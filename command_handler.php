@@ -27,7 +27,8 @@ class commandHandler
 	public function __construct(&$jabber)
 	{
 		$this->db = new PichiDatabase();
-		$this->jabber = &$jabber; 
+		$this->jabber = &$jabber;
+		$this->db->log = & $this->log;
 	}
     
 	public function getJID($nick, $is_nick = false)
@@ -193,7 +194,10 @@ class commandHandler
 		$w = implode(" ",$w);
 		$this->db->query("SELECT * FROM settings" . (($w != NULL) ? " WHERE name='".$this->db->db->escapeString($w)."'" : "") . ";");
 		while($data = $this->db->fetch_array())
+		{
 			$this->sendAnswer($data['name'] . " = " . $data['value']);
+			$this->log->log("User request setting: {$data['name']} = {$data['value']}", PichiLog::LEVEL_VERBOSE);
+		}
 	}
     
 	private function show_wtf($command)
@@ -202,7 +206,9 @@ class commandHandler
 		unset($w[0]);
 		$w = implode(" ",$w);
 		$this->db->query("SELECT `value` FROM wiki WHERE name='".$this->db->db->escapeString($w)."';");
-		$this->sendAnswer($this->db->fetchColumn(0));
+		$answer = $this->db->fetchColumn(0);
+		$this->sendAnswer($answer);
+		$this->log->log("User request wiki page \"$w\" = $answer", PichiLog::LEVEL_DEBUG);
 	}
     
 	private function set_dfn($command)
@@ -218,7 +224,8 @@ class commandHandler
 			$this->db->query("UPDATE wiki SET value = '".$this->db->db->escapeString($data[1])."'  WHERE name = '".$this->db->db->escapeString($data[0])."';");
 		else
 			$this->db->query("INSERT INTO wiki (`name`,`value`) VALUES ('" . $this->db->db->escapeString($data[0]) . "','".$this->db->db->escapeString($data[1])."');");
-      
+		
+		$this->log->log("User set wiki page $data[0] = $data[1]", PichiLog::LEVEL_DEBUG);
 		$this->sendAnswer("Value Updated!");
 	}
     
@@ -239,9 +246,11 @@ class commandHandler
 			$this->db->query("UPDATE settings SET value = '".$this->db->db->escapeString($data[1])."'  WHERE name = '".$this->db->db->escapeString($data[0])."';");
 			$this->sendAnswer("Updated!");
 			$this->parseOptions();
+			$this->log->log("Updated option $data[0] = $data[1]", PichiLog::LEVEL_DEBUG);
 		}
 		else
 		{
+			$this->log->log("Can't set $data[0]. There is no such option.", PichiLog::LEVEL_DEBUG);
 			$this->sendAnswer("Нету такой опции =(");
 		}
       
@@ -267,6 +276,7 @@ class commandHandler
 			$user = $this->getJID($user, true);
 		
 		$this->jabber->message($user, $message, "chat");
+		$this->log->log("Send message to $user: $message", PichiLog::LEVEL_DEBUG);
 	}
 	
     
@@ -283,6 +293,7 @@ class commandHandler
       
 		if($w == NULL)
 		{
+			$this->log->log("Begin creting user list", PichiLog::LEVEL_DEBUG);
 			$userlist = "Список пользователей, которых я видел:\n";
 			$online = $offline = "";
 			$n = $f = 0;
@@ -292,11 +303,13 @@ class commandHandler
 				{
 					$n++;
 					$online .= "$n. $data[nick]\n";
+					$this->log->log("User $data[nick]: online", PichiLog::LEVEL_VERBOSE);
 				}
 				else
 				{
 					$f++;
 					$offline .= "$f. $data[nick] (Последний раз видел ".date("d.m.y \в H:i:s", $data['time']).")\n";
+					$this->log->log("User $data[nick]: offline", PichiLog::LEVEL_VERBOSE);
 				}
 			}
 			$userlist .= "Пользователи онлайн:\n" . $online;
@@ -306,8 +319,13 @@ class commandHandler
 		else
 		{
 			while($data = $this->db->fetch_array())
+			{
 				if($data['nick'] == $w || $data['jid'] == $w)
+				{
+					$this->log->log("User {$data['nick']} founded!", PichiLog::LEVEL_VERBOSE);
 					$this->sendAnswer($data['nick'] . " сейчас " . (($data['status'] == 'available') ? "онлайн и смотрит на тебя 0_0" : "оффлайн, а жаль"));
+				}
+			}
 		}
 	}
     
@@ -317,6 +335,7 @@ class commandHandler
 	*/
 	public function setUserInfo($jid, $nick, $room, $status)
 	{      
+		$this->log->log("Updating user status for $nick($jid) in $room = $status", PichiLog::LEVEL_DEBUG);
 		$this->db->query("SELECT COUNT(*) FROM users WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND room = '" . $this->db->db->escapeString($room) . "';");
 		if($this->db->fetchColumn() > 0)
 			$this->db->query("UPDATE users SET nick = '".$this->db->db->escapeString($nick)."', time = '".time()."', status = '".$status."'  WHERE jid = '".$this->db->db->escapeString($jid)."' AND room = '". $this->db->db->escapeString($room) ."';");
@@ -343,6 +362,8 @@ class commandHandler
 		$this->last_from = $from;
 		$this->last_type = $type;
 	
+		$this->log->log("Call message method", PichiLog::LEVEL_DEBUG);
+		
 		if(!$this->isIgnore())
 			$this->fetch_commands($this->last_message, $this->last_from, $this->last_type); // проверяем на комманду
 
@@ -379,6 +400,7 @@ class commandHandler
   
 	private function toLexems($string)
 	{
+		$this->log->log("$string to lexems", PichiLog::LEVEL_DEBUG);
 		$base = explode(" ", $string);
       
 		if($base[0] != NULL)
@@ -404,6 +426,7 @@ class commandHandler
 			$this->db->query("UPDATE lexems SET count = count+1  WHERE lexeme = '".$this->db->db->escapeString($str)."';");
 		else
 			$this->db->query("INSERT INTO lexems (`lexeme`,`count`) VALUES ('" . $this->db->db->escapeString($str) . "','1');");
+		$this->log->log("$str writed to lexems", PichiLog::LEVEL_VERBOSE);
 	}
     
 	private function genFromLexems() //сложность
@@ -435,6 +458,7 @@ class commandHandler
 	// используемс алгоритм лелика на вес
 	private function randGenAnswer()
 	{
+		$this->log->log("Rand world from lexems:", PichiLog::LEVEL_VERBOSE);
 		$answers = array();
 		$i = 0;
 		$sum = 0;
@@ -444,6 +468,7 @@ class commandHandler
 			$answers[$i]['count'] = $data['count'];	
 			$sum += (int)$data['count'];
 			$i++;
+			$this->log->log("World \"{$data['lexeme']}\" have {$data['count']} points", PichiLog::LEVEL_VERBOSE);
 		}
 		$rand = rand(0, $sum);
       
@@ -474,6 +499,7 @@ class commandHandler
 			$qu_i--;
 		}
 		$log .= "-----------------------------------------------------------------------";
+		$this->log->log("Request log:\n$log", PichiLog::LEVEL_VERBOSE);
 		$this->sendAnswer($log);
 	}
     
@@ -481,6 +507,7 @@ class commandHandler
 	{
 		if($this->options['rand_message'] > 10) //10 вменяемый лимит секунд
 		{
+			$this->log->log("Rand message method", PichiLog::LEVEL_DEBUG);
 			$this->db->query("SELECT `nick` FROM users WHERE status = 'available';");
 			$user = array();
 			$n = 0;

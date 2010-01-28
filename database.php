@@ -3,6 +3,7 @@
 class PichiDatabase
 {
 	public $db;
+	public $log;
 	private $name;
 	private $type = "sqlite";
 	public $last_query;
@@ -32,6 +33,7 @@ class PichiDatabase
 				{
 					$this->last_query = $this->db->query($query);
 					$this->last_query_text = $query;
+					$this->log->log("[QUERY] \"$query\"", PichiLog::LEVEL_VERBOSE);
 				}
 				$this->last_query->reset();
 				return $this->last_query;
