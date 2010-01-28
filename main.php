@@ -75,7 +75,7 @@ if(!$db_exist)
 	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('log_enabled','1');"); // вести лог ?
 	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('treatment_coincidence','3');"); // вставлять обращение, совпадения (3 из 1)
 	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('rand_message','0');"); // случайны ответ когда скучно
-	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('msg_limit','200');"); // лимит символов, после чего отправляет ответ в личку
+	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('msg_limit','500');"); // лимит символов, после чего отправляет ответ в личку
 	$log->log("done",PichiLog::LEVEL_DEBUG);
 }
 
