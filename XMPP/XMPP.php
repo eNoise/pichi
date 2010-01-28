@@ -431,4 +431,29 @@ class XMPPHP_XMPP extends XMPPHP_XMLStream {
 		$vcard_array['from'] = $xml->attrs['from'];
 		$this->event('vcard', $vcard_array);
 	}
+	
+	public function ping($jid, $id = NULL)
+	{
+		if($id == NULL)
+			$id = $this->getId();
+		$this->addIdHandler($id, 'ping_handler');
+		$this->send("
+			<iq from='{$this->fulljid}' 
+				to='$jid'
+				type='get' 
+				id='$id'>
+					<ping xmlns='urn:xmpp:ping'/>
+			</iq>
+
+		");
+	}
+	
+	protected function ping_handler($xml)
+	{
+		$payload['from'] = $xml->attrs['from'];
+		$payload['id'] = $xml->attrs['id'];
+		$payload['xml'] = $xml;
+		$this->log->log("Pong from: {$payload['from']}", XMPPHP_Log::LEVEL_DEBUG);
+		$this->event('ping', $payload);
+	}
 }

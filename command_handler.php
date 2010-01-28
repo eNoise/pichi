@@ -19,6 +19,8 @@ class commandHandler
 	private $last_from;
 	private $last_type;
 	private $last_room;
+	public $last_ping_id;
+	public $last_ping_time;
 	public $users;
 	public $users_count = 0;
 	
@@ -54,10 +56,29 @@ class commandHandler
 		$this->log->log("Left room $room as $nick", PichiLog::LEVEL_DEBUG);
 	}
 
-	public function getJID($nick, $is_nick = false)
+	public function ping($jid, $id)
+	{
+		$this->log->log("Send ping to $jid", PichiLog::LEVEL_DEBUG);
+		$this->jabber->ping($jid, $id);
+		$this->last_ping_time = microtime(true);
+		$this->last_ping_id = $id;
+	}
+	
+	public function do_if_ping($id)
+	{
+		if($id == $this->last_ping_id)
+		{
+			$time = microtime(true) - $this->last_ping_time;
+			$time = number_format($time, 2); // до 2 символов
+			$this->log->log("Recived ping if $time", PichiLog::LEVEL_DEBUG);
+			$this->sendAnswer("Pong in $time sec.");
+		}
+	}
+
+	public function getJID($nick)
 	{
 		$this->log->log("Get JID from $nick", PichiLog::LEVEL_VERBOSE);
-		if($is_nick)
+		if(strpos($nick, "@") === FALSE)
 		{
 			$this->db->query("SELECT `jid` FROM users WHERE nick = '" . $this->db->db->escapeString($nick) . "';");
 			return $this->db->fetchColumn(0);
@@ -173,6 +194,7 @@ class commandHandler
 				$help .= "!gc [name] - показать значение опции\n";
 				$help .= "!users [nick|jid] - список пользователей\n";
 				$help .= "!msg [nick|jid] message - сообщение пользователю\n";
+				$help .= "!ping nick - ping запрос пользователю\n";
 				$help .= "!join room nick [status] - войти в комнату\n";
 				$help .= "!left room nick [status] - выйти из комнаты\n";
 				$help .= "!quit - выход\n";
@@ -214,6 +236,10 @@ class commandHandler
 					return;
 				$w = explode(" ",$command);
 				$this->leftRoom($w[1], $w[2], $w[3]);
+				break;
+			case ($this->getCommand($command) == "!ping"):
+				$w = explode(" ",$command);
+				$this->ping($w[1], "pichiping");
 				break;
 			case ($this->getCommand($command) == "!quit" || $this->getCommand($command) == "!exit"):
 				$this->doExit();
@@ -309,8 +335,7 @@ class commandHandler
 		$message = implode(" ", $w);
 		unset($w);
 
-		if(strpos($user, "@") === FALSE)
-			$user = $this->getJID($user, true);
+		$user = $this->getJID($user);
 		
 		$this->jabber->message($user, $message, "chat");
 		$this->log->log("Send message to $user: $message", PichiLog::LEVEL_DEBUG);

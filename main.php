@@ -93,7 +93,7 @@ $log->log("Sync Timers",PichiLog::LEVEL_VERBOSE);
 $time_message = $time_ping = time(); // сбрасываем
 $log->log("Begin Session",PichiLog::LEVEL_VERBOSE);
 while(!$jabber->isDisconnected()) {
-	$payloads = $jabber->processUntil(array('message', 'presence', 'end_stream', 'session_start'), 1);
+	$payloads = $jabber->processUntil(array('message', 'presence', 'end_stream', 'session_start', 'ping'), 1);
 	//wait for proccess
     
 	foreach($payloads as $event) 
@@ -105,6 +105,9 @@ while(!$jabber->isDisconnected()) {
 				$time_message = time();
 				$log->log("Recive MESSAGE Handler From $data[body]($data[type]):\nMessage: $data[body]",PichiLog::LEVEL_DEBUG);
 				$command_handler->do_if_message($data['body'], $data['from'], $data['type']);
+				break;
+			case 'ping':
+				$command_handler->do_if_ping($data['id']);
 				break;
 			case 'presence':
 				$log->log("Recive PRESENCE Handler from: {$data['from']} [{$data['show']}] {$data['status']}",PichiLog::LEVEL_DEBUG);
