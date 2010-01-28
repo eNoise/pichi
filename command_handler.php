@@ -32,6 +32,7 @@ class commandHandler
     
 	public function getJID($nick, $is_nick = false)
 	{
+		$this->log->log("Get JID from $nick", PichiLog::LEVEL_VERBOSE);
 		if($is_nick)
 		{
 			$this->db->query("SELECT `jid` FROM users WHERE nick = '" . $this->db->db->escapeString($nick) . "';");
@@ -76,6 +77,7 @@ class commandHandler
 			$this->jabber->message($to, $message, $type);
 		else
 			$this->jabber->message($this->getJID($this->getName($this->last_from), true), $message, "chat");
+		$this->log->log("Send answer to $to:\n$message", PichiLog::LEVEL_VERBOSE);
 	}
 
 	//Вспомогательная функция с поиском пользователя в списке
@@ -101,16 +103,19 @@ class commandHandler
 
 	private function isAccess()
 	{
+		$this->log->log("Test access ". $this->last_from . " in admins", PichiLog::LEVEL_VERBOSE);
 		return $this->inUser($this->admins, $this->last_from);
 	}
 	
 	private function isIgnore()
 	{
+		$this->log->log("Test ignore ". $this->last_from . " in ignorelist", PichiLog::LEVEL_VERBOSE);
 		return $this->inUser($this->ignore, $this->last_from);
 	}
     
 	private function doExit()
 	{
+		$this->log->log("Do disconnect", PichiLog::LEVEL_INFO);
 		if($this->isAccess())
 			$this->jabber->disconnect();
 	}
@@ -118,12 +123,17 @@ class commandHandler
 	public function parseOptions()
 	{
 		$this->db->query("SELECT * FROM settings;");
+		$this->log->log("Parse Settings", PichiLog::LEVEL_DEBUG);
 		while($data = $this->db->fetch_array())
+		{
 			$this->options[$data['name']] = $data['value'];
+			$this->log->log("$data[name] = $data[value]", PichiLog::LEVEL_VERBOSE);
+		}
 	}
     
 	protected function fetch_commands($command, $from, $type)
 	{
+		$this->log->log("Command from " . $this->last_from . ": $command", PichiLog::LEVEL_DEBUG);
 		switch($command)
 		{
 			case "!help":
