@@ -19,8 +19,8 @@ class commandHandler
 	private $last_from;
 	private $last_type;
 	private $last_room;
-	public $last_ping_id;
-	public $last_ping_time;
+	public $last_id;                                           
+	public $last_data;
 	public $users;
 	public $users_count = 0;
 	
@@ -56,19 +56,20 @@ class commandHandler
 		$this->log->log("Left room $room as $nick", PichiLog::LEVEL_DEBUG);
 	}
 
-	public function ping($jid, $id)
+	public function ping($jid, $id = "pichi_ping")
 	{
+		$jid = $this->getJID($jid); // На всякий случай
 		$this->log->log("Send ping to $jid", PichiLog::LEVEL_DEBUG);
 		$this->jabber->ping($jid, $id);
-		$this->last_ping_time = microtime(true);
-		$this->last_ping_id = $id;
+		$this->last_data['ping_time'] = microtime(true);                   
+		$this->last_id['ping'] = $id;
 	}
 	
 	public function do_if_ping($id)
 	{
-		if($id == $this->last_ping_id)
+		if($id == $this->last_id['ping'])
 		{
-			$time = microtime(true) - $this->last_ping_time;
+			$time = microtime(true) - $this->last_data['ping_time'];
 			$time = number_format($time, 2); // до 2 символов
 			$this->log->log("Recived ping if $time", PichiLog::LEVEL_DEBUG);
 			$this->sendAnswer("Pong in $time sec.");
@@ -194,8 +195,8 @@ class commandHandler
 				$help .= "!gc [name] - показать значение опции\n";
 				$help .= "!users [nick|jid] - список пользователей\n";
 				$help .= "!msg [nick|jid] message - сообщение пользователю\n";
-				$help .= "!ping nick - ping запрос пользователю\n";
-				$help .= "!join room nick [status] - войти в комнату\n";
+				$help .= "!ping [nick|jid] - ping запрос пользователю\n";
+				$help .= "!join room nick [status] - войти в комнату (сменить ник)\n";
 				$help .= "!left room nick [status] - выйти из комнаты\n";
 				$help .= "!quit - выход\n";
 				$help .= "!version - версия бота\n";
@@ -239,7 +240,7 @@ class commandHandler
 				break;
 			case ($this->getCommand($command) == "!ping"):
 				$w = explode(" ",$command);
-				$this->ping($w[1], "pichiping");
+				$this->ping($w[1]);
 				break;
 			case ($this->getCommand($command) == "!quit" || $this->getCommand($command) == "!exit"):
 				$this->doExit();

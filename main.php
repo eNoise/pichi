@@ -12,6 +12,33 @@ include("config.php");
 
 $log = new PichiLog($config['debug'], 5);
 
+function php_extension_load($ext)
+{
+	if (!extension_loaded($ext))
+	{
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+		{
+			if(!dl("php_$ext.dll"))
+			{
+				$log->log("Extension $ext not loaded. Enable it.",PichiLog::LEVEL_ERROR);
+				exit();
+			}
+		}
+		else
+		{
+			if(!dl("$ext.so"))
+			{
+				$log->log("Extension $ext not loaded. Enable it.",PichiLog::LEVEL_ERROR);
+				exit();
+			}
+		}
+	}
+}
+
+php_extension_load("sqlite3");
+php_extension_load("mbstring");
+php_extension_load("openssl");
+
 function isRoom($test)
 {
 	global $config;
