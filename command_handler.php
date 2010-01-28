@@ -222,8 +222,7 @@ class commandHandler
 			case "!help":
 				$help = "\n";
 				$help .= "-------------------------\n";
-				$help .= "---     Pichi Bot     ---\n";
-				$help .= "---  Commfort Killer  ---\n";
+				$help .= "        Pichi Bot        \n";
 				$help .= "-------------------------\n";	  
 				$help .= "!log n - показывает последний лог\n";
 				$help .= "!wtf name - определение из базы\n";
