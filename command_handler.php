@@ -111,6 +111,41 @@ class commandHandler
 		}
 	}
 
+	private function seperate($command, $level = 2)
+	{
+		$array = array();
+		if(strpos($command, "=") !== FALSE)
+		{
+			$w = explode(" ",$command);
+			$array[0] = $w[0];
+			unset($w[0]);
+			$w = implode(" ",$w);
+			$w = explode("=",$w);
+			$array[1] = $w[0];
+			$array[2] = $w[1];
+			return $array;
+		}
+		else if(strpos($command, "\"") !== FALSE)
+		{
+			$w = explode("\"", $command);
+			$array[0] = trim($w[0]);
+			$array[1] = $w[1];
+			$array[2] = trim($w[2]);
+			return $array;
+		}
+		else // default
+		{
+			$w = explode(" ",$command);
+			for($i = 0; $i < $level; $i++)
+			{
+				$array[$i] = $w[$i];
+				unset($w[$i]);
+			}
+			$array[$i+1] = implode(" ", $w);
+			return $array;
+		}
+	}
+
 	// Отправляет ответ тому, от кого пришло сообщение
 	private function sendAnswer($message)
 	{
@@ -229,17 +264,17 @@ class commandHandler
 			case ($this->getCommand($command) == "!join"):
 				if(!$this->isAccess())
 					return;
-				$w = explode(" ",$command);
+				$w = $this->seperate($command, 3);
 				$this->joinRoom($w[1], $w[2], $w[3]);
 				break;
 			case ($this->getCommand($command) == "!left"):
 				if(!$this->isAccess())
 					return;
-				$w = explode(" ",$command);
+				$w = $this->seperate($command, 3);
 				$this->leftRoom($w[1], $w[2], $w[3]);
 				break;
 			case ($this->getCommand($command) == "!ping"):
-				$w = explode(" ",$command);
+				$w = $this->seperate($command);
 				$this->ping($w[1]);
 				break;
 			case ($this->getCommand($command) == "!quit" || $this->getCommand($command) == "!exit"):
@@ -253,10 +288,8 @@ class commandHandler
 		if(!$this->isAccess())
 			return;
       
-		$w = explode(" ",$command);
-		unset($w[0]);
-		$w = implode(" ",$w);
-		$this->db->query("SELECT * FROM settings" . (($w != NULL) ? " WHERE name='".$this->db->db->escapeString($w)."'" : "") . ";");
+		$w = $this->seperate($command);
+		$this->db->query("SELECT * FROM settings" . (($w[1] != NULL) ? " WHERE name='".$this->db->db->escapeString($w[1])."'" : "") . ";");
 		while($data = $this->db->fetch_array())
 		{
 			$this->sendAnswer($data['name'] . " = " . $data['value']);
@@ -266,30 +299,24 @@ class commandHandler
     
 	private function show_wtf($command)
 	{
-		$w = explode(" ",$command);
-		unset($w[0]);
-		$w = implode(" ",$w);
-		$this->db->query("SELECT `value` FROM wiki WHERE name='".$this->db->db->escapeString($w)."';");
+		$w = $this->seperate($command);
+		$this->db->query("SELECT `value` FROM wiki WHERE name='".$this->db->db->escapeString($w[1])."';");
 		$answer = $this->db->fetchColumn(0);
 		$this->sendAnswer($answer);
-		$this->log->log("User request wiki page \"$w\" = $answer", PichiLog::LEVEL_DEBUG);
+		$this->log->log("User request wiki page \"$w[1]\" = $answer", PichiLog::LEVEL_DEBUG);
 	}
     
 	private function set_dfn($command)
 	{
-		$w = explode(" ",$command);
-		unset($w[0]);
-		$w = implode(" ",$w);
-
-		$data = explode("=",$w);
+		$w = $this->seperate($command);
       
-		$this->db->query("SELECT COUNT(*) FROM wiki WHERE name = '" . $this->db->db->escapeString($data[0]) . "';");
+		$this->db->query("SELECT COUNT(*) FROM wiki WHERE name = '" . $this->db->db->escapeString($w[1]) . "';");
 		if($this->db->fetchColumn() > 0)
-			$this->db->query("UPDATE wiki SET value = '".$this->db->db->escapeString($data[1])."'  WHERE name = '".$this->db->db->escapeString($data[0])."';");
+			$this->db->query("UPDATE wiki SET value = '".$this->db->db->escapeString($w[2])."'  WHERE name = '".$this->db->db->escapeString($w[1])."';");
 		else
-			$this->db->query("INSERT INTO wiki (`name`,`value`) VALUES ('" . $this->db->db->escapeString($data[0]) . "','".$this->db->db->escapeString($data[1])."');");
+			$this->db->query("INSERT INTO wiki (`name`,`value`) VALUES ('" . $this->db->db->escapeString($w[1]) . "','".$this->db->db->escapeString($w[2])."');");
 		
-		$this->log->log("User set wiki page $data[0] = $data[1]", PichiLog::LEVEL_DEBUG);
+		$this->log->log("User set wiki page $w[1] = $w[2]", PichiLog::LEVEL_DEBUG);
 		$this->sendAnswer("Value Updated!");
 	}
     
@@ -298,23 +325,19 @@ class commandHandler
 		if(!$this->isAccess())
 			return;
       
-		$w = explode(" ",$command);
-		unset($w[0]);
-		$w = implode(" ",$w);
-
-		$data = explode("=",$w);
+		$w = $this->seperate($command);
       
-		$this->db->query("SELECT COUNT(*) FROM settings WHERE name = '" . $this->db->db->escapeString($data[0]) . "';");
+		$this->db->query("SELECT COUNT(*) FROM settings WHERE name = '" . $this->db->db->escapeString($w[1]) . "';");
 		if($this->db->fetchColumn() > 0)
 		{
-			$this->db->query("UPDATE settings SET value = '".$this->db->db->escapeString($data[1])."'  WHERE name = '".$this->db->db->escapeString($data[0])."';");
+			$this->db->query("UPDATE settings SET value = '".$this->db->db->escapeString($w[2])."'  WHERE name = '".$this->db->db->escapeString($w[1])."';");
 			$this->sendAnswer("Updated!");
 			$this->parseOptions();
-			$this->log->log("Updated option $data[0] = $data[1]", PichiLog::LEVEL_DEBUG);
+			$this->log->log("Updated option $w[1] = $w[2]", PichiLog::LEVEL_DEBUG);
 		}
 		else
 		{
-			$this->log->log("Can't set $data[0]. There is no such option.", PichiLog::LEVEL_DEBUG);
+			$this->log->log("Can't set $w[1]. There is no such option.", PichiLog::LEVEL_DEBUG);
 			$this->sendAnswer("Нету такой опции =(");
 		}
       
@@ -326,17 +349,10 @@ class commandHandler
 		if(!$this->isAccess())
 			return;
       
-		$w = explode(" ",$command);
-		if(count($w) < 3)
-			return;
-		
-		unset($w[0]);
-		$user = $w[1];
-		unset($w[1]);
-		$message = implode(" ", $w);
-		unset($w);
+		$w = $this->seperate($command);
 
-		$user = $this->getJID($user);
+		$user = $this->getJID($w[1]);
+		$message = $w[2];
 		
 		$this->jabber->message($user, $message, "chat");
 		$this->log->log("Send message to $user: $message", PichiLog::LEVEL_DEBUG);
@@ -348,13 +364,11 @@ class commandHandler
 	*/
 	private function user_list($command)
 	{
-		$w = explode(" ",$command);
-		unset($w[0]);
-		$w = implode(" ",$w);
+		$w = $this->seperate($command);
       
 		$this->db->query("SELECT * FROM users;");
       
-		if($w == NULL)
+		if($w[1] == NULL)
 		{
 			$this->log->log("Begin creting user list", PichiLog::LEVEL_DEBUG);
 			$userlist = "Список пользователей, которых я видел:\n";
@@ -385,7 +399,7 @@ class commandHandler
 		{
 			while($data = $this->db->fetch_array())
 			{
-				if($data['nick'] == $w || $data['jid'] == $w)
+				if($data['nick'] == $w[1] || $data['jid'] == $w[1])
 				{
 					$this->log->log("User {$data['nick']} founded!", PichiLog::LEVEL_VERBOSE);
 					$this->sendAnswer($data['nick'] . " сейчас " . (($data['status'] == 'available') ? "онлайн и смотрит на тебя 0_0" : "оффлайн, а жаль"));
