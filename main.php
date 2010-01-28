@@ -35,15 +35,15 @@ function php_extension_load($ext)
 	}
 }
 
-php_extension_load("sqlite3");
-php_extension_load("mbstring");
-php_extension_load("openssl");
-
 function isRoom($test)
 {
 	global $config;
 	return (strpos($test, "@") !== FALSE) && (strpos($test, $config['room_service']) !== FALSE) && (strpos($test, $config['server']) !== FALSE);
 }
+
+php_extension_load("sqlite3");
+php_extension_load("mbstring");
+php_extension_load("openssl");
 
 // init
 $log->log("Start Pichi",PichiLog::LEVEL_INFO);
