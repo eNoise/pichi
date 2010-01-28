@@ -1,17 +1,16 @@
 <?php
 
+if(function_exists("date_default_timezone_set") and function_exists("date_default_timezone_get"))
+	@date_default_timezone_set(@date_default_timezone_get()); //disable timezone errors
+
 $config['db_version'] = 10; // Work only parram
 
 require_once("XMPP/XMPP.php");
 require_once("command_handler.php");
+require_once("Log_pichi.php");
 include("config.php");
 
-function debug($it)
-{
-	global $config;
-	if($config['debug'])
-		echo $it . "\n";
-}
+$log = new PichiLog($config['debug'], 5);
 
 function isRoom($test)
 {
@@ -20,35 +19,45 @@ function isRoom($test)
 }
 
 // init
-debug("Start...");
+$log->log("Start Pichi",PichiLog::LEVEL_INFO);
 $jabber = new XMPPHP_XMPP($config['server'], $config['port'], $config['user'], $config['password'], $config['resource'], $config['server'], $printlog=false, $loglevel = (($config['debug']) ? XMPPHP_Log::LEVEL_VERBOSE : XMPPHP_Log::LEVEL_INFO));
 try
 {
+	$log->log("Try to connect...",PichiLog::LEVEL_VERBOSE);
 	$jabber->connect();
 }
 
 catch(XMPPHP_Exception $e)
 {
-	debug("connection fail wit error: " . $e);
-	exit("exit with error...");
+	$log->log("Connection fail with error: $e",PichiLog::LEVEL_ERROR);
+	exit();
 }
 
 // connect
-debug("connected...");
+$log->log("Connection success",PichiLog::LEVEL_VERBOSE);
 
 if(file_exists($config['db_file']))
+{
+	$log->log("There is no db file.",PichiLog::LEVEL_DEBUG);
 	$db_exist = TRUE;
+}
 else
+{
+	$log->log("Db file founded",PichiLog::LEVEL_DEBUG);
 	$db_exist = FALSE; 
-
+}
+$log->log("Creating CommandHandler",PichiLog::LEVEL_VERBOSE);
 $command_handler = new commandHandler($jabber);
+$command_handler->log = $log;
 $command_handler->room = $config['room'];
 $command_handler->user = $config['user'];
 $command_handler->room_user = $config['room_user'];
 $command_handler->ignore[] = $config['user'] . "@" . $config['server'];
+$log->log("done!",PichiLog::LEVEL_VERBOSE);
 
 if(!$db_exist)
 {
+	$log->log("Creating database structure",PichiLog::LEVEL_DEBUG);
 	$command_handler->db->query("CREATE TABLE log (`from` TEXT, `time` TEXT, `type` TEXT, `message` TEXT);");
 	$command_handler->db->query("CREATE TABLE lexems (`lexeme` TEXT, `count` INT);");
 	$command_handler->db->query("CREATE TABLE wiki (`name` TEXT, `value` TEXT);");
@@ -65,19 +74,22 @@ if(!$db_exist)
 	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('treatment_coincidence','3');"); // вставлять обращение, совпадения (3 из 1)
 	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('rand_message','0');"); // случайны ответ когда скучно
 	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('msg_limit','200');"); // лимит символов, после чего отправляет ответ в личку
+	$log->log("done",PichiLog::LEVEL_DEBUG);
 }
 
 $command_handler->db->query("SELECT * FROM db_version;");
 $current_db_version = $command_handler->db->fetchColumn(0);
 if($current_db_version < $config['db_version'])
 {
-	debug("DB version is $current_db_version, but Pichi require " . $config['db_version']);
-	exit("Exit with db error");
+	$log->log("Old database!",PichiLog::LEVEL_ERROR);
+	$log->log("Your database version: $current_db_version. But needed: ". $config['db_version'],PichiLog::LEVEL_ERROR);
+	exit();
 }
 
 $command_handler->parseOptions(); // загнать все опции
+$log->log("Sync Timers",PichiLog::LEVEL_VERBOSE);
 $time_message = $time_ping = time(); // сбрасываем
-
+$log->log("Begin Session",PichiLog::LEVEL_VERBOSE);
 while(!$jabber->isDisconnected()) {
 	$payloads = $jabber->processUntil(array('message', 'presence', 'end_stream', 'session_start'), 1);
 	//wait for proccess
@@ -92,14 +104,11 @@ while(!$jabber->isDisconnected()) {
 				if($time_message - $time_session > 10)
 				{
 					$command_handler->do_if_message($data['body'], $data['from'], $data['type']);
-					debug("---------------------------------------------------------------------------------");
-					debug("Message From: $data[from]");
-					debug("Body: $data[body]");
-					debug("---------------------------------------------------------------------------------");
+					$log->log("Recive MESSAGE Handler From $data[body]($data[type]):\nMessage: $data[body]",PichiLog::LEVEL_DEBUG);
 				}
 				break;
 			case 'presence':
-				debug("Presence: {$data['from']} [{$data['show']}] {$data['status']}");
+				$log->log("Recive PRESENCE Handler from: {$data['from']} [{$data['show']}] {$data['status']}",PichiLog::LEVEL_DEBUG);
 				if($data['show'] == 'available' || $data['show'] == 'unavailable')
 				{
 					unset($jid);
@@ -118,7 +127,7 @@ while(!$jabber->isDisconnected()) {
 				}
 				break;
 			case 'session_start':
-				debug("Session Start...");
+				$log->log("Recive SESSION_START Handler",PichiLog::LEVEL_DEBUG);
 				$command_handler->db->query("UPDATE users SET status = 'unavailable';");
 				$jabber->getRoster();
 				$jabber->presence($config['status']);
@@ -136,6 +145,7 @@ while(!$jabber->isDisconnected()) {
 	// вставляем случайное сообщение если скучно
 	if(time() - $time_message > $command_handler->options['rand_message'] && $command_handler->options['rand_message'] > $config['wait_time']) // 10 минимум секунд
 	{
+		$log->log("Send randome message",PichiLog::LEVEL_DEBUG);
 		$command_handler->sendRandMessage();
 	}
 	
@@ -144,6 +154,7 @@ while(!$jabber->isDisconnected()) {
 	{
 		$time_ping = time();
 		$jabber->send("<iq from='$config[user]@$config[server]' to='$config[server]' id='pingx' type='get'><ping xmlns='urn:xmpp:ping'/></iq>");
+		$log->log("Send ping query",PichiLog::LEVEL_DEBUG);
 	}
 }
 

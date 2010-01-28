@@ -5,6 +5,7 @@ class commandHandler
 {
 	public $db;
 	protected $jabber;
+	public $log;
     
 	public $room;
 	public $user;
