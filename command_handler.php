@@ -7,6 +7,8 @@ class commandHandler
 	protected $jabber;
 	public $log;
     
+	public $server;
+	public $room_service;
 	public $room;
 	public $user;
 	public $room_user;
@@ -16,10 +18,12 @@ class commandHandler
 	private $last_massage;
 	private $last_from;
 	private $last_type;
+	private $last_room;
 	public $users;
 	public $users_count = 0;
-	public $need_reconnect = FALSE;
-	public $reconstatus = 0;
+	
+	public $wait;
+	public $wait_time = 5;
     
 	public $admins = array("deg@jabber.uruchie.org", "[ice.net]user@jabber.uruchie.org");
 	public $ignore = array();
@@ -30,7 +34,26 @@ class commandHandler
 		$this->jabber = &$jabber;
 		$this->db->log = & $this->log;
 	}
-    
+
+	public function joinRoom($room, $nick, $status = "BotWorld!")
+	{
+		if(strpos($room, "@") === FALSE)
+			$room .= "@" . $this->room_service . "." . $this->server;
+		$this->jabber->presence($status, 'available', $room."/".$nick);
+		$this->setUserInfo($this->user."@".$this->server, $nick, $room, 'available');
+		$this->wait = time();
+		$this->log->log("Join to room $room as $nick", PichiLog::LEVEL_DEBUG);
+	}
+	
+	public function leftRoom($room, $nick, $status)
+	{
+	  	if(strpos($room, "@") === FALSE)
+			$room .= "@" . $this->room_service . "." . $this->server;
+		$this->jabber->presence($status, 'unavailable', $room."/".$nick);
+		$this->setUserInfo($this->user."@".$this->server, $nick, $room, 'unavailable');
+		$this->log->log("Left room $room as $nick", PichiLog::LEVEL_DEBUG);
+	}
+
 	public function getJID($nick, $is_nick = false)
 	{
 		$this->log->log("Get JID from $nick", PichiLog::LEVEL_VERBOSE);
@@ -70,7 +93,7 @@ class commandHandler
 	private function sendAnswer($message)
 	{
 		if($this->last_type == "groupchat")
-			$to = $this->getJID($this->last_from);
+			$to = $this->last_room;
 		else
 			$to = $this->last_from;
 		$type = $this->last_type;
@@ -150,6 +173,8 @@ class commandHandler
 				$help .= "!gc [name] - показать значение опции\n";
 				$help .= "!users [nick|jid] - список пользователей\n";
 				$help .= "!msg [nick|jid] message - сообщение пользователю\n";
+				$help .= "!join room nick [status] - войти в комнату\n";
+				$help .= "!left room nick [status] - выйти из комнаты\n";
 				$help .= "!quit - выход\n";
 				$help .= "!version - версия бота\n";
 				$this->sendAnswer($help);
@@ -177,6 +202,18 @@ class commandHandler
 				break;
 			case ($this->getCommand($command) == "!users"):
 				$this->user_list($command);
+				break;
+			case ($this->getCommand($command) == "!join"):
+				if(!$this->isAccess())
+					return;
+				$w = explode(" ",$command);
+				$this->joinRoom($w[1], $w[2], $w[3]);
+				break;
+			case ($this->getCommand($command) == "!left"):
+				if(!$this->isAccess())
+					return;
+				$w = explode(" ",$command);
+				$this->leftRoom($w[1], $w[2], $w[3]);
 				break;
 			case ($this->getCommand($command) == "!quit" || $this->getCommand($command) == "!exit"):
 				$this->doExit();
@@ -299,16 +336,18 @@ class commandHandler
 			$n = $f = 0;
 			while($data = $this->db->fetch_array())
 			{
+				$roomname = explode("@", $data['nick']);
+				$roomname = $roomname[1];
 				if($data['status'] == 'available')
 				{
 					$n++;
-					$online .= "$n. $data[nick]\n";
+					$online .= "$n. $data[nick] (в комнате $roomname)\n";
 					$this->log->log("User $data[nick]: online", PichiLog::LEVEL_VERBOSE);
 				}
 				else
 				{
 					$f++;
-					$offline .= "$f. $data[nick] (Последний раз видел ".date("d.m.y \в H:i:s", $data['time']).")\n";
+					$offline .= "$f. $data[nick] (Последний раз видел ".date("d.m.y \в H:i:s", $data['time'])."в комнате $roomname)\n";
 					$this->log->log("User $data[nick]: offline", PichiLog::LEVEL_VERBOSE);
 				}
 			}
@@ -345,22 +384,20 @@ class commandHandler
     
 	public function do_if_message($message, $from, $type)
 	{
-		if($this->need_reconnect)
+		// No reaction while time off
+		if(time() - $this->wait < $this->wait_time)
 		{
-			if($this->last_message==$massage && $this->last_from==$from)
-			{
-				$this->need_reconnect = FALSE;
-				return;
-			}
-			else
-			{
-				return;
-			}
+			$this->log->log("Ignore Message: <$from> $message", PichiLog::LEVEL_DEBUG);
+			return;
 		}
-
+			
 		$this->last_message = $message;
 		$this->last_from = $from;
 		$this->last_type = $type;
+		if($this->last_type == "groupchat")
+			$this->last_room = $this->getJID($this->last_from);
+		else
+			$this->last_room = NULL;
 	
 		$this->log->log("Call message method", PichiLog::LEVEL_DEBUG);
 		

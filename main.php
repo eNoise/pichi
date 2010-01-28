@@ -51,6 +51,8 @@ $command_handler = new commandHandler($jabber);
 $command_handler->log = $log;
 $command_handler->room = $config['room'];
 $command_handler->user = $config['user'];
+$command_handler->server = $config['server'];
+$command_handler->room_service = $config['room_service'];
 $command_handler->room_user = $config['room_user'];
 $command_handler->ignore[] = $config['user'] . "@" . $config['server'];
 $log->log("done!",PichiLog::LEVEL_VERBOSE);
@@ -101,11 +103,8 @@ while(!$jabber->isDisconnected()) {
 		{
 			case 'message':
 				$time_message = time();
-				if($time_message - $time_session > 10)
-				{
-					$command_handler->do_if_message($data['body'], $data['from'], $data['type']);
-					$log->log("Recive MESSAGE Handler From $data[body]($data[type]):\nMessage: $data[body]",PichiLog::LEVEL_DEBUG);
-				}
+				$log->log("Recive MESSAGE Handler From $data[body]($data[type]):\nMessage: $data[body]",PichiLog::LEVEL_DEBUG);
+				$command_handler->do_if_message($data['body'], $data['from'], $data['type']);
 				break;
 			case 'presence':
 				$log->log("Recive PRESENCE Handler from: {$data['from']} [{$data['show']}] {$data['status']}",PichiLog::LEVEL_DEBUG);
@@ -131,13 +130,8 @@ while(!$jabber->isDisconnected()) {
 				$command_handler->db->query("UPDATE users SET status = 'unavailable';");
 				$jabber->getRoster();
 				$jabber->presence($config['status']);
-				$jabber->presence($config['status'], 'available', $config['room']."/".$config['room_user']);
-				//пичи онлайн в базе
-				$command_handler->setUserInfo($config['user']."@".$config['server'], $config['room_user'], $config['room'], 'available');
-				$command_handler->reconstatus++;
-				if($command_handler->reconstatus > 1)
-					$command_handler->need_reconnect = TRUE;
-				$time_session = time();
+				$command_handler->joinRoom($config['room'], $config['room_user'], "BotWorld!");
+				$command_handler->wait = $time_session = time();
 				break;
 		}
 	}
