@@ -3,7 +3,7 @@
 if(function_exists("date_default_timezone_set") and function_exists("date_default_timezone_get"))
 	@date_default_timezone_set(@date_default_timezone_get()); //disable timezone errors
 
-$config['db_version'] = 10; // Work only parram
+$config['db_version'] = 11; // Work only parram
 
 require_once("XMPP/XMPP.php");
 require_once("command_handler.php");
@@ -47,7 +47,7 @@ php_extension_load("openssl");
 
 // init
 $log->log("Start Pichi",PichiLog::LEVEL_INFO);
-$jabber = new XMPPHP_XMPP($config['server'], $config['port'], $config['user'], $config['password'], $config['resource'], $config['server'], $printlog=false, $loglevel = (($config['debug']) ? XMPPHP_Log::LEVEL_VERBOSE : XMPPHP_Log::LEVEL_INFO));
+$jabber = new XMPPHP_XMPP($config['server'], $config['port'], $config['user'], $config['password'], $config['resource'], $config['server'], $printlog=true, $loglevel = (($config['debug']) ? XMPPHP_Log::LEVEL_VERBOSE : XMPPHP_Log::LEVEL_INFO));
 try
 {
 	$log->log("Try to connect...",PichiLog::LEVEL_VERBOSE);
@@ -82,6 +82,7 @@ $command_handler->server = $config['server'];
 $command_handler->room_service = $config['room_service'];
 $command_handler->room_user = $config['room_user'];
 $command_handler->ignore[] = $config['user'] . "@" . $config['server'];
+$command_handler->admins = $config['admins'];
 $log->log("done!",PichiLog::LEVEL_VERBOSE);
 
 if(!$db_exist)
@@ -91,7 +92,7 @@ if(!$db_exist)
 	$command_handler->db->query("CREATE TABLE lexems (`lexeme` TEXT, `count` INT);");
 	$command_handler->db->query("CREATE TABLE wiki (`name` TEXT, `value` TEXT);");
 	$command_handler->db->query("CREATE TABLE settings (`name` TEXT, `value` TEXT);");
-	$command_handler->db->query("CREATE TABLE users (`jid` TEXT, `nick` TEXT, `room` TEXT, `time` TEXT, `status` TEXT);");
+	$command_handler->db->query("CREATE TABLE users (`jid` TEXT, `nick` TEXT, `role` TEXT, `room` TEXT, `time` TEXT, `status` TEXT);");
 	$command_handler->db->query("CREATE TABLE stats (`name` TEXT, `value` TEXT);");
 	$command_handler->db->query("CREATE TABLE db_version (`version` TEXT, `value` TEXT);");
   
@@ -143,16 +144,21 @@ while(!$jabber->isDisconnected()) {
 					unset($jid);
 					$nick = $command_handler->getName($data['from']);
 					foreach($data['xml']->subs as $x)
+					{
 						if($x->name == 'x' && $x->subs[0]->attrs['jid'])
+						{
 							$jid = $command_handler->getJID($x->subs[0]->attrs['jid']);
+							$role = $x->subs[0]->attrs['role'];
+						}
+					}
 					if(!$jid)
 						break;
 
 					$room = $command_handler->getJID($data['from']);
 					if(isRoom($room))
-						$command_handler->setUserInfo($jid, $nick, $room, $data['show']);
+						$command_handler->setUserInfo($jid, $nick, $role, $room, $data['show']);
 					else
-						$command_handler->setUserInfo($jid, $nick, NULL, $data['show']);
+						$command_handler->setUserInfo($jid, $nick, $role, NULL, $data['show']);
 				}
 				break;
 			case 'session_start':

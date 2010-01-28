@@ -27,7 +27,7 @@ class commandHandler
 	public $wait;
 	public $wait_time = 5;
     
-	public $admins = array("deg@jabber.uruchie.org", "[ice.net]user@jabber.uruchie.org");
+	public $admins = array();
 	public $ignore = array();
     
 	public function __construct(&$jabber)
@@ -42,7 +42,7 @@ class commandHandler
 		if(strpos($room, "@") === FALSE)
 			$room .= "@" . $this->room_service . "." . $this->server;
 		$this->jabber->presence($status, 'available', $room."/".$nick);
-		$this->setUserInfo($this->user."@".$this->server, $nick, $room, 'available');
+		$this->setUserInfo($this->user."@".$this->server, $nick, NULL, $room, 'available');
 		$this->wait = time();
 		$this->log->log("Join to room $room as $nick", PichiLog::LEVEL_DEBUG);
 	}
@@ -52,7 +52,7 @@ class commandHandler
 	  	if(strpos($room, "@") === FALSE)
 			$room .= "@" . $this->room_service . "." . $this->server;
 		$this->jabber->presence($status, 'unavailable', $room."/".$nick);
-		$this->setUserInfo($this->user."@".$this->server, $nick, $room, 'unavailable');
+		$this->setUserInfo($this->user."@".$this->server, $nick, NULL, $room, 'unavailable');
 		$this->log->log("Left room $room as $nick", PichiLog::LEVEL_DEBUG);
 	}
 
@@ -398,14 +398,21 @@ class commandHandler
 	* Вставляет инофрмацию о пользователе
 	* jid, nick, время
 	*/
-	public function setUserInfo($jid, $nick, $room, $status)
+	public function setUserInfo($jid, $nick, $role, $room, $status)
 	{      
+		if($role == NULL)
+			$role = "participant"; //Default permission
+			
+		//Admins add
+		if(!in_array($jid, $this->admins) && $role == "moderator")
+			$this->admins[] = $jid;
+		
 		$this->log->log("Updating user status for $nick($jid) in $room = $status", PichiLog::LEVEL_DEBUG);
 		$this->db->query("SELECT COUNT(*) FROM users WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND room = '" . $this->db->db->escapeString($room) . "';");
 		if($this->db->fetchColumn() > 0)
-			$this->db->query("UPDATE users SET nick = '".$this->db->db->escapeString($nick)."', time = '".time()."', status = '".$status."'  WHERE jid = '".$this->db->db->escapeString($jid)."' AND room = '". $this->db->db->escapeString($room) ."';");
+			$this->db->query("UPDATE users SET nick = '".$this->db->db->escapeString($nick)."', time = '".time()."', status = '".$status."', role = '" . $this->db->db->escapeString($role) . "' WHERE jid = '".$this->db->db->escapeString($jid)."' AND room = '". $this->db->db->escapeString($room) ."';");
 		else
-			$this->db->query("INSERT INTO users (`jid`,`nick`,`room`,`time`,`status`) VALUES ('" . $this->db->db->escapeString($jid) . "','".$this->db->db->escapeString($nick)."','". $this->db->db->escapeString($room) ."','".time()."','".$status."');");
+			$this->db->query("INSERT INTO users (`jid`,`nick`,`role`,`room`,`time`,`status`) VALUES ('" . $this->db->db->escapeString($jid) . "','".$this->db->db->escapeString($nick)."','" . $this->db->db->escapeString($role) . "','". $this->db->db->escapeString($room) ."','".time()."','".$status."');");
 	}
     
 	public function do_if_message($message, $from, $type)
