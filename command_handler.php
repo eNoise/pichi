@@ -215,6 +215,7 @@ class commandHandler
     
 	protected function fetch_commands($command, $from, $type)
 	{
+		global $config;
 		$this->log->log("Command from " . $this->last_from . ": $command", PichiLog::LEVEL_DEBUG);
 		switch($command)
 		{
@@ -239,7 +240,7 @@ class commandHandler
 				$this->sendAnswer($help);
 				break;
 			case "!version":
-				$this->sendAnswer("Pichi Bot v0.2.0");
+				$this->sendAnswer("Pichi Bot v.{$config['pichi_version']}");
 				break;
 			case ($this->getCommand($command) == "!log"):
 				$this->show_log($command);

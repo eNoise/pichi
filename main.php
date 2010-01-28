@@ -3,6 +3,7 @@
 ### Some settings ###
 $config['db_version'] = 11; // Work only parram
 $config['min_version'] = 2; // Min version of config
+$config['pichi_version'] = "0.3.0 (dev)"; //Pichi version
 
 ### Begin basic settings end checks ###
 
@@ -62,6 +63,11 @@ if($config['version'] < $config['min_version'])
 	$log->log("You version {$config['version']}. But >{$config['min_version']} required.",PichiLog::LEVEL_ERROR);
 	exit();
 }
+
+echo Console_Color::convert("%b");
+echo Console_Color::convert("----------------------------------\n");
+echo Console_Color::convert("      Pichi bot v.{$config['pichi_version']}\n");
+echo Console_Color::convert("----------------------------------%n\n");
 
 ### Begin ###
 $log->log("Start Pichi",PichiLog::LEVEL_INFO);
