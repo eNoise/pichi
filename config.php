@@ -5,7 +5,7 @@
 $config['server'] = "jabber.uruchie.org"; // Jabber server
 $config['port'] = 5222; //With TLS
 $config['room_service'] = "conference"; // Jabber service for rooms
-$config['room'] = "main"."@".$room_service.".".$server; // Room to autojoin
+$config['room'] = "main"."@".$config['room_service'].".".$config['server']; // Room to autojoin
 $config['db_file'] = "pichi.db"; // Room to autojoin
 $config['debug'] = TRUE; // Debug mode
 
