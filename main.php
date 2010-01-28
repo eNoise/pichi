@@ -1,16 +1,25 @@
 <?php
 
+### Some settings ###
+$config['db_version'] = 11; // Work only parram
+$config['min_version'] = 2; // Min version of config
+
+### Begin basic settings end checks ###
+
 if(function_exists("date_default_timezone_set") and function_exists("date_default_timezone_get"))
 	@date_default_timezone_set(@date_default_timezone_get()); //disable timezone errors
 
-$config['db_version'] = 11; // Work only parram
-
+include("config.php");
 require_once("XMPP/XMPP.php");
 require_once("command_handler.php");
 require_once("Log_pichi.php");
-include("config.php");
 
-$log = new PichiLog($config['debug'], 5);
+if(!$config['debug'] && $config['debug_level'] > 2)
+	$config['debug_level'] = 2;
+if($config['debug_level'] > 4)
+	$config['debug_level'] = 4;
+
+$log = new PichiLog(true, $config['debug_level']);
 
 function php_extension_load($ext)
 {
@@ -45,9 +54,16 @@ php_extension_load("sqlite3");
 php_extension_load("mbstring");
 php_extension_load("openssl");
 
-// init
+if($config['version'] < $config['min_version'])
+{
+	$log->log("Old config version",PichiLog::LEVEL_ERROR);
+	$log->log("You version {$config['version']}. But >{$config['min_version']} required.",PichiLog::LEVEL_ERROR);
+	exit();
+}
+
+### Begin ###
 $log->log("Start Pichi",PichiLog::LEVEL_INFO);
-$jabber = new XMPPHP_XMPP($config['server'], $config['port'], $config['user'], $config['password'], $config['resource'], $config['server'], $printlog=true, $loglevel = (($config['debug']) ? XMPPHP_Log::LEVEL_VERBOSE : XMPPHP_Log::LEVEL_INFO));
+$jabber = new XMPPHP_XMPP($config['server'], $config['port'], $config['user'], $config['password'], $config['resource'], $config['server'], $printlog=false, $loglevel = (($config['debug']) ? XMPPHP_Log::LEVEL_VERBOSE : XMPPHP_Log::LEVEL_INFO));
 try
 {
 	$log->log("Try to connect...",PichiLog::LEVEL_VERBOSE);
@@ -61,7 +77,7 @@ catch(XMPPHP_Exception $e)
 }
 
 // connect
-$log->log("Connection success",PichiLog::LEVEL_VERBOSE);
+$log->log("Connection success", PichiLog::LEVEL_VERBOSE);
 
 if(file_exists($config['db_file']))
 {

@@ -129,8 +129,9 @@ class commandHandler
 		{
 			$w = explode("\"", $command);
 			$array[0] = trim($w[0]);
-			$array[1] = $w[1];
-			$array[2] = trim($w[2]);
+			for($i = $g = 1; $i < count($w); $i = $i+2, $g++)
+				$array[$g] = $w[$i];
+			$array[++$g] = $w[++$i];
 			return $array;
 		}
 		else // default
