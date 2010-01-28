@@ -131,7 +131,7 @@ class commandHandler
 			$array[0] = trim($w[0]);
 			for($i = $g = 1; $i < count($w); $i = $i+2, $g++)
 				$array[$g] = $w[$i];
-			$array[++$g] = $w[++$i];
+			$array[$g] = trim($w[--$i]);
 			return $array;
 		}
 		else // default
