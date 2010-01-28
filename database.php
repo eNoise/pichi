@@ -47,7 +47,7 @@ class PichiDatabase
 		}
 	}
       
-	public function fetch_column($column = 0)
+	public function fetchColumn($column = 0)
 	{
 		switch($this->type)
 		{

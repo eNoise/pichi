@@ -34,7 +34,7 @@ class commandHandler
 		if($is_nick)
 		{
 			$this->db->query("SELECT `jid` FROM users WHERE nick = '" . $this->db->db->escapeString($nick) . "';");
-			return $this->db->fetch_column(0);
+			return $this->db->fetchColumn(0);
 		}
 		else
 		{
@@ -191,7 +191,7 @@ class commandHandler
 		unset($w[0]);
 		$w = implode(" ",$w);
 		$this->db->query("SELECT `value` FROM wiki WHERE name='".$this->db->db->escapeString($w)."';");
-		$this->sendAnswer($this->db->fetch_column(0));
+		$this->sendAnswer($this->db->fetchColumn(0));
 	}
     
 	private function set_dfn($command)
@@ -203,7 +203,7 @@ class commandHandler
 		$data = explode("=",$w);
       
 		$this->db->query("SELECT COUNT(*) FROM wiki WHERE name = '" . $this->db->db->escapeString($data[0]) . "';");
-		if($this->db->fetch_column() > 0)
+		if($this->db->fetchColumn() > 0)
 			$this->db->query("UPDATE wiki SET value = '".$this->db->db->escapeString($data[1])."'  WHERE name = '".$this->db->db->escapeString($data[0])."';");
 		else
 			$this->db->query("INSERT INTO wiki (`name`,`value`) VALUES ('" . $this->db->db->escapeString($data[0]) . "','".$this->db->db->escapeString($data[1])."');");
@@ -223,7 +223,7 @@ class commandHandler
 		$data = explode("=",$w);
       
 		$this->db->query("SELECT COUNT(*) FROM settings WHERE name = '" . $this->db->db->escapeString($data[0]) . "';");
-		if($this->db->fetch_column() > 0)
+		if($this->db->fetchColumn() > 0)
 		{
 			$this->db->query("UPDATE settings SET value = '".$this->db->db->escapeString($data[1])."'  WHERE name = '".$this->db->db->escapeString($data[0])."';");
 			$this->sendAnswer("Updated!");
@@ -307,7 +307,7 @@ class commandHandler
 	public function setUserInfo($jid, $nick, $room, $status)
 	{      
 		$this->db->query("SELECT COUNT(*) FROM users WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND room = '" . $this->db->db->escapeString($room) . "';");
-		if($this->db->fetch_column() > 0)
+		if($this->db->fetchColumn() > 0)
 			$this->db->query("UPDATE users SET nick = '".$this->db->db->escapeString($nick)."', time = '".time()."', status = '".$status."'  WHERE jid = '".$this->db->db->escapeString($jid)."' AND room = '". $this->db->db->escapeString($room) ."';");
 		else
 			$this->db->query("INSERT INTO users (`jid`,`nick`,`room`,`time`,`status`) VALUES ('" . $this->db->db->escapeString($jid) . "','".$this->db->db->escapeString($nick)."','". $this->db->db->escapeString($room) ."','".time()."','".$status."');");
@@ -389,7 +389,7 @@ class commandHandler
 			return;
       
 		$this->db->query("SELECT COUNT(*) FROM lexems WHERE lexeme = '" . $this->db->db->escapeString($str) . "';");
-		if($this->db->fetch_column() > 0)
+		if($this->db->fetchColumn() > 0)
 			$this->db->query("UPDATE lexems SET count = count+1  WHERE lexeme = '".$this->db->db->escapeString($str)."';");
 		else
 			$this->db->query("INSERT INTO lexems (`lexeme`,`count`) VALUES ('" . $this->db->db->escapeString($str) . "','1');");
