@@ -18,6 +18,8 @@ if(!$config['debug'] && $config['debug_level'] > 2)
 	$config['debug_level'] = 2;
 if($config['debug_level'] > 4)
 	$config['debug_level'] = 4;
+if($config['debug_level'] < 3)
+	error_reporting(E_ALL & ~E_NOTICE); //disable notices
 
 $log = new PichiLog(true, $config['debug_level']);
 

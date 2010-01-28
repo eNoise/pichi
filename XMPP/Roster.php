@@ -139,7 +139,7 @@ class Roster {
 	 * @param string $jid
 	 */
 	public function getPresence($jid) {
-		$split = split("/", $jid);
+		$split = explode("/", $jid);
 		$jid = $split[0];
 		if($this->isContact($jid)) {
 			$current = array('resource' => '', 'active' => '', 'priority' => -129, 'show' => '', 'status' => ''); //Priorities can only be -128 = 127
