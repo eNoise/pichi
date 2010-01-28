@@ -1,6 +1,6 @@
 <?php
 
-$db_version = 10;
+$config['db_version'] = 10; // Work only parram
 
 require_once("XMPP/XMPP.php");
 require_once("command_handler.php");
@@ -8,20 +8,20 @@ include("config.php");
 
 function debug($it)
 {
-	global $debug;
-	if($debug)
+	global $config;
+	if($config['debug'])
 		echo $it . "\n";
 }
 
 function isRoom($test)
 {
-	global $room_service, $server;
-	return (strpos($test, "@") !== FALSE) && (strpos($test, "$room_service") !== FALSE) && (strpos($test, "$server") !== FALSE);
+	global $config;
+	return (strpos($test, "@") !== FALSE) && (strpos($test, $config['room_service']) !== FALSE) && (strpos($test, $config['server']) !== FALSE);
 }
 
 // init
 debug("Start...");
-$jabber = new XMPPHP_XMPP($server, 5222, $user, $pass, $resource, "$server", $printlog=false, $loglevel = (($debug) ? XMPPHP_Log::LEVEL_VERBOSE : XMPPHP_Log::LEVEL_INFO));
+$jabber = new XMPPHP_XMPP($config['server'], $config['port'], $config['user'], $config['password'], $config['resource'], $config['server'], $printlog=false, $loglevel = (($config['debug']) ? XMPPHP_Log::LEVEL_VERBOSE : XMPPHP_Log::LEVEL_INFO));
 try
 {
 	$jabber->connect();
@@ -36,16 +36,16 @@ catch(XMPPHP_Exception $e)
 // connect
 debug("connected...");
 
-if(file_exists("pichi.db"))
+if(file_exists($config['db_file']))
 	$db_exist = TRUE;
 else
 	$db_exist = FALSE; 
 
 $command_handler = new commandHandler($jabber);
-$command_handler->room = $room;
-$command_handler->user = $user;
-$command_handler->room_user = $room_user;
-$command_handler->ignore[] = $user . "@" . $server;
+$command_handler->room = $config['room'];
+$command_handler->user = $config['user'];
+$command_handler->room_user = $config['room_user'];
+$command_handler->ignore[] = $config['user'] . "@" . $config['server'];
 
 if(!$db_exist)
 {
@@ -57,7 +57,7 @@ if(!$db_exist)
 	$command_handler->db->query("CREATE TABLE stats (`name` TEXT, `value` TEXT);");
 	$command_handler->db->query("CREATE TABLE db_version (`version` TEXT, `value` TEXT);");
   
-	$command_handler->db->query("INSERT INTO db_version (`version`) VALUES ('$db_version');");
+	$command_handler->db->query("INSERT INTO db_version (`version`) VALUES ('" . $config['db_version'] . "');");
 	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('answer_mode','1');"); // Отвечать после сообщений пользователей
 	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('answer_random','0');"); // отвечать не всегда
 	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('answer_remember','1');"); // запоминать и разбивать на лексемы
@@ -68,10 +68,10 @@ if(!$db_exist)
 }
 
 $command_handler->db->query("SELECT * FROM db_version;");
-$current_db_version = $command_handler->db->fetch_column(0);
-if($current_db_version < $db_version)
+$current_db_version = $command_handler->db->fetchColumn(0);
+if($current_db_version < $config['db_version'])
 {
-	debug("DB version is $current_db_version, but Bot require $db_version");
+	debug("DB version is $current_db_version, but Pichi require " . $config['db_version']);
 	exit("Exit with db error");
 }
 
@@ -121,10 +121,10 @@ while(!$jabber->isDisconnected()) {
 				debug("Session Start...");
 				$command_handler->db->query("UPDATE users SET status = 'unavailable';");
 				$jabber->getRoster();
-				$jabber->presence($status);
-				$jabber->presence($status,'available',$room."/".$room_user);
+				$jabber->presence($config['status']);
+				$jabber->presence($config['status'], 'available', $config['room']."/".$config['room_user']);
 				//пичи онлайн в базе
-				$command_handler->setUserInfo($user."@".$server, $room_user, $room, 'available');
+				$command_handler->setUserInfo($config['user']."@".$config['server'], $config['room_user'], $config['room'], 'available');
 				$command_handler->reconstatus++;
 				if($command_handler->reconstatus > 1)
 					$command_handler->need_reconnect = TRUE;
@@ -134,16 +134,16 @@ while(!$jabber->isDisconnected()) {
 	}
     
 	// вставляем случайное сообщение если скучно
-	if(time() - $time_message > $command_handler->options['rand_message'] && $command_handler->options['rand_message'] > 10) // 10 минимум секунд
+	if(time() - $time_message > $command_handler->options['rand_message'] && $command_handler->options['rand_message'] > $config['wait_time']) // 10 минимум секунд
 	{
 		$command_handler->sendRandMessage();
 	}
 	
 	// Пингуем чтобы не отключалось
-	if(time() - $time_ping > 5 * 60)
+	if(time() - $time_ping > $config['ping_time'] * 60)
 	{
 		$time_ping = time();
-		$jabber->send("<iq from='$user@$server' to='$server' id='pingx' type='get'><ping xmlns='urn:xmpp:ping'/></iq>");
+		$jabber->send("<iq from='$config[user]@$config[server]' to='$config[server]' id='pingx' type='get'><ping xmlns='urn:xmpp:ping'/></iq>");
 	}
 }
 
