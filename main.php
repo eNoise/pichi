@@ -68,10 +68,19 @@ if($config['version'] < $config['min_version'])
 	exit();
 }
 
-echo Console_Color::convert("%b");
-echo Console_Color::convert("----------------------------------\n");
-echo Console_Color::convert("      Pichi bot v.{$config['pichi_version']}\n");
-echo Console_Color::convert("----------------------------------%n\n");
+if(RUN_OS == "Nix")
+{
+	echo Console_Color::convert("%b");
+	echo Console_Color::convert("----------------------------------\n");
+	echo Console_Color::convert("      Pichi bot v.{$config['pichi_version']}\n");
+	echo Console_Color::convert("----------------------------------%n\n");
+}
+else
+{
+	echo "----------------------------------\n";
+	echo "      Pichi bot v.{$config['pichi_version']}\n";
+	echo "----------------------------------\n";
+}
 
 ### Begin ###
 $log->log("Start Pichi",PichiLog::LEVEL_INFO);

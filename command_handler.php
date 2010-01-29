@@ -388,7 +388,7 @@ class commandHandler
 				else
 				{
 					$f++;
-					$offline .= "$f. $data[nick] (Последний раз видел ".date("d.m.y \в H:i:s", $data['time'])."в комнате $roomname)\n";
+					$offline .= "$f. $data[nick] (Последний раз видел ".date("d.m.y \в H:i:s", $data['time'])." в комнате $roomname)\n";
 					$this->log->log("User $data[nick]: offline", PichiLog::LEVEL_VERBOSE);
 				}
 			}
