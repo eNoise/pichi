@@ -377,8 +377,8 @@ class commandHandler
 			$n = $f = 0;
 			while($data = $this->db->fetch_array())
 			{
-				$roomname = explode("@", $data['nick']);
-				$roomname = $roomname[1];
+				$roomname = explode("@", $data['room']);
+				$roomname = $roomname[0];
 				if($data['status'] == 'available')
 				{
 					$n++;
