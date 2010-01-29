@@ -516,7 +516,7 @@ class commandHandler
     
 	private function genFromLexems() //сложность
 	{
-		$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '#beg#%';");
+		$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '#beg# %';");
 		if($this->db->numRows(true) == 0)
 			break; //пусто
 		$last = $this->randGenAnswer();
@@ -524,7 +524,7 @@ class commandHandler
 		$genans = $last = $last[1];
 		for($i=0; $i < 20; $i++)
 		{
-			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString($last) . "%';");
+			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString($last) . " %';");
 			if($this->db->numRows(true) == 0)
 				break; //больше нет совпадений
 			$last = $this->randGenAnswer();
