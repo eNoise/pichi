@@ -6,6 +6,10 @@ $config['min_version'] = 2; // Min version of config
 $config['pichi_version'] = "0.3.0"; //Pichi version
 
 ### Begin basic settings end checks ###
+if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+       define(RUN_OS, "Windows");
+else
+       define(RUN_OS, "Nix");
 
 if(function_exists("date_default_timezone_set") and function_exists("date_default_timezone_get"))
 	@date_default_timezone_set(@date_default_timezone_get()); //disable timezone errors
@@ -28,7 +32,7 @@ function php_extension_load($ext)
 {
 	if (!extension_loaded($ext))
 	{
-		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+		if (RUN_OS == "Windows")
 		{
 			if(!dl("php_$ext.dll"))
 			{

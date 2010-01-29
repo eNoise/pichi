@@ -34,7 +34,12 @@ class PichiLog {
 	
 	protected function writeLine($msg, $runlevel, $time)
 	{
-		echo Console_Color::convert($this->colors[$runlevel] . "(" . date('Y-m-d H:i:s', $time).") [".$this->names[$runlevel]."]: ".$msg."%n\n");
+		if(RUN_OS == "Nix")
+			echo Console_Color::convert($this->colors[$runlevel] . "(" . date('Y-m-d H:i:s', $time).") [".$this->names[$runlevel]."]: ".$msg."%n\n");
+		else if(RUN_OS == "Windows")
+			echo $this->colors[$runlevel] . "(" . date('Y-m-d H:i:s', $time).") [".$this->names[$runlevel]."]: ".$msg."\n";
+		else
+			echo $this->colors[$runlevel] . "(" . date('Y-m-d H:i:s', $time).") [".$this->names[$runlevel]."]: ".$msg."\n";
 		flush();
 	}
 }
