@@ -35,7 +35,10 @@ class PichiDatabase
 					$this->last_query_text = $query;
 					$this->log->log("[QUERY] \"$query\"", PichiLog::LEVEL_VERBOSE);
 				}
-				$this->last_query->reset();
+				else
+				{
+					$this->last_query->reset();
+				}
 				return $this->last_query;
 		}
 	}
