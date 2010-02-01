@@ -431,9 +431,13 @@ class XMPPHP_XMLStream {
 			$endtime = (microtime(true)*1000000);
 			$time_past = $endtime - $starttime;
 			$remaining = $remaining - $time_past;
+			
+			$this->__post_process();
 		} while (is_null($maximum) || $remaining > 0);
 		return true;
 	}
+	
+	protected function __post_process(){}
 	
 	/**
 	 * Process

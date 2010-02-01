@@ -3,7 +3,7 @@
 ### Some settings ###
 $config['db_version'] = 11; // Work only parram
 $config['min_version'] = 2; // Min version of config
-$config['pichi_version'] = "0.3.1"; //Pichi version
+$config['pichi_version'] = "0.4.0 (dev)"; //Pichi version
 
 ### Begin basic settings end checks ###
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
@@ -214,14 +214,6 @@ while(!$jabber->isDisconnected()) {
 	{
 		$log->log("Send randome message",PichiLog::LEVEL_DEBUG);
 		$command_handler->sendRandMessage();
-	}
-	
-	// Пингуем чтобы не отключалось
-	if(time() - $time_ping > $config['ping_time'] * 60)
-	{
-		$time_ping = time();
-		$jabber->send("<iq from='$config[user]@$config[server]' to='$config[server]' id='pingx' type='get'><ping xmlns='urn:xmpp:ping'/></iq>");
-		$log->log("Send ping query",PichiLog::LEVEL_DEBUG);
 	}
 }
 

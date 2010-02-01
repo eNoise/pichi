@@ -99,7 +99,15 @@ class XMPPHP_XMPP extends XMPPHP_XMLStream {
 	 * @var object
 	 */
 	public $roster;
-
+	/**
+	 * @var integer
+	 */
+	protected $ping_time = 5;
+	/**
+	 * @var integer
+	 */
+	protected $ping_timer;
+	
 	/**
 	 * Constructor
 	 *
@@ -135,6 +143,17 @@ class XMPPHP_XMPP extends XMPPHP_XMLStream {
 		$this->addXPathHandler('{jabber:client}message', 'message_handler');
 		$this->addXPathHandler('{jabber:client}presence', 'presence_handler');
 		$this->addXPathHandler('{jabber:client}iq/{jabber:iq:roster}query', 'roster_iq_handler');
+	}
+
+	public function connect($timeout = 30, $persistent = false, $sendinit = true) {
+		parent::connect($timeout, $persistent, $sendinit);
+		if(!$this->disconnected)
+			$this->ping_timer = time();
+	}
+	
+	protected function __post_process()
+	{
+		$this->autoPing(); // ping query
 	}
 
 	/**
@@ -455,5 +474,15 @@ class XMPPHP_XMPP extends XMPPHP_XMLStream {
 		$payload['xml'] = $xml;
 		$this->log->log("Pong from: {$payload['from']}", XMPPHP_Log::LEVEL_DEBUG);
 		$this->event('ping', $payload);
+	}
+	
+	protected function autoPing()
+	{
+		if(time() - $this->ping_timer > $this->ping_time * 60 && !$this->disconnected)
+		{
+			$this->ping_timer = time();
+			$this->send("<iq from='{$this->basejid}' to='{$this->host}' id='pingx' type='get'><ping xmlns='urn:xmpp:ping'/></iq>");
+			$this->log->log("Ping query to stay alive.",  XMPPHP_Log::LEVEL_DEBUG);
+		}
 	}
 }
