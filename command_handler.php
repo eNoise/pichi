@@ -142,7 +142,7 @@ class commandHandler
 				$array[$i] = $w[$i];
 				unset($w[$i]);
 			}
-			$array[$i+1] = implode(" ", $w);
+			$array[$i] = implode(" ", $w);
 			return $array;
 		}
 	}
@@ -234,6 +234,8 @@ class commandHandler
 				$help .= "!ping [nick|jid] - ping запрос пользователю\n";
 				$help .= "!join room nick [status] - войти в комнату (сменить ник)\n";
 				$help .= "!left room nick [status] - выйти из комнаты\n";
+				$help .= "!greet jid room@server greet - Сообщение при заходе\n";
+				$help .= "!farewell jid room@server buy - Сообщение при выходе\n";
 				$help .= "!quit - выход\n";
 				$help .= "!version - версия бота\n";
 				$this->sendAnswer($help);
@@ -277,6 +279,17 @@ class commandHandler
 			case ($this->getCommand($command) == "!ping"):
 				$w = $this->seperate($command);
 				$this->ping($w[1]);
+				break;
+			case ($this->getCommand($command) == "!greet" || $this->getCommand($command) == "!farewell"):
+				$w = $this->seperate($command, 3);
+				if(!$this->isAccess())
+					return;
+				$action = ($w[0] == "!greet") ? "user_join_room" : "user_left_room";
+				$this->db->query("SELECT COUNT(*) FROM actions WHERE action = '$action' AND coincidence='room=" . $this->db->db->escapeString($w[2]) . ",jid=" . $this->db->db->escapeString($w[1]) . "';");
+				if($this->db->fetchColumn() > 0)
+					$this->db->query("UPDATE actions SET value = '".$this->db->db->escapeString($w[3])."'  WHERE action = '$action' AND coincidence='room=" . $this->db->db->escapeString($w[2]) . ",jid=" . $this->db->db->escapeString($w[1]) . "';");
+				else
+					$this->db->query("INSERT INTO actions (`action`,`coincidence`,`do`,`option`,`value`) VALUES ('$action', 'room=" . $this->db->db->escapeString($w[2]) . ",jid=" . $this->db->db->escapeString($w[1]) . "', 'send_message', '', '".$this->db->db->escapeString($w[3])."');");
 				break;
 			case ($this->getCommand($command) == "!quit" || $this->getCommand($command) == "!exit"):
 				$this->doExit();
@@ -403,7 +416,7 @@ class commandHandler
 				if($data['nick'] == $w[1] || $data['jid'] == $w[1])
 				{
 					$this->log->log("User {$data['nick']} founded!", PichiLog::LEVEL_VERBOSE);
-					$this->sendAnswer($data['nick'] . " сейчас " . (($data['status'] == 'available') ? "онлайн и смотрит на тебя 0_0" : "оффлайн, а жаль"));
+					$this->sendAnswer($data['nick'] . " сейчас " . (($data['status'] == 'available') ? "онлайн и смотрит на тебя 0_0" : "оффлайн, а жаль. Последний раз видел " . date("d.m.y \в H:i:s", $data['time'])));
 				}
 			}
 		}
@@ -421,6 +434,11 @@ class commandHandler
 		//Admins add
 		if(!in_array($jid, $this->admins) && $role == "moderator")
 			$this->admins[] = $jid;
+		
+		if($status == 'available')
+			$this->doAction("user_join_room", "room=$room,jid=$jid");
+		else if($status == 'unavailable')
+			$this->doAction("user_left_room", "room=$room,jid=$jid");
 		
 		$this->log->log("Updating user status for $nick($jid) in $room = $status", PichiLog::LEVEL_DEBUG);
 		$this->db->query("SELECT COUNT(*) FROM users WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND room = '" . $this->db->db->escapeString($room) . "';");
@@ -609,6 +627,24 @@ class commandHandler
 				case 2:
 					$this->jabber->message($this->room, $user[rand(0, $n-1)] . ", " . $this->genFromLexems(), "groupchat");
 					break;		
+			}
+		}
+	}
+	
+	public function doAction($action, $coincidence = NULL)
+	{
+		$this->db->query("SELECT `do`, `option`,`value` FROM actions WHERE action = '$action' AND coincidence='" . (($coincidence != NULL) ? $this->db->db->escapeString($coincidence) : "" ) . "';");
+		while($actions = $this->db->fetch_array())
+		{
+			switch($actions['do'])
+			{
+				case "send_message":
+					if($actions['option'] == NULL)
+						if($actions['value'] != NULL)
+							$this->jabber->message($this->room, $actions['value'],"groupchat");
+					else
+						if($actions['value'] != NULL)
+							$this->jabber->message($actions['option'], $actions['value'],"chat");
 			}
 		}
 	}

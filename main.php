@@ -1,7 +1,7 @@
 <?php
 
 ### Some settings ###
-$config['db_version'] = 11; // Work only parram
+$config['db_version'] = 12; // Work only parram
 $config['min_version'] = 2; // Min version of config
 $config['pichi_version'] = "0.4.0 (dev)"; //Pichi version
 
@@ -131,6 +131,7 @@ if(!$db_exist)
 	$command_handler->db->query("CREATE TABLE settings (`name` TEXT, `value` TEXT);");
 	$command_handler->db->query("CREATE TABLE users (`jid` TEXT, `nick` TEXT, `role` TEXT, `room` TEXT, `time` TEXT, `status` TEXT);");
 	$command_handler->db->query("CREATE TABLE stats (`name` TEXT, `value` TEXT);");
+	$command_handler->db->query("CREATE TABLE actions (`action` TEXT, `coincidence` TEXT, `do` TEXT, `option` TEXT, `value` TEXT);");
 	$command_handler->db->query("CREATE TABLE db_version (`version` TEXT, `value` TEXT);");
   
 	$command_handler->db->query("INSERT INTO db_version (`version`) VALUES ('" . $config['db_version'] . "');");
