@@ -42,8 +42,8 @@ class commandHandler
 		if(strpos($room, "@") === FALSE)
 			$room .= "@" . $this->room_service . "." . $this->server;
 		$this->jabber->presence($status, 'available', $room."/".$nick);
-		$this->setUserInfo($this->user."@".$this->server, $nick, NULL, $room, 'available');
 		$this->wait = time();
+		$this->setUserInfo($this->user."@".$this->server, $nick, NULL, $room, 'available');
 		$this->log->log("Join to room $room as $nick", PichiLog::LEVEL_DEBUG);
 	}
 	
