@@ -120,6 +120,7 @@ $command_handler->room_service = $config['room_service'];
 $command_handler->room_user = $config['room_user'];
 $command_handler->ignore[] = $config['user'] . "@" . $config['server'];
 $command_handler->admins = $config['admins'];
+$command_handler->wait_time = $config['wait_time'];
 $log->log("done!",PichiLog::LEVEL_VERBOSE);
 
 if(!$db_exist)
@@ -136,7 +137,7 @@ if(!$db_exist)
   
 	$command_handler->db->query("INSERT INTO db_version (`version`) VALUES ('" . $config['db_version'] . "');");
 	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('answer_mode','1');"); // Отвечать после сообщений пользователей
-	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('answer_random','0');"); // отвечать не всегда
+	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('answer_random','0');"); // отвечать не всегда (0 - всегда)
 	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('answer_remember','1');"); // запоминать и разбивать на лексемы
 	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('log_enabled','1');"); // вести лог ?
 	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('treatment_coincidence','3');"); // вставлять обращение, совпадения (3 из 1)
@@ -211,7 +212,7 @@ while(!$jabber->isDisconnected()) {
 	}
     
 	// вставляем случайное сообщение если скучно
-	if(time() - $time_message > $command_handler->options['rand_message'] && $command_handler->options['rand_message'] > $config['wait_time']) // 10 минимум секунд
+	if(time() - $time_message > $command_handler->options['rand_message'] && $command_handler->options['rand_message'] > 10) // 10 минимум секунд
 	{
 		$log->log("Send randome message",PichiLog::LEVEL_DEBUG);
 		$command_handler->sendRandMessage();

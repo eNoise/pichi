@@ -481,21 +481,24 @@ class commandHandler
 		//test message
 		if(!$this->isIgnore() && !$this->isCommand($this->last_message) && $this->options['answer_mode'] == 1)
 		{
-			if(rand(1, $this->options['treatment_coincidence']) == 1 && $this->options['treatment_coincidence'] > 0)
+			if((int)$this->options['answer_random'] === 0 || rand(1, (int)$this->options['answer_random']) === 1)
 			{
-				switch(rand(1,2))
+				if(rand(1, (int)$this->options['treatment_coincidence']) === 1 && $this->options['treatment_coincidence'] > 0)
 				{
-					case 1:
-						$this->sendAnswer($this->getName($this->last_from) . ": " . $this->genFromLexems());
-						break;
-					case 2:
-						$this->sendAnswer($this->getName($this->last_from) . ", " . $this->genFromLexems());
-						break;		
+					switch(rand(1,2))
+					{
+						case 1:
+							$this->sendAnswer($this->getName($this->last_from) . ": " . $this->genFromLexems());
+							break;
+						case 2:
+							$this->sendAnswer($this->getName($this->last_from) . ", " . $this->genFromLexems());
+							break;		
+					}
 				}
-			}
-			else
-			{
-				$this->sendAnswer($this->genFromLexems());
+				else
+				{
+					$this->sendAnswer($this->genFromLexems());
+				}
 			}
 		}
 	}
