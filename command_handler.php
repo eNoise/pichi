@@ -1,11 +1,13 @@
 <?php
 require_once("database.php");
+require_once("syntax_analizer.php");
 
 class commandHandler
 {
 	public $db;
 	protected $jabber;
 	public $log;
+	protected $syntax;
     
 	public $server;
 	public $room_service;
@@ -35,6 +37,9 @@ class commandHandler
 		$this->db = new PichiDatabase();
 		$this->jabber = &$jabber;
 		$this->db->log = & $this->log;
+		$this->syntax = new SyntaxAnalizer();
+		$this->syntax->db = & $this->db;
+		$this->syntax->log = & $this->log;
 	}
 
 	public function joinRoom($room, $nick, $status = "BotWorld!")
@@ -476,116 +481,33 @@ class commandHandler
 	
 		//to lexems massges
 		if(!$this->isIgnore() && !$this->isCommand($this->last_message) && $this->options['answer_remember'] == 1)
-			$this->toLexems($this->last_message);
+			$this->syntax->parseText($this->last_message);
 	
 		//test message
 		if(!$this->isIgnore() && !$this->isCommand($this->last_message) && $this->options['answer_mode'] == 1)
 		{
 			if((int)$this->options['answer_random'] === 0 || rand(1, (int)$this->options['answer_random']) === 1)
 			{
+				$this->syntax->generate();
 				if(rand(1, (int)$this->options['treatment_coincidence']) === 1 && $this->options['treatment_coincidence'] > 0)
 				{
 					switch(rand(1,2))
 					{
 						case 1:
-							$this->sendAnswer($this->getName($this->last_from) . ": " . $this->genFromLexems());
+							$this->sendAnswer($this->getName($this->last_from) . ": " . $this->syntax->returnText());
 							break;
 						case 2:
-							$this->sendAnswer($this->getName($this->last_from) . ", " . $this->genFromLexems());
+							$this->sendAnswer($this->getName($this->last_from) . ", " . $this->syntax->returnText());
 							break;		
 					}
 				}
 				else
 				{
-					$this->sendAnswer($this->genFromLexems());
+					$this->sendAnswer($this->syntax->returnText());
 				}
 			}
 		}
 	}
-  
-  
-	private function toLexems($string)
-	{
-		$this->log->log("$string to lexems", PichiLog::LEVEL_DEBUG);
-		$base = explode(" ", $string);
-      
-		if($base[0] != NULL)
-		{
-			$str = "#beg# " . $base[0];
-			$this->addLexema($str);      
-		}
-      
-		for($i = 0; $i < count($base) ; $i++)
-		{
-			$str = $base[$i] . (($base[$i+1]) ? " " . $base[$i+1] : " #end#");
-			$this->addLexema($str);
-		}
-	}
-    
-	private function addLexema($str)
-	{	
-		if($str == NULL)
-			return;
-      
-		$this->db->query("SELECT COUNT(*) FROM lexems WHERE lexeme = '" . $this->db->db->escapeString($str) . "';");
-		if($this->db->fetchColumn() > 0)
-			$this->db->query("UPDATE lexems SET count = count+1  WHERE lexeme = '".$this->db->db->escapeString($str)."';");
-		else
-			$this->db->query("INSERT INTO lexems (`lexeme`,`count`) VALUES ('" . $this->db->db->escapeString($str) . "','1');");
-		$this->log->log("$str writed to lexems", PichiLog::LEVEL_VERBOSE);
-	}
-    
-	private function genFromLexems() //сложность
-	{
-		$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '#beg# %';");
-		if($this->db->numRows(true) == 0)
-			break; //пусто
-		$last = $this->randGenAnswer();
-		$last = explode(" ",$last);
-		$genans = $last = $last[1];
-		for($i=0; $i < 20; $i++)
-		{
-			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString($last) . " %';");
-			if($this->db->numRows(true) == 0)
-				break; //больше нет совпадений
-			$last = $this->randGenAnswer();
-			$last = explode(" ",$last);
-			$last = $last[1];
-	
-			if($last == "#end#" || $last==NULL)
-				break;
-	
-			$genans .= " " . $last;
-		}
-      
-		return $genans;
-	}
-  
-	// используемс алгоритм лелика на вес
-	private function randGenAnswer()
-	{
-		$this->log->log("Rand world from lexems:", PichiLog::LEVEL_VERBOSE);
-		$answers = array();
-		$i = 0;
-		$sum = 0;
-		while($data = $this->db->fetch_array())
-		{
-			$answers[$i]['lexeme'] = $data['lexeme'];
-			$answers[$i]['count'] = $data['count'];	
-			$sum += (int)$data['count'];
-			$i++;
-			$this->log->log("World \"{$data['lexeme']}\" have {$data['count']} points", PichiLog::LEVEL_VERBOSE);
-		}
-		$rand = rand(0, $sum);
-      
-		$temp_sum = 0;
-		$num = 0;
-		while($temp_sum < $rand)
-			$temp_sum += $answers[$num++]['count'];
-
-		return $answers[(($num>0) ? $num-1 : $num)]['lexeme'];
-	}
-    
   
 	public function show_log($command)
 	{
@@ -622,13 +544,14 @@ class commandHandler
 				$n++;
 				$user[] = $users['nick'];
 			}
+			$this->syntax->generate();
 			switch(rand(1,2))
 			{
 				case 1:
-					$this->jabber->message($this->room, $user[rand(0, $n-1)] . ": " . $this->genFromLexems(), "groupchat");
+					$this->jabber->message($this->room, $user[rand(0, $n-1)] . ": " . $this->syntax->returnText(), "groupchat");
 					break;
 				case 2:
-					$this->jabber->message($this->room, $user[rand(0, $n-1)] . ", " . $this->genFromLexems(), "groupchat");
+					$this->jabber->message($this->room, $user[rand(0, $n-1)] . ", " . $this->syntax->returnText(), "groupchat");
 					break;		
 			}
 		}
