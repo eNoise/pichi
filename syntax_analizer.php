@@ -127,7 +127,7 @@ class SyntaxAnalizer
 		$genans = $last = $last[1];
 		for($i=0; $i < $limit; $i++)
 		{
-			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString($last) . " %';");
+			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString($last) . " " . (($i == $limit-1) ? "#end#" : "%") . "';");
 			if($this->db->numRows(true) == 0)
 				break; //больше нет совпадений
 			$last = $this->choseLexem($this->buildArray());
@@ -148,7 +148,7 @@ class SyntaxAnalizer
 		//left
 		for($i = 0; $i < $limit; $i++)
 		{
-			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '% " . $this->db->db->escapeString(($i == 0) ? $word : $first) . "';");
+			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . (($i == $limit-1) ? "#beg#" : "%") . " " . $this->db->db->escapeString(($i == 0) ? $word : $first) . "';");
 			if($this->db->numRows(true) == 0)
 				break; //больше нет совпадений
 			$last = $this->choseLexem($this->buildArray());
@@ -161,7 +161,7 @@ class SyntaxAnalizer
 		//right
 		for($i = 0; $i < $limit; $i++)
 		{
-			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString(($i == 0) ? $word : $second) . " %';");
+			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString(($i == 0) ? $word : $second) . " " . (($i == $limit-1) ? "#end#" : "%") . "';");
 			if($this->db->numRows(true) == 0)
 				break; //больше нет совпадений
 			$last = $this->choseLexem($this->buildArray());
@@ -185,6 +185,11 @@ class SyntaxAnalizer
 			$i++;
 		}
 		return $answers;
+	}
+
+	private function testText(& $text)
+	{
+		
 	}
 }
 

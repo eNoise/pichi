@@ -7,8 +7,8 @@ $config['port'] = 5222; //With TLS
 $config['room_service'] = "conference"; // Jabber service for rooms
 $config['room'] = "main"."@".$config['room_service'].".".$config['server']; // Room to autojoin
 $config['db_file'] = "pichi.db"; // Room to autojoin
-$config['debug'] = TRUE; // Debug mode
-$config['debug_level'] = 4; // Debug mode levels (0-4) 4 - max debug info
+$config['debug'] = FALSE; // Debug mode
+$config['debug_level'] = 5; // Debug mode levels (0-5) 5 - max debug info
 
 $config['user'] = "pichi";
 $config['room_user'] = "pichi";
@@ -24,6 +24,6 @@ $config['ping_time'] = 5; //If reconnect problem (in openfire)
 $config['wait_time'] = 5; //Secs to waiting after connect
 ######################
 
-$config['version'] = 2; //Version of config file (Modify this only if you sure that all new options sets)
+$config['version'] = 3; //Version of config file (Modify this only if you sure that all new options sets)
 
 ?>

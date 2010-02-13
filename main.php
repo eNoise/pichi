@@ -2,7 +2,7 @@
 
 ### Some settings ###
 $config['db_version'] = 12; // Work only parram
-$config['min_version'] = 2; // Min version of config
+$config['min_version'] = 3; // Min version of config
 $config['pichi_version'] = "0.4.0 (dev)"; //Pichi version
 
 ### Begin basic settings end checks ###
@@ -18,6 +18,11 @@ include("config.php");
 require_once("XMPP/XMPP.php");
 require_once("command_handler.php");
 require_once("Log_pichi.php");
+
+if($config['debug'] && $config['debug_level'] == 5)
+	$config['xmpp_log'] = TRUE;
+else
+	$config['xmpp_log'] = FALSE;
 
 if(!$config['debug'] && $config['debug_level'] > 2)
 	$config['debug_level'] = 2;
@@ -84,7 +89,7 @@ else
 
 ### Begin ###
 $log->log("Start Pichi",PichiLog::LEVEL_INFO);
-$jabber = new XMPPHP_XMPP($config['server'], $config['port'], $config['user'], $config['password'], $config['resource'], $config['server'], $printlog=false, $loglevel = (($config['debug']) ? XMPPHP_Log::LEVEL_VERBOSE : XMPPHP_Log::LEVEL_INFO));
+$jabber = new XMPPHP_XMPP($config['server'], $config['port'], $config['user'], $config['password'], $config['resource'], $config['server'], $config['xmpp_log'], $loglevel = (($config['debug']) ? XMPPHP_Log::LEVEL_VERBOSE : XMPPHP_Log::LEVEL_INFO));
 try
 {
 	$log->log("Try to connect...",PichiLog::LEVEL_VERBOSE);
