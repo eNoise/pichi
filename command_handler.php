@@ -1,6 +1,7 @@
 <?php
 require_once("database.php");
 require_once("syntax_analizer.php");
+require_once("eventHandler.php");
 
 class commandHandler
 {
@@ -8,6 +9,7 @@ class commandHandler
 	protected $jabber;
 	public $log;
 	protected $syntax;
+	protected $event;
     
 	public $server;
 	public $room_service;
@@ -40,6 +42,10 @@ class commandHandler
 		$this->syntax = new SyntaxAnalizer();
 		$this->syntax->db = & $this->db;
 		$this->syntax->log = & $this->log;
+		$this->event = new eventHandler();
+		$this->event->db = & $this->db;
+		$this->event->log = & $this->log;
+		$this->event->jabber = & $this->jabber;
 	}
 
 	public function joinRoom($room, $nick, $status = "BotWorld!")
@@ -441,9 +447,9 @@ class commandHandler
 			$this->admins[] = $jid;
 		
 		if($status == 'available')
-			$this->doAction("user_join_room", "room=$room,jid=$jid");
+			$this->event->catchEvent("user_join_room", "room=$room,jid=$jid");
 		else if($status == 'unavailable')
-			$this->doAction("user_left_room", "room=$room,jid=$jid");
+			$this->event->catchEvent("user_left_room", "room=$room,jid=$jid");
 		
 		$this->log->log("Updating user status for $nick($jid) in $room = $status", PichiLog::LEVEL_DEBUG);
 		$this->db->query("SELECT COUNT(*) FROM users WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND room = '" . $this->db->db->escapeString($room) . "';");
@@ -556,25 +562,7 @@ class commandHandler
 			}
 		}
 	}
-	
-	public function doAction($action, $coincidence = NULL)
-	{
-		$this->db->query("SELECT `do`, `option`,`value` FROM actions WHERE action = '$action' AND coincidence='" . (($coincidence != NULL) ? $this->db->db->escapeString($coincidence) : "" ) . "';");
-		while($actions = $this->db->fetch_array())
-		{
-			switch($actions['do'])
-			{
-				case "send_message":
-					if($actions['option'] == NULL)
-						if($actions['value'] != NULL)
-							$this->jabber->message($this->room, $actions['value'],"groupchat");
-					else
-						if($actions['value'] != NULL)
-							$this->jabber->message($actions['option'], $actions['value'],"chat");
-			}
-		}
-	}
-  
+
 }
 
 ?>
