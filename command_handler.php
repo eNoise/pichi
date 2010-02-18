@@ -298,6 +298,7 @@ class commandHandler
 				$date = (int)$this->db->fetchColumn(0);
 				if($date > 0)
 					$this->sendAnswer(date("d.m.y \в H:i:s", $date));
+				break;
 			case ($this->getCommand($command) == "!greet" || $this->getCommand($command) == "!farewell"):
 				$w = $this->seperate($command, 3);
 				if(!$this->isAccess())
