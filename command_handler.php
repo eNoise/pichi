@@ -247,6 +247,7 @@ class commandHandler
 				$help .= "!left room nick [status] - выйти из комнаты\n";
 				$help .= "!greet jid room@server greet - Сообщение при заходе\n";
 				$help .= "!farewell jid room@server buy - Сообщение при выходе\n";
+				$help .= "!idle nick - сколько молчит указаный ник\n";
 				$help .= "!quit - выход\n";
 				$help .= "!version - версия бота\n";
 				$this->sendAnswer($help);
@@ -291,6 +292,12 @@ class commandHandler
 				$w = $this->seperate($command);
 				$this->ping($w[1]);
 				break;
+			case ($this->getCommand($command) == "!idle"):
+				$w = $this->seperate($command);
+				$this->db->query("SELECT `time` FROM log WHERE `from` = '" . $this->db->db->escapeString($w[1]) . "' OR `from` LIKE '%/" . $this->db->db->escapeString($this->getName($w[1])) . "' ORDER BY time DESC;");
+				$date = (int)$this->db->fetchColumn(0);
+				if($date > 0)
+					$this->sendAnswer(date("d.m.y \в H:i:s", $date));
 			case ($this->getCommand($command) == "!greet" || $this->getCommand($command) == "!farewell"):
 				$w = $this->seperate($command, 3);
 				if(!$this->isAccess())
