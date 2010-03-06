@@ -14,7 +14,7 @@ else
 if(function_exists("date_default_timezone_set") and function_exists("date_default_timezone_get"))
 	@date_default_timezone_set(@date_default_timezone_get()); //disable timezone errors
 
-include("config.php"); // init config
+include("parse_xml_config.php"); // init config
 require_once("XMPP/XMPP.php");
 require_once("command_handler.php");
 require_once("Log_pichi.php");
@@ -67,6 +67,7 @@ function isRoom($test)
 php_extension_load("sqlite3");
 php_extension_load("mbstring");
 php_extension_load("openssl");
+php_extension_load("xml");
 
 if($config['version'] < $config['min_version'])
 {

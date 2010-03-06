@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<PichiConfig>
+	<version>5</version>
+        <config>
+                <option Name="server" type="string">jabber.uruchie.org</option>
+                <option Name="port" type="int">5222</option>
+                <option Name="room" type="string">main@conference.jabber.uruchie.org</option>
+                <option Name="db_file" type="string">pichi.db</option>
+                <option Name="debug" type="bool">0</option>
+                <option Name="debug_level" type="int">5</option>
+                
+                <option Name="user" type="string">pichi</option>
+                <option Name="room_user" type="string">pichi</option>
+                <option Name="password" type="string">iampichi</option>
+                <option Name="resource" type="string">BotWorld!</option>
+                <option Name="status" type="string">From hell!</option>
+                
+                <option Name="global_admins" type="bool">1</option>
+                <option Name="admins" type="array" sepperator=",">deg@jabber.uruchie.org</option>
+                
+                <!-- DO NOT MODIFY! -->
+                <option Name="ping_time" type="int">5</option>  <!-- If reconnect problem (in openfire) -->
+                <option Name="wait_time" type="int">5</option>  <!-- Secs to waiting after connect -->
+        </config>
+</PichiConfig>
