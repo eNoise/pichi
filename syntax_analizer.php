@@ -197,7 +197,6 @@ class SyntaxAnalizer
 		$this->db->query("SELECT nick FROM users WHERE status='available';");
 		while($u = $this->db->fetch_array())
 			$ignore_nick[] = $u['nick'];
-		var_dump($ignore_nick);
 		if(in_array($test1[0], $ignore_nick))
 		{
 			unset($test1[0]);

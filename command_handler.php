@@ -527,8 +527,12 @@ class commandHandler
 			$role = "participant"; //Default permission
 			
 		//Admins add
-		if(!in_array($jid, $this->admins) && $role == "moderator")
-			$this->admins[] = $jid;
+		global $config;
+		if($config['global_admins'])
+		{
+			if(!in_array($jid, $this->admins) && $role == "moderator")
+				$this->admins[] = $jid;
+		}
 		
 		if($status == 'available')
 			$this->event->catchEvent("user_join_room", "room=$room,jid=$jid");

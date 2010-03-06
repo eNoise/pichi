@@ -16,7 +16,7 @@ $config['password'] = "iampichi";
 $config['resource'] = "BotWorld!";
 $config['status'] = "From hell!";
 
-$config['global_admins'] = 1; // Use global admin setting from jabber
+$config['global_admins'] = TRUE; // Use global admin setting from jabber
 $config['admins'] = array("deg@jabber.uruchie.org"); // Enter addition admins
 
 ### DO NOT MODIFY! ###
@@ -24,6 +24,6 @@ $config['ping_time'] = 5; //If reconnect problem (in openfire)
 $config['wait_time'] = 5; //Secs to waiting after connect
 ######################
 
-$config['version'] = 3; //Version of config file (Modify this only if you sure that all new options sets)
+$config['version'] = 4; //Version of config file (Modify this only if you sure that all new options sets)
 
 ?>

@@ -6,11 +6,11 @@ $args = new Console_CommandLine(array(
     'version'     => $config['pichi_version']
 ));
 
-$args->addOption('config', array(
-    'short_name'  => '-c',
-    'long_name'   => '--config',
+$args->addOption('database', array(
+    'short_name'  => '-b',
+    'long_name'   => '--db',
     'action'      => 'StoreString',
-    'description' => 'Config name',
+    'description' => 'Database name',
     'default'     => "{$config['db_file']}" // a default value
 ));
 
@@ -34,7 +34,7 @@ $args->addOption('verbose', array(
 try 
 {
 	$arg = $args->parse();
-	$config['db_file'] = $arg->options['config'];
+	$config['db_file'] = $arg->options['database'];
 	if($arg->options['verbose'])
 	{
 		$config['debug'] = TRUE;
