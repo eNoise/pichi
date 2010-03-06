@@ -19,7 +19,7 @@ $args->addOption('daemon', array(
     'short_name'  => '-d',
     'long_name'   => '--daemon',
     'action'      => 'StoreTrue',
-    'description' => 'Run pichi as daemon'
+    'description' => 'Run pichi as daemon (Only Linux)'
 ));
 
 
@@ -38,6 +38,19 @@ try
 	if($arg->options['verbose'])
 	{
 		$config['debug'] = TRUE;
+	}
+	if($arg->options['daemon'] && RUN_OS == "Nix")
+	{
+		System_Daemon::setOption("appName", "pichi-bot");
+		System_Daemon::setOption("appDir", dirname(__FILE__));
+		System_Daemon::setOption("logLocation", dirname(__FILE__) . "/pichi.log");
+		System_Daemon::setOption("appPidLocation", dirname(__FILE__) . "/" . System_Daemon::getOption("appName") . "/pichi.pid");
+		System_Daemon::start();
+		$config['daemon_mode'] = TRUE;
+	}
+	else
+	{
+		$config['daemon_mode'] = FALSE;
 	}
 } catch (Exception $exc) {
 	$args->displayError($exc->getMessage());

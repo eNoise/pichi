@@ -208,9 +208,12 @@ class commandHandler
     
 	private function doExit()
 	{
+		global $config;
 		$this->log->log("Do disconnect", PichiLog::LEVEL_INFO);
 		if($this->isAccess())
 			$this->jabber->disconnect();
+		if($config['daemon_mode'])
+			System_Daemon::stop();
 	}
     
 	public function parseOptions()

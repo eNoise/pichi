@@ -18,6 +18,7 @@ include("config.php"); // init config
 require_once("XMPP/XMPP.php");
 require_once("command_handler.php");
 require_once("Log_pichi.php");
+require_once("System/Daemon.php");
 include("console_commands.php"); // parse command line
 
 if($config['debug'] && $config['debug_level'] == 5)
