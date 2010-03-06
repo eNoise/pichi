@@ -2,7 +2,7 @@
 
 ### Some settings ###
 $config['db_version'] = 12; // Work only parram
-$config['min_version'] = 4; // Min version of config
+$config['min_version'] = 5; // Min version of config
 $config['pichi_version'] = "0.4.0 (dev)"; //Pichi version
 
 ### Begin basic settings end checks ###
