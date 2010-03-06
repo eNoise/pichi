@@ -249,7 +249,7 @@ class commandHandler
 				$help .= "!set name=val - установить опцию\n";
 				$help .= "!gc [name] - показать значение опции\n";
 				$help .= "!users [nick|jid] - список пользователей\n";
-				$help .= "!msg [nick|jid] message - сообщение пользователю\n";
+				$help .= "!msg [nick|jid|room] message [type] - сообщение пользователю\n";
 				$help .= "!ping [nick|jid] - ping запрос пользователю\n";
 				$help .= "!join room nick [status] - войти в комнату (сменить ник)\n";
 				$help .= "!left room nick [status] - выйти из комнаты\n";
@@ -446,12 +446,14 @@ class commandHandler
 		if(!$this->isAccess())
 			return;
       
-		$w = $this->seperate($command);
+		$w = $this->seperate($command, 3);
 
 		$user = $this->getJID($w[1]);
 		$message = $w[2];
+		if($w[3] != "chat" && $w[3] != "groupchat")
+			$w[3] = "chat";
 		
-		$this->jabber->message($user, $message, "chat");
+		$this->jabber->message($user, $message, $w[3]);
 		$this->log->log("Send message to $user: $message", PichiLog::LEVEL_DEBUG);
 	}
 	
