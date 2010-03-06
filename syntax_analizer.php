@@ -5,7 +5,7 @@ class SyntaxAnalizer
   
 	protected $user_text;
 	protected $send_text;
-  
+	
 	public $db;
 	public $log;
   
@@ -20,6 +20,7 @@ class SyntaxAnalizer
 
 	public function parseText($string)
 	{
+		$this->testText($string);
 		$this->log->log("$string to lexems", PichiLog::LEVEL_DEBUG);
 		$base = explode(" ", $string);
       
@@ -189,7 +190,27 @@ class SyntaxAnalizer
 
 	private function testText(& $text)
 	{
-		
+		$this->log->log("$text before test to lexems", PichiLog::LEVEL_VERBOSE);
+		$test1 = explode(",",$text);
+		$test2 = explode(":",$text);
+		$ignore_nick = array();
+		$this->db->query("SELECT nick FROM users WHERE status='available';");
+		while($u = $this->db->fetch_array())
+			$ignore_nick[] = $u['nick'];
+		var_dump($ignore_nick);
+		if(in_array($test1[0], $ignore_nick))
+		{
+			unset($test1[0]);
+			$text = implode(",",$test1);
+			ltrim($text);
+		}
+		if(in_array($test2[0], $ignore_nick))
+		{
+			unset($test2[0]);
+			$text = implode(":",$test2);
+			ltrim($text);
+		}
+		$this->log->log("$text after test to lexems", PichiLog::LEVEL_VERBOSE);
 	}
 }
 

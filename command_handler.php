@@ -25,8 +25,6 @@ class commandHandler
 	private $last_room;
 	public $last_id;                                           
 	public $last_data;
-	public $users;
-	public $users_count = 0;
 	
 	public $wait;
 	public $wait_time = 5;
