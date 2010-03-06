@@ -7,9 +7,9 @@ $config['pichi_version'] = "0.4.0 (dev)"; //Pichi version
 
 ### Begin basic settings end checks ###
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
-       define(RUN_OS, "Windows");
+       @define(RUN_OS, "Windows");
 else
-       define(RUN_OS, "Nix");
+       @define(RUN_OS, "Nix");
 
 if(function_exists("date_default_timezone_set") and function_exists("date_default_timezone_get"))
 	@date_default_timezone_set(@date_default_timezone_get()); //disable timezone errors
