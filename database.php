@@ -52,11 +52,13 @@ class PichiDatabase
 		}
 	}
       
-	public function fetchColumn($column = 0)
+	public function fetchColumn($column = 0, $reset = false)
 	{
 		switch($this->type)
 		{
 			default:
+				if($reset)
+					$this->last_query->reset();
 				$temp = $this->last_query->fetchArray(SQLITE3_NUM);
 				return $temp[$column];
 		}

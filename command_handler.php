@@ -240,6 +240,11 @@ class commandHandler
 				$help .= "-------------------------\n";	  
 				$help .= "!log n - показывает последний лог\n";
 				$help .= "!wtf name - определение из базы\n";
+				$help .= "!wtfcount - количество определений в базе\n";
+				$help .= "!wtfrand - случайно определение\n";
+				$help .= "!top - топ 10 слов в базе\n";
+				$help .= "!count - количество лексем\n";
+				$help .= "!talkers - 10 самых болтнивых пользователей\n";
 				$help .= "!dfn name=val - установить определение\n";
 				$help .= "!set name=val - установить опцию\n";
 				$help .= "!gc [name] - показать значение опции\n";
@@ -263,6 +268,62 @@ class commandHandler
 				break;
 			case ($this->getCommand($command) == "!wtf"):
 				$this->show_wtf($command);
+				break;
+			case ($this->getCommand($command) == "!wtfcount"):
+				$this->db->query("SELECT COUNT(*) FROM wiki;");
+				$wtfnum = (int)$this->db->fetchColumn(0);
+				$this->sendAnswer("Количество определений в базе: $wtfnum");
+				break;
+			case ($this->getCommand($command) == "!wtfrand"):
+				$this->db->query("SELECT * FROM wiki ORDER BY RANDOM() LIMIT 0,1;");
+				$wtfword = $this->db->fetchColumn(0);
+				$wtfdef = $this->db->fetchColumn(1,true);
+				//if($wtfword != NULL && $wtfdef != NULL)
+					$this->sendAnswer($wtfword . " = " . $wtfdef);
+				break;
+			case ($this->getCommand($command) == "!top"):
+				$this->db->query("SELECT lexeme FROM lexems ORDER BY count DESC LIMIT 0,10;");
+				$this->sendAnswer("10 самых популярных связок слов:");
+				$ans = "";
+				$ix = 0;
+				while($lex = $this->db->fetch_array())
+				{
+					$ix++;
+					$tmp = explode(" ", $lex['lexeme']);
+					if($tmp[0] == "#beg#")
+						$tmp[0] = "(начало)";
+					if($tmp[1] == "#end#")
+						$tmp[1] = "(конец)";
+					$ans .= $ix . ". " . implode(" ", $tmp) . "\n";
+				}
+				$this->sendAnswer($ans);
+				break;
+			case ($this->getCommand($command) == "!talkers"):
+				$this->db->query("SELECT `from` FROM log;");
+				$this->sendAnswer("10 самых болтливых пользователей:");
+				$ans = "";
+				$tmp = array();
+				while($fr = $this->db->fetch_array())
+				{
+					if($tmp["{$fr['from']}"] == NULL)
+						$tmp["{$fr['from']}"] = 0;
+					$tmp["{$fr['from']}"]++;
+				}
+				arsort($tmp);
+				$i = 0;
+				foreach($tmp as $key=>$val)
+				{
+					$i++;
+					$ans .= $i . ". " . $this->getName($key) . " с " . $val . " словами.\n";
+					if($i>=10)
+						break;
+				}
+				$this->sendAnswer($ans);
+				break;
+			case ($this->getCommand($command) == "!count"):
+				$this->db->query("SELECT COUNT(*) FROM lexems;");
+				$lexnum = (int)$this->db->fetchColumn(0);
+				$this->sendAnswer("Количество определений в базе: $lexnum");
 				break;
 			case ($this->getCommand($command) == "!dfn"):
 				$this->set_dfn($command);
