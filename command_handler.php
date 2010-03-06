@@ -102,10 +102,22 @@ class commandHandler
 		}
 	}
     
-	public function getName($nick)
+	public function getName($jid)
 	{
-		$mes=explode("/",$nick);
-		return (($mes[1]) ? $mes[1] : $mes[0]);
+	  
+	  	$this->log->log("Get Nick from JID $jid", PichiLog::LEVEL_VERBOSE);
+		if(strpos($jid, "@") === FALSE)
+			return $jid;
+		if(strpos($jid, "/") === FALSE)
+		{
+			$this->db->query("SELECT `nick` FROM users WHERE jid = '" . $this->db->db->escapeString($jid) . "';");
+			return $this->db->fetchColumn(0);
+		}
+		else
+		{
+			$mes=explode("/", $jid);
+			return $mes[1];
+		}
 	}
     
 	private function isCommand($command)
