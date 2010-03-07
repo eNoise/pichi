@@ -288,7 +288,7 @@ class commandHandler
 				$this->db->query("SELECT * FROM wiki ORDER BY RANDOM() LIMIT 0,1;");
 				$wtfword = $this->db->fetchColumn(0);
 				$wtfdef = $this->db->fetchColumn(1,true);
-				//if($wtfword != NULL && $wtfdef != NULL)
+				if($wtfword != NULL && $wtfdef != NULL)
 					$this->sendAnswer($wtfword . " = " . $wtfdef);
 				break;
 			case ($this->getCommand($command) == "!top"):
