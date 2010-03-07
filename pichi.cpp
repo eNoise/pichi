@@ -1,6 +1,6 @@
 #include <iostream>
-#include <embed/php_embed.h>
-#include <zend_extensions.h>
+#include <sapi/embed/php_embed.h>
+#include <Zend/zend_extensions.h>
 
 int main(int argc, char* argv[])
 {
