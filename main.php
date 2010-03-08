@@ -170,11 +170,10 @@ $log->log("Begin Session",PichiLog::LEVEL_VERBOSE);
 while(!$jabber->isDisconnected()) {
 	$payloads = $jabber->processUntil(array('message', 'presence', 'end_stream', 'session_start', 'ping'), 1);
 	//wait for proccess
-    
-	foreach($payloads as $event) 
+	if(count($payloads) == 2)
 	{
-		$data = $event[1];
-		switch($event[0]) 
+		$data = $payloads[1];
+		switch($payloads[0]) 
 		{
 			case 'message':
 				$time_message = time();

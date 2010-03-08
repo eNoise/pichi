@@ -471,24 +471,18 @@ class XMPPHP_XMLStream {
 	 */
 	public function processUntil($event, $timeout=-1) {
 		$start = time();
-		if(!is_array($event)) $event = array($event);
-		$this->until[] = $event;
-		end($this->until);
-		$event_key = key($this->until);
-		reset($this->until);
-		$this->until_count[$event_key] = 0;
-		$updated = '';
-		while(!$this->disconnected and $this->until_count[$event_key] < 1 and (time() - $start < $timeout or $timeout == -1)) {
+		if(!is_array($event))
+			$event = array($event);
+		$this->until = $event;
+		$this->until_count = 0;
+		while(!$this->disconnected and $this->until_count < 1 and (time() - $start < $timeout or $timeout == -1)) {
 			$this->__process();
 		}
-		if(array_key_exists($event_key, $this->until_payload)) {
-			$payload = $this->until_payload[$event_key];
-			unset($this->until_payload[$event_key]);
-			unset($this->until_count[$event_key]);
-			unset($this->until[$event_key]);
-		} else {
+		if($this->until_count > 0)
+			$payload = $this->until_payload;
+		else
 			$payload = array();
-		}
+		unset($this->until_payload);
 		return $payload;
 	}
 
@@ -654,16 +648,14 @@ class XMPPHP_XMLStream {
 				$handler[2]->$handler[1]($payload);
 			}
 		}
-		foreach($this->until as $key => $until) {
-			if(is_array($until)) {
-				if(in_array($name, $until)) {
-					$this->until_payload[$key][] = array($name, $payload);
-					if(!isset($this->until_count[$key])) {
-						$this->until_count[$key] = 0;
-					}
-					$this->until_count[$key] += 1;
-					#$this->until[$key] = false;
-				}
+		if(is_array($this->until))
+		{
+			if(in_array($name, $this->until))
+			{
+				$this->until_payload = array($name, $payload);
+				if(!isset($this->until_count)) 
+					$this->until_count = 0;
+				$this->until_count += 1;
 			}
 		}
 	}
