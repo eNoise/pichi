@@ -383,6 +383,7 @@ class commandHandler
 					$this->db->query("UPDATE actions SET value = '".$this->db->db->escapeString($w[3])."'  WHERE action = '$action' AND coincidence='room=" . $this->db->db->escapeString($w[2]) . ",jid=" . $this->db->db->escapeString($w[1]) . "';");
 				else
 					$this->db->query("INSERT INTO actions (`action`,`coincidence`,`do`,`option`,`value`) VALUES ('$action', 'room=" . $this->db->db->escapeString($w[2]) . ",jid=" . $this->db->db->escapeString($w[1]) . "', 'send_message', '', '".$this->db->db->escapeString($w[3])."');");
+				$this->sendAnswer("Updated!");
 				break;
 			case ($this->getCommand($command) == "!quit" || $this->getCommand($command) == "!exit"):
 				$this->doExit();
@@ -526,6 +527,10 @@ class commandHandler
 		if($role == NULL)
 			$role = "participant"; //Default permission
 			
+		// Old status test
+		$this->db->query("SELECT `status` FROM users WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND room = '" . $this->db->db->escapeString($room) . "';");
+		$old_status = $this->db->fetchColumn(0);
+			
 		//Admins add
 		global $config;
 		if($config['global_admins'])
@@ -534,9 +539,9 @@ class commandHandler
 				$this->admins[] = $jid;
 		}
 		
-		if($status == 'available')
+		if($status == 'available' && $old_status == 'unavailable')
 			$this->event->catchEvent("user_join_room", "room=$room,jid=$jid");
-		else if($status == 'unavailable')
+		else if($status == 'unavailable' && $old_status == 'available')
 			$this->event->catchEvent("user_left_room", "room=$room,jid=$jid");
 		
 		$this->log->log("Updating user status for $nick($jid) in $room = $status", PichiLog::LEVEL_DEBUG);

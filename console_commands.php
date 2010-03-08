@@ -56,5 +56,8 @@ try
 	$args->displayError($exc->getMessage());
 }
 
+// leeks
+unset($args);
+unset($arg);
 
 ?>

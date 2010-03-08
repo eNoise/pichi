@@ -18,6 +18,12 @@ class PichiDatabase
 				break;
 		}
 	}
+	
+	public function __destruct()
+	{
+		unset($this->db);
+		unset($this->last_query);
+	}
       
 	public function setTypeDB($type)
 	{
