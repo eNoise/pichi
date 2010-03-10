@@ -539,10 +539,13 @@ class commandHandler
 				$this->admins[] = $jid;
 		}
 		
-		if($status == 'available' && $old_status == 'unavailable')
-			$this->event->catchEvent("user_join_room", "room=$room,jid=$jid");
-		else if($status == 'unavailable' && $old_status == 'available')
-			$this->event->catchEvent("user_left_room", "room=$room,jid=$jid");
+		if(time() - $this->wait > $this->wait_time)
+		{
+			if($status == 'available' && $old_status == 'unavailable')
+				$this->event->catchEvent("user_join_room", "room=$room,jid=$jid");
+			else if($status == 'unavailable' && $old_status == 'available')
+				$this->event->catchEvent("user_left_room", "room=$room,jid=$jid");
+		}
 		
 		$this->log->log("Updating user status for $nick($jid) in $room = $status", PichiLog::LEVEL_DEBUG);
 		$this->db->query("SELECT COUNT(*) FROM users WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND room = '" . $this->db->db->escapeString($room) . "';");
