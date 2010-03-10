@@ -13,6 +13,9 @@ class SyntaxAnalizer
 	public $limit_word = 2;
 	public $from_world_coi = 3;
 
+	private $try_count = 0; //попытки построить выражения
+	public $try_limit = 3; //лимит попыток
+	
 	public function __construct()
 	{
 		//$this->log->log("Init syntaxis analizator", PichiLog::LEVEL_DEBUG);
@@ -78,6 +81,8 @@ class SyntaxAnalizer
 	
 	public function generate()
 	{
+		$this->try_count = 0; // сбрасываем попытки
+	  
 		if(rand(1, $this->from_world_coi) === 1)
 		{
 			$this->log->log("Full Random method", PichiLog::LEVEL_DEBUG);
@@ -118,8 +123,11 @@ class SyntaxAnalizer
 	}
 
 
-	private function genFullRandom($limit = 20)
+	private function genFullRandom($limit = NULL)
 	{
+		if($limit == NULL)
+			$limit = rand(5,20);
+		$this->try_count++; //очередная попытка
 		$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '#beg# %';");
 		if($this->db->numRows(true) == 0)
 			return; //пусто
@@ -143,9 +151,12 @@ class SyntaxAnalizer
 		return $genans;
 	}
 	
-	private function genFromCenterWord($word, $limit = 10)
+	private function genFromCenterWord($word, $limit = NULL)
 	{
+		if($limit == NULL)
+			$limit = rand(7,12);
 		$answer = $word;
+		$this->try_count++; //очередная попытка
 		//left
 		for($i = 0; $i < $limit; $i++)
 		{
