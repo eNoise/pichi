@@ -333,7 +333,7 @@ class commandHandler
 			case ($this->getCommand($command) == "!count"):
 				$this->db->query("SELECT COUNT(*) FROM lexems;");
 				$lexnum = (int)$this->db->fetchColumn(0);
-				$this->sendAnswer("Количество определений в базе: $lexnum");
+				$this->sendAnswer("Количество слов-связок в базе: $lexnum");
 				break;
 			case ($this->getCommand($command) == "!dfn"):
 				$this->set_dfn($command);
