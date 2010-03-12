@@ -148,7 +148,10 @@ class SyntaxAnalizer
 	
 			$genans .= " " . $last;
 		}
-		return $genans;
+		if($genans != $this->user_text)
+			return $genans;
+		else
+			return $this->randFromLog(); //возращать тоже самое нехорошо, вернем что-нибудь из лога
 	}
 	
 	private function genFromCenterWord($word, $limit = NULL)
@@ -183,7 +186,23 @@ class SyntaxAnalizer
 				break;
 			$answer .= " " . $second;
 		}
-		return $answer;
+		if($answer != $this->user_text)
+			return $answer;
+		else
+			return $this->randFromLog(); //возращать тоже самое нехорошо, вернем что-нибудь из лога
+	}
+	
+	//Использовать случайную фразу из лога
+	// 3 слова как лимит
+	// смайл если невозможно найти подходящей фразы
+	private function randFromLog($words_limit = 3, $dafault = ":(")
+	{
+		$this->try_count++; //очередная попытка
+		$this->db->query("SELECT text FROM log ORDER BY RANDOM() LIMIT 0,10;");
+		while($text['text'] = $this->db->fetch_array())
+			if(count(explode(" ", $text['text'])) <= $words_limit)
+				return $text['text'];
+		return $dafault;
 	}
 	
 	private function buildArray()
