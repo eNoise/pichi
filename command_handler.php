@@ -292,7 +292,7 @@ class commandHandler
 					$this->sendAnswer($wtfword . " = " . $wtfdef);
 				break;
 			case ($this->getCommand($command) == "!top"):
-				$this->db->query("SELECT lexeme FROM lexems ORDER BY count DESC LIMIT 0,10;");
+				$this->db->query("SELECT lexeme FROM lexems,count ORDER BY count DESC LIMIT 0,10;");
 				$this->sendAnswer("10 самых популярных связок слов:");
 				$ans = "";
 				$ix = 0;
@@ -304,7 +304,7 @@ class commandHandler
 						$tmp[0] = "(начало)";
 					if($tmp[1] == "#end#")
 						$tmp[1] = "(конец)";
-					$ans .= $ix . ". " . implode(" ", $tmp) . "\n";
+					$ans .= $ix . ". " . implode(" ", $tmp) . " [{$lex['count']}]" . "\n";
 				}
 				$this->sendAnswer($ans);
 				break;
@@ -324,7 +324,7 @@ class commandHandler
 				foreach($tmp as $key=>$val)
 				{
 					$i++;
-					$ans .= $i . ". " . $this->getName($key) . " с " . $val . " словами.\n";
+					$ans .= $i . ". " . $this->getName($key) . " с " . $val . " фразами.\n";
 					if($i>=10)
 						break;
 				}
