@@ -24,19 +24,13 @@ class SyntaxAnalizer
 
 	public function parseText($string)
 	{
-		$this->testText($string);
+		$this->testText($string); //режим все лишнее со строки
 		$this->log->log("$string to lexems", PichiLog::LEVEL_DEBUG);
 		$base = explode(" ", $string);
       
-		if($base[0] != NULL)
+		for($i = -1; $i < count($base) ; $i++)
 		{
-			$str = "#beg# " . $base[0];
-			$this->addLexema($str);      
-		}
-      
-		for($i = 0; $i < count($base) ; $i++)
-		{
-			$str = $base[$i] . (($base[$i+1]) ? " " . $base[$i+1] : " #end#");
+			$str = ((@$base[$i]) ? $base[$i] : "#beg#" ) . " " . ((@$base[$i+1]) ? $base[$i+1] : "#end#");
 			$this->addLexema($str);
 		}
 		
