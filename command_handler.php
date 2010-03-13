@@ -235,6 +235,15 @@ class commandHandler
 			$this->options[$data['name']] = $data['value'];
 			$this->log->log("$data[name] = $data[value]", PichiLog::LEVEL_VERBOSE);
 		}
+		$this->postParseOptions();
+	}
+	
+	// Значения, которые должны немедленно измениться после вызова парсера.
+	private function postParseOptions()
+	{
+		//Syntaxis limit
+		$this->syntax->query_limit = (int)$this->options['answer_word_limit'];
+		//...
 	}
     
 	protected function fetch_commands($command, $from, $type)

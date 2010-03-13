@@ -11,6 +11,7 @@ class SyntaxAnalizer
   
 	//Settings
 	public $limit_word = 2;
+	public $query_limit = 10;
 	public $from_world_coi = 3;
 
 	private $try_count = 0; //попытки построить выражения
@@ -128,7 +129,7 @@ class SyntaxAnalizer
 		if($limit == NULL)
 			$limit = rand(5,20);
 		$this->try_count++; //очередная попытка
-		$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '#beg# %';");
+		$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '#beg# %' ORDER BY `count` DESC;");
 		if($this->db->numRows(true) == 0)
 			return; //пусто
 		$last = $this->choseLexem($this->buildArray());
@@ -136,7 +137,7 @@ class SyntaxAnalizer
 		$genans = $last = $last[1];
 		for($i=0; $i < $limit; $i++)
 		{
-			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString($last) . " " . (($i == $limit-1) ? "#end#" : "%") . "';");
+			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString($last) . " " . (($i == $limit-1) ? "#end#" : "%") . "' ORDER BY `count` DESC LIMIT 0," . $this->query_limit . ";");
 			if($this->db->numRows(true) == 0)
 				break; //больше нет совпадений
 			$last = $this->choseLexem($this->buildArray());
@@ -163,7 +164,7 @@ class SyntaxAnalizer
 		//left
 		for($i = 0; $i < $limit; $i++)
 		{
-			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . (($i == $limit-1) ? "#beg#" : "%") . " " . $this->db->db->escapeString(($i == 0) ? $word : $first) . "';");
+			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . (($i == $limit-1) ? "#beg#" : "%") . " " . $this->db->db->escapeString(($i == 0) ? $word : $first) . "' ORDER BY `count` DESC LIMIT 0," . $this->query_limit . ";");
 			if($this->db->numRows(true) == 0)
 				break; //больше нет совпадений
 			$last = $this->choseLexem($this->buildArray());
@@ -176,7 +177,7 @@ class SyntaxAnalizer
 		//right
 		for($i = 0; $i < $limit; $i++)
 		{
-			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString(($i == 0) ? $word : $second) . " " . (($i == $limit-1) ? "#end#" : "%") . "';");
+			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString(($i == 0) ? $word : $second) . " " . (($i == $limit-1) ? "#end#" : "%") . "' ORDER BY `count` DESC LIMIT 0," . $this->query_limit . ";");
 			if($this->db->numRows(true) == 0)
 				break; //больше нет совпадений
 			$last = $this->choseLexem($this->buildArray());

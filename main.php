@@ -1,7 +1,7 @@
 <?php
 
 ### Some settings ###
-$config['db_version'] = 12; // Work only parram
+$config['db_version'] = 13; // Work only parram
 $config['min_version'] = 6; // Min version of config
 $config['pichi_version'] = "0.4.1 (dev)"; //Pichi version
 
@@ -137,20 +137,21 @@ if(!$db_exist)
 	$command_handler->db->query("CREATE TABLE log (`from` TEXT, `time` TEXT, `type` TEXT, `message` TEXT);");
 	$command_handler->db->query("CREATE TABLE lexems (`lexeme` TEXT, `count` INT);");
 	$command_handler->db->query("CREATE TABLE wiki (`name` TEXT, `value` TEXT);");
-	$command_handler->db->query("CREATE TABLE settings (`name` TEXT, `value` TEXT);");
+	$command_handler->db->query("CREATE TABLE settings (`name` TEXT, `value` TEXT, `description` TEXT);");
 	$command_handler->db->query("CREATE TABLE users (`jid` TEXT, `nick` TEXT, `role` TEXT, `room` TEXT, `time` TEXT, `status` TEXT);");
 	$command_handler->db->query("CREATE TABLE stats (`name` TEXT, `value` TEXT);");
 	$command_handler->db->query("CREATE TABLE actions (`action` TEXT, `coincidence` TEXT, `do` TEXT, `option` TEXT, `value` TEXT);");
 	$command_handler->db->query("CREATE TABLE db_version (`version` TEXT, `value` TEXT);");
   
 	$command_handler->db->query("INSERT INTO db_version (`version`) VALUES ('" . $config['db_version'] . "');");
-	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('answer_mode','1');"); // Отвечать после сообщений пользователей
-	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('answer_random','0');"); // отвечать не всегда (0 - всегда)
-	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('answer_remember','1');"); // запоминать и разбивать на лексемы
-	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('log_enabled','1');"); // вести лог ?
-	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('treatment_coincidence','3');"); // вставлять обращение, совпадения (3 из 1)
-	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('rand_message','0');"); // случайны ответ когда скучно
-	$command_handler->db->query("INSERT INTO settings (`name`, `value`) VALUES ('msg_limit','500');"); // лимит символов, после чего отправляет ответ в личку
+	$command_handler->db->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_mode','1','Режим ответа на сообщения. [0 - выключить; 1 - включить][По умолчанию: 1]');"); // Отвечать после сообщений пользователей
+	$command_handler->db->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_random','0','Не всегда ответь при получении сообщения. [0 - всегда отвечать; >100 фактически всегда молчать][По умолчанию: 0]');"); // отвечать не всегда (0 - всегда)
+	$command_handler->db->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_remember','1','Разбивать на связки слов. [0 - выключить; 1 - включить][По умолчанию: 1]');"); // запоминать и разбивать на лексемы
+	$command_handler->db->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_remember','1','Разбивать на связки слов. [0 - выключить; 1 - включить][По умолчанию: 1]');"); // запоминать и разбивать на лексемы
+	$command_handler->db->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_word_limit','10','Максимальное количество связок слов в расмотрении. Влияет на алгоритм построения фраз, так же как и на нагрузку. [Рекомендуется >3 и <50][По умолчанию: 10]');"); // limit для запросов в лексемах
+	$command_handler->db->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('treatment_coincidence','3','Вероятность вставки обращений. [1 - всегда; >100 фактически никогда][По умолчанию: 3]');"); // вставлять обращение, совпадения (3 из 1)
+	$command_handler->db->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('rand_message','0','Переодически отправлять случайные фразы в главный чат. [0 - выключить; 1 - включить][По умолчанию: 0]');"); // случайны ответ когда скучно
+	$command_handler->db->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('msg_limit','500','Максимальное количество символов, допустимое в главном чате (в противном случае пишет в личку) [По умолчанию: 500]');"); // лимит символов, после чего отправляет ответ в личку
 	$log->log("done",PichiLog::LEVEL_DEBUG);
 }
 
