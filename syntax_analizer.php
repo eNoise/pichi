@@ -199,10 +199,10 @@ class SyntaxAnalizer
 	private function randFromLog($words_limit = 3, $dafault = ":(")
 	{
 		$this->try_count++; //очередная попытка
-		$this->db->query("SELECT text FROM log ORDER BY RANDOM() LIMIT 0,10;");
-		while($text['text'] = $this->db->fetch_array())
-			if(count(explode(" ", $text['text'])) <= $words_limit)
-				return $text['text'];
+		$this->db->query("SELECT message FROM log ORDER BY RANDOM() LIMIT 0,10;");
+		while($text['message'] = $this->db->fetch_array())
+			if(count(explode(" ", $text['message'])) <= $words_limit)
+				return $text['message'];
 		return $dafault;
 	}
 	
