@@ -221,6 +221,7 @@ class SyntaxAnalizer
 	private function testText(& $text)
 	{
 		$this->log->log("$text before test to lexems", PichiLog::LEVEL_VERBOSE);
+		$text = str_replace("\n", " ", $text);
 		$test1 = explode(",",$text);
 		$test2 = explode(":",$text);
 		$ignore_nick = array();
