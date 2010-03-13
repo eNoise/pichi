@@ -200,7 +200,7 @@ class SyntaxAnalizer
 	{
 		$this->try_count++; //очередная попытка
 		$this->db->query("SELECT message FROM log ORDER BY RANDOM() LIMIT 0,10;");
-		while($text['message'] = $this->db->fetch_array())
+		while($text = $this->db->fetch_array())
 			if(count(explode(" ", $text['message'])) <= $words_limit)
 				return $text['message'];
 		return $dafault;
