@@ -409,7 +409,7 @@ class commandHandler
 		$this->db->query("SELECT * FROM settings" . (($w[1] != NULL) ? " WHERE name='".$this->db->db->escapeString($w[1])."'" : "") . ";");
 		while($data = $this->db->fetch_array())
 		{
-			$this->sendAnswer($data['name'] . " = " . $data['value']);
+			$this->sendAnswer($data['name'] . " = " . $data['value'] . " //{$data['description']}");
 			$this->log->log("User request setting: {$data['name']} = {$data['value']}", PichiLog::LEVEL_VERBOSE);
 		}
 	}
