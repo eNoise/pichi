@@ -71,12 +71,14 @@ class SyntaxAnalizer
 			$this->log->log("World \"{$data['lexeme']}\" have {$data['count']} points", PichiLog::LEVEL_VERBOSE);
 		}
 		$rand = rand(0, $sum);
-      
+		$this->log->log("Random seed: {$rand}", PichiLog::LEVEL_VERBOSE);
+		
 		$temp_sum = 0;
 		$num = 0;
 		while($temp_sum < $rand)
 			$temp_sum += $answers[$num++]['count'];
 
+		$this->log->log("CHOISE: " . $answers[(($num>0) ? $num-1 : $num)]['lexeme'], PichiLog::LEVEL_VERBOSE);
 		return $answers[(($num>0) ? $num-1 : $num)]['lexeme'];
 	}
 	
