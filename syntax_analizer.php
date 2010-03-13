@@ -76,6 +76,26 @@ class SyntaxAnalizer
 		return $answers[(($num>0) ? $num-1 : $num)]['lexeme'];
 	}
 	
+	//метод поиска слова, за которым следует данное.
+	// по умолчанию возращает троеточие
+	private function doubleLemem(& $answers, $word, $reverse = false)
+	{
+		$this->log->log("Seek DOUBLE lexeme for: {$word}", PichiLog::LEVEL_VERBOSE);
+		foreach($answers as $key=>$data)
+		{
+			$this->log->log("Try DOUBLE lexeme: {$data['lexeme']}", PichiLog::LEVEL_VERBOSE);
+			$need = explode(" ", $data['lexeme']);
+			$need = (!$reverse) ? $need[1] : $need[0];
+			$this->db->query("SELECT COUNT(*) FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString(((!$reverse) ? $need : $word)) . " " . $this->db->db->escapeString(((!$reverse) ? $word : $need)) . "' LIMIT 0,1;");
+			if($this->db->fetchColumn() > 0)
+			{
+				$this->log->log("CHOISE DOUBLE lexeme: {$data['lexeme']}", PichiLog::LEVEL_VERBOSE);
+				return $data['lexeme'];
+			}
+		}
+		return "... ...";
+	}
+	
 	public function generate()
 	{
 		$this->try_count = 0; // сбрасываем попытки
@@ -133,10 +153,13 @@ class SyntaxAnalizer
 		$genans = $last = $last[1];
 		for($i=0; $i < $limit; $i++)
 		{
-			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString($last) . " " . (($i == $limit-1) ? "#end#" : "%") . "' ORDER BY `count` DESC LIMIT 0," . $this->query_limit . ";");
+			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString($last) . " %' ORDER BY `count` DESC LIMIT 0," . $this->query_limit . ";");
 			if($this->db->numRows(true) == 0)
 				break; //больше нет совпадений
-			$last = $this->choseLexem($this->buildArray());
+			if($i != $limit-1)
+				$last = $this->choseLexem($this->buildArray());
+			else
+				$last = $this->doubleLemem($this->buildArray(), "#end#");
 			$last = explode(" ",$last);
 			$last = $last[1];
 	
@@ -160,10 +183,13 @@ class SyntaxAnalizer
 		//left
 		for($i = 0; $i < $limit; $i++)
 		{
-			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . (($i == $limit-1) ? "#beg#" : "%") . " " . $this->db->db->escapeString(($i == 0) ? $word : $first) . "' ORDER BY `count` DESC LIMIT 0," . $this->query_limit . ";");
+			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '% " . $this->db->db->escapeString(($i == 0) ? $word : $first) . "' ORDER BY `count` DESC LIMIT 0," . $this->query_limit . ";");
 			if($this->db->numRows(true) == 0)
 				break; //больше нет совпадений
-			$last = $this->choseLexem($this->buildArray());
+			if($i != $limit-1)
+				$last = $this->choseLexem($this->buildArray());
+			else
+				$last = $this->doubleLemem($this->buildArray(), "#beg#", true);
 			list($first, $second) = explode(" ", $last);
 				
 			if($first == "#beg#" || $first == NULL)
@@ -173,10 +199,13 @@ class SyntaxAnalizer
 		//right
 		for($i = 0; $i < $limit; $i++)
 		{
-			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString(($i == 0) ? $word : $second) . " " . (($i == $limit-1) ? "#end#" : "%") . "' ORDER BY `count` DESC LIMIT 0," . $this->query_limit . ";");
+			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString(($i == 0) ? $word : $second) . " %' ORDER BY `count` DESC LIMIT 0," . $this->query_limit . ";");
 			if($this->db->numRows(true) == 0)
 				break; //больше нет совпадений
-			$last = $this->choseLexem($this->buildArray());
+			if($i != $limit-1)
+				$last = $this->choseLexem($this->buildArray());
+			else
+				$last = $this->doubleLemem($this->buildArray(), "#end#");
 			list($first, $second) = explode(" ", $last);
 				
 			if($second == "#end#" || $second == NULL)
