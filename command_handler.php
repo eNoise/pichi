@@ -292,7 +292,7 @@ class commandHandler
 					$this->sendAnswer($wtfword . " = " . $wtfdef);
 				break;
 			case ($this->getCommand($command) == "!top"):
-				$this->db->query("SELECT lexeme FROM lexems,count ORDER BY count DESC LIMIT 0,10;");
+				$this->db->query("SELECT `lexeme`,`count` FROM lexems ORDER BY count DESC LIMIT 0,10;");
 				$this->sendAnswer("10 самых популярных связок слов:");
 				$ans = "";
 				$ix = 0;
