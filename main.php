@@ -186,6 +186,8 @@ while(!$jabber->isDisconnected()) {
 				break;
 			case 'presence':
 				$log->log("Recive PRESENCE Handler from: {$data['from']} [{$data['show']}] {$data['status']}",PichiLog::LEVEL_DEBUG);
+				if($data['show'] != 'unavailable')
+					$data['show'] = 'available'; // Во всех случаях кроме оффлайна, ставим онлайн
 				if($data['show'] == 'available' || $data['show'] == 'unavailable')
 				{
 					unset($jid);
