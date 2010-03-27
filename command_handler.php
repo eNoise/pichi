@@ -261,6 +261,7 @@ class commandHandler
 				$help .= "!wtf name - определение из базы\n";
 				$help .= "!wtfcount - количество определений в базе\n";
 				$help .= "!wtfrand - случайно определение\n";
+				$help .= "!wtfrev def - Показать ревизию статьи\n";
 				$help .= "!top - топ 10 слов в базе\n";
 				$help .= "!count - количество лексем\n";
 				$help .= "!talkers - 10 самых болтнивых пользователей\n";
@@ -318,6 +319,14 @@ class commandHandler
 				{
 					$this->sendAnswer("В базе нет поредлений =(");
 				}
+				break;
+			case ($this->getCommand($command) == "!wtfrev"):
+				$w = $this->seperate($command);
+				$this->db->query("SELECT revision FROM wiki WHERE name = '" . $this->db->db->escapeString($w[1]) . "' ORDER BY revision DESC LIMIT 0,1;");
+				if($this->db->numRows(true) > 0)
+					$this->sendAnswer("Ревизия: " . $this->db->fetchColumn(0));
+				else
+					$this->sendAnswer("Такого определения нету в базе");
 				break;
 			case ($this->getCommand($command) == "!top"):
 				$this->db->query("SELECT `lexeme`,`count` FROM lexems ORDER BY count DESC LIMIT 0,10;");
