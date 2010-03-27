@@ -130,7 +130,7 @@ $command_handler->ignore[] = $config['user'] . "@" . $config['server'];
 $command_handler->admins = $config['admins'];
 $command_handler->wait_time = $config['wait_time'];
 // Settings XMPPHP
-$jabber->auto_subscribe = TRUE; // Auto subscribe
+$jabber->autoSubscribe(); // Auto subscribe
 $log->log("done!",PichiLog::LEVEL_VERBOSE);
 
 if(!$db_exist)
