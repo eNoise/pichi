@@ -261,7 +261,9 @@ class commandHandler
 				$help .= "!wtf name - определение из базы\n";
 				$help .= "!wtfcount - количество определений в базе\n";
 				$help .= "!wtfrand - случайно определение\n";
-				$help .= "!wtfrev def - Показать ревизию статьи\n";
+				$help .= "!wtfrev def - Показать ревизию определения\n";
+				$help .= "!wtfull def - Полный список ревизий с определениями\n";
+				$help .= "!wtfset rev - Вернуть определенную ревизию\n";
 				$help .= "!top - топ 10 слов в базе\n";
 				$help .= "!count - количество лексем\n";
 				$help .= "!talkers - 10 самых болтнивых пользователей\n";
@@ -327,6 +329,34 @@ class commandHandler
 					$this->sendAnswer("Ревизия: " . $this->db->fetchColumn(0));
 				else
 					$this->sendAnswer("Такого определения нету в базе");
+				break;
+			case ($this->getCommand($command) == "!wtfull"):
+				$w = $this->seperate($command);
+				$this->db->query("SELECT * FROM wiki WHERE name = '" . $this->db->db->escapeString($w[1]) . "' ORDER BY revision DESC;");
+				$list_rev = NULL;
+				while($tmp = $this->db->fetch_array())
+					$list_rev .= "\n------- Ревизия {$tmp['revision']} ({$tmp['name']}) -------\n{$tmp['value']}\n---------------------";
+				if($list_rev != NULL)
+					$this->sendAnswer($list_rev);
+				else
+					$this->sendAnswer("Такого определения нету в базе");
+				break;
+			case ($this->getCommand($command) == "!wtfset"):
+				$w = $this->seperate($command, 3);
+				$this->db->query("SELECT name,revision,value FROM wiki WHERE name = '" . $this->db->db->escapeString($w[1]) . "' AND revision='" . $this->db->db->escapeString($w[2]) . "' LIMIT 0,1;");
+				if($this->db->numRows(true) > 0)
+				{
+					$name = $this->db->fetchColumn(0);
+					//$rev = $this->db->fetchColumn(1);
+					$val = $this->db->fetchColumn(2,true);
+					$this->db->query("SELECT revision FROM wiki WHERE name = '" . $this->db->db->escapeString($name) . "' ORDER BY revision DESC LIMIT 0,1;");
+					$newrev = ((int)$this->db->fetchColumn(0))+1;
+					$this->db->query("INSERT INTO wiki (`name`,`revision`,`value`) VALUES ('" . $this->db->db->escapeString($name) . "','" . $this->db->db->escapeString($newrev) . "','".$this->db->db->escapeString($val)."');");
+				}
+				else
+				{
+					$this->sendAnswer("Такого определения нету в базе");
+				} 
 				break;
 			case ($this->getCommand($command) == "!top"):
 				$this->db->query("SELECT `lexeme`,`count` FROM lexems ORDER BY count DESC LIMIT 0,10;");
