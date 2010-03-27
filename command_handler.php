@@ -347,11 +347,12 @@ class commandHandler
 				if($this->db->numRows(true) > 0)
 				{
 					$name = $this->db->fetchColumn(0);
-					//$rev = $this->db->fetchColumn(1);
+					$rev = $this->db->fetchColumn(1,true);
 					$val = $this->db->fetchColumn(2,true);
 					$this->db->query("SELECT revision FROM wiki WHERE name = '" . $this->db->db->escapeString($name) . "' ORDER BY revision DESC LIMIT 0,1;");
 					$newrev = ((int)$this->db->fetchColumn(0))+1;
 					$this->db->query("INSERT INTO wiki (`name`,`revision`,`value`) VALUES ('" . $this->db->db->escapeString($name) . "','" . $this->db->db->escapeString($newrev) . "','".$this->db->db->escapeString($val)."');");
+					$this->sendAnswer("Set to revision {$rev}.");
 				}
 				else
 				{
