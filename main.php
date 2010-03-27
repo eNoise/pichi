@@ -1,7 +1,7 @@
 <?php
 
 ### Some settings ###
-$config['db_version'] = 13; // Work only parram
+$config['db_version'] = 14; // Work only parram
 $config['min_version'] = 6; // Min version of config
 $config['pichi_version'] = "0.4.1 (dev)"; //Pichi version
 
@@ -138,7 +138,7 @@ if(!$db_exist)
 	$log->log("Creating database structure",PichiLog::LEVEL_DEBUG);
 	$command_handler->db->query("CREATE TABLE log (`from` TEXT, `time` TEXT, `type` TEXT, `message` TEXT);");
 	$command_handler->db->query("CREATE TABLE lexems (`lexeme` TEXT, `count` INT);");
-	$command_handler->db->query("CREATE TABLE wiki (`name` TEXT, `value` TEXT);");
+	$command_handler->db->query("CREATE TABLE wiki (`name` TEXT, `revision` INT, `value` TEXT);");
 	$command_handler->db->query("CREATE TABLE settings (`name` TEXT, `value` TEXT, `description` TEXT);");
 	$command_handler->db->query("CREATE TABLE users (`jid` TEXT, `nick` TEXT, `role` TEXT, `room` TEXT, `time` TEXT, `status` TEXT);");
 	$command_handler->db->query("CREATE TABLE stats (`name` TEXT, `value` TEXT);");

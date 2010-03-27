@@ -289,16 +289,35 @@ class commandHandler
 				$this->show_wtf($command);
 				break;
 			case ($this->getCommand($command) == "!wtfcount"):
-				$this->db->query("SELECT COUNT(*) FROM wiki;");
-				$wtfnum = (int)$this->db->fetchColumn(0);
-				$this->sendAnswer("Количество определений в базе: $wtfnum");
+				$this->db->query("SELECT name FROM wiki;");
+				if($this->db->numRows(true) > 0)
+				{
+					$tmp_ar = array();
+					while($tmp = $this->db->fetch_array())
+						$tmp_ar[] = $tmp['name'];
+					$tmp_ar = array_unique($tmp_ar);
+					$wtfnum = count($tmp_ar);
+					$this->sendAnswer("Количество определений в базе: $wtfnum");
+				}
+				else
+				{
+					$this->sendAnswer("В базе нет поредлений =(");
+				}
 				break;
 			case ($this->getCommand($command) == "!wtfrand"):
-				$this->db->query("SELECT * FROM wiki ORDER BY RANDOM() LIMIT 0,1;");
-				$wtfword = $this->db->fetchColumn(0);
-				$wtfdef = $this->db->fetchColumn(1,true);
-				if($wtfword != NULL && $wtfdef != NULL)
-					$this->sendAnswer($wtfword . " = " . $wtfdef);
+				$this->db->query("SELECT name FROM wiki ORDER BY RANDOM() LIMIT 0,1;");
+				if($this->db->numRows(true) > 0)
+				{
+					$this->db->query("SELECT name,value FROM wiki WHERE name = '" . $this->db->db->escapeString($this->db->fetchColumn(0)) . "' ORDER BY revision DESC LIMIT 0,1;");
+					$wtfword = $this->db->fetchColumn(0);
+					$wtfdef = $this->db->fetchColumn(1,true);
+					if($wtfword != NULL && $wtfdef != NULL)
+						$this->sendAnswer($wtfword . " = " . $wtfdef);
+				}
+				else
+				{
+					$this->sendAnswer("В базе нет поредлений =(");
+				}
 				break;
 			case ($this->getCommand($command) == "!top"):
 				$this->db->query("SELECT `lexeme`,`count` FROM lexems ORDER BY count DESC LIMIT 0,10;");
@@ -417,7 +436,7 @@ class commandHandler
 	private function show_wtf($command)
 	{
 		$w = $this->seperate($command);
-		$this->db->query("SELECT `value` FROM wiki WHERE name='".$this->db->db->escapeString($w[1])."';");
+		$this->db->query("SELECT `value` FROM wiki WHERE name='".$this->db->db->escapeString($w[1])."' ORDER BY revision DESC LIMIT 0,1;");
 		$answer = $this->db->fetchColumn(0);
 		$this->sendAnswer($answer);
 		$this->log->log("User request wiki page \"$w[1]\" = $answer", PichiLog::LEVEL_DEBUG);
@@ -427,11 +446,16 @@ class commandHandler
 	{
 		$w = $this->seperate($command);
       
-		$this->db->query("SELECT COUNT(*) FROM wiki WHERE name = '" . $this->db->db->escapeString($w[1]) . "';");
-		if($this->db->fetchColumn() > 0)
-			$this->db->query("UPDATE wiki SET value = '".$this->db->db->escapeString($w[2])."'  WHERE name = '".$this->db->db->escapeString($w[1])."';");
+		$this->db->query("SELECT revision FROM wiki WHERE name = '" . $this->db->db->escapeString($w[1]) . "' ORDER BY revision DESC LIMIT 0,1;");
+		if($this->db->numRows(true) > 0)
+		{
+			$rev = (int)$this->db->fetchColumn(0);
+			$this->db->query("INSERT INTO wiki (`name`,`revision`,`value`) VALUES ('" . $this->db->db->escapeString($w[1]) . "','" . $this->db->db->escapeString($rev+1) . "','".$this->db->db->escapeString($w[2])."');");
+		}
 		else
-			$this->db->query("INSERT INTO wiki (`name`,`value`) VALUES ('" . $this->db->db->escapeString($w[1]) . "','".$this->db->db->escapeString($w[2])."');");
+		{
+			$this->db->query("INSERT INTO wiki (`name`,`revision`,`value`) VALUES ('" . $this->db->db->escapeString($w[1]) . "','1','".$this->db->db->escapeString($w[2])."');");
+		}
 		
 		$this->log->log("User set wiki page $w[1] = $w[2]", PichiLog::LEVEL_DEBUG);
 		$this->sendAnswer("Value Updated!");
