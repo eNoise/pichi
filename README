@@ -1,0 +1,21 @@
+# Pichi Bot
+Pichi is a jabber(xmpp) bot writen on php. It is based on sulchi facilities.
+
+* [Google Code Page](http://code.google.com/p/pichi/)
+* SVN: http://pichi.googlecode.com/svn/trunk/
+* GIT: git://github.com/DEgx/pichi.git
+
+## Required
+* php >= 5.2
+* php-openssl
+* php-mbstring
+* php-sqlite3
+* php-xml
+
+## Installation
+Download from svn:
+ svn checkout http://pichi.googlecode.com/svn/trunk/ pichi
+or git:
+ git clone git://github.com/DEgx/pichi.git
+Then simply run:
+ ./pichi
