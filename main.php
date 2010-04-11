@@ -120,7 +120,7 @@ else
 }
 $log->log("Pichi Init",PichiLog::LEVEL_VERBOSE);
 $pichi = new Pichi($jabber);
-$pichi->log = $log;
+$pichi->_log($log);
 $pichi->room = $config['room'];
 $pichi->user = $config['user'];
 $pichi->server = $config['server'];
@@ -136,29 +136,29 @@ $log->log("done!",PichiLog::LEVEL_VERBOSE);
 if(!$db_exist)
 {
 	$log->log("Creating database structure",PichiLog::LEVEL_DEBUG);
-	$pichi->db->query("CREATE TABLE log (`from` TEXT, `time` TEXT, `type` TEXT, `message` TEXT);");
-	$pichi->db->query("CREATE TABLE lexems (`lexeme` TEXT, `count` INT);");
-	$pichi->db->query("CREATE TABLE wiki (`name` TEXT, `revision` INT, `value` TEXT);");
-	$pichi->db->query("CREATE TABLE settings (`name` TEXT, `value` TEXT, `description` TEXT);");
-	$pichi->db->query("CREATE TABLE users (`jid` TEXT, `nick` TEXT, `role` TEXT, `room` TEXT, `time` TEXT, `status` TEXT);");
-	$pichi->db->query("CREATE TABLE stats (`name` TEXT, `value` TEXT);");
-	$pichi->db->query("CREATE TABLE actions (`action` TEXT, `coincidence` TEXT, `do` TEXT, `option` TEXT, `value` TEXT);");
-	$pichi->db->query("CREATE TABLE db_version (`version` TEXT, `value` TEXT);");
+	$pichi->_db()->query("CREATE TABLE log (`from` TEXT, `time` TEXT, `type` TEXT, `message` TEXT);");
+	$pichi->_db()->query("CREATE TABLE lexems (`lexeme` TEXT, `count` INT);");
+	$pichi->_db()->query("CREATE TABLE wiki (`name` TEXT, `revision` INT, `value` TEXT);");
+	$pichi->_db()->query("CREATE TABLE settings (`name` TEXT, `value` TEXT, `description` TEXT);");
+	$pichi->_db()->query("CREATE TABLE users (`jid` TEXT, `nick` TEXT, `role` TEXT, `room` TEXT, `time` TEXT, `status` TEXT);");
+	$pichi->_db()->query("CREATE TABLE stats (`name` TEXT, `value` TEXT);");
+	$pichi->_db()->query("CREATE TABLE actions (`action` TEXT, `coincidence` TEXT, `do` TEXT, `option` TEXT, `value` TEXT);");
+	$pichi->_db()->query("CREATE TABLE db_version (`version` TEXT, `value` TEXT);");
   
-	$pichi->db->query("INSERT INTO db_version (`version`) VALUES ('" . $config['db_version'] . "');");
-	$pichi->db->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_mode','1','Режим ответа на сообщения. [0 - выключить; 1 - включить][По умолчанию: 1]');"); // Отвечать после сообщений пользователей
-	$pichi->db->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_random','0','Не всегда ответь при получении сообщения. [0 - всегда отвечать; >100 фактически всегда молчать][По умолчанию: 0]');"); // отвечать не всегда (0 - всегда)
-	$pichi->db->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_remember','1','Разбивать на связки слов. [0 - выключить; 1 - включить][По умолчанию: 1]');"); // запоминать и разбивать на лексемы
-	$pichi->db->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_word_limit','10','Максимальное количество связок слов в расмотрении. Влияет на алгоритм построения фраз, так же как и на нагрузку. [Рекомендуется >3 и <50][По умолчанию: 10]');"); // limit для запросов в лексемах
-	$pichi->db->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('log_enabled','1','Вести лог? [0 - выключить; 1 - включить][По умолчанию: 1]');"); // вести лог ?
-	$pichi->db->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('treatment_coincidence','3','Вероятность вставки обращений. [1 - всегда; >100 фактически никогда][По умолчанию: 3]');"); // вставлять обращение, совпадения (3 из 1)
-	$pichi->db->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('rand_message','0','Переодически отправлять случайные фразы в главный чат. [0 - выключить; 1 - включить][По умолчанию: 0]');"); // случайны ответ когда скучно
-	$pichi->db->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('msg_limit','500','Максимальное количество символов, допустимое в главном чате (в противном случае пишет в личку) [По умолчанию: 500]');"); // лимит символов, после чего отправляет ответ в личку
+	$pichi->_db()->query("INSERT INTO db_version (`version`) VALUES ('" . $config['db_version'] . "');");
+	$pichi->_db()->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_mode','1','Режим ответа на сообщения. [0 - выключить; 1 - включить][По умолчанию: 1]');"); // Отвечать после сообщений пользователей
+	$pichi->_db()->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_random','0','Не всегда ответь при получении сообщения. [0 - всегда отвечать; >100 фактически всегда молчать][По умолчанию: 0]');"); // отвечать не всегда (0 - всегда)
+	$pichi->_db()->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_remember','1','Разбивать на связки слов. [0 - выключить; 1 - включить][По умолчанию: 1]');"); // запоминать и разбивать на лексемы
+	$pichi->_db()->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_word_limit','10','Максимальное количество связок слов в расмотрении. Влияет на алгоритм построения фраз, так же как и на нагрузку. [Рекомендуется >3 и <50][По умолчанию: 10]');"); // limit для запросов в лексемах
+	$pichi->_db()->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('log_enabled','1','Вести лог? [0 - выключить; 1 - включить][По умолчанию: 1]');"); // вести лог ?
+	$pichi->_db()->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('treatment_coincidence','3','Вероятность вставки обращений. [1 - всегда; >100 фактически никогда][По умолчанию: 3]');"); // вставлять обращение, совпадения (3 из 1)
+	$pichi->_db()->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('rand_message','0','Переодически отправлять случайные фразы в главный чат. [0 - выключить; 1 - включить][По умолчанию: 0]');"); // случайны ответ когда скучно
+	$pichi->_db()->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('msg_limit','500','Максимальное количество символов, допустимое в главном чате (в противном случае пишет в личку) [По умолчанию: 500]');"); // лимит символов, после чего отправляет ответ в личку
 	$log->log("done",PichiLog::LEVEL_DEBUG);
 }
 
-$pichi->db->query("SELECT * FROM db_version;");
-$current_db_version = $pichi->db->fetchColumn(0);
+$pichi->_db()->query("SELECT * FROM db_version;");
+$current_db_version = $pichi->_db()->fetchColumn(0);
 if($current_db_version < $config['db_version'])
 {
 	$log->log("Old database!",PichiLog::LEVEL_ERROR);
@@ -214,7 +214,7 @@ while(!$jabber->isDisconnected()) {
 				break;
 			case 'session_start':
 				$log->log("Recive SESSION_START Handler",PichiLog::LEVEL_DEBUG);
-				$pichi->db->query("UPDATE users SET status = 'unavailable';");
+				$pichi->_db()->query("UPDATE users SET status = 'unavailable';");
 				$jabber->getRoster();
 				$jabber->presence($config['status']);
 				$pichi->joinRoom($config['room'], $config['room_user'], "BotWorld!");

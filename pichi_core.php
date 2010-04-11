@@ -57,6 +57,17 @@ class PichiCore
 		$this->event->jabber = & $this->jabber;
 	}
 
+	//some stubs
+	public function _db()
+	{
+		return $this->db;
+	}
+	
+	public function _log(& $log)
+	{
+		$this->log = $log;
+	}
+
 	public function joinRoom($room, $nick, $status = "BotWorld!")
 	{
 		if(strpos($room, "@") === FALSE)

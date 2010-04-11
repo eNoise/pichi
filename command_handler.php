@@ -71,7 +71,7 @@ class CommandHandler extends PichiCore
 			$command = $this->getCommand($this->last_from);
 			$command = substr($command, 1);
 			if(method_exists("command_{$command}"))
-				$this->"command_$command"();
+				$this->{"command_$command"}();
 		}
 	
 	}
