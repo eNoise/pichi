@@ -25,10 +25,10 @@ class PichiCore
 	public $room_user;
     
 	// Last message settings
-	private $last_massage;
-	private $last_from;
-	private $last_type;
-	private $last_room;
+	protected $last_massage;
+	protected $last_from;
+	protected $last_type;
+	protected $last_room;
 	// Last data recive settings
 	public $last_id;                                           
 	public $last_data;
@@ -255,13 +255,18 @@ class PichiCore
 			$this->db->query("INSERT INTO users (`jid`,`nick`,`role`,`room`,`time`,`status`) VALUES ('" . $this->db->db->escapeString($jid) . "','".$this->db->db->escapeString($nick)."','" . $this->db->db->escapeString($role) . "','". $this->db->db->escapeString($room) ."','".time()."','".$status."');");
 	}
     
+        private function isCommand($command)
+        {
+                return (substr($command,0,1) == "!");
+        }
+    
 	public function reciveMessage($message, $from, $type)
 	{
 		// No reaction while time off
 		if(time() - $this->wait < $this->wait_time)
 		{
 			$this->log->log("Ignore Message: <$from> $message", PichiLog::LEVEL_DEBUG);
-			return;
+			return false;
 		}
 		
 		// Remember
@@ -281,6 +286,8 @@ class PichiCore
 		//to lexems massges
 		if(!$this->isIgnore() && !$this->isCommand($this->last_message) && $this->options['answer_remember'] == 1)
 			$this->syntax->parseText($this->last_message);
+		
+		return true;
 
 	}
 

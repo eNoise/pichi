@@ -64,13 +64,13 @@ class CommandHandler extends PichiCore
 	{
 		global $config;
 		
-		$this->log->log("Command from " . $this->last_from . ": $command", PichiLog::LEVEL_DEBUG);
+		$this->log->log("Command from " . $this->last_from . ": {$this->last_message}", PichiLog::LEVEL_DEBUG);
 		
-		if(isCommand($this->last_message))
+		if($this->isCommand($this->last_message))
 		{
-			$command = $this->getCommand($this->last_from);
+			$command = $this->getCommand($this->last_message);
 			$command = substr($command, 1);
-			if(method_exists("command_{$command}"))
+			if(method_exists($this, "command_{$command}"))
 				$this->{"command_$command"}();
 		}
 	
@@ -78,7 +78,8 @@ class CommandHandler extends PichiCore
 
 	public function reciveMessage($message, $from, $type)
 	{
-		parent::reciveMessage($message, $from, $type);
+		if(!parent::reciveMessage($message, $from, $type))
+			return false;
 	  
 		// Command send
 		if(!$this->isIgnore())
