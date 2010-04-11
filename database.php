@@ -44,6 +44,7 @@ class PichiDatabase
 				else
 				{
 					$this->last_query->reset();
+					$this->log->log("[QOLD] \"$query\"", PichiLog::LEVEL_VERBOSE);
 				}
 				return $this->last_query;
 		}
