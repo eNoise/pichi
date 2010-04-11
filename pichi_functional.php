@@ -45,7 +45,7 @@ class Pichi extends CommandHandler
 	
 	protected function command_version()
 	{
-		global $config
+		global $config;
 		$this->sendAnswer("Pichi Bot v.{$config['pichi_version']}");
 	}
 	
@@ -203,7 +203,7 @@ class Pichi extends CommandHandler
 		$this->sendAnswer($ans);
 	}
 	
-	protected function command_talkers()
+	protected function command_count()
 	{
 		$this->db->query("SELECT COUNT(*) FROM lexems;");
 		$lexnum = (int)$this->db->fetchColumn(0);

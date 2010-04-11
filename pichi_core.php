@@ -85,7 +85,7 @@ class PichiCore
 		$this->last_id['ping'] = $id;
 	}
 	
-	public function do_if_ping($id)
+	public function recivePing($id)
 	{
 		if($id == $this->last_id['ping'])
 		{
@@ -244,7 +244,7 @@ class PichiCore
 			$this->db->query("INSERT INTO users (`jid`,`nick`,`role`,`room`,`time`,`status`) VALUES ('" . $this->db->db->escapeString($jid) . "','".$this->db->db->escapeString($nick)."','" . $this->db->db->escapeString($role) . "','". $this->db->db->escapeString($room) ."','".time()."','".$status."');");
 	}
     
-	public function do_if_message($message, $from, $type)
+	public function reciveMessage($message, $from, $type)
 	{
 		// No reaction while time off
 		if(time() - $this->wait < $this->wait_time)
@@ -252,7 +252,8 @@ class PichiCore
 			$this->log->log("Ignore Message: <$from> $message", PichiLog::LEVEL_DEBUG);
 			return;
 		}
-			
+		
+		// Remember
 		$this->last_message = $message;
 		$this->last_from = $from;
 		$this->last_type = $type;
@@ -263,41 +264,13 @@ class PichiCore
 	
 		$this->log->log("Call message method", PichiLog::LEVEL_DEBUG);
 		
-		if(!$this->isIgnore())
-			$this->fetch_commands($this->last_message, $this->last_from, $this->last_type); // проверяем на комманду
-
 		if(!$this->isCommand($message) && $this->options['log_enabled'] == 1)
 			$this->db->query("INSERT INTO log (`from`,`time`,`type`,`message`) VALUES ('".$this->db->db->escapeString($this->last_from)."','".$this->db->db->escapeString(time())."','".$this->db->db->escapeString($this->last_type)."','".$this->db->db->escapeString($this->last_message)."');");
-		//Log
-	
+		
 		//to lexems massges
 		if(!$this->isIgnore() && !$this->isCommand($this->last_message) && $this->options['answer_remember'] == 1)
 			$this->syntax->parseText($this->last_message);
-	
-		//test message
-		if(!$this->isIgnore() && !$this->isCommand($this->last_message) && $this->options['answer_mode'] == 1)
-		{
-			if((int)$this->options['answer_random'] === 0 || rand(1, (int)$this->options['answer_random']) === 1)
-			{
-				$this->syntax->generate();
-				if(rand(1, (int)$this->options['treatment_coincidence']) === 1 && $this->options['treatment_coincidence'] > 0)
-				{
-					switch(rand(1,2))
-					{
-						case 1:
-							$this->sendAnswer($this->getName($this->last_from) . ": " . $this->syntax->returnText());
-							break;
-						case 2:
-							$this->sendAnswer($this->getName($this->last_from) . ", " . $this->syntax->returnText());
-							break;		
-					}
-				}
-				else
-				{
-					$this->sendAnswer($this->syntax->returnText());
-				}
-			}
-		}
+
 	}
 
 	public function sendRandMessage()

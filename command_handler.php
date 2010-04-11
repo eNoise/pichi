@@ -76,35 +76,13 @@ class CommandHandler extends PichiCore
 	
 	}
 
-	public function do_if_message($message, $from, $type)
+	public function reciveMessage($message, $from, $type)
 	{
-		// No reaction while time off
-		if(time() - $this->wait < $this->wait_time)
-		{
-			$this->log->log("Ignore Message: <$from> $message", PichiLog::LEVEL_DEBUG);
-			return;
-		}
-			
-		$this->last_message = $message;
-		$this->last_from = $from;
-		$this->last_type = $type;
-		if($this->last_type == "groupchat")
-			$this->last_room = $this->getJID($this->last_from);
-		else
-			$this->last_room = NULL;
-	
-		$this->log->log("Call message method", PichiLog::LEVEL_DEBUG);
-		
+		parent::reciveMessage($message, $from, $type);
+	  
+		// Command send
 		if(!$this->isIgnore())
-			$this->fetch_commands($this->last_message, $this->last_from, $this->last_type); // проверяем на комманду
-
-		if(!$this->isCommand($message) && $this->options['log_enabled'] == 1)
-			$this->db->query("INSERT INTO log (`from`,`time`,`type`,`message`) VALUES ('".$this->db->db->escapeString($this->last_from)."','".$this->db->db->escapeString(time())."','".$this->db->db->escapeString($this->last_type)."','".$this->db->db->escapeString($this->last_message)."');");
-		//Log
-	
-		//to lexems massges
-		if(!$this->isIgnore() && !$this->isCommand($this->last_message) && $this->options['answer_remember'] == 1)
-			$this->syntax->parseText($this->last_message);
+			$this->fetchCommand();
 	
 		//test message
 		if(!$this->isIgnore() && !$this->isCommand($this->last_message) && $this->options['answer_mode'] == 1)

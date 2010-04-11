@@ -181,10 +181,10 @@ while(!$jabber->isDisconnected()) {
 			case 'message':
 				$time_message = time();
 				$log->log("Recive MESSAGE Handler From $data[body]($data[type]):\nMessage: $data[body]",PichiLog::LEVEL_DEBUG);
-				$pichi->do_if_message($data['body'], $data['from'], $data['type']);
+				$pichi->reciveMessage($data['body'], $data['from'], $data['type']);
 				break;
 			case 'ping':
-				$pichi->do_if_ping($data['id']);
+				$pichi->recivePing($data['id']);
 				break;
 			case 'presence':
 				$log->log("Recive PRESENCE Handler from: {$data['from']} [{$data['show']}] {$data['status']}",PichiLog::LEVEL_DEBUG);
