@@ -74,6 +74,7 @@ class PichiCore
 			$room .= "@" . $this->room_service . "." . $this->server;
 		$this->jabber->presence($status, 'available', $room."/".$nick);
 		$this->wait = time();
+		($hook = PichiPlugin::fetch_hook('pichicore_room_join')) ? eval($hook) : false;
 		$this->setUserInfo($this->user."@".$this->server, $nick, NULL, $room, 'available');
 		$this->log->log("Join to room $room as $nick", PichiLog::LEVEL_DEBUG);
 	}
@@ -83,6 +84,7 @@ class PichiCore
 	  	if(strpos($room, "@") === FALSE)
 			$room .= "@" . $this->room_service . "." . $this->server;
 		$this->jabber->presence($status, 'unavailable', $room."/".$nick);
+		($hook = PichiPlugin::fetch_hook('pichicore_room_left')) ? eval($hook) : false;
 		$this->setUserInfo($this->user."@".$this->server, $nick, NULL, $room, 'unavailable');
 		$this->log->log("Left room $room as $nick", PichiLog::LEVEL_DEBUG);
 	}
@@ -148,6 +150,7 @@ class PichiCore
 		else
 			$to = $this->last_from;
 		$type = $this->last_type;
+		($hook = PichiPlugin::fetch_hook('pichicore_answer_send')) ? eval($hook) : false;
 		if(strlen($message) < $this->options['msg_limit'] || $this->options['msg_limit'] < 1 || $this->last_type != "groupchat")
 			$this->jabber->message($to, $message, $type);
 		else
@@ -216,6 +219,7 @@ class PichiCore
 		//Syntaxis limit
 		$this->syntax->query_limit = (int)$this->options['answer_word_limit'];
 		//...
+		($hook = PichiPlugin::fetch_hook('pichicore_options_parse')) ? eval($hook) : false;
 	}
     
 	/*
@@ -246,6 +250,8 @@ class PichiCore
 			else if($status == 'unavailable' && $old_status == 'available')
 				$this->event->catchEvent("user_left_room", "room=$room,jid=$jid");
 		}
+		
+		($hook = PichiPlugin::fetch_hook('pichicore_status_update')) ? eval($hook) : false;
 		
 		$this->log->log("Updating user status for $nick($jid) in $room = $status", PichiLog::LEVEL_DEBUG);
 		$this->db->query("SELECT COUNT(*) FROM users WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND room = '" . $this->db->db->escapeString($room) . "';");
@@ -278,6 +284,7 @@ class PichiCore
 		else
 			$this->last_room = NULL;
 	
+		($hook = PichiPlugin::fetch_hook('pichicore_message_recive_begin')) ? eval($hook) : false;
 		$this->log->log("Call message method", PichiLog::LEVEL_DEBUG);
 		
 		if(!$this->isCommand($message) && $this->options['log_enabled'] == 1)
@@ -286,6 +293,8 @@ class PichiCore
 		//to lexems massges
 		if(!$this->isIgnore() && !$this->isCommand($this->last_message) && $this->options['answer_remember'] == 1)
 			$this->syntax->parseText($this->last_message);
+		
+		($hook = PichiPlugin::fetch_hook('pichicore_message_recive_complete')) ? eval($hook) : false;
 		
 		return true;
 

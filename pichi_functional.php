@@ -38,6 +38,7 @@ class Pichi extends CommandHandler
 		$help .= "!greet jid room@server greet - Сообщение при заходе\n";
 		$help .= "!farewell jid room@server buy - Сообщение при выходе\n";
 		$help .= "!idle nick - сколько молчит указаный ник\n";
+		($hook = PichiPlugin::fetch_hook('commands_show_help')) ? eval($hook) : false;
 		$help .= "!quit - выход\n";
 		$help .= "!version - версия бота\n";
 		$this->sendAnswer($help);
@@ -47,6 +48,7 @@ class Pichi extends CommandHandler
 	{
 		global $config;
 		$this->sendAnswer("Pichi Bot v.{$config['pichi_version']}");
+		($hook = PichiPlugin::fetch_hook('commands_show_version')) ? eval($hook) : false;
 	}
 	
 	protected function command_log()

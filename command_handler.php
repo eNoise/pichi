@@ -72,6 +72,8 @@ class CommandHandler extends PichiCore
 			$command = substr($command, 1);
 			if(method_exists($this, "command_{$command}"))
 				$this->{"command_$command"}();
+			else
+				($hook = PichiPlugin::fetch_hook('commands_fetch')) ? eval($hook) : false;
 		}
 	
 	}
@@ -81,6 +83,7 @@ class CommandHandler extends PichiCore
 		if(!parent::reciveMessage($message, $from, $type))
 			return false;
 	  
+		($hook = PichiPlugin::fetch_hook('commands_message_recive_begin')) ? eval($hook) : false;
 		// Command send
 		if(!$this->isIgnore())
 			$this->fetchCommand();
@@ -109,6 +112,8 @@ class CommandHandler extends PichiCore
 				}
 			}
 		}
+		
+		($hook = PichiPlugin::fetch_hook('commands_message_recive_complete')) ? eval($hook) : false;
 	}
 
 }

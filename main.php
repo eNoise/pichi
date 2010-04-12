@@ -19,7 +19,11 @@ require_once("XMPP/XMPP.php");
 require_once("pichi_functional.php");
 require_once("Log_pichi.php");
 require_once("System/Daemon.php");
+require_once("plugins.php");
 include("console_commands.php"); // parse command line
+
+PichiPlugin::init(); // init plugin system
+($hook = PichiPlugin::fetch_hook('main_init_plugin_system')) ? eval($hook) : false;
 
 if($config['debug'] && $config['debug_level'] == 5)
 	$config['xmpp_log'] = TRUE;
@@ -107,6 +111,7 @@ catch(XMPPHP_Exception $e)
 
 // connect
 $log->log("Connection success", PichiLog::LEVEL_VERBOSE);
+($hook = PichiPlugin::fetch_hook('main_jabber_connected')) ? eval($hook) : false;
 
 if(file_exists($config['db_file']))
 {
@@ -154,6 +159,9 @@ if(!$db_exist)
 	$pichi->_db()->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('treatment_coincidence','3','Вероятность вставки обращений. [1 - всегда; >100 фактически никогда][По умолчанию: 3]');"); // вставлять обращение, совпадения (3 из 1)
 	$pichi->_db()->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('rand_message','0','Переодически отправлять случайные фразы в главный чат. [0 - выключить; 1 - включить][По умолчанию: 0]');"); // случайны ответ когда скучно
 	$pichi->_db()->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('msg_limit','500','Максимальное количество символов, допустимое в главном чате (в противном случае пишет в личку) [По умолчанию: 500]');"); // лимит символов, после чего отправляет ответ в личку
+	
+	($hook = PichiPlugin::fetch_hook('main_creating_db')) ? eval($hook) : false;
+	
 	$log->log("done",PichiLog::LEVEL_DEBUG);
 }
 
@@ -219,6 +227,7 @@ while(!$jabber->isDisconnected()) {
 				$jabber->presence($config['status']);
 				$pichi->joinRoom($config['room'], $config['room_user'], "BotWorld!");
 				$pichi->wait = $time_session = time();
+				($hook = PichiPlugin::fetch_hook('main_session_start')) ? eval($hook) : false;
 				break;
 		}
 	}

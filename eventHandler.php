@@ -51,6 +51,7 @@ class eventHandler
 						$this->jabber->message($option, $value, "chat");
 				$this->log->log("EVENT: {$action} (Send message {$value})", PichiLog::LEVEL_VERBOSE);
 		}
+		($hook = PichiPlugin::fetch_hook('event_action')) ? eval($hook) : false;
 	}
 }
 
