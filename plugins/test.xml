@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <PichiPlugin>
 	<index>test_plugin</index>
+	<enabled>1</enabled>
 	<name>Тестовый плагин</name>
-	<description>(пример написания кода плагина, не более)</description>
+	<description>пример написания кода плагина, не более</description>
 	<version>0.1</version>
         <code>
 		<hook name="commands_show_help"><![CDATA[ 

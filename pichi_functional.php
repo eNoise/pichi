@@ -16,21 +16,13 @@ class Pichi extends CommandHandler
 		$help = "\n";
 		$help .= "-------------------------\n";
 		$help .= "        Pichi Bot        \n";
-		$help .= "-------------------------\n";	  
-		$help .= "!log n - показывает последний лог\n";
-		$help .= "!wtf name - определение из базы\n";
-		$help .= "!wtfcount - количество определений в базе\n";
-		$help .= "!wtfrand - случайно определение\n";
-		$help .= "!wtfrev def - Показать ревизию определения\n";
-		$help .= "!wtfull def - Полный список ревизий с определениями\n";
-		$help .= "!wtfset rev - Вернуть определенную ревизию\n";
-		$help .= "!top - топ 10 слов в базе\n";
-		$help .= "!count - количество лексем\n";
-		$help .= "!talkers - 10 самых болтнивых пользователей\n";
-		$help .= "!dfn name=val - установить определение\n";
+		$help .= "-------------------------\n";
+		
+		$help .= "=====  Основные комманды  =====\n";
 		$help .= "!set name=val - установить опцию\n";
 		$help .= "!gc [name] - показать значение опции\n";
-		$help .= "!users [nick|jid] - список пользователей\n";
+		$help .= "!log n - показывает последний лог\n";
+		$help .= "!users [nick|jid] - список пользователей\n";		
 		$help .= "!msg [nick|jid|room] message [type] - сообщение пользователю\n";
 		$help .= "!ping [nick|jid] - ping запрос пользователю\n";
 		$help .= "!join room nick [status] - войти в комнату (сменить ник)\n";
@@ -38,9 +30,31 @@ class Pichi extends CommandHandler
 		$help .= "!greet jid room@server greet - Сообщение при заходе\n";
 		$help .= "!farewell jid room@server buy - Сообщение при выходе\n";
 		$help .= "!idle nick - сколько молчит указаный ник\n";
-		($hook = PichiPlugin::fetch_hook('commands_show_help')) ? eval($hook) : false;
 		$help .= "!quit - выход\n";
 		$help .= "!version - версия бота\n";
+		
+		$help .= "=====  Plugins  =====\n";
+		$help .= "!plugins - список плагинов\n";
+		$help .= "!enable N - включить плагин\n";
+		$help .= "!disable N - выключить плагин\n";	
+
+		$help .= "=====  Wiki  =====\n";
+		$help .= "!dfn name=val - установить определение\n";
+		$help .= "!wtf name - определение из базы\n";
+		$help .= "!wtfcount - количество определений в базе\n";
+		$help .= "!wtfrand - случайно определение\n";
+		$help .= "!wtfrev def - Показать ревизию определения\n";
+		$help .= "!wtfull def - Полный список ревизий с определениями\n";
+		$help .= "!wtfset rev - Вернуть определенную ревизию\n";
+
+		$help .= "=====  Разговорник  =====\n";
+		$help .= "!top - топ 10 слов в базе\n";
+		$help .= "!count - количество лексем\n";
+		$help .= "!talkers - 10 самых болтнивых пользователей\n";
+
+		$help .= "=====  Другие команды  =====\n";
+		($hook = PichiPlugin::fetch_hook('commands_show_help')) ? eval($hook) : false;
+		
 		$this->sendAnswer($help);
 	}
 	
@@ -49,6 +63,23 @@ class Pichi extends CommandHandler
 		global $config;
 		$this->sendAnswer("Pichi Bot v.{$config['pichi_version']}");
 		($hook = PichiPlugin::fetch_hook('commands_show_version')) ? eval($hook) : false;
+		$this->sendAnswer("Плагины:\n" . PichiPlugin::show_plugin_list());
+	}
+	
+	protected function command_enable()
+	{
+		$w = $this->seperate($this->last_message);
+		PichiPlugin::enable((int)$w[1]);
+	}
+	
+	protected function command_disable()
+	{
+		$w = $this->seperate($this->last_message);
+		PichiPlugin::disable((int)$w[1]);
+	}
+	
+	protected function command_plugins()
+	{
 		$this->sendAnswer("Плагины:\n" . PichiPlugin::show_plugin_list());
 	}
 	

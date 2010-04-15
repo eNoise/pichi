@@ -47,6 +47,7 @@ class PichiPlugin
 			self::$plugins[$index]['name'] = (string)$xml->name;
 			self::$plugins[$index]['description'] = (string)$xml->description;
 			self::$plugins[$index]['version'] = (double)$xml->version;
+			self::$plugins[$index]['enabled'] = (bool)(int)$xml->enabled;
 			
 			foreach($xml->code->children() as $hook)
 			{
@@ -62,7 +63,7 @@ class PichiPlugin
 		$i = 1;
 		if(self::$plugins != NULL)
 			foreach(self::$plugins as $name=>$plugin)
-				$pluglist .= "$i. {$plugin['name']} ({$plugin['description']}) v{$plugin['version']}";
+				$pluglist .= "$i. {$plugin['name']} ({$plugin['description']}) v{$plugin['version']} - " . (($plugin['enabled']) ? "ON" : "OFF");
 		return $pluglist;
 	}
 	
@@ -73,13 +74,39 @@ class PichiPlugin
 		{
 			foreach(self::$plugins as $key=>$plugin)
 			{
-				if(@$plugin['code'][$hookname] != NULL)
+				if(@$plugin['code'][$hookname] != NULL && $plugin['enabled'])
 					$code .= $plugin['code'][$hookname];
 			}
 		}
 		return $code;
 	}
 	
+	private static function change($index, $enable = TRUE)
+	{
+		if(is_string($index))
+		{
+			self::$plugins[$index]['enabled'] = $enable;
+		}
+		else if(is_int($index) && $index > 0)
+		{
+			$plugs = self::$plugins; //copy!
+			
+			for($i = 0; $i < $index - 1; $i++)
+				next($plugs);
+			
+			self::$plugins[key($plugs)]['enabled'] = $enable;
+		}
+	}
+	
+	public static function enable($index)
+	{
+		self::change($index, TRUE);
+	}
+	
+	public static function disable($index)
+	{
+		self::change($index, FALSE);
+	}
 }
 
 ?>
