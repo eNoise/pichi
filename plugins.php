@@ -87,7 +87,7 @@ class PichiPlugin
 		{
 			self::$plugins[$index]['enabled'] = $enable;
 		}
-		else if(is_int($index) && $index > 0)
+		else if(is_int($index) && $index > 0 && $index <= count(self::$plugins))
 		{
 			$plugs = self::$plugins; //copy!
 			

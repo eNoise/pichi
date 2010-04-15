@@ -68,12 +68,18 @@ class Pichi extends CommandHandler
 	
 	protected function command_enable()
 	{
+		if(!$this->isAccess())
+			return;
+		
 		$w = $this->seperate($this->last_message);
 		PichiPlugin::enable((int)$w[1]);
 	}
 	
 	protected function command_disable()
 	{
+		if(!$this->isAccess())
+			return;
+		
 		$w = $this->seperate($this->last_message);
 		PichiPlugin::disable((int)$w[1]);
 	}
