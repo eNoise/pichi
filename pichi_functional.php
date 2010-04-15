@@ -49,6 +49,7 @@ class Pichi extends CommandHandler
 		global $config;
 		$this->sendAnswer("Pichi Bot v.{$config['pichi_version']}");
 		($hook = PichiPlugin::fetch_hook('commands_show_version')) ? eval($hook) : false;
+		$this->sendAnswer("Плагины:\n" . PichiPlugin::show_plugin_list());
 	}
 	
 	protected function command_log()

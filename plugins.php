@@ -24,6 +24,7 @@ class PichiPlugin
 					  );
 	
 	private static $plugins = array();
+	private static $dir = "/plugins/";
 	
 	// Constructor
 	function PichiPlugin()
@@ -32,13 +33,27 @@ class PichiPlugin
 	
 	public static function init()
 	{
-		
-	}
+		$opendir = getcwd() . self::$dir;
+		$dir = opendir($opendir);
+		while(($file = readdir($dir)) !== false)
+		{
+			if (!preg_match('#^(.*).xml$#i', $file, $matches))
+			{
+				continue;
+			}
 
-	public static function add(& $plugin)
-	{
-		if($plugin['name'] != NULL && $plugin['index'] != NULL && is_array($plugin['code']))
-			self::$plugins[$plugin['index']] = $plugin;
+			$xml = simplexml_load_file($opendir . $file, 'SimpleXMLElement', LIBXML_NOCDATA);
+			$index = (string)$xml->index;
+			self::$plugins[$index]['name'] = (string)$xml->name;
+			self::$plugins[$index]['description'] = (string)$xml->description;
+			self::$plugins[$index]['version'] = (double)$xml->version;
+			
+			foreach($xml->code->children() as $hook)
+			{
+				$name = (string)$hook->attributes()->name;
+				self::$plugins[$index]['code'][$name] = (string)$hook[0];
+			}
+		}
 	}
 
 	public static function show_plugin_list()
@@ -58,7 +73,7 @@ class PichiPlugin
 		{
 			foreach(self::$plugins as $key=>$plugin)
 			{
-				if($plugin['code'][$hookname] != NULL)
+				if(@$plugin['code'][$hookname] != NULL)
 					$code .= $plugin['code'][$hookname];
 			}
 		}

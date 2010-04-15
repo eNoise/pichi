@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<PichiPlugin>
+	<index>bidlo_mod</index>
+	<name>Быдло мод</name>
+	<description>Делает из пичи быдло</description>
+	<version>0.1</version>
+        <code>
+		<hook name="commands_show_help"><![CDATA[ 
+		$help .= "!bidlo - БЫДЛИТЬ!";
+		]]></hook>
+        </code>
+</PichiPlugin>
