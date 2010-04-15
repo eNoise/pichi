@@ -238,6 +238,8 @@ while(!$jabber->isDisconnected()) {
 		$log->log("Send randome message",PichiLog::LEVEL_DEBUG);
 		$pichi->sendRandMessage();
 	}
+	
+	($hook = PichiPlugin::fetch_hook('main_handle_cycle')) ? eval($hook) : false;
 }
 
 ?>

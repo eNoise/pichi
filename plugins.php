@@ -8,6 +8,7 @@ class PichiPlugin
 					'main_jabber_connected',
 					'main_creating_db',
 					'main_session_start',
+					'main_handle_cycle',
 					'pichicore_room_join',
 					'pichicore_room_left',
 					'pichicore_answer_send',
