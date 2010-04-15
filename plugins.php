@@ -23,7 +23,7 @@ class PichiPlugin
 					'event_action'
 					  );
 	
-	private static $init_list = array();
+	private static $plugins = array();
 	
 	// Constructor
 	function PichiPlugin()
@@ -34,15 +34,35 @@ class PichiPlugin
 	{
 		
 	}
-	
+
+	public static function add(& $plugin)
+	{
+		if($plugin['name'] != NULL && $plugin['index'] != NULL && is_array($plugin['code']))
+			self::$plugins[$plugin['index']] = $plugin;
+	}
+
 	public static function show_plugin_list()
 	{
-		
+		$pluglist = NULL;
+		$i = 1;
+		if(self::$plugins != NULL)
+			foreach(self::$plugins as $name=>$plugin)
+				$pluglist .= "$i. {$plugin['name']} ({$plugin['description']}) v{$plugin['version']}";
+		return $pluglist;
 	}
 	
 	public static function fetch_hook($hookname = false)
 	{
-		return NULL;
+		$code = NULL;
+		if(in_array($hookname, self::$pluginlist) && self::$plugins != NULL)
+		{
+			foreach(self::$plugins as $key=>$plugin)
+			{
+				if($plugin['code'][$hookname] != NULL)
+					$code .= $plugin['code'][$hookname];
+			}
+		}
+		return $code;
 	}
 	
 }
