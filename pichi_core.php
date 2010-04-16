@@ -372,7 +372,7 @@ class PichiCore
 	// return array
 	public function getJIDinfo($jid, $name = NULL)
 	{
-		$array = array();
+		$array = FALSE; // изначально не масив =)
 		$this->db->query("SELECT * FROM users_data WHERE jid = '" . $this->db->db->escapeString($jid) . "'" . (($name != NULL) ? " AND name = '" . $this->db->db->escapeString($name) . "'" : "") . ";");
 		while($data = $this->db->fetch_array())
 			$array[$data['name']] = $data['value'];

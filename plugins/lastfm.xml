@@ -13,7 +13,25 @@
 		<hook name="commands_fetch"><![CDATA[ 
 			if($command == 'lastfm')
 			{
-			
+				$jid = $this->getJIDlast();
+				$user = $this->getJIDinfo($jid, 'lastfm_user');
+				if($user = $user['lastfm_user'])
+				{
+					$file = fopen("http://ws.audioscrobbler.com/1.0/user/{$user}/recenttracks.txt", "r");
+					if($file)
+					{
+						$songs = array();
+						while(!feof($file))
+						{
+							$song = fgets($file, 1024);
+							$song = explode(',', $song);
+							$songs[] = trim($song[1]);
+						}
+						fclose($file);
+				
+						$this->sendAnswer($this->getName($jid) . " только что слушал: " . $songs[0]);
+					}
+				}
 			}
 			else
 			if($command == 'lastfm_setuser')
