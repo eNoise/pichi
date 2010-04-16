@@ -154,7 +154,7 @@ class PichiCore
 		if(strlen($message) < $this->options['msg_limit'] || $this->options['msg_limit'] < 1 || $this->last_type != "groupchat")
 			$this->jabber->message($to, $message, $type);
 		else
-			$this->jabber->message($this->getJID($this->getName($this->last_from), true), $message, "chat");
+			$this->jabber->message($this->getJID($this->getName($this->last_from)), $message, "chat");
 		$this->log->log("Send answer to $to:\n$message", PichiLog::LEVEL_VERBOSE);
 	}
 
