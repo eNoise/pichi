@@ -486,4 +486,24 @@ class XMPPHP_XMPP extends XMPPHP_XMLStream {
 			$this->log->log("Ping query to stay alive.",  XMPPHP_Log::LEVEL_DEBUG);
 		}
 	}
+	
+	public function kick($nick, $room, $mesage = "bye, bye!", $id = NULL)
+	{
+			if($id == NULL)
+				$id = $this->getId();
+			
+			$this->send("
+			<iq from='{$this->fulljid}' 
+				to='$room'
+				type='set' 
+				id='$id'>
+					<query xmlns='http://jabber.org/protocol/muc#admin'>
+						<item nick='$nick' role='none'>
+							<reason>$mesage</reason>
+						</item>
+					</query>
+			</iq>
+
+		");
+	}
 }

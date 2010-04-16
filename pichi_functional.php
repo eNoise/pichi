@@ -33,6 +33,9 @@ class Pichi extends CommandHandler
 		$help .= "!quit - выход\n";
 		$help .= "!version - версия бота\n";
 		
+		$help .= "=====  Администраторские команды  =====\n";
+		$help .= "!kick nick - кикнуть пользователя\n";
+		
 		$help .= "=====  Plugins  =====\n";
 		$help .= "!plugins - список плагинов\n";
 		$help .= "!enable N - включить плагин\n";
@@ -87,6 +90,15 @@ class Pichi extends CommandHandler
 	protected function command_plugins()
 	{
 		$this->sendAnswer("Плагины:\n" . PichiPlugin::show_plugin_list());
+	}
+	
+	protected function command_kick()
+	{
+		if(!$this->isAccess())
+			return;
+		
+		$w = $this->seperate($this->last_message);
+		$this->jabber->kick($w[1], $this->room);
 	}
 	
 	protected function command_log()
