@@ -275,20 +275,10 @@ class Pichi extends CommandHandler
 			return;
       
 		$w = $this->seperate($this->last_message);
-      
-		$this->db->query("SELECT COUNT(*) FROM settings WHERE name = '" . $this->db->db->escapeString($w[1]) . "';");
-		if($this->db->fetchColumn() > 0)
-		{
-			$this->db->query("UPDATE settings SET value = '".$this->db->db->escapeString($w[2])."'  WHERE name = '".$this->db->db->escapeString($w[1])."';");
-			$this->sendAnswer("Updated!");
-			$this->parseOptions();
-			$this->log->log("Updated option $w[1] = $w[2]", PichiLog::LEVEL_DEBUG);
-		}
-		else
-		{
-			$this->log->log("Can't set $w[1]. There is no such option.", PichiLog::LEVEL_DEBUG);
+		if($this->setOption($w[1], $w[2]))
+			$this->sendAnswer("Option updated!");
+		else	
 			$this->sendAnswer("Нету такой опции =(");
-		}
 	}
 	
 	protected function command_msg()

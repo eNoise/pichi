@@ -1,7 +1,7 @@
 <?php
 
 ### Some settings ###
-$config['db_version'] = 14; // Work only parram
+$config['db_version'] = 15; // Work only parram
 $config['min_version'] = 6; // Min version of config
 $config['pichi_version'] = "0.5.0 (dev)"; //Pichi version
 
@@ -146,6 +146,7 @@ if(!$db_exist)
 	$pichi->_db()->query("CREATE TABLE wiki (`name` TEXT, `revision` INT, `value` TEXT);");
 	$pichi->_db()->query("CREATE TABLE settings (`name` TEXT, `value` TEXT, `description` TEXT);");
 	$pichi->_db()->query("CREATE TABLE users (`jid` TEXT, `nick` TEXT, `role` TEXT, `room` TEXT, `time` TEXT, `status` TEXT);");
+	$pichi->_db()->query("CREATE TABLE users_data (`jid` TEXT, `name` TEXT, `value` TEXT);");
 	$pichi->_db()->query("CREATE TABLE stats (`name` TEXT, `value` TEXT);");
 	$pichi->_db()->query("CREATE TABLE actions (`action` TEXT, `coincidence` TEXT, `do` TEXT, `option` TEXT, `value` TEXT);");
 	$pichi->_db()->query("CREATE TABLE db_version (`version` TEXT, `value` TEXT);");

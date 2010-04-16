@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<PichiPlugin>
+	<index>lastfm_playsong</index>
+	<enabled>1</enabled>
+	<name>Last.fm информация</name>
+	<description>Возможность отображения индивидуальной информации с last.fm</description>
+	<version>0.1</version>
+        <code>
+		<hook name="commands_show_help"><![CDATA[ 
+			$help .= "!lastfm_setuser user - устанавливает ваш аккаунт на last.fm\n";
+			$help .= "!lastfm - отображает то, что вы сейчас слушали\n";
+		]]></hook>
+		<hook name="commands_fetch"><![CDATA[ 
+			if($command == 'lastfm')
+			{
+			
+			}
+			else
+			if($command == 'lastfm_setuser')
+			{
+			
+			}
+		]]></hook>
+        </code>
+</PichiPlugin>

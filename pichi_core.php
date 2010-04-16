@@ -325,6 +325,38 @@ class PichiCore
 			}
 		}
 	}
+	
+	// устанавливает опцию для пичи
+	// true - если установило
+	// flase - нету опции
+	public function setOption($option, $value)
+	{
+		$this->db->query("SELECT COUNT(*) FROM settings WHERE name = '" . $this->db->db->escapeString($option) . "';");
+		if($this->db->fetchColumn() > 0)
+		{
+			$this->db->query("UPDATE settings SET value = '".$this->db->db->escapeString($value)."'  WHERE name = '".$this->db->db->escapeString($option)."';");
+			$this->parseOptions();
+			$this->log->log("Updated option $option = $value", PichiLog::LEVEL_DEBUG);
+			return true;
+		}
+		else
+		{
+			$this->log->log("Can't set $option. There is no such option.", PichiLog::LEVEL_DEBUG);
+			return false;
+		}
+	}
+	
+	// устанавливает информацию о jid
+	// true - если установило
+	// flase - нету опции
+	public function setJIDinfo($jid, $name, $value)
+	{
+		$this->db->query("SELECT COUNT(*) FROM users_data WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND name = '" . $this->db->db->escapeString($name) . "';");
+		if($this->db->fetchColumn() > 0)
+			$this->db->query("UPDATE users_data SET value = '".$this->db->db->escapeString($value)."'  WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND name = '".$this->db->db->escapeString($name)."';");
+		else
+			$this->db->query("INSERT INTO users_data (`jid`,`name`,`value`) VALUES ('" . $this->db->db->escapeString($jid) . "','" . $this->db->db->escapeString($name) . "','" . $this->db->db->escapeString($value) . "');");
+	}
 
 }
 
