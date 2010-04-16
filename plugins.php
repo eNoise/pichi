@@ -64,7 +64,7 @@ class PichiPlugin
 		$i = 1;
 		if(self::$plugins != NULL)
 			foreach(self::$plugins as $name=>$plugin)
-				$pluglist .= "$i. {$plugin['name']} ({$plugin['description']}) v{$plugin['version']} - " . (($plugin['enabled']) ? "ON" : "OFF");
+				$pluglist .= $i++ . ". {$plugin['name']} ({$plugin['description']}) v{$plugin['version']} - " . (($plugin['enabled']) ? "ON\n" : "OFF\n");
 		return $pluglist;
 	}
 	
