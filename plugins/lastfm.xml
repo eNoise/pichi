@@ -18,7 +18,9 @@
 			else
 			if($command == 'lastfm_setuser')
 			{
-			
+				$jid = $this->getJIDlast();
+				$w = $this->seperate($this->last_message);
+				$this->setJIDinfo($jid, 'lastfm_user', $w[1]);
 			}
 		]]></hook>
         </code>

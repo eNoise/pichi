@@ -109,6 +109,7 @@ class PichiCore
 		}
 	}
 
+	// get JID from nick
 	public function getJID($nick)
 	{
 		$this->log->log("Get JID from $nick", PichiLog::LEVEL_VERBOSE);
@@ -123,11 +124,20 @@ class PichiCore
 			return $mes[0];
 		}
 	}
-    
+
+	// get Jid from last messager
+	public function getJIDlast()
+	{
+		if($this->last_type == "groupchat")
+			return $this->getJID($this->getName($this->last_from));
+		else
+			return $this->getJID($this->last_from);	
+	}
+
+	// get name from jid
 	public function getName($jid)
 	{
-	  
-	  	$this->log->log("Get Nick from JID $jid", PichiLog::LEVEL_VERBOSE);
+		$this->log->log("Get Nick from JID $jid", PichiLog::LEVEL_VERBOSE);
 		if(strpos($jid, "@") === FALSE)
 			return $jid;
 		if(strpos($jid, "/") === FALSE)
