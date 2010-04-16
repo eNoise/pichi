@@ -28,9 +28,9 @@ class SyntaxAnalizer
 		$this->log->log("$string to lexems", PichiLog::LEVEL_DEBUG);
 		$base = explode(" ", $string);
       
-		for($i = -1; $i < count($base) ; $i++)
+		for($i = 0; $i < count($base) ; $i++)
 		{
-			$str = ((@$base[$i]) ? $base[$i] : "#beg#" ) . " " . ((@$base[$i+1]) ? $base[$i+1] : "#end#");
+			$str = ((@$base[$i-1]) ? $base[$i-1] : "#beg#" ) . " " . $base[$i]  . " " . ((@$base[$i+1]) ? $base[$i+1] : "#end#");
 			$this->addLexema($str);
 		}
 		
@@ -100,18 +100,18 @@ class SyntaxAnalizer
 	{
 		$this->try_count = 0; // сбрасываем попытки
 	  
-		if(rand(1, $this->from_world_coi) === 1)
-		{
+		//if(rand(1, $this->from_world_coi) === 1)
+		//{
 			$this->log->log("Full Random method", PichiLog::LEVEL_DEBUG);
 			$this->send_text = $this->genFullRandom();
-		}
-		else
-		{
-			$this->log->log("Word method", PichiLog::LEVEL_DEBUG);
-			$words = explode(" ", $this->user_text);
-			$word = $this->choseWord($words);
-			$this->send_text = $this->genFromCenterWord($word);
-		}
+		//}
+		//else
+		//{
+		//	$this->log->log("Word method", PichiLog::LEVEL_DEBUG);
+		//	$words = explode(" ", $this->user_text);
+		//	$word = $this->choseWord($words);
+		//	$this->send_text = $this->genFromCenterWord($word);
+		//}
 	}
 	
 	private function choseWord(& $array)
@@ -149,29 +149,32 @@ class SyntaxAnalizer
 		if($this->db->numRows(true) == 0)
 			return; //пусто
 		$last = $this->choseLexem($this->buildArray());
-		$last = explode(" ",$last);
-		$genans = $last = $last[1];
+		$lastx = explode(" ", $last);
+
+		$last = $lastx[1] . " " . $lastx[2];
+		$genans = $lastx[1] . (($lastx[2]!="#end#") ? " " . $lastx[2] : "");
+
 		for($i=0; $i < $limit; $i++)
 		{
 			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString($last) . " %' ORDER BY `count` DESC LIMIT 0," . $this->query_limit . ";");
 			if($this->db->numRows(true) == 0)
 				break; //больше нет совпадений
-			if($i != $limit-1)
+			//if($i != $limit-1)
 				$last = $this->choseLexem($this->buildArray());
-			else
-				$last = $this->doubleLemem($this->buildArray(), "#end#");
-			$last = explode(" ",$last);
-			$last = $last[1];
+			//else
+			//	$last = $this->doubleLemem($this->buildArray(), "#end#");
+			$lastx = explode(" ",$last);
+			$last = $lastx[1] . " " . $lastx[2];
 	
-			if($last == "#end#" || $last==NULL)
+			if($lastx[2] == "#end#" || $lastx[2]==NULL)
 				break;
 	
-			$genans .= " " . $last;
+			$genans .= " " . $lastx[2];
 		}
-		if($genans != $this->user_text)
+		//if($genans != $this->user_text)
 			return $genans;
-		else
-			return $this->randFromLog(); //возращать тоже самое нехорошо, вернем что-нибудь из лога
+		//else
+		//	return $this->randFromLog(); //возращать тоже самое нехорошо, вернем что-нибудь из лога
 	}
 	
 	private function genFromCenterWord($word, $limit = NULL)

@@ -224,8 +224,8 @@ class Pichi extends CommandHandler
 			$tmp = explode(" ", $lex['lexeme']);
 			if($tmp[0] == "#beg#")
 				$tmp[0] = "(начало)";
-			if($tmp[1] == "#end#")
-				$tmp[1] = "(конец)";
+			if($tmp[2] == "#end#")
+				$tmp[2] = "(конец)";
 			$ans .= $ix . ". " . implode(" ", $tmp) . " [{$lex['count']}]" . "\n";
 		}
 		$this->sendAnswer($ans);
