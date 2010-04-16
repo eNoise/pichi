@@ -357,6 +357,17 @@ class PichiCore
 		else
 			$this->db->query("INSERT INTO users_data (`jid`,`name`,`value`) VALUES ('" . $this->db->db->escapeString($jid) . "','" . $this->db->db->escapeString($name) . "','" . $this->db->db->escapeString($value) . "');");
 	}
+	
+	// а теперь получить инфу
+	// return array
+	public function getJIDinfo($jid, $name = NULL)
+	{
+		$array = array();
+		$this->db->query("SELECT * FROM users_data WHERE jid = '" . $this->db->db->escapeString($jid) . "'" . (($name != NULL) ? " AND name = '" . $this->db->db->escapeString($name) . "'" : "") . ";");
+		while($data = $this->db->fetch_array())
+			$array[$data['name']] = $data['value'];
+		return $array;
+	}
 
 }
 
