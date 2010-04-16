@@ -28,7 +28,7 @@ class SyntaxAnalizer
 		$this->log->log("$string to lexems", PichiLog::LEVEL_DEBUG);
 		$base = explode(" ", $string);
       
-		for($i = 0; $i < count($base) ; $i++)
+		for($i = 0; $i < count($base); $i++)
 		{
 			$str = ((@$base[$i-1]) ? $base[$i-1] : "#beg#" ) . " " . $base[$i]  . " " . ((@$base[$i+1]) ? $base[$i+1] : "#end#");
 			$this->addLexema($str);
@@ -85,7 +85,7 @@ class SyntaxAnalizer
 		{
 			$this->log->log("Try DOUBLE lexeme: {$data['lexeme']}", PichiLog::LEVEL_VERBOSE);
 			$need = explode(" ", $data['lexeme']);
-			$need = (!$reverse) ? $need[1] : $need[0];
+			$need = (!$reverse) ? $need[1] . " " . $need[2] : $need[0] . " " . $need[1];
 			$this->db->query("SELECT COUNT(*) FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString(((!$reverse) ? $need : $word)) . " " . $this->db->db->escapeString(((!$reverse) ? $word : $need)) . "' LIMIT 0,1;");
 			if($this->db->fetchColumn() > 0)
 			{
@@ -93,7 +93,7 @@ class SyntaxAnalizer
 				return $data['lexeme'];
 			}
 		}
-		return "... ...";
+		return "... ... ...";
 	}
 	
 	public function generate()
@@ -153,16 +153,18 @@ class SyntaxAnalizer
 
 		$last = $lastx[1] . " " . $lastx[2];
 		$genans = $lastx[1] . (($lastx[2]!="#end#") ? " " . $lastx[2] : "");
+		if($lastx[2] == "#end#")
+			return $genans;
 
 		for($i=0; $i < $limit; $i++)
 		{
 			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString($last) . " %' ORDER BY `count` DESC LIMIT 0," . $this->query_limit . ";");
 			if($this->db->numRows(true) == 0)
 				break; //больше нет совпадений
-			//if($i != $limit-1)
+			if($i != $limit-1)
 				$last = $this->choseLexem($this->buildArray());
-			//else
-			//	$last = $this->doubleLemem($this->buildArray(), "#end#");
+			else
+				$last = $this->doubleLemem($this->buildArray(), "#end#");
 			$lastx = explode(" ",$last);
 			$last = $lastx[1] . " " . $lastx[2];
 	
@@ -186,39 +188,39 @@ class SyntaxAnalizer
 		//left
 		for($i = 0; $i < $limit; $i++)
 		{
-			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '% " . $this->db->db->escapeString(($i == 0) ? $word : $first) . "' ORDER BY `count` DESC LIMIT 0," . $this->query_limit . ";");
+			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '% " . $this->db->db->escapeString(($i == 0) ? $word : $first . " " . $second) . "' ORDER BY `count` DESC LIMIT 0," . $this->query_limit . ";");
 			if($this->db->numRows(true) == 0)
 				break; //больше нет совпадений
 			if($i != $limit-1)
 				$last = $this->choseLexem($this->buildArray());
 			else
 				$last = $this->doubleLemem($this->buildArray(), "#beg#", true);
-			list($first, $second) = explode(" ", $last);
+			list($first, $second, $third) = explode(" ", $last);
 				
 			if($first == "#beg#" || $first == NULL)
 				break;
-			$answer = $first . " " . $answer;
+			$answer = (($i==0) ? $first . " " . $second : $first) . " " . $answer;
 		}
 		//right
 		for($i = 0; $i < $limit; $i++)
 		{
-			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString(($i == 0) ? $word : $second) . " %' ORDER BY `count` DESC LIMIT 0," . $this->query_limit . ";");
+			$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '" . $this->db->db->escapeString(($i == 0) ? $word : $second . " " . $third) . " %' ORDER BY `count` DESC LIMIT 0," . $this->query_limit . ";");
 			if($this->db->numRows(true) == 0)
 				break; //больше нет совпадений
 			if($i != $limit-1)
 				$last = $this->choseLexem($this->buildArray());
 			else
 				$last = $this->doubleLemem($this->buildArray(), "#end#");
-			list($first, $second) = explode(" ", $last);
+			list($first, $second, $third) = explode(" ", $last);
 				
-			if($second == "#end#" || $second == NULL)
+			if($third == "#end#" || $third == NULL)
 				break;
-			$answer .= " " . $second;
+			$answer = $answer . " " . (($i==0) ? $second . " " . $third : $third);
 		}
-		if($answer != $this->user_text)
+		//if($answer != $this->user_text)
 			return $answer;
-		else
-			return $this->randFromLog(); //возращать тоже самое нехорошо, вернем что-нибудь из лога
+		//else
+		//	return $this->randFromLog(); //возращать тоже самое нехорошо, вернем что-нибудь из лога
 	}
 	
 	//Использовать случайную фразу из лога
@@ -250,7 +252,7 @@ class SyntaxAnalizer
 	private function testText(& $text)
 	{
 		$this->log->log("$text before test to lexems", PichiLog::LEVEL_VERBOSE);
-		$text = str_replace("\n", " ", $text);
+		$text = str_replace("\n", "", $text);
 		$text = str_replace("#beg#", "", $text);
 		$text = str_replace("#end#", "", $text);
 		$test1 = explode(",",$text);
@@ -271,6 +273,9 @@ class SyntaxAnalizer
 			$text = implode(":",$test2);
 			ltrim($text);
 		}
+		while(strpos($text,'  ') !== FALSE)
+			$text = str_replace('  ', ' ', $text);
+		
 		$this->log->log("$text after test to lexems", PichiLog::LEVEL_VERBOSE);
 	}
 }
