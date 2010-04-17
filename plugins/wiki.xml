@@ -9,18 +9,24 @@
 		<hook name="commands_show_help"><![CDATA[ 
 			$help .= "---- Wiki ----\n";
 			$help .= "!wiki addr статья - переводит текст\n";
+			$help .= "!wikiraw addr статья - тоже самое только без обозначений\n";
 			$help .= "!wikilist - список доступных wiki сайтов\n";
 		]]></hook>
 		<hook name="commands_fetch"><![CDATA[
-			$wikilist = array('ru' => 'http://ru.wikipedia.org/w/api.php', 'en' => 'http://en.wikipedia.org/w/api.php', 'u3' => 'http://wiki.uruchie.org/wikipedia/api.php');
+			$wikilist = array('ru' => 'http://ru.wikipedia.org/w/', 'en' => 'http://en.wikipedia.org/w/', 'u3' => 'http://wiki.uruchie.org/wikipedia/');
 		
-			if($command == 'wiki')
-			{
+			if($command == 'wiki' || $command == 'wikiraw')
+			{	
 				$w = $this->seperate($this->last_message, 2);
-				
+			
 				if($wikilist["$w[1]"] != NULL)
 				{
-					$url = $wikilist["$w[1]"] . "?action=query&format=php&prop=revisions&titles=".urlencode($w[2])."&rvprop=content&rvlimit=1";
+					if($command == 'wikiraw')
+						$add = "";
+					else
+						$add = "$w[2]\n" . $wikilist["$w[1]"] . "index.php?title=" . urlencode($w[2]) . "\n";
+				
+					$url = $wikilist["$w[1]"] . "api.php?action=query&format=php&prop=revisions&titles=".urlencode($w[2])."&rvprop=content&rvlimit=1";
 					$curl = curl_init();
 					curl_setopt($curl, CURLOPT_URL, $url);
 					curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -35,7 +41,7 @@
 						foreach ($info['query']['pages'] as $key => $data)
 						{
 							if(@$data['revisions'][0]['*'])
-								$this->sendAnswer($data['revisions'][0]['*']);
+								$this->sendAnswer($add . $data['revisions'][0]['*']);
 						}
 					}
 				}
