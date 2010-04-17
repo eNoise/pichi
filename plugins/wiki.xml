@@ -12,7 +12,7 @@
 			$help .= "!wikilist - список доступных wiki сайтов\n";
 		]]></hook>
 		<hook name="commands_fetch"><![CDATA[
-			$wikilist = array('ru' => 'http://ru.wikipedia.org/w/api.php', 'en' => 'http://en.wikipedia.org/w/api.php', 'ur' => 'http://wiki.uruchie.org/wikipedia/api.php');
+			$wikilist = array('ru' => 'http://ru.wikipedia.org/w/api.php', 'en' => 'http://en.wikipedia.org/w/api.php', 'u3' => 'http://wiki.uruchie.org/wikipedia/api.php');
 		
 			if($command == 'wiki')
 			{
@@ -32,7 +32,6 @@
 				
 					if(@$info['query']['pages'])
 					{
-					echo "good";
 						foreach ($info['query']['pages'] as $key => $data)
 						{
 							if(@$data['revisions'][0]['*'])
