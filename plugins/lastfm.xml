@@ -6,7 +6,8 @@
 	<description>Возможность отображения индивидуальной информации с last.fm</description>
 	<version>1.0</version>
         <code>
-		<hook name="commands_show_help"><![CDATA[ 
+		<hook name="commands_show_help"><![CDATA[
+			$help .= "---- Last.fm ----\n";
 			$help .= "!lastfm_setuser user - устанавливает ваш аккаунт на last.fm\n";
 			$help .= "!lastfm - отображает то, что вы сейчас слушали\n";
 		]]></hook>
