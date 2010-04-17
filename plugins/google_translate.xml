@@ -23,7 +23,7 @@
 				if($t_from != NULL && $t_to != NULL && $w[1] != NULL)
 				{
 			
-					$url = "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=".urlencode($w[1])."&langpair=".urlencode($t_from.'|'.$t_to); 
+					$url = "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=".urlencode($w[1])."&langpair=".urlencode($t_from['translate_from'].'|'.$t_to['translate_to']); 
 					$curl = curl_init();
 					curl_setopt($curl, CURLOPT_URL, $url);
 					curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
