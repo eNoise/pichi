@@ -108,6 +108,12 @@ class PichiPlugin
 	{
 		self::change($index, FALSE);
 	}
+	
+	public static function reload()
+	{
+		self::$plugins = NULL;
+		self::init();
+	}
 }
 
 ?>

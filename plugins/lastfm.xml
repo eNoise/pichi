@@ -4,7 +4,7 @@
 	<enabled>1</enabled>
 	<name>Last.fm информация</name>
 	<description>Возможность отображения индивидуальной информации с last.fm</description>
-	<version>0.1</version>
+	<version>1.0</version>
         <code>
 		<hook name="commands_show_help"><![CDATA[ 
 			$help .= "!lastfm_setuser user - устанавливает ваш аккаунт на last.fm\n";

@@ -39,7 +39,8 @@ class Pichi extends CommandHandler
 		$help .= "=====  Plugins  =====\n";
 		$help .= "!plugins - список плагинов\n";
 		$help .= "!enable N - включить плагин\n";
-		$help .= "!disable N - выключить плагин\n";	
+		$help .= "!disable N - выключить плагин\n";
+		$help .= "!reload - перезагрузить все плагины\n";
 
 		$help .= "=====  Wiki  =====\n";
 		$help .= "!dfn name=val - установить определение\n";
@@ -85,6 +86,14 @@ class Pichi extends CommandHandler
 		
 		$w = $this->seperate($this->last_message);
 		PichiPlugin::disable((int)$w[1]);
+	}
+	
+	protected function command_reload()
+	{
+		if(!$this->isAccess())
+			return;
+		
+		PichiPlugin::reload();
 	}
 	
 	protected function command_plugins()

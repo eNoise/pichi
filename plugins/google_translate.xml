@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<PichiPlugin>
+	<index>google_translate</index>
+	<enabled>1</enabled>
+	<name>Google переводчик</name>
+	<description>Возможность использовать перевод при помощи гугла</description>
+	<version>1.0</version>
+        <code>
+		<hook name="commands_show_help"><![CDATA[ 
+			$help .= "---- Перевод гугла ----\n";
+			$help .= "!translate текст - переводит текст\n";
+			$help .= "!translate_language lang_from lang_to - устанавливает с какого языка на какой язык переводить ваш текст\n";
+		]]></hook>
+		<hook name="commands_fetch"><![CDATA[ 
+			if($command == 'translate')
+			{
+				$jid = $this->getJIDlast();
+				$t_from = $this->getJIDinfo($jid, 'translate_from');
+				$t_to = $this->getJIDinfo($jid, 'translate_to');
+			
+				$w = $this->seperate($this->last_message);
+			
+				if($t_from != NULL && $t_to != NULL && $w[1] != NULL)
+				{
+			
+					$url = "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=".urlencode($w[1])."&langpair=".urlencode($t_from.'|'.$t_to); 
+					$curl = curl_init();
+					curl_setopt($curl, CURLOPT_URL, $url);
+					curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+					curl_setopt($curl, CURLOPT_REFERER, "http://{$this->server}");
+					$js = curl_exec($curl);
+					curl_close($curl);
+					$json = json_decode($js, true);
+
+					if($json['responseStatus'] == 200)
+						$this->sendAnswer($json['responseData']['translatedText']);
+					else
+						$this->sendAnswer("Не удалось перевести =(");
+				}
+			}
+			else if($command == 'translate_language')
+			{
+				$w = $this->seperate($this->last_message,2);
+				if($w[1] != NULL && $w[2] != NULL)
+				{
+					$this->setJIDinfo($jid, 'translate_from', $w[1]);
+					$this->setJIDinfo($jid, 'translate_to', $w[2]);
+				}
+			}
+		]]></hook>
+        </code>
+</PichiPlugin>
+ 
