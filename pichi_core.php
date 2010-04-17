@@ -278,12 +278,16 @@ class PichiCore
     
 	public function reciveMessage($message, $from, $type)
 	{
+		// Tests
 		// No reaction while time off
 		if(time() - $this->wait < $this->wait_time)
 		{
 			$this->log->log("Ignore Message: <$from> $message", PichiLog::LEVEL_DEBUG);
 			return false;
 		}
+		
+		if($message == NULL || $from == NULL || $type == NULL)
+			return false;
 		
 		// Remember
 		$this->last_message = $message;
