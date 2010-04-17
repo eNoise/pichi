@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<PichiPlugin>
+	<index>wikipedia_plugin</index>
+	<enabled>1</enabled>
+	<name>Wiki-плагин</name>
+	<description>Использование wiki для получения информации</description>
+	<version>1.0</version>
+        <code>
+		<hook name="commands_show_help"><![CDATA[ 
+			$help .= "---- Wiki ----\n";
+			$help .= "!wiki addr статья - переводит текст\n";
+			$help .= "!wikilist - список доступных wiki сайтов\n";
+		]]></hook>
+		<hook name="commands_fetch"><![CDATA[
+			$wikilist = array('ru' => 'http://ru.wikipedia.org/w/api.php', 'en' => 'http://en.wikipedia.org/w/api.php', 'ur' => 'http://wiki.uruchie.org/wikipedia/api.php');
+		
+			if($command == 'wiki')
+			{
+				$w = $this->seperate($this->last_message, 2);
+				
+				if($wikilist["$w[1]"] != NULL)
+				{
+					$url = $wikilist["$w[1]"] . "?action=query&format=php&prop=revisions&titles=".urlencode($w[2])."&rvprop=content&rvlimit=1";
+					$curl = curl_init();
+					curl_setopt($curl, CURLOPT_URL, $url);
+					curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+					curl_setopt($curl, CURLOPT_REFERER, "http://{$this->server}");
+					curl_setopt($curl, CURLOPT_USERAGENT,'Pichi/1.0');
+					$info = curl_exec($curl);
+					$info = unserialize($info);
+					curl_close($curl);
+				
+					if(@$info['query']['pages'])
+					{
+					echo "good";
+						foreach ($info['query']['pages'] as $key => $data)
+						{
+							if(@$data['revisions'][0]['*'])
+								$this->sendAnswer($data['revisions'][0]['*']);
+						}
+					}
+				}
+				else
+				{
+					$this->sendAnswer("Нету такой вики в базе =(");
+				}
+			}
+			
+			if($command == 'wikilist')
+			{
+				$ret = NULL;
+				foreach($wikilist as $key=>$val)
+					$ret .= $key . "\n";
+				$this->sendAnswer("Список доступных вики:\n$ret");
+			}
+		]]></hook>
+        </code>
+</PichiPlugin>
+ 
