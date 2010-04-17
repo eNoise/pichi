@@ -43,6 +43,7 @@
 				$w = $this->seperate($this->last_message,2);
 				if($w[1] != NULL && $w[2] != NULL)
 				{
+					$jid = $this->getJIDlast();
 					$this->setJIDinfo($jid, 'translate_from', $w[1]);
 					$this->setJIDinfo($jid, 'translate_to', $w[2]);
 				}
