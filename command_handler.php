@@ -10,7 +10,7 @@ class CommandHandler extends PichiCore
 		parent::__construct($jabber);
 	}
 
-	protected function seperate($command, $level = 2)
+	protected function seperate($command, $level = 1)
 	{
 		$array = array();
 		if(strpos($command, "=") !== FALSE)
