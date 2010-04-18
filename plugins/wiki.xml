@@ -8,7 +8,7 @@
         <code>
 		<hook name="commands_show_help"><![CDATA[ 
 			$help .= "---- Wiki ----\n";
-			$help .= "!wiki addr статья - переводит текст\n";
+			$help .= "!wiki addr статья - статья с вики\n";
 			$help .= "!wikiraw addr статья - тоже самое только без обозначений\n";
 			$help .= "!wikilist - список доступных wiki сайтов\n";
 		]]></hook>

@@ -4,14 +4,34 @@
 	<enabled>1</enabled>
 	<name>Google переводчик</name>
 	<description>Возможность использовать перевод при помощи гугла</description>
-	<version>1.0</version>
+	<version>1.1</version>
         <code>
 		<hook name="commands_show_help"><![CDATA[ 
 			$help .= "---- Перевод гугла ----\n";
 			$help .= "!translate текст - переводит текст\n";
+			$help .= "!tr lg2lg текст - укороченный вариант перевода\n";
 			$help .= "!translate_language lang_from lang_to - устанавливает с какого языка на какой язык переводить ваш текст\n";
 		]]></hook>
-		<hook name="commands_fetch"><![CDATA[ 
+		<hook name="commands_fetch"><![CDATA[
+			if(!function_exists('google_translate'))
+			{
+				function google_translate($text, $from, $to, $server = "http://google.com")
+				{
+					$url = "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=".urlencode($text)."&langpair=".urlencode($from.'|'.$to); 
+					$curl = curl_init();
+					curl_setopt($curl, CURLOPT_URL, $url);
+					curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+					curl_setopt($curl, CURLOPT_REFERER, "http://{$server}");
+					$js = curl_exec($curl);
+					curl_close($curl);
+					$json = json_decode($js, true);
+
+					if($json['responseStatus'] == 200)
+						return $json['responseData']['translatedText'];
+					else
+						return false;
+				}
+			}
 			if($command == 'translate')
 			{
 				$jid = $this->getJIDlast();
@@ -22,20 +42,26 @@
 			
 				if($t_from != NULL && $t_to != NULL && $w[1] != NULL)
 				{
+					$trans = google_translate($w[1], $t_from['translate_from'], $t_to['translate_to'], $this->server);
 			
-					$url = "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=".urlencode($w[1])."&langpair=".urlencode($t_from['translate_from'].'|'.$t_to['translate_to']); 
-					$curl = curl_init();
-					curl_setopt($curl, CURLOPT_URL, $url);
-					curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-					curl_setopt($curl, CURLOPT_REFERER, "http://{$this->server}");
-					$js = curl_exec($curl);
-					curl_close($curl);
-					$json = json_decode($js, true);
-
-					if($json['responseStatus'] == 200)
-						$this->sendAnswer($json['responseData']['translatedText']);
+					if($trans != false)
+						$this->sendAnswer($trans);
 					else
 						$this->sendAnswer("Не удалось перевести =(");
+				}
+			}
+			else if($command == 'tr')
+			{
+				$w = $this->seperate($this->last_message, 2);
+				list($from, $to) = explode('2',$w[1]);
+				if($w[2] != NULL && $from != NULL && $to != NULL)
+				{
+					$trans = google_translate($w[2], $from, $to, $this->server);
+			
+					if($trans != false)
+						$this->sendAnswer($trans);
+					else
+						$this->sendAnswer("Не удалось перевести =(");	
 				}
 			}
 			else if($command == 'translate_language')
@@ -48,6 +74,10 @@
 					$this->setJIDinfo($jid, 'translate_to', $w[2]);
 				}
 			}
+		]]></hook>
+		<hook name="pichicore_status_create"><![CDATA[ 
+			$this->setJIDinfo($jid, 'translate_from', 'en');
+			$this->setJIDinfo($jid, 'translate_to', 'ru');
 		]]></hook>
         </code>
 </PichiPlugin>

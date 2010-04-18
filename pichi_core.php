@@ -261,14 +261,22 @@ class PichiCore
 				$this->event->catchEvent("user_left_room", "room=$room,jid=$jid");
 		}
 		
-		($hook = PichiPlugin::fetch_hook('pichicore_status_update')) ? eval($hook) : false;
+		($hook = PichiPlugin::fetch_hook('pichicore_status_set')) ? eval($hook) : false;
 		
 		$this->log->log("Updating user status for $nick($jid) in $room = $status", PichiLog::LEVEL_DEBUG);
 		$this->db->query("SELECT COUNT(*) FROM users WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND room = '" . $this->db->db->escapeString($room) . "';");
 		if($this->db->fetchColumn() > 0)
+		{
 			$this->db->query("UPDATE users SET nick = '".$this->db->db->escapeString($nick)."', time = '".time()."', status = '".$status."', role = '" . $this->db->db->escapeString($role) . "' WHERE jid = '".$this->db->db->escapeString($jid)."' AND room = '". $this->db->db->escapeString($room) ."';");
+			($hook = PichiPlugin::fetch_hook('pichicore_status_update')) ? eval($hook) : false;
+		}
 		else
+		{
 			$this->db->query("INSERT INTO users (`jid`,`nick`,`role`,`room`,`time`,`status`) VALUES ('" . $this->db->db->escapeString($jid) . "','".$this->db->db->escapeString($nick)."','" . $this->db->db->escapeString($role) . "','". $this->db->db->escapeString($room) ."','".time()."','".$status."');");
+			$this->db->query("SELECT COUNT(*) FROM users WHERE jid = '" . $this->db->db->escapeString($jid) . "';");
+			if($this->db->fetchColumn() == 0)
+				($hook = PichiPlugin::fetch_hook('pichicore_status_create')) ? eval($hook) : false;
+		}
 	}
     
         private function isCommand($command)
