@@ -23,7 +23,7 @@ class Pichi extends CommandHandler
 		$help .= "!gc [name] - показать значение опции\n";
 		$help .= "!log n - показывает последний лог\n";
 		$help .= "!users [nick|jid] - список пользователей\n";		
-		$help .= "!msg [nick|jid|room] message [type] - сообщение пользователю\n";
+		$help .= "!msg [nick|jid|room] [type] message - сообщение пользователю\n";
 		$help .= "!ping [nick|jid] - ping запрос пользователю\n";
 		$help .= "!join room nick [status] - войти в комнату (сменить ник)\n";
 		$help .= "!left room nick [status] - выйти из комнаты\n";
@@ -42,7 +42,7 @@ class Pichi extends CommandHandler
 		$help .= "!disable N - выключить плагин\n";
 		$help .= "!reload - перезагрузить все плагины\n";
 
-		$help .= "=====  Wiki  =====\n";
+		$help .= "=====  Wiki (встроенная)  =====\n";
 		$help .= "!dfn name=val - установить определение\n";
 		$help .= "!wtf name - определение из базы\n";
 		$help .= "!wtfcount - количество определений в базе\n";
@@ -310,11 +310,11 @@ class Pichi extends CommandHandler
 		$w = $this->seperate($this->last_message, 3);
 
 		$user = $this->getJID($w[1]);
-		$message = $w[2];
-		if($w[3] != "chat" && $w[3] != "groupchat")
-			$w[3] = "chat";
+		$message = $w[3];
+		if($w[2] != "chat" && $w[2] != "groupchat")
+			$w[2] = "chat";
 		
-		$this->jabber->message($user, $message, $w[3]);
+		$this->jabber->message($user, $message, $w[2]);
 		$this->log->log("Send message to $user: $message", PichiLog::LEVEL_DEBUG);
 	}
 	
@@ -397,7 +397,10 @@ class Pichi extends CommandHandler
 	protected function command_ping()
 	{
 		$w = $this->seperate($this->last_message);
-		$this->ping($w[1]);
+		if($this->isOnline($w[1])
+			$this->ping($w[1]);
+		else
+			$this->sendAnswer("Такого пользователя нет =(");
 	}
 	
 	protected function command_idle()

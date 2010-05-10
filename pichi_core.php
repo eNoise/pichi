@@ -201,6 +201,17 @@ class PichiCore
 		return $this->inUser($this->ignore, $this->last_from);
 	}
     
+	protected function isOnline($user)
+	{
+		$this->db->query("SELECT `jid`,`nick` FROM users WHERE status = 'available';");
+		while($users = $this->db->fetch_array())
+		{
+			if($users['nick'] == $user || $users['jid'] == $user)
+				return true;
+		}
+		return false;
+	}
+    
 	public function doExit()
 	{
 		global $config;

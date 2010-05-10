@@ -230,6 +230,9 @@ while(!$jabber->isDisconnected()) {
 				$pichi->wait = $time_session = time();
 				($hook = PichiPlugin::fetch_hook('main_session_start')) ? eval($hook) : false;
 				break;
+			case 'end_stream':
+				$pichi->wait = time();
+				break;
 		}
 	}
     
