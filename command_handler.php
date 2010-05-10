@@ -38,6 +38,8 @@ class CommandHandler extends PichiCore
 			$w = explode(" ",$command);
 			for($i = 0; $i < $level; $i++)
 			{
+				if(!isset($w[$i]))
+					break;
 				$array[$i] = $w[$i];
 				unset($w[$i]);
 			}

@@ -487,7 +487,7 @@ class XMPPHP_XMPP extends XMPPHP_XMLStream {
 		}
 	}
 	
-	public function kick($nick, $room, $mesage = "bye, bye!", $id = NULL)
+	public function kick($nick, $room, $mesage = NULL, $id = NULL)
 	{
 			if($id == NULL)
 				$id = $this->getId();
@@ -499,6 +499,44 @@ class XMPPHP_XMPP extends XMPPHP_XMLStream {
 				id='$id'>
 					<query xmlns='http://jabber.org/protocol/muc#admin'>
 						<item nick='$nick' role='none'>
+							<reason>$mesage</reason>
+						</item>
+					</query>
+			</iq>
+		");
+	}
+	
+	public function ban($jid, $room, $mesage = NULL, $id = NULL)
+	{
+			if($id == NULL)
+				$id = $this->getId();
+			
+			$this->send("
+			<iq from='{$this->fulljid}' 
+				to='$room'
+				type='set' 
+				id='$id'>
+					<query xmlns='http://jabber.org/protocol/muc#admin'>
+						<item affiliation='outcast' jid='$jid'>
+							<reason>$mesage</reason>
+						</item>
+					</query>
+			</iq>
+		");
+	}
+	
+	public function unban($jid, $room, $mesage = NULL, $id = NULL)
+	{
+			if($id == NULL)
+				$id = $this->getId();
+			
+			$this->send("
+			<iq from='{$this->fulljid}' 
+				to='$room'
+				type='set' 
+				id='$id'>
+					<query xmlns='http://jabber.org/protocol/muc#admin'>
+						<item affiliation='none' jid='$jid'>
 							<reason>$mesage</reason>
 						</item>
 					</query>

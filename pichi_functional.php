@@ -30,12 +30,14 @@ class Pichi extends CommandHandler
 		$help .= "!greet jid room@server greet - Сообщение при заходе\n";
 		$help .= "!farewell jid room@server buy - Сообщение при выходе\n";
 		$help .= "!idle nick - сколько молчит указаный ник\n";
-		$help .= "!topic text - установить тему\n";
 		$help .= "!quit - выход\n";
 		$help .= "!version - версия бота\n";
 		
 		$help .= "=====  Администраторские команды  =====\n";
 		$help .= "!kick nick - кикнуть пользователя\n";
+		$help .= "!topic text - установить тему\n";
+		$help .= "!ban jid|nick - забанить";
+		$help .= "!unban jid - разбанить";
 		
 		$help .= "=====  Plugins  =====\n";
 		$help .= "!plugins - список плагинов\n";
@@ -107,8 +109,26 @@ class Pichi extends CommandHandler
 		if(!$this->isAccess())
 			return;
 		
-		$w = $this->seperate($this->last_message);
-		$this->jabber->kick($w[1], $this->room);
+		$w = $this->seperate($this->last_message, 2);
+		$this->jabber->kick($w[1], $this->room, (($w[2]) ? $w[2] : NULL));
+	}
+	
+	protected function command_ban()
+	{
+		if(!$this->isAccess())
+			return;
+		
+		$w = $this->seperate($this->last_message, 2);
+		$this->jabber->ban($this->getJID($w[1]), $this->room, (($w[2]) ? $w[2] : NULL));
+	}
+	
+	protected function command_unban()
+	{
+		if(!$this->isAccess())
+			return;
+		
+		$w = $this->seperate($this->last_message, 2);
+		$this->jabber->unban($w[1], $this->room, (($w[2]) ? $w[2] : NULL));
 	}
 	
 	protected function command_log()
