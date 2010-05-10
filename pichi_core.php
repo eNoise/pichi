@@ -79,10 +79,17 @@ class PichiCore
 			$this->log->log("do CYCLE()", PichiLog::LEVEL_VERBOSE);
 			// ----------------------
 			// Unban
-			$this->db->query("SELECT `jid`,`value` FROM users_data WHERE name = 'ban';");
+			$this->db->query("SELECT `jid`,`value`,`name` FROM users_data WHERE name = 'ban' OR name = 'kick';");
 			while($bans = $this->db->fetch_array())
+			{
 				if((int)$bans['value'] <= time())
-					$this->unban($bans['jid']);
+				{
+					if($bans['name'] == 'ban')
+						$this->unban($bans['jid']);
+					else if($bans['name'] == 'kick')
+						$this->unkick($bans['jid']);
+				}
+			}
 		}
 	}
 	
@@ -324,9 +331,17 @@ class PichiCore
 		if(time() - $this->wait > $this->wait_time)
 		{
 			if($status == 'available' && $old_status == 'unavailable')
+			{
 				$this->event->catchEvent("user_join_room", "room=$room,jid=$jid");
+				// autokick
+				$this->db->query("SELECT COUNT(*) FROM users_data WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND name = 'kick';");
+				if($this->db->fetchColumn() > 0)
+					$this->jabber->kick($this->getName($this->getJID($jid)), $this->room, NULL);
+			}
 			else if($status == 'unavailable' && $old_status == 'available')
+			{
 				$this->event->catchEvent("user_left_room", "room=$room,jid=$jid");
+			}
 		}
 		
 		($hook = PichiPlugin::fetch_hook('pichicore_status_set')) ? eval($hook) : false;
