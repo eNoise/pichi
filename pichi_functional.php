@@ -34,11 +34,12 @@ class Pichi extends CommandHandler
 		$help .= "!version - версия бота\n";
 		
 		$help .= "=====  Администраторские команды  =====\n";
-		$help .= "!kick nick - кикнуть пользователя\n";
 		$help .= "!topic text - установить тему\n";
-		$help .= "!ban jid|nick - забанить";
-		$help .= "!banlist - список забаненых в пичи";
-		$help .= "!unban jid - разбанить";
+		$help .= "!ban jid|nick [time] [reason] - забанить\n";
+		$help .= "!unban jid - разбанить\n";
+		$help .= "!banlist - список забаненых в пичи\n";
+		$help .= "!kick nick|jid [time] [reason] - кикнуть пользователя\n";
+		$help .= "!unkick jid - удалить кик\n";
 		
 		$help .= "=====  Plugins  =====\n";
 		$help .= "!plugins - список плагинов\n";
