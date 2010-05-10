@@ -244,6 +244,7 @@ while(!$jabber->isDisconnected()) {
 	}
 	
 	($hook = PichiPlugin::fetch_hook('main_handle_cycle')) ? eval($hook) : false;
+	$pichi->cycle(); // циклический метод
 }
 
 ?>

@@ -37,6 +37,7 @@ class Pichi extends CommandHandler
 		$help .= "!kick nick - кикнуть пользователя\n";
 		$help .= "!topic text - установить тему\n";
 		$help .= "!ban jid|nick - забанить";
+		$help .= "!banlist - список забаненых в пичи";
 		$help .= "!unban jid - разбанить";
 		
 		$help .= "=====  Plugins  =====\n";
@@ -118,8 +119,8 @@ class Pichi extends CommandHandler
 		if(!$this->isAccess())
 			return;
 		
-		$w = $this->seperate($this->last_message, 2);
-		$this->jabber->ban($this->getJID($w[1]), $this->room, (($w[2]) ? $w[2] : NULL));
+		$w = $this->seperate($this->last_message, 3);
+		$this->ban($w[1], $w[2], $w[3]);
 	}
 	
 	protected function command_unban()
@@ -128,7 +129,18 @@ class Pichi extends CommandHandler
 			return;
 		
 		$w = $this->seperate($this->last_message, 2);
-		$this->jabber->unban($w[1], $this->room, (($w[2]) ? $w[2] : NULL));
+		$this->unban($w[1], $w[2]);
+	}
+	
+	protected function command_banlist()
+	{
+		$this->db->query("SELECT `jid`,`value` FROM users_data WHERE name = 'ban';");
+		$banlist = "";
+		while($bans = $this->db->fetch_array())
+		{
+			$banlist .= $bans['jid'] . " " . date("d.m.y \в H:i:s", $bans['value']) . "\n";
+		}
+		$this->sendAnswer("Список заблокированных в пичи:\n" . $banlist);
 	}
 	
 	protected function command_log()

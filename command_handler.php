@@ -48,6 +48,43 @@ class CommandHandler extends PichiCore
 		}
 	}
 	
+	protected function convertTime($time)
+	{
+		if($time == NULL)
+			return 0;
+		
+		switch(substr($time, -1))
+		{
+			case "m":
+				$realtime = intval(substr($time, 0, -1));
+				return $realtime * 60;
+				break;
+			case "h":
+				$realtime = intval(substr($time, 0, -1));
+				return $realtime * 60 * 60;
+				break;
+			case "d":
+				$realtime = intval(substr($time, 0, -1));
+				return $realtime * 60 * 60 * 24;
+				break;
+			case "w":
+				$realtime = intval(substr($time, 0, -1));
+				return $realtime * 60 * 60 * 24 * 7;
+				break;
+			case "M":
+				$realtime = intval(substr($time, 0, -1));
+				return $realtime * 60 * 60 * 24 * 30;
+				break;
+			case "Y":
+				$realtime = intval(substr($time, 0, -1));
+				return $realtime * 60 * 60 * 24 * 30 * 12;
+				break;
+			default:
+				return intval($realtime);
+				break;
+		}
+	}
+	
         private function isCommand($command)
         {
                 return (substr($command,0,1) == "!");

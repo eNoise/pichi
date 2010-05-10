@@ -36,6 +36,7 @@ class PichiCore
 	// Timers
 	public $wait;
 	public $wait_time = 5;
+	public $cycle_interval = 5;
     
 	// Privilegy
 	public $admins = array();
@@ -67,6 +68,43 @@ class PichiCore
 	{
 		$this->log = $log;
 	}
+
+	public function cycle()
+	{
+		$this->cycle_interval--;
+		// begin
+		if($this->cycle_interval <= 0)
+		{
+			$this->cycle_interval = 5;
+			$this->log->log("do CYCLE()", PichiLog::LEVEL_VERBOSE);
+			// ----------------------
+			// Unban
+			$this->db->query("SELECT `jid`,`value` FROM users_data WHERE name = 'ban';");
+			while($bans = $this->db->fetch_array())
+				if((int)$bans['value'] <= time())
+					$this->unban($bans['jid']);
+		}
+	}
+	
+	protected function ban($jid, $time = NULL, $reason = NULL)
+	{
+		$this->jabber->ban(($jid = $this->getJID($jid)), $this->room, (($reason) ? $reason : NULL));
+		if($time != NULL)
+		{
+			$time = $this->convertTime($time);
+			$this->setJIDinfo($jid, 'ban', $time + time());
+			$this->setJIDinfo($jid, 'ban_reason', $reason);
+		}
+	}
+	
+	protected function unban($jid, $reason = NULL)
+	{
+		$this->jabber->unban($jid, $this->room, (($reason) ? $reason : NULL));
+		$this->delJIDinfo($jid, 'ban');
+		$this->delJIDinfo($jid, 'ban_reason');
+	}
+	
+	protected function convertTime(){} // заглушка
 
 	public function joinRoom($room, $nick, $status = "BotWorld!")
 	{
@@ -400,6 +438,15 @@ class PichiCore
 		while($data = $this->db->fetch_array())
 			$array[$data['name']] = $data['value'];
 		return $array;
+	}
+	
+	// ну и удалить
+	// return bool
+	public function delJIDinfo($jid, $name = NULL)
+	{
+		$array = FALSE; // изначально не масив =)
+		$this->db->query("DELETE FROM users_data WHERE jid = '" . $this->db->db->escapeString($jid) . "'" . (($name != NULL) ? " AND name = '" . $this->db->db->escapeString($name) . "'" : "") . ";");
+		return true;
 	}
 
 }
