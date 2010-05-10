@@ -30,6 +30,7 @@ class Pichi extends CommandHandler
 		$help .= "!greet jid room@server greet - Сообщение при заходе\n";
 		$help .= "!farewell jid room@server buy - Сообщение при выходе\n";
 		$help .= "!idle nick - сколько молчит указаный ник\n";
+		$help .= "!topic text - установить тему\n";
 		$help .= "!quit - выход\n";
 		$help .= "!version - версия бота\n";
 		
@@ -401,6 +402,12 @@ class Pichi extends CommandHandler
 			$this->ping($w[1]);
 		else
 			$this->sendAnswer("Такого пользователя нет =(");
+	}
+	
+	protected function command_topic()
+	{
+		$w = $this->seperate($this->last_message);
+		$this->jabber->setTopic($this->room, $w[1]);
 	}
 	
 	protected function command_idle()

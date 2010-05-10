@@ -503,7 +503,15 @@ class XMPPHP_XMPP extends XMPPHP_XMLStream {
 						</item>
 					</query>
 			</iq>
-
+		");
+	}
+	
+	public function setTopic($room, $topic)
+	{
+		$this->send("
+			<message to='$room' type='groupchat'>
+				<subject>$topic</subject>
+			</message>
 		");
 	}
 }
