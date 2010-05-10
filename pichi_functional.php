@@ -397,7 +397,7 @@ class Pichi extends CommandHandler
 	protected function command_ping()
 	{
 		$w = $this->seperate($this->last_message);
-		if($this->isOnline($w[1])
+		if($this->isOnline($w[1]))
 			$this->ping($w[1]);
 		else
 			$this->sendAnswer("Такого пользователя нет =(");
