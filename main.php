@@ -197,9 +197,7 @@ while(!$jabber->isDisconnected()) {
 				break;
 			case 'presence':
 				$log->log("Recive PRESENCE Handler from: {$data['from']} [{$data['show']}] {$data['status']}",PichiLog::LEVEL_DEBUG);
-				if($data['show'] != NULL && $data['show'] != 'unavailable')
-					$data['show'] = 'available'; // Во всех случаях кроме оффлайна, ставим онлайн
-				if($data['show'] == 'available' || $data['show'] == 'unavailable')
+				if($data['type'] == 'available' || $data['type'] == 'unavailable')
 				{
 					unset($jid);
 					$nick = $pichi->getName($data['from']);
@@ -216,9 +214,9 @@ while(!$jabber->isDisconnected()) {
 
 					$room = $pichi->getJID($data['from']);
 					if(isRoom($room))
-						$pichi->setUserInfo($jid, $nick, $role, $room, $data['show']);
+						$pichi->setUserInfo($jid, $nick, $role, $room, $data['type']);
 					else
-						$pichi->setUserInfo($jid, $nick, $role, NULL, $data['show']);
+						$pichi->setUserInfo($jid, $nick, $role, NULL, $data['type']);
 				}
 				break;
 			case 'session_start':
