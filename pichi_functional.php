@@ -110,8 +110,17 @@ class Pichi extends CommandHandler
 		if(!$this->isAccess())
 			return;
 		
-		$w = $this->seperate($this->last_message, 2);
-		$this->jabber->kick($w[1], $this->room, (($w[2]) ? $w[2] : NULL));
+		$w = $this->seperate($this->last_message, 3);
+		$this->kick($w[1], $w[2], $w[3]);
+	}
+	
+	protected function command_unkick()
+	{
+		if(!$this->isAccess())
+			return;
+		
+		$w = $this->seperate($this->last_message);
+		$this->unkick($w[1]);
 	}
 	
 	protected function command_ban()

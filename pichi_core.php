@@ -99,9 +99,28 @@ class PichiCore
 	
 	protected function unban($jid, $reason = NULL)
 	{
+		$jid = $this->getJID($jid);
 		$this->jabber->unban($jid, $this->room, (($reason) ? $reason : NULL));
 		$this->delJIDinfo($jid, 'ban');
 		$this->delJIDinfo($jid, 'ban_reason');
+	}
+	
+	protected function kick($jid, $time = NULL, $reason = NULL)
+	{
+		$this->jabber->kick($this->getName($jid = $this->getJID($jid)), $this->room, (($reason) ? $reason : NULL));
+		if($time != NULL)
+		{
+			$time = $this->convertTime($time);
+			$this->setJIDinfo($jid, 'kick', $time + time());
+			$this->setJIDinfo($jid, 'kick_reason', $reason);
+		}
+	}
+	
+	protected function unkick($jid)
+	{
+		$jid = $this->getJID($jid);
+		$this->delJIDinfo($jid, 'kick');
+		$this->delJIDinfo($jid, 'kick_reason');
 	}
 	
 	protected function convertTime(){} // заглушка
