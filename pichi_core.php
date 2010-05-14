@@ -167,7 +167,7 @@ class PichiCore
 		if($id == $this->last_id['ping'])
 		{
 			$time = microtime(true) - $this->last_data['ping_time'];
-			$time = number_format($time, 2); // до 2 символов
+			$time = number_format($time, 3); // до 3 символов
 			$this->log->log("Recived ping if $time", PichiLog::LEVEL_DEBUG);
 			$this->sendAnswer("Pong in $time sec.");
 		}
