@@ -180,7 +180,11 @@ class PichiCore
 		if(strpos($nick, "@") === FALSE)
 		{
 			$this->db->query("SELECT `jid` FROM users WHERE nick = '" . $this->db->db->escapeString($nick) . "';");
-			return $this->db->fetchColumn(0);
+			$jid = $this->db->fetchColumn(0);
+			if($jid != NULL)
+				return $jid;
+			else
+				return false;
 		}
 		else
 		{
@@ -207,7 +211,11 @@ class PichiCore
 		if(strpos($jid, "/") === FALSE)
 		{
 			$this->db->query("SELECT `nick` FROM users WHERE jid = '" . $this->db->db->escapeString($jid) . "';");
-			return $this->db->fetchColumn(0);
+			$name = $this->db->fetchColumn(0);
+			if($name != NULL)
+				return $name;
+			else
+				return false;
 		}
 		else
 		{

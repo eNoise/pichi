@@ -199,19 +199,19 @@ while(!$jabber->isDisconnected()) {
 				$log->log("Recive PRESENCE Handler from: {$data['from']} [{$data['show']}] {$data['status']}",PichiLog::LEVEL_DEBUG);
 				if($data['type'] == 'available' || $data['type'] == 'unavailable')
 				{
-					unset($jid);
+					unset($jid, $role);
 					$nick = $pichi->getName($data['from']);
+					$jid = $pichi->getJID($nick);
 					foreach($data['xml']->subs as $x)
 					{
 						if($x->name == 'x' && $x->subs[0]->attrs['jid'])
-						{
 							$jid = $pichi->getJID($x->subs[0]->attrs['jid']);
+						if($x->name == 'x' && $x->subs[0]->attrs['role'])
 							$role = $x->subs[0]->attrs['role'];
-						}
 					}
+					
 					if(!$jid)
 						break;
-
 					$room = $pichi->getJID($data['from']);
 					if(isRoom($room))
 						$pichi->setUserInfo($jid, $nick, $role, $room, $data['type']);
