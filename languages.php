@@ -4,7 +4,7 @@
 class PichiLang
 {
 	private static $language = array();
-	private static $dir = "/languages/";
+	private static $dir = "languages/";
 	
 	// Constructor
 	function PichiLang()
@@ -18,13 +18,13 @@ class PichiLang
 
 	public static function load($lang)
 	{
-		if(file_exists(self::$dir . $lang . '.xml')
+		if(file_exists(self::$dir . $lang . '.xml'))
 		{
 			$xml = simplexml_load_file(self::$dir . $lang . '.xml');
 			
-			foreach($xml_config->language->children() as $l)
+			foreach($xml->language->children() as $l)
 			{
-				self::$language[$l->attributes()->name] = (string)$l;
+				self::$language[(string)$l->attributes()->name] = (string)$l;
 			}
 		}
 	}
@@ -34,9 +34,16 @@ class PichiLang
 		self::$language = array();
 	}
 
-	public static function get($name)
+	public static function get($name, $param = array())
 	{
-		return self::$language[$name];
+		$string = self::$language[$name];
+		if(count($param) > 0)
+		{
+			$string = str_replace('%', '%%', $string);
+			$string = preg_replace('#\{([0-9]+)\}#sU', '%\\1$s', $string);
+			$string = @call_user_func_array('sprintf', array_merge(array($string), $param));
+		}
+		return $string;
 	}
 }
 

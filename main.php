@@ -51,7 +51,7 @@ function php_extension_load($ext)
 		{
 			if(!dl("php_$ext.dll"))
 			{
-				$log->log("Extension $ext not loaded. Enable it.",PichiLog::LEVEL_ERROR);
+				$log->log(PichiLang::get('error_cant_load_extension', array($ext)),PichiLog::LEVEL_ERROR);
 				exit();
 			}
 		}
@@ -59,7 +59,7 @@ function php_extension_load($ext)
 		{
 			if(!dl("$ext.so"))
 			{
-				$log->log("Extension $ext not loaded. Enable it.",PichiLog::LEVEL_ERROR);
+				$log->log(PichiLang::get('error_cant_load_extension', array($ext)),PichiLog::LEVEL_ERROR);
 				exit();
 			}
 		}
@@ -79,8 +79,8 @@ php_extension_load("xml");
 
 if($config['version'] < $config['min_version'])
 {
-	$log->log("Old config version",PichiLog::LEVEL_ERROR);
-	$log->log("You version {$config['version']}. But >{$config['min_version']} required.",PichiLog::LEVEL_ERROR);
+	$log->log(PichiLang::get('error_config_old'),PichiLog::LEVEL_ERROR);
+	$log->log(PichiLang::get('error_config_old_version', array($config['version'], $config['min_version'])), PichiLog::LEVEL_ERROR);
 	exit();
 }
 
@@ -103,28 +103,28 @@ $log->log("Start Pichi",PichiLog::LEVEL_INFO);
 $jabber = new XMPPHP_XMPP($config['server'], $config['port'], $config['user'], $config['password'], $config['resource'], $config['server'], $config['xmpp_log'], $loglevel = (($config['debug']) ? XMPPHP_Log::LEVEL_VERBOSE : XMPPHP_Log::LEVEL_INFO));
 try
 {
-	$log->log("Try to connect...",PichiLog::LEVEL_VERBOSE);
+	$log->log(PichiLang::get('info_start_connecting'),PichiLog::LEVEL_VERBOSE);
 	$jabber->connect();
 }
 
 catch(XMPPHP_Exception $e)
 {
-	$log->log("Connection fail with error: $e",PichiLog::LEVEL_ERROR);
+	$log->log(PichiLang::get('error_connect_failed', array($e)),PichiLog::LEVEL_ERROR);
 	exit();
 }
 
 // connect
-$log->log("Connection success", PichiLog::LEVEL_VERBOSE);
+$log->log(PichiLang::get('info_connect_success'), PichiLog::LEVEL_VERBOSE);
 ($hook = PichiPlugin::fetch_hook('main_jabber_connected')) ? eval($hook) : false;
 
 if(file_exists($config['db_file']))
 {
-	$log->log("There is no db file.",PichiLog::LEVEL_DEBUG);
+	$log->log(PichiLang::get('info_database_exists'),PichiLog::LEVEL_DEBUG);
 	$db_exist = TRUE;
 }
 else
 {
-	$log->log("Db file founded",PichiLog::LEVEL_DEBUG);
+	$log->log(PichiLang::get('info_no_database'),PichiLog::LEVEL_DEBUG);
 	$db_exist = FALSE; 
 }
 $log->log("Pichi Init",PichiLog::LEVEL_VERBOSE);
@@ -174,15 +174,15 @@ $pichi->_db()->query("SELECT * FROM db_version;");
 $current_db_version = $pichi->_db()->fetchColumn(0);
 if($current_db_version < $config['db_version'])
 {
-	$log->log("Old database!",PichiLog::LEVEL_ERROR);
-	$log->log("Your database version: $current_db_version. But needed: ". $config['db_version'],PichiLog::LEVEL_ERROR);
+	$log->log(PichiLang::get('error_database_old'),PichiLog::LEVEL_ERROR);
+	$log->log(PichiLang::get('error_database_old_need', array($current_db_version, $config['db_version'])), PichiLog::LEVEL_ERROR);
 	exit();
 }
 
 $pichi->parseOptions(); // загнать все опции
-$log->log("Sync Timers",PichiLog::LEVEL_VERBOSE);
+$log->log(PichiLang::get('info_timer_sync'),PichiLog::LEVEL_VERBOSE);
 $time_message = $time_ping = time(); // сбрасываем
-$log->log("Begin Session",PichiLog::LEVEL_VERBOSE);
+$log->log(PichiLang::get('info_session_begin'),PichiLog::LEVEL_VERBOSE);
 while(!$jabber->isDisconnected()) {
 	$payloads = $jabber->processUntil(array('message', 'presence', 'end_stream', 'session_start', 'ping'), 1);
 	//wait for proccess
@@ -241,7 +241,7 @@ while(!$jabber->isDisconnected()) {
 	// вставляем случайное сообщение если скучно
 	if(time() - $time_message > $pichi->options['rand_message'] && $pichi->options['rand_message'] > 10) // 10 минимум секунд
 	{
-		$log->log("Send randome message",PichiLog::LEVEL_DEBUG);
+		$log->log(PichiLang::get('info_send_random_message'),PichiLog::LEVEL_DEBUG);
 		$pichi->sendRandMessage();
 	}
 	

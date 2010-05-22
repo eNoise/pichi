@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <PichiLanguage>
         <language>
-                <option name="server" type="string">jabber.uruchie.org</option>
+                <option name="error_cant_load_extension" type="string">Не могу загрузить расширение {1}</option>
+                <option name="error_config_old" type="string">Не могу загрузить расширение {1}</option>
+                <option name="error_config_old_version" type="string">Ваша версия конфига {1}. А нужна {2}.</option>
+                <option name="info_start_connecting" type="string">Пытаемся соединиться с сервером</option>
+                <option name="error_connect_failed" type="string">Соединиться не удалось. Выход с ошибкой: {1}</option>
+                <option name="info_connect_success" type="string">Соединено успешно.</option>
+                <option name="info_no_database" type="string">База данных не существует.</option>
+                <option name="info_database_exists" type="string">База данных существует.</option>
+                <option name="error_database_old" type="string">База данных устарела.</option>
+                <option name="error_database_old_need" type="string">Версия вашей базы данных {1}. Необходима {2}.</option>
+                <option name="info_timer_sync" type="string">Синхронизация таймера</option>
+                <option name="info_session_begin" type="string">Начало сессии</option>
+                <option name="info_send_random_message" type="string">Отправка случайного сообщения</option>
         </language>
 </PichiLanguage>
