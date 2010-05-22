@@ -233,11 +233,17 @@ class PichiCore
 		else
 			$to = $this->last_from;
 		$type = $this->last_type;
+		
+		if(strlen($message) > $this->options['msg_limit'] && $this->options['msg_limit'] > 1 && $this->last_type == "groupchat")
+		{
+			$to = $this->getJID($this->getName($this->last_from));
+			$type = 'chat';
+		}
 		($hook = PichiPlugin::fetch_hook('pichicore_answer_send')) ? eval($hook) : false;
-		if(strlen($message) < $this->options['msg_limit'] || $this->options['msg_limit'] < 1 || $this->last_type != "groupchat")
-			$this->jabber->message($to, $message, $type);
-		else
-			$this->jabber->message($this->getJID($this->getName($this->last_from)), $message, "chat");
+		
+		foreach(str_split($message, $this->options['msg_max_limit']) as $msg)
+			$this->jabber->message($to, $msg, $type);
+
 		$this->log->log("Send answer to $to:\n$message", PichiLog::LEVEL_VERBOSE);
 	}
 
