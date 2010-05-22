@@ -90,6 +90,7 @@ class PichiCore
 						$this->unkick($bans['jid']);
 				}
 			}
+			($hook = PichiPlugin::fetch_hook('pichicore_cycle')) ? eval($hook) : false;
 		}
 	}
 	

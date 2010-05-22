@@ -45,6 +45,11 @@ class PichiLang
 		}
 		return $string;
 	}
+	
+	public static function set($name, $value)
+	{
+		self::$language[$name] = $value;
+	}
 }
 
 ?>

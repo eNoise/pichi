@@ -5,12 +5,14 @@ class PichiPlugin
 {
 	private static $pluginlist = array(
 					'main_init_plugin_system',
+					'main_init_translations',
 					'main_jabber_connected',
 					'main_creating_db',
 					'main_session_start',
 					'main_handle_cycle',
 					'pichicore_room_join',
 					'pichicore_room_left',
+					'pichicore_cycle',
 					'pichicore_answer_send',
 					'pichicore_options_parse',
 					'pichicore_status_set',
