@@ -25,33 +25,33 @@
 		<option name="help_command_description_set" type="string">Устанавливает параметр опции. Например !set answer_mode=1</option>
 		<option name="help_command_description_gc" type="string">Получить значение опции. Можно вызывать без параметра, тогда покажет все опции. Можно с параметром, тогда только для определенной. Например !gc answer_mode.</option>
 		<option name="help_command_description_log" type="string">Показать лог. Паметром указывается количество последних сообщений. Например !log 10 покажет 10 последних</option>
-		<option name="help_command_description_users" type="string">Показать список пользователей. Показывает пользователей которые сейчас онлайн, или когда-либо были онлайн. Узнать статус определенного пользователя можно указав JID или ник как параметр. Например !users nagg</option>
+		<option name="help_command_description_users" type="string">Показать список пользователей. Показывает пользователей которые онлайн или когда-либо были онлайн. Узнать статус определенного пользователя можно указав JID или ник как параметр. Пример: !users deg</option>
 		<option name="help_command_description_msg" type="string">Отправить сообщение пользователю. Первым параметром является адрес (может быть пользователем или комнатой). Вторым ялвяется тип: chat или groupchat (для комнаты). И наконец третьим само сообщение. Пример использования: !msg "room@conference.jabber.ru" "groupchat" "Пример сообщения".</option>
-		<option name="help_command_description_ping" type="string">Пингует пользователя. Например !ping nagg</option>
+		<option name="help_command_description_ping" type="string">Получает время отклика от пользователя. Например !ping nagg</option>
 		<option name="help_command_description_join" type="string">Войти в комнату. Например !join room@conference.jabber.ru</option>
 		<option name="help_command_description_left" type="string">Покинуть команату. Например !left room@conference.jabber.ru</option>
 		<option name="help_command_description_greet" type="string">Устанавить приветсвие для пользователя. Например !greet "nagg@jabber.ru" "room@conference.jabber.ru" "С возращением, nagg!"</option>
 		<option name="help_command_description_farewell" type="string">Установить прощание, после ухода пользователя. Пример !farewell "nagg@jabber.ru" "room@conference.jabber.ru" "nagg ушел"</option>
-		<option name="help_command_description_idle" type="string">Узнать сколько времени молчит указанный пользователь в комнате. Например !idle nagg</option>
+		<option name="help_command_description_idle" type="string">Узнать время бездействия (время, прошедшее с момента последнего активного действия пользователя) в комнате. Пример: !idle deg</option>
 		<option name="help_command_description_quit" type="string">Выйти</option>
 		<option name="help_command_description_version" type="string">Показать версию pichi.</option>
-		<option name="help_command_description_topic" type="string">Установить тему в комнате. Пример использования: !topic тема</option>
-		<option name="help_command_description_ban" type="string">Забанить пользователя. Первым параметром является ник или jid пользователя. Второй - время (можно использовать сокращения например 5m - 5 минут, 5h - 5 часов). Если указано время, пользователя автоматически отбанит. Третий параметр - причина. Пример использования: !ban "nagg" "5h" "просто"</option>
-		<option name="help_command_description_unban" type="string">Разбанить пользователя. Указываем JID пользователя. Пример: !unban nagg@jabber.ru</option>
-		<option name="help_command_description_banlist" type="string">Показывает список заблокированных пользователей</option>
-		<option name="help_command_description_kick" type="string">Кикнуть пользователя из комнаты. Если указано время, пользователя будет автоматически кикать из комнаты, если он зайдет повторно. Первый параметр jid или ник. Второй время (см !ban). Третий причина. Пример: !kick nagg 5m просто_так </option>
-		<option name="help_command_description_unckick" type="string">Убрать автоматический кик с пользователя. !unkick nagg</option>
-		<option name="help_command_description_plugins" type="string">Показать список включенных и выключенных плагинов.</option>
-		<option name="help_command_description_enable" type="string">Включить указанный плагин из списка. Например !enable lastfm</option>
+		<option name="help_command_description_topic" type="string">Установить тему в комнате. Пример: !topic тема</option>
+		<option name="help_command_description_ban" type="string">Забанить пользователя. Первым параметром является ник или jid пользователя. Второй - время (можно использовать сокращения например 5m - 5 минут, 5h - 5 часов). Если указано время, бан будет автоматически снят спустя указанный промежуток времени. Третий параметр - причина (опционально). Пример: !ban "vovan" "5h" "причина"</option>
+		<option name="help_command_description_unban" type="string">Снять бан с указанного пользователя. Пример:  !unban vovan@jabber.uruchie.org</option>
+		<option name="help_command_description_banlist" type="string">Показать список заблокированных пользователей</option>
+		<option name="help_command_description_kick" type="string">Выгнать пользователя из комнаты. Если указано время, пользователя,  при попытках зайти, будет автоматически сразу выгонять из комнаты на протяжении указанного времени. Первый параметр - jid или ник. Второй - время (см !ban). Третий - причина. Пример: !kick vovan 5m просто_так</option>
+		<option name="help_command_description_unckick" type="string">Отменить действие команды !kick. Необходима только, если команда !kick была использована с параметром "время". Пример: !unkick vovan</option>
+		<option name="help_command_description_plugins" type="string">Показать список всех плагинов.</option>
+		<option name="help_command_description_enable" type="string">Включить указанный плагин. Пример: !enable lastfm</option>
 		<option name="help_command_description_disable" type="string">Отключить указанный плагин. Пример: !disable lastfm</option>
 		<option name="help_command_description_reload" type="string">Перезагрузить все плагины. Полезно если внесены изменения в плагины.</option>
-		<option name="help_command_description_dfn" type="string">Установить определение для встроенной вики. Например !dfn wow=игра</option>
-		<option name="help_command_description_wtf" type="string">Узнать определение из базы. Например "!wtf wow" выведет "игра"</option>
-		<option name="help_command_description_wtfcount" type="string">Посчитать число определений в базе</option>
+		<option name="help_command_description_dfn" type="string">Установить определение для встроенной вики. Пример: !dfn wow=игра</option>
+		<option name="help_command_description_wtf" type="string">Узнать определение из базы. Пример: !wtf wow покажет "игра"</option>
+		<option name="help_command_description_wtfcount" type="string">Показать число определений в базе.</option>
 		<option name="help_command_description_wtfrand" type="string">Показать случайное определение из вики.</option>
-		<option name="help_command_description_wtfrev" type="string">Показать текущую ревизию определения. Например !wtfrev wow выведет 1</option>
-		<option name="help_command_description_wtffull" type="string">Показать текст всех ревизий данного определения. например !wtffull wow покажет и определение и ревизию.</option>
-		<option name="help_command_description_wtfset" type="string">Откатить статью до рпделенной ревизии. Например !wtfset wow 1 откатит статью к определенной ревизии</option>
+		<option name="help_command_description_wtfrev" type="string">Показать текущую ревизию определения. Пример: !wtfrev wow покажет "1"</option>
+		<option name="help_command_description_wtffull" type="string">Показать текст всех ревизий данного определения. Пример: "!wtffull wow" покажет и определение и ревизию.</option>
+		<option name="help_command_description_wtfset" type="string">Откатить статью до определённой ревизии. Пример: "!wtfset wow 1" откатит статью к указанной ревизии.</option>
 		<option name="help_command_description_top" type="string">Показать топ10 слов-связок в базе.</option>
 		<option name="help_command_description_count" type="string">Посчитать количество слов-связок в базе.</option>
 		<option name="help_command_description_talkers" type="string">Топ10 наиболее разговорчивых пользователей</option>
@@ -65,6 +65,7 @@
 		<option name="help_command_usage_status" type="string">статус</option>
 		<option name="help_command_usage_reason" type="string">причина</option>
 		<option name="help_command_usage_time" type="string">время</option>
+		<option name="help_command_usage_variable" type="string">переменная</option>
 		
 		<option name="help_plugins" type="string">Система плагинов</option>
 		<option name="help_admin_commands" type="string">Комманды администратора</option>

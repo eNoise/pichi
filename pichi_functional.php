@@ -22,8 +22,8 @@ class Pichi extends CommandHandler
 		$help .= "--------------------------------------------\n";
 		
 		$help .= "=====  " . PichiLang::get('help_main_commands') . "  =====\n";
-		$help .= "!set ".PichiLang::get('help_command_usage_param')."=".PichiLang::get('help_command_usage_value')." - ".PichiLang::get('help_command_description_set')."\n";
-		$help .= "!gc [".PichiLang::get('help_command_usage_param')."] - ".PichiLang::get('help_command_description_gc')."\n";
+		$help .= "!set ".PichiLang::get('help_command_usage_variable')."=".PichiLang::get('help_command_usage_value')." - ".PichiLang::get('help_command_description_set')."\n";
+		$help .= "!gc [".PichiLang::get('help_command_usage_variable')."] - ".PichiLang::get('help_command_description_gc')."\n";
 		$help .= "!log ".PichiLang::get('help_command_usage_param')." - ".PichiLang::get('help_command_description_log')."\n";
 		$help .= "!users [".PichiLang::get('help_command_usage_nick')."|".PichiLang::get('help_command_usage_jid')."] - ".PichiLang::get('help_command_description_users')."\n";		
 		$help .= "!msg [".PichiLang::get('help_command_usage_nick')."|".PichiLang::get('help_command_usage_jid')."|".PichiLang::get('help_command_usage_room')."] [type] message - ".PichiLang::get('help_command_description_msg')."\n";
