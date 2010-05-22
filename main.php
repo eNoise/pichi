@@ -23,12 +23,12 @@ require_once("plugins.php");
 require_once("languages.php");
 include("console_commands.php"); // parse command line
 
+PichiPlugin::init(); // init plugin system
+($hook = PichiPlugin::fetch_hook('main_init_plugin_system')) ? eval($hook) : false;
+
 PichiLang::init();
 PichiLang::load($config['language']);
 ($hook = PichiPlugin::fetch_hook('main_init_translations')) ? eval($hook) : false;
-
-PichiPlugin::init(); // init plugin system
-($hook = PichiPlugin::fetch_hook('main_init_plugin_system')) ? eval($hook) : false;
 
 if($config['debug'] && $config['debug_level'] == 5)
 	$config['xmpp_log'] = TRUE;
