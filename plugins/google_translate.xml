@@ -8,9 +8,14 @@
         <code>
 		<hook name="commands_show_help"><![CDATA[ 
 			$help .= "---- Перевод гугла ----\n";
-			$help .= "!translate текст - переводит текст\n";
-			$help .= "!tr lg2lg текст - укороченный вариант перевода\n";
-			$help .= "!translate_language lang_from lang_to - устанавливает с какого языка на какой язык переводить ваш текст\n";
+			$help .= "!translate текст - ".PichiLang::get('help_command_description_translate')."\n";
+			$help .= "!tr lg2lg текст - ".PichiLang::get('help_command_description_tr')."\n";
+			$help .= "!translate_language lang_from lang_to - ".PichiLang::get('help_command_description_translate_language')."\n";
+		]]></hook>
+		<hook name="main_init_translations"><![CDATA[
+			PichiLang::set('help_command_description_translate', 'Перевести указанный текст при помощи сервиса Google Translate. (Необходимо чтобы был выставлен язык перевода, см !translate_language)', 'ru');
+			PichiLang::set('help_command_description_tr', 'Быстрый перевод текста. Вторым параметром является укороченный вариант с_какого_языка2в_какой_язык. Например: "!tr en2ru this" переведет слово this с английского на русский.', 'ru');
+			PichiLang::set('help_command_description_translate_language', 'Устанавливает язык перевода для вашего аккаунта. Первый параметр - с какого. Второй - в какой. Например "!translate_language en ru" установит язык перевода с английского на русский. После уставновки этого параметра можно использовать комманду !translate', 'ru');
 		]]></hook>
 		<hook name="commands_fetch"><![CDATA[
 			if(!function_exists('google_translate'))

@@ -4,12 +4,16 @@
 	<enabled>1</enabled>
 	<name>Last.fm информация</name>
 	<description>Возможность отображения индивидуальной информации с last.fm</description>
-	<version>1.0</version>
+	<version>1.1</version>
         <code>
 		<hook name="commands_show_help"><![CDATA[
 			$help .= "---- Last.fm ----\n";
-			$help .= "!lastfm_setuser user - устанавливает ваш аккаунт на last.fm\n";
-			$help .= "!lastfm - отображает то, что вы сейчас слушали\n";
+			$help .= "!lastfm_setuser user - ".PichiLang::get('help_command_description_lastfm_setuser')."\n";
+			$help .= "!lastfm - ".PichiLang::get('help_command_description_lastfm')."\n";
+		]]></hook>
+		<hook name="main_init_translations"><![CDATA[
+			PichiLang::set('help_command_description_lastfm_setuser', 'Связывает вас с Last.fm аккаунтом.', 'ru');
+			PichiLang::set('help_command_description_lastfm', 'Отображает последний прослушанные композиции для вашего аккаунта', 'ru');
 		]]></hook>
 		<hook name="commands_fetch"><![CDATA[ 
 			if($command == 'lastfm')

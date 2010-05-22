@@ -8,9 +8,14 @@
         <code>
 		<hook name="commands_show_help"><![CDATA[ 
 			$help .= "---- Wiki ----\n";
-			$help .= "!wiki addr статья - статья с вики\n";
-			$help .= "!wikiraw addr статья - тоже самое только без обозначений\n";
-			$help .= "!wikilist - список доступных wiki сайтов\n";
+			$help .= "!wiki addr статья - ".PichiLang::get('help_command_description_wiki')."\n";
+			$help .= "!wikiraw addr статья - ".PichiLang::get('help_command_description_wikiraw')."\n";
+			$help .= "!wikilist - ".PichiLang::get('help_command_description_wikilist')."\n";
+		]]></hook>
+		<hook name="main_init_translations"><![CDATA[
+			PichiLang::set('help_command_description_wiki', 'Получает текст статьи с mediawiki (движка википедии). Вторым параметром является псевдоним вики. Например "!wiki ru сети" - получит текст статьи "сети" c русской википедии', 'ru');
+			PichiLang::set('help_command_description_wikiraw', 'Получить текст статьи в исходном варианте. Смотреть комманду !wiki.', 'ru');
+			PichiLang::set('help_command_description_wikilist', 'Список доступных псевдонимов различных вики. Используется для !wiki и !wikiraw', 'ru');
 		]]></hook>
 		<hook name="commands_fetch"><![CDATA[
 			$wikilist = array('ru' => 'http://ru.wikipedia.org/w/', 'en' => 'http://en.wikipedia.org/w/', 'u3' => 'http://wiki.uruchie.org/wikipedia/');

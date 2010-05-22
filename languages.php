@@ -5,6 +5,7 @@ class PichiLang
 {
 	private static $language = array();
 	private static $dir = "languages/";
+	private static $lastlang;
 	
 	// Constructor
 	function PichiLang()
@@ -26,6 +27,7 @@ class PichiLang
 			{
 				self::$language[(string)$l->attributes()->name] = (string)$l;
 			}
+			self::$lastlang = $lang;
 		}
 	}
 	
@@ -46,9 +48,10 @@ class PichiLang
 		return $string;
 	}
 	
-	public static function set($name, $value)
+	public static function set($name, $value, $lang = NULL)
 	{
-		self::$language[$name] = $value;
+		if($lang == NULL || ($lang != NULL && self::$lastlang == $lang))
+			self::$language[$name] = $value;
 	}
 }
 

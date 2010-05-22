@@ -8,7 +8,10 @@
         <code>
 		<hook name="commands_show_help"><![CDATA[ 
 			$help .= "---- Поиск в гугле ----\n";
-			$help .= "!google текст - поиск текста\n";
+			$help .= "!google текст - ".PichiLang::get('help_command_description_google')."\n";
+		]]></hook>
+		<hook name="main_init_translations"><![CDATA[
+			PichiLang::set('help_command_description_google', 'Поиск указанного текста в поисковой системе Google.', 'ru');
 		]]></hook>
 		<hook name="commands_fetch"><![CDATA[
 			if($command == 'google')
