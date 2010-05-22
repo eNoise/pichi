@@ -69,6 +69,14 @@ class PichiCore
 		$this->log = $log;
 	}
 
+	public static function str_split_unicode($string, $split_length=1)
+	{
+		$arr = preg_split('//u',$string);
+		$arr = array_chunk($arr, $split_length);
+		$arr = array_map('implode', $arr);
+		return $arr;
+	}
+
 	public function cycle()
 	{
 		$this->cycle_interval--;
@@ -242,7 +250,7 @@ class PichiCore
 		($hook = PichiPlugin::fetch_hook('pichicore_answer_send')) ? eval($hook) : false;
 		
 		if($this->options['msg_max_limit'] > 0)
-			foreach(str_split($message, $this->options['msg_max_limit']) as $msg)
+			foreach(self::str_split_unicode($message, $this->options['msg_max_limit']) as $msg)
 				$this->jabber->message($to, $msg, $type);
 		else
 			$this->jabber->message($to, $message, $type);
