@@ -94,6 +94,9 @@ class CommandHandler extends PichiCore
         {
                 if($this->isCommand($command))
                 {
+			while(strpos($command,'  ') !== FALSE)
+				$command = str_replace('  ', ' ', $command);
+			
                         $get = explode(" ", $command);
                         return $get[0];
                 }
