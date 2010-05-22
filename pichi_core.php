@@ -241,8 +241,11 @@ class PichiCore
 		}
 		($hook = PichiPlugin::fetch_hook('pichicore_answer_send')) ? eval($hook) : false;
 		
-		foreach(str_split($message, $this->options['msg_max_limit']) as $msg)
-			$this->jabber->message($to, $msg, $type);
+		if($this->options['msg_max_limit'] > ))
+			foreach(str_split($message, $this->options['msg_max_limit']) as $msg)
+				$this->jabber->message($to, $msg, $type);
+		else
+			$this->jabber->message($to, $message, $type);
 
 		$this->log->log("Send answer to $to:\n$message", PichiLog::LEVEL_VERBOSE);
 	}
