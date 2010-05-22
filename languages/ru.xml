@@ -63,5 +63,7 @@
 		<option name="help_command_usage_room" type="string">комната</option>
 		<option name="help_command_usage_message" type="string">сообщение</option>
 		<option name="help_command_usage_status" type="string">статус</option>
+		<option name="help_command_usage_reason" type="string">причина</option>
+		<option name="help_command_usage_time" type="string">время</option>
         </language>
 </PichiLanguage>
