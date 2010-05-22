@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <PichiConfig>
-	<version>6</version>
+	<version>7</version>
         <config>
                 <option Name="server" type="string">jabber.uruchie.org</option>
                 <option Name="port" type="int">5222</option>
@@ -9,6 +9,8 @@
                 <option Name="db_file" type="string">pichi.db</option>
                 <option Name="debug" type="bool">0</option>
                 <option Name="debug_level" type="int">5</option>
+                
+                <option Name="language" type="string">ru</option>
                 
                 <option Name="user" type="string">pichi</option>
                 <option Name="room_user" type="string">pichi</option>

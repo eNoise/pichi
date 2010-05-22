@@ -2,7 +2,7 @@
 
 ### Some settings ###
 $config['db_version'] = 15; // Work only parram
-$config['min_version'] = 6; // Min version of config
+$config['min_version'] = 7; // Min version of config
 $config['pichi_version'] = "0.5.0 (dev)"; //Pichi version
 
 ### Begin basic settings end checks ###
@@ -20,7 +20,11 @@ require_once("pichi_functional.php");
 require_once("Log_pichi.php");
 require_once("System/Daemon.php");
 require_once("plugins.php");
+require_once("languages.php");
 include("console_commands.php"); // parse command line
+
+PichiLang::init();
+PichiLang::load($config['language']);
 
 PichiPlugin::init(); // init plugin system
 ($hook = PichiPlugin::fetch_hook('main_init_plugin_system')) ? eval($hook) : false;
