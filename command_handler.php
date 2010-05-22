@@ -94,9 +94,6 @@ class CommandHandler extends PichiCore
         {
                 if($this->isCommand($command))
                 {
-			while(strpos($command,'  ') !== FALSE)
-				$command = str_replace('  ', ' ', $command);
-			
                         $get = explode(" ", $command);
                         return $get[0];
                 }
@@ -110,6 +107,10 @@ class CommandHandler extends PichiCore
 		
 		if($this->isCommand($this->last_message))
 		{
+			// Fix wrong commands execude
+			while(strpos($this->last_message,'  ') !== FALSE)
+				$this->last_message = str_replace('  ', ' ', $this->last_message);
+			
 			$command = $this->getCommand($this->last_message);
 			$command = substr($command, 1);
 			if(method_exists($this, "command_{$command}"))
