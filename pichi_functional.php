@@ -36,7 +36,7 @@ class Pichi extends CommandHandler
 		$help .= "!quit - ".PichiLang::get('help_command_description_quit')."\n";
 		$help .= "!version - ".PichiLang::get('help_command_description_version')."\n";
 		
-		$help .= "=====  Администраторские команды  =====\n";
+		$help .= "=====  " . PichiLang::get('help_admin_commands') . "  =====\n";
 		$help .= "!topic ".PichiLang::get('help_command_usage_param')." - ".PichiLang::get('help_command_description_topic')."\n";
 		$help .= "!ban ".PichiLang::get('help_command_usage_jid')."|".PichiLang::get('help_command_usage_nick')." [".PichiLang::get('help_command_usage_time')."] [".PichiLang::get('help_command_usage_reason')."] - ".PichiLang::get('help_command_description_ban')."\n";
 		$help .= "!unban ".PichiLang::get('help_command_usage_jid')." - ".PichiLang::get('help_command_description_jid')."\n";
@@ -44,13 +44,13 @@ class Pichi extends CommandHandler
 		$help .= "!kick ".PichiLang::get('help_command_usage_nick')."|".PichiLang::get('help_command_usage_jid')." [".PichiLang::get('help_command_usage_time')."] [".PichiLang::get('help_command_usage_reason')."] - ".PichiLang::get('help_command_description_kick')."\n";
 		$help .= "!unkick ".PichiLang::get('help_command_usage_jid')." - ".PichiLang::get('help_command_description_unkick')."\n";
 		
-		$help .= "=====  Plugins  =====\n";
+		$help .= "=====  " . PichiLang::get('help_plugins') . "  =====\n";
 		$help .= "!plugins - ".PichiLang::get('help_command_description_plugins')."\n";
 		$help .= "!enable ".PichiLang::get('help_command_usage_param')." - ".PichiLang::get('help_command_description_enable')."\n";
 		$help .= "!disable ".PichiLang::get('help_command_usage_param')." - ".PichiLang::get('help_command_description_disable')."\n";
 		$help .= "!reload - ".PichiLang::get('help_command_description_reload')."\n";
 
-		$help .= "=====  Wiki (встроенная)  =====\n";
+		$help .= "=====  " . PichiLang::get('help_wiki_inline') . "  =====\n";
 		$help .= "!dfn ".PichiLang::get('help_command_usage_param')."=".PichiLang::get('help_command_usage_value')." - ".PichiLang::get('help_command_description_dfn')."\n";
 		$help .= "!wtf ".PichiLang::get('help_command_usage_param')." - ".PichiLang::get('help_command_description_wtf')."\n";
 		$help .= "!wtfcount - ".PichiLang::get('help_command_description_wtfcount')."\n";
@@ -59,12 +59,12 @@ class Pichi extends CommandHandler
 		$help .= "!wtfull ".PichiLang::get('help_command_usage_param')." - ".PichiLang::get('help_command_description_wtffull')."\n";
 		$help .= "!wtfset ".PichiLang::get('help_command_usage_param')." - ".PichiLang::get('help_command_description_wtfset')."\n";
 
-		$help .= "=====  Разговорник  =====\n";
+		$help .= "=====  " . PichiLang::get('help_lexems') . "  =====\n";
 		$help .= "!top - ".PichiLang::get('help_command_description_top')."\n";
 		$help .= "!count - ".PichiLang::get('help_command_description_count')."\n";
 		$help .= "!talkers - ".PichiLang::get('help_command_description_talkers')."\n";
 
-		$help .= "=====  Другие команды  =====\n";
+		$help .= "=====  " . PichiLang::get('help_other_commands') . "  =====\n";
 		($hook = PichiPlugin::fetch_hook('commands_show_help')) ? eval($hook) : false;
 		
 		$this->sendAnswer($help);

@@ -65,5 +65,11 @@
 		<option name="help_command_usage_status" type="string">статус</option>
 		<option name="help_command_usage_reason" type="string">причина</option>
 		<option name="help_command_usage_time" type="string">время</option>
+		
+		<option name="help_plugins" type="string">Система плагинов</option>
+		<option name="help_admin_commands" type="string">Комманды администратора</option>
+		<option name="help_wiki_inline" type="string">Встроенная вики</option>
+		<option name="help_other_commands" type="string">Другие комманды</option>
+		<option name="help_lexems" type="string">Разговорник</option>
         </language>
 </PichiLanguage>
