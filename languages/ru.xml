@@ -15,18 +15,18 @@
                 <option name="info_session_begin" type="string">Начало сессии</option>
                 <option name="info_send_random_message" type="string">Отправка случайного сообщения</option>
                 
-                <option name="help_syntaxis_info" type="string">Основа управления:
+                <option name="help_syntaxis_info" type="string">Основы управления:
 Все комманды начинаются с !
 После комманды идут параметры:
 параметр - обязательный параметр
 параметр1|параметр2 - параметр1 или параметр2
 [параметр] - необязательный параметр</option>
-		<option name="help_main_commands" type="string">Основные коммады</option>
+		<option name="help_main_commands" type="string">Основные комманды</option>
 		<option name="help_command_description_set" type="string">Устанавливает параметр опции. Например !set answer_mode=1</option>
 		<option name="help_command_description_gc" type="string">Получить значение опции. Можно вызывать без параметра, тогда покажет все опции. Можно с параметром, тогда только для определенной. Например !gc answer_mode.</option>
 		<option name="help_command_description_log" type="string">Показать лог. Паметром указывается количество последних сообщений. Например !log 10 покажет 10 последних</option>
-		<option name="help_command_description_users" type="string">Показать список пользователей. Показывает пользователей которые сейчас онлайн, или когда либо были онлайн. Узнать статус определенного пользователя можно указав JID или ник как параметр. Например !users nagg</option>
-		<option name="help_command_description_msg" type="string">Отправить сообщение пользователю. Первым параметром является адрес (может быть пользователем или комнатой). Вторым ялвяется тип: chat или groupchat (для комнаты). И наконец 3 само сообщение. Пример использования: !msg "room@conference.jabber.ru" "groupchat" "Пример сообщения".</option>
+		<option name="help_command_description_users" type="string">Показать список пользователей. Показывает пользователей которые сейчас онлайн, или когда-либо были онлайн. Узнать статус определенного пользователя можно указав JID или ник как параметр. Например !users nagg</option>
+		<option name="help_command_description_msg" type="string">Отправить сообщение пользователю. Первым параметром является адрес (может быть пользователем или комнатой). Вторым ялвяется тип: chat или groupchat (для комнаты). И наконец третьим само сообщение. Пример использования: !msg "room@conference.jabber.ru" "groupchat" "Пример сообщения".</option>
 		<option name="help_command_description_ping" type="string">Пингует пользователя. Например !ping nagg</option>
 		<option name="help_command_description_join" type="string">Войти в комнату. Например !join room@conference.jabber.ru</option>
 		<option name="help_command_description_left" type="string">Покинуть команату. Например !left room@conference.jabber.ru</option>
