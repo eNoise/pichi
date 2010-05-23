@@ -303,7 +303,7 @@ class Pichi extends CommandHandler
 		foreach($tmp as $key=>$val)
 		{
 			$i++;
-			$ans .= PichiLang::get('command_talkers_list', array($i,$this->getName($key),$val));
+			$ans .= PichiLang::get('command_talkers_list', array($i,$this->getName($key),$val)) . "\n";
 			if($i>=10)
 				break;
 		}
@@ -314,7 +314,7 @@ class Pichi extends CommandHandler
 	{
 		$this->db->query("SELECT COUNT(*) FROM lexems;");
 		$lexnum = (int)$this->db->fetchColumn(0);
-		$this->sendAnswer(PichiLang::get('command_count', array($lexnum));
+		$this->sendAnswer(PichiLang::get('command_count', array($lexnum)));
 	}
 	
 	protected function command_dfn()
@@ -397,13 +397,13 @@ class Pichi extends CommandHandler
 				if($data['status'] == 'available')
 				{
 					$n++;
-					$online .= PichiLang::get('command_users_online_seen',array($n, $data['nick'], $roomname));
+					$online .= PichiLang::get('command_users_online_seen',array($n, $data['nick'], $roomname)) . "\n";
 					$this->log->log("User $data[nick]: online", PichiLog::LEVEL_VERBOSE);
 				}
 				else
 				{
 					$f++;
-					$offline .= PichiLang::get('command_users_offline_seen',array($f, $data['nick'], date("d.m.y \в H:i:s", $data['time']), $roomname));
+					$offline .= PichiLang::get('command_users_offline_seen',array($f, $data['nick'], date("d.m.y \в H:i:s", $data['time']), $roomname)) . "\n";
 					$this->log->log("User $data[nick]: offline", PichiLog::LEVEL_VERBOSE);
 				}
 			}
@@ -418,7 +418,7 @@ class Pichi extends CommandHandler
 				if($data['nick'] == $w[1] || $data['jid'] == $w[1])
 				{
 					$this->log->log("User {$data['nick']} founded!", PichiLog::LEVEL_VERBOSE);
-					$this->sendAnswer(PichiLang::get('command_status', array($data['nick'), (($data['status'] == 'available') ? PichiLang::get('command_status_online') : PichiLang::get('command_status_offline'))));
+					$this->sendAnswer(PichiLang::get('command_status', array($data['nick'], (($data['status'] == 'available') ? PichiLang::get('command_status_online') : PichiLang::get('command_status_offline')))));
 				}
 			}
 		}
