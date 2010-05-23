@@ -165,7 +165,7 @@ if(!$db_exist)
 	$pichi->_db()->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('treatment_coincidence','3','Вероятность вставки обращений. [1 - всегда; >100 фактически никогда][По умолчанию: 3]');"); // вставлять обращение, совпадения (3 из 1)
 	$pichi->_db()->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('rand_message','0','Переодически отправлять случайные фразы в главный чат. [0 - выключить; 1 - включить][По умолчанию: 0]');"); // случайны ответ когда скучно
 	$pichi->_db()->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('msg_limit','500','Максимальное количество символов, допустимое в главном чате (в противном случае пишет в личку) [По умолчанию: 500]');"); // лимит символов, после чего отправляет ответ в личку
-	$pichi->_db()->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('msg_max_limit','5000','Верхний предел для сообщения, после которого сообщение разобьет на несколько [По умолчанию: 5000]');"); // вверхний предел
+	$pichi->_db()->query("INSERT INTO settings (`name`, `value`, `description`) VALUES ('msg_max_limit','0','Верхний предел для сообщения, после которого сообщение разобьет на несколько [По умолчанию: 0]');"); // вверхний предел
 	
 	($hook = PichiPlugin::fetch_hook('main_creating_db')) ? eval($hook) : false;
 	
