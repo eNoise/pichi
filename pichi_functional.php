@@ -75,7 +75,7 @@ class Pichi extends CommandHandler
 		global $config;
 		$this->sendAnswer("Pichi Bot v.{$config['pichi_version']}");
 		($hook = PichiPlugin::fetch_hook('commands_show_version')) ? eval($hook) : false;
-		$this->sendAnswer("Плагины:\n" . PichiPlugin::show_plugin_list());
+		$this->sendAnswer("".PichiLang::get('command_version_plugins').":\n" . PichiPlugin::show_plugin_list());
 	}
 	
 	protected function command_enable()
@@ -106,7 +106,7 @@ class Pichi extends CommandHandler
 	
 	protected function command_plugins()
 	{
-		$this->sendAnswer("Плагины:\n" . PichiPlugin::show_plugin_list());
+		$this->sendAnswer("".PichiLang::get('command_version_plugins').":\n" . PichiPlugin::show_plugin_list());
 	}
 	
 	protected function command_kick()
@@ -153,7 +153,7 @@ class Pichi extends CommandHandler
 		{
 			$banlist .= $bans['jid'] . " " . date("d.m.y \в H:i:s", $bans['value']) . "\n";
 		}
-		$this->sendAnswer("Список заблокированных в пичи:\n" . $banlist);
+		$this->sendAnswer("".PichiLang::get('command_banlist_lock').":\n" . $banlist);
 	}
 	
 	protected function command_log()
@@ -197,11 +197,11 @@ class Pichi extends CommandHandler
 				$tmp_ar[] = $tmp['name'];
 			$tmp_ar = array_unique($tmp_ar);
 			$wtfnum = count($tmp_ar);
-			$this->sendAnswer("Количество определений в базе: $wtfnum");
+			$this->sendAnswer("".PichiLang::get('command_wiki_count').": $wtfnum");
 		}
 		else
 		{
-			$this->sendAnswer("В базе нет поредлений =(");
+			$this->sendAnswer(PichiLang::get('command_wiki_nodef'));
 		}
 	}
 	
@@ -218,7 +218,7 @@ class Pichi extends CommandHandler
 		}
 		else
 		{
-			$this->sendAnswer("В базе нет поредлений =(");
+			$this->sendAnswer(PichiLang::get('command_wiki_nodef'));
 		} 
 	}
 	
@@ -227,9 +227,9 @@ class Pichi extends CommandHandler
 		$w = $this->seperate($this->last_message);
 		$this->db->query("SELECT revision FROM wiki WHERE name = '" . $this->db->db->escapeString($w[1]) . "' ORDER BY revision DESC LIMIT 0,1;");
 		if($this->db->numRows(true) > 0)
-			$this->sendAnswer("Ревизия: " . $this->db->fetchColumn(0));
+			$this->sendAnswer("".PichiLang::get('command_wiki_revision').": " . $this->db->fetchColumn(0));
 		else
-			$this->sendAnswer("Такого определения нету в базе");
+			$this->sendAnswer(PichiLang::get('command_wiki_nodef'));
 		break;
 	}
 	
@@ -239,11 +239,11 @@ class Pichi extends CommandHandler
 		$this->db->query("SELECT * FROM wiki WHERE name = '" . $this->db->db->escapeString($w[1]) . "' ORDER BY revision DESC;");
 		$list_rev = NULL;
 		while($tmp = $this->db->fetch_array())
-			$list_rev .= "\n------- Ревизия {$tmp['revision']} ({$tmp['name']}) -------\n{$tmp['value']}\n---------------------";
+			$list_rev .= "\n------- ".PichiLang::get('command_wiki_revision')." {$tmp['revision']} ({$tmp['name']}) -------\n{$tmp['value']}\n---------------------";
 		if($list_rev != NULL)
 			$this->sendAnswer($list_rev);
 		else
-			$this->sendAnswer("Такого определения нету в базе");
+			$this->sendAnswer(PichiLang::get('command_wiki_nodef'));
 		break;
 	}
 	
@@ -259,18 +259,18 @@ class Pichi extends CommandHandler
 			$this->db->query("SELECT revision FROM wiki WHERE name = '" . $this->db->db->escapeString($name) . "' ORDER BY revision DESC LIMIT 0,1;");
 			$newrev = ((int)$this->db->fetchColumn(0))+1;
 			$this->db->query("INSERT INTO wiki (`name`,`revision`,`value`) VALUES ('" . $this->db->db->escapeString($name) . "','" . $this->db->db->escapeString($newrev) . "','".$this->db->db->escapeString($val)."');");
-			$this->sendAnswer("Set to revision {$rev}.");
+			$this->sendAnswer(PichiLang::get('command_wiki_revision_set', array($rev)));
 		}
 		else
 		{
-			$this->sendAnswer("Такого определения нету в базе");
+			$this->sendAnswer(PichiLang::get('command_wiki_nodef'));
 		} 
 	}
 	
   	protected function command_top()
 	{
 		$this->db->query("SELECT `lexeme`,`count` FROM lexems ORDER BY count DESC LIMIT 0,10;");
-		$this->sendAnswer("10 самых популярных связок слов:");
+		$this->sendAnswer(PichiLang::get('command_top10'));
 		$ans = "";
 		$ix = 0;
 		while($lex = $this->db->fetch_array())
@@ -278,9 +278,9 @@ class Pichi extends CommandHandler
 			$ix++;
 			$tmp = explode(" ", $lex['lexeme']);
 			if($tmp[0] == "#beg#")
-				$tmp[0] = "(начало)";
+				$tmp[0] = "(".PichiLang::get('command_top10_begin').")";
 			if($tmp[2] == "#end#")
-				$tmp[2] = "(конец)";
+				$tmp[2] = "(".PichiLang::get('command_top10_end').")";
 			$ans .= $ix . ". " . implode(" ", $tmp) . " [{$lex['count']}]" . "\n";
 		}
 		$this->sendAnswer($ans);
@@ -289,7 +289,7 @@ class Pichi extends CommandHandler
   	protected function command_talkers()
 	{
 		$this->db->query("SELECT `from` FROM log;");
-		$this->sendAnswer("10 самых болтливых пользователей:");
+		$this->sendAnswer(PichiLang::get('command_talkers'));
 		$ans = "";
 		$tmp = array();
 		while($fr = $this->db->fetch_array())
@@ -303,7 +303,7 @@ class Pichi extends CommandHandler
 		foreach($tmp as $key=>$val)
 		{
 			$i++;
-			$ans .= $i . ". " . $this->getName($key) . " с " . $val . " фразами.\n";
+			$ans .= PichiLang::get('command_talkers_list', array($i,$this->getName($key),$val));
 			if($i>=10)
 				break;
 		}
@@ -314,7 +314,7 @@ class Pichi extends CommandHandler
 	{
 		$this->db->query("SELECT COUNT(*) FROM lexems;");
 		$lexnum = (int)$this->db->fetchColumn(0);
-		$this->sendAnswer("Количество слов-связок в базе: $lexnum");
+		$this->sendAnswer(PichiLang::get('command_count', array($lexnum));
 	}
 	
 	protected function command_dfn()
@@ -333,7 +333,7 @@ class Pichi extends CommandHandler
 		}
 		
 		$this->log->log("User set wiki page $w[1] = $w[2]", PichiLog::LEVEL_DEBUG);
-		$this->sendAnswer("Value Updated!");
+		$this->sendAnswer(PichiLang::get('command_dfn'));
 	}
 	
 	protected function command_set()
@@ -343,9 +343,9 @@ class Pichi extends CommandHandler
       
 		$w = $this->seperate($this->last_message);
 		if($this->setOption($w[1], $w[2]))
-			$this->sendAnswer("Option updated!");
+			$this->sendAnswer(PichiLang::get('command_set'));
 		else	
-			$this->sendAnswer("Нету такой опции =(");
+			$this->sendAnswer(PichiLang::get('command_nosuch'));
 	}
 	
 	protected function command_msg()
@@ -387,7 +387,7 @@ class Pichi extends CommandHandler
 		if($w[1] == NULL)
 		{
 			$this->log->log("Begin creting user list", PichiLog::LEVEL_DEBUG);
-			$userlist = "Список пользователей, которых я видел:\n";
+			$userlist = "".PichiLang::get('command_users_list_seen').":\n";
 			$online = $offline = "";
 			$n = $f = 0;
 			while($data = $this->db->fetch_array())
@@ -397,18 +397,18 @@ class Pichi extends CommandHandler
 				if($data['status'] == 'available')
 				{
 					$n++;
-					$online .= "$n. $data[nick] (в комнате $roomname)\n";
+					$online .= PichiLang::get('command_users_online_seen',array($n, $data['nick'], $roomname));
 					$this->log->log("User $data[nick]: online", PichiLog::LEVEL_VERBOSE);
 				}
 				else
 				{
 					$f++;
-					$offline .= "$f. $data[nick] (Последний раз видел ".date("d.m.y \в H:i:s", $data['time'])." в комнате $roomname)\n";
+					$offline .= PichiLang::get('command_users_offline_seen',array($f, $data['nick'], date("d.m.y \в H:i:s", $data['time']), $roomname));
 					$this->log->log("User $data[nick]: offline", PichiLog::LEVEL_VERBOSE);
 				}
 			}
-			$userlist .= "Пользователи онлайн:\n" . $online;
-			$userlist .= "Пользователи оффлайн:\n" . $offline;
+			$userlist .= "".PichiLang::get('command_users_online').":\n" . $online;
+			$userlist .= "".PichiLang::get('command_users_offline').":\n" . $offline;
 			$this->sendAnswer($userlist);
 		}
 		else
@@ -418,7 +418,7 @@ class Pichi extends CommandHandler
 				if($data['nick'] == $w[1] || $data['jid'] == $w[1])
 				{
 					$this->log->log("User {$data['nick']} founded!", PichiLog::LEVEL_VERBOSE);
-					$this->sendAnswer($data['nick'] . " сейчас " . (($data['status'] == 'available') ? "онлайн и смотрит на тебя 0_0" : "оффлайн, а жаль. Последний раз видел " . date("d.m.y \в H:i:s", $data['time'])));
+					$this->sendAnswer(PichiLang::get('command_status', array($data['nick'), (($data['status'] == 'available') ? PichiLang::get('command_status_online') : PichiLang::get('command_status_offline'))));
 				}
 			}
 		}
@@ -446,7 +446,7 @@ class Pichi extends CommandHandler
 		if($this->isOnline($w[1]))
 			$this->ping($w[1]);
 		else
-			$this->sendAnswer("Такого пользователя нет =(");
+			$this->sendAnswer(PichiLang::get('command_ping_nouser'));
 	}
 	
 	protected function command_topic()
