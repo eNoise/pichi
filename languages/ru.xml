@@ -24,7 +24,7 @@
 		<option name="help_main_commands" type="string">Основные комманды</option>
 		<option name="help_command_description_set" type="string">Устанавливает параметр опции. Например !set answer_mode=1</option>
 		<option name="help_command_description_gc" type="string">Получить значение опции. Можно вызывать без параметра, тогда покажет все опции. Можно с параметром, тогда только для определенной. Например !gc answer_mode.</option>
-		<option name="help_command_description_log" type="string">Показать лог. Паметром указывается количество последних сообщений. Например !log 10 покажет 10 последних</option>
+		<option name="help_command_description_log" type="string">Показать последние n сообщений конференции. Пример: !log 10</option>
 		<option name="help_command_description_users" type="string">Показать список пользователей. Показывает пользователей которые онлайн или когда-либо были онлайн. Узнать статус определенного пользователя можно указав JID или ник как параметр. Пример: !users deg</option>
 		<option name="help_command_description_msg" type="string">Отправить сообщение пользователю. Первым параметром является адрес (может быть пользователем или комнатой). Вторым ялвяется тип: chat или groupchat (для комнаты). И наконец третьим само сообщение. Пример использования: !msg "room@conference.jabber.ru" "groupchat" "Пример сообщения".</option>
 		<option name="help_command_description_ping" type="string">Получает время отклика от пользователя. Например !ping nagg</option>
