@@ -95,15 +95,15 @@ class PichiCore
 			$this->log->log("do CYCLE()", PichiLog::LEVEL_VERBOSE);
 			// ----------------------
 			// Unban
-			$this->db->query("SELECT `jid`,`value`,`name` FROM users_data WHERE name = 'ban' OR name = 'kick';");
+			$this->db->query("SELECT `jid`,`value`,`name`,`groupid` FROM users_data WHERE name = 'ban' OR name = 'kick';");
 			while($bans = $this->db->fetch_array())
 			{
 				if((int)$bans['value'] <= time())
 				{
 					if($bans['name'] == 'ban')
-						$this->unban($bans['jid']);
+						$this->unban($bans['jid'], $bans['groupid']);
 					else if($bans['name'] == 'kick')
-						$this->unkick($bans['jid']);
+						$this->unkick($bans['jid'], $bans['groupid']);
 				}
 			}
 			($hook = PichiPlugin::fetch_hook('pichicore_cycle')) ? eval($hook) : false;
@@ -114,12 +114,13 @@ class PichiCore
 	{
 		if($room == NULL)
 			$room = $this->room[0]; // main room
-		$this->jabber->ban(($jid = $this->getJID($jid)), $room, (($reason) ? $reason : NULL));
+		$this->jabber->ban(($jid = $this->getJID($jid, $room)), $room, (($reason) ? $reason : NULL));
 		if($time != NULL)
 		{
 			$time = $this->convertTime($time);
-			$this->setJIDinfo($jid, 'ban', $time + time());
-			$this->setJIDinfo($jid, 'ban_reason', $reason);
+			$this->setJIDinfo($jid, 'ban', $time + time(), $room);
+			$this->setJIDinfo($jid, 'ban_reason', $reason, $room);
+			$this->setJIDinfo($jid, 'ban_room', $room, $room);
 		}
 	}
 	
@@ -127,30 +128,35 @@ class PichiCore
 	{
 		if($room == NULL)
 			$room = $this->room[0]; // main room
-		$jid = $this->getJID($jid);
+		$jid = $this->getJID($jid, $room);
 		$this->jabber->unban($jid, $room, (($reason) ? $reason : NULL));
-		$this->delJIDinfo($jid, 'ban');
-		$this->delJIDinfo($jid, 'ban_reason');
+		$this->delJIDinfo($jid, 'ban', $room);
+		$this->delJIDinfo($jid, 'ban_reason', $room);
+		$this->delJIDinfo($jid, 'ban_room', $room);
 	}
 	
 	protected function kick($jid, $time = NULL, $reason = NULL, $room = NULL)
 	{
 		if($room == NULL)
 			$room = $this->room[0]; // main room
-		$this->jabber->kick($this->getName($jid = $this->getJID($jid)), $room, (($reason) ? $reason : NULL));
+		$this->jabber->kick($this->getName($jid = $this->getJID($jid, $room), $room), $room, (($reason) ? $reason : NULL));
 		if($time != NULL)
 		{
 			$time = $this->convertTime($time);
-			$this->setJIDinfo($jid, 'kick', $time + time());
-			$this->setJIDinfo($jid, 'kick_reason', $reason);
+			$this->setJIDinfo($jid, 'kick', $time + time(), $room);
+			$this->setJIDinfo($jid, 'kick_reason', $reason, $room);
+			$this->setJIDinfo($jid, 'kick_room', $room, $room);
 		}
 	}
 	
-	protected function unkick($jid)
+	protected function unkick($jid, $room = NULL)
 	{
-		$jid = $this->getJID($jid);
-		$this->delJIDinfo($jid, 'kick');
-		$this->delJIDinfo($jid, 'kick_reason');
+		if($room == NULL)
+			$room = $this->room[0]; // main room
+		$jid = $this->getJID($jid, $room);
+		$this->delJIDinfo($jid, 'kick', $room);
+		$this->delJIDinfo($jid, 'kick_reason', $room);
+		$this->delJIDinfo($jid, 'kick_room', $room);
 	}
 	
 	protected function convertTime(){} // заглушка
@@ -180,9 +186,11 @@ class PichiCore
 		$this->log->log("Left room $room as $nick", PichiLog::LEVEL_DEBUG);
 	}
 
-	public function ping($jid, $id = "pichi_ping")
+	public function ping($jid, $id = "pichi_ping", $room = NULL)
 	{
-		$jid = $this->getJID($jid); // На всякий случай
+		if($room == NULL)
+			$room = $this->room[0]; // main room
+		$jid = $this->getJID($jid, $room); // На всякий случай
 		$this->log->log("Send ping to $jid", PichiLog::LEVEL_DEBUG);
 		$this->jabber->ping($jid, $id);
 		$this->last_data['ping_time'] = microtime(true);                   
@@ -314,9 +322,9 @@ class PichiCore
 		return $this->inUser($this->ignore, $this->last_from);
 	}
     
-	protected function isOnline($user)
+	protected function isOnline($user, $room = NULL)
 	{
-		$this->db->query("SELECT `jid`,`nick` FROM users WHERE status = 'available';");
+		$this->db->query("SELECT `jid`,`nick` FROM users WHERE status = 'available'" . (($room != NULL) ? " AND room = '" . $this->db->db->escapeString($room) . "'" : "") . ";");
 		while($users = $this->db->fetch_array())
 		{
 			if($users['nick'] == $user || $users['jid'] == $user)
@@ -383,9 +391,9 @@ class PichiCore
 			{
 				$this->event->catchEvent("user_join_room", "room=$room,jid=$jid");
 				// autokick
-				$this->db->query("SELECT COUNT(*) FROM users_data WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND name = 'kick';");
+				$this->db->query("SELECT COUNT(*) FROM users_data WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND name = 'kick' AND groupid = '" . $this->db->db->escapeString($room) ."';");
 				if($this->db->fetchColumn() > 0)
-					$this->jabber->kick($this->getName($this->getJID($jid)), $this->room, NULL);
+					$this->jabber->kick($this->getName($this->getJID($jid, $room), $room), $room, NULL);
 			}
 			else if($status == 'unavailable' && $old_status == 'available')
 			{
@@ -503,21 +511,21 @@ class PichiCore
 	// устанавливает информацию о jid
 	// true - если установило
 	// flase - нету опции
-	public function setJIDinfo($jid, $name, $value)
+	public function setJIDinfo($jid, $name, $value, $groupid = NULL)
 	{
-		$this->db->query("SELECT COUNT(*) FROM users_data WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND name = '" . $this->db->db->escapeString($name) . "';");
+		$this->db->query("SELECT COUNT(*) FROM users_data WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND name = '" . $this->db->db->escapeString($name) . "'" . (($groupid != NULL) ? " AND groupid = '" . $this->db->db->escapeString($groupid) . "'" : "") . ";");
 		if($this->db->fetchColumn() > 0)
-			$this->db->query("UPDATE users_data SET value = '".$this->db->db->escapeString($value)."'  WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND name = '".$this->db->db->escapeString($name)."';");
+			$this->db->query("UPDATE users_data SET value = '".$this->db->db->escapeString($value)."'  WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND name = '".$this->db->db->escapeString($name)."'" . (($groupid != NULL) ? " AND groupid = '" . $this->db->db->escapeString($groupid) . "'" : "") . ";");
 		else
-			$this->db->query("INSERT INTO users_data (`jid`,`name`,`value`) VALUES ('" . $this->db->db->escapeString($jid) . "','" . $this->db->db->escapeString($name) . "','" . $this->db->db->escapeString($value) . "');");
+			$this->db->query("INSERT INTO users_data (`jid`,`name`,`value`,`groupid`) VALUES ('" . $this->db->db->escapeString($jid) . "','" . $this->db->db->escapeString($name) . "','" . $this->db->db->escapeString($value) . "','" . (($groupid != NULL) ? $this->db->db->escapeString($groupid) : "") . "');");
 	}
 	
 	// а теперь получить инфу
 	// return array
-	public function getJIDinfo($jid, $name = NULL)
+	public function getJIDinfo($jid, $name = NULL, $groupid = NULL)
 	{
 		$array = FALSE; // изначально не масив =)
-		$this->db->query("SELECT * FROM users_data WHERE jid = '" . $this->db->db->escapeString($jid) . "'" . (($name != NULL) ? " AND name = '" . $this->db->db->escapeString($name) . "'" : "") . ";");
+		$this->db->query("SELECT * FROM users_data WHERE jid = '" . $this->db->db->escapeString($jid) . "'" . (($name != NULL) ? " AND name = '" . $this->db->db->escapeString($name) . "'" : "") . (($groupid != NULL) ? " AND groupid = '" . $this->db->db->escapeString($groupid) . "'" : "") . ";");
 		while($data = $this->db->fetch_array())
 			$array[$data['name']] = $data['value'];
 		return $array;
@@ -525,10 +533,10 @@ class PichiCore
 	
 	// ну и удалить
 	// return bool
-	public function delJIDinfo($jid, $name = NULL)
+	public function delJIDinfo($jid, $name = NULL, $groupid = NULL)
 	{
 		$array = FALSE; // изначально не масив =)
-		$this->db->query("DELETE FROM users_data WHERE jid = '" . $this->db->db->escapeString($jid) . "'" . (($name != NULL) ? " AND name = '" . $this->db->db->escapeString($name) . "'" : "") . ";");
+		$this->db->query("DELETE FROM users_data WHERE jid = '" . $this->db->db->escapeString($jid) . "'" . (($name != NULL) ? " AND name = '" . $this->db->db->escapeString($name) . "'" : "") . (($groupid != NULL) ? " AND groupid = '" . $this->db->db->escapeString($groupid) . "'" : "") . ";");
 		return true;
 	}
 
