@@ -40,15 +40,15 @@
 		<option name="help_command_description_unban" type="string">Снять бан с указанного пользователя. Пример: !unban vovan@jabber.uruchie.org</option>
 		<option name="help_command_description_banlist" type="string">Показать список заблокированных пользователей.</option>
 		<option name="help_command_description_kick" type="string">Выгнать пользователя из комнаты. Если указано время, пользователя (при попытках зайти) будет автоматически сразу выгонять из комнаты на протяжении указанного времени. Первый параметр - jid или ник. Второй - время (см !ban). Третий - причина (опционально). Пример: !kick vovan 5m просто_так</option>
-		<option name="help_command_description_unckick" type="string">Отменить действие команды !kick. Необходима только, если команда !kick была использована с параметром "время". Пример: !unkick vovan</option>
+		<option name="help_command_description_unckick" type="string">Прервать действие команды !kick. Необходима только, если команда !kick была использована с параметром "время". Пример: !unkick vovan</option>
 		<option name="help_command_description_plugins" type="string">Показать список всех плагинов.</option>
 		<option name="help_command_description_enable" type="string">Включить указанный плагин. Пример: !enable lastfm</option>
 		<option name="help_command_description_disable" type="string">Отключить указанный плагин. Пример: !disable lastfm</option>
 		<option name="help_command_description_reload" type="string">Перезагрузить все плагины. Полезно если внесены изменения в плагины.</option>
-		<option name="help_command_description_dfn" type="string">Установить определение для встроенной вики. Пример: !dfn wow=игра</option>
-		<option name="help_command_description_wtf" type="string">Узнать определение из базы. Пример: !wtf wow покажет "игра"</option>
+		<option name="help_command_description_dfn" type="string">Установить определение для встроенной базы. Пример: !dfn wow=игра</option>
+		<option name="help_command_description_wtf" type="string">Показать определение из базы. Пример: !wtf wow покажет "игра"</option>
 		<option name="help_command_description_wtfcount" type="string">Показать число определений в базе.</option>
-		<option name="help_command_description_wtfrand" type="string">Показать случайное определение из вики.</option>
+		<option name="help_command_description_wtfrand" type="string">Показать случайное определение из базы.</option>
 		<option name="help_command_description_wtfrev" type="string">Показать текущую ревизию определения. Пример: !wtfrev wow покажет "1"</option>
 		<option name="help_command_description_wtffull" type="string">Показать текст всех ревизий данного определения. Пример: "!wtffull wow" покажет и определение и ревизию.</option>
 		<option name="help_command_description_wtfset" type="string">Откатить статью до определённой ревизии. Пример: "!wtfset wow 1" откатит статью к указанной ревизии.</option>

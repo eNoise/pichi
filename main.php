@@ -131,7 +131,7 @@ else
 $log->log("Pichi Init",PichiLog::LEVEL_VERBOSE);
 $pichi = new Pichi($jabber);
 $pichi->_log($log);
-$pichi->room = $config['room'];
+$pichi->room[] = $config['room'];
 $pichi->user = $config['user'];
 $pichi->server = $config['server'];
 $pichi->room_service = $config['room_service'];

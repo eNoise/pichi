@@ -449,10 +449,12 @@ class Pichi extends CommandHandler
 			$this->sendAnswer(PichiLang::get('command_ping_nouser'));
 	}
 	
-	protected function command_topic()
+	protected function command_topic($room = NULL)
 	{
+		if($room == NULL)
+			$room = $this->room[0];
 		$w = $this->seperate($this->last_message);
-		$this->jabber->setTopic($this->room, $w[1]);
+		$this->jabber->setTopic($room, $w[1]);
 	}
 	
 	protected function command_idle()

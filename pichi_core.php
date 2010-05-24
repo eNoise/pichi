@@ -20,7 +20,7 @@ class PichiCore
 	// Account settings
 	public $server;
 	public $room_service;
-	public $room;
+	public $room = array(); // array of rooms
 	public $user;
 	public $room_user;
     
@@ -110,9 +110,11 @@ class PichiCore
 		}
 	}
 	
-	protected function ban($jid, $time = NULL, $reason = NULL)
+	protected function ban($jid, $time = NULL, $reason = NULL, $room = NULL)
 	{
-		$this->jabber->ban(($jid = $this->getJID($jid)), $this->room, (($reason) ? $reason : NULL));
+		if($room == NULL)
+			$room = $this->room[0]; // main room
+		$this->jabber->ban(($jid = $this->getJID($jid)), $room, (($reason) ? $reason : NULL));
 		if($time != NULL)
 		{
 			$time = $this->convertTime($time);
@@ -121,17 +123,21 @@ class PichiCore
 		}
 	}
 	
-	protected function unban($jid, $reason = NULL)
+	protected function unban($jid, $reason = NULL, $room = NULL)
 	{
+		if($room == NULL)
+			$room = $this->room[0]; // main room
 		$jid = $this->getJID($jid);
-		$this->jabber->unban($jid, $this->room, (($reason) ? $reason : NULL));
+		$this->jabber->unban($jid, $room, (($reason) ? $reason : NULL));
 		$this->delJIDinfo($jid, 'ban');
 		$this->delJIDinfo($jid, 'ban_reason');
 	}
 	
-	protected function kick($jid, $time = NULL, $reason = NULL)
+	protected function kick($jid, $time = NULL, $reason = NULL, $room = NULL)
 	{
-		$this->jabber->kick($this->getName($jid = $this->getJID($jid)), $this->room, (($reason) ? $reason : NULL));
+		if($room == NULL)
+			$room = $this->room[0]; // main room
+		$this->jabber->kick($this->getName($jid = $this->getJID($jid)), $room, (($reason) ? $reason : NULL));
 		if($time != NULL)
 		{
 			$time = $this->convertTime($time);
@@ -154,6 +160,8 @@ class PichiCore
 		if(strpos($room, "@") === FALSE)
 			$room .= "@" . $this->room_service . "." . $this->server;
 		$this->jabber->presence($status, 'available', $room."/".$nick);
+		if(!in_array($room, $this->room))
+			$this->room[] = $room;
 		$this->wait = time();
 		($hook = PichiPlugin::fetch_hook('pichicore_room_join')) ? eval($hook) : false;
 		$this->setUserInfo($this->user."@".$this->server, $nick, NULL, $room, 'available');
@@ -165,6 +173,8 @@ class PichiCore
 	  	if(strpos($room, "@") === FALSE)
 			$room .= "@" . $this->room_service . "." . $this->server;
 		$this->jabber->presence($status, 'unavailable', $room."/".$nick);
+		if(in_array($room, $this->room))
+			unset($this->room[array_search($room, $this->room)]);
 		($hook = PichiPlugin::fetch_hook('pichicore_room_left')) ? eval($hook) : false;
 		$this->setUserInfo($this->user."@".$this->server, $nick, NULL, $room, 'unavailable');
 		$this->log->log("Left room $room as $nick", PichiLog::LEVEL_DEBUG);
@@ -191,12 +201,15 @@ class PichiCore
 	}
 
 	// get JID from nick
-	public function getJID($nick)
+	public function getJID($nick, $room = NULL)
 	{
 		$this->log->log("Get JID from $nick", PichiLog::LEVEL_VERBOSE);
 		if(strpos($nick, "@") === FALSE)
 		{
-			$this->db->query("SELECT `jid` FROM users WHERE nick = '" . $this->db->db->escapeString($nick) . "';");
+			if($room == NULL)
+				$room = $this->room[0]; // main room
+			
+			$this->db->query("SELECT `jid` FROM users WHERE nick = '" . $this->db->db->escapeString($nick) . "' AND room = '" . $this->db->db->escapeString($room) . "';");
 			$jid = $this->db->fetchColumn(0);
 			if($jid != NULL)
 				return $jid;
@@ -220,14 +233,16 @@ class PichiCore
 	}
 
 	// get name from jid
-	public function getName($jid)
+	public function getName($jid, $room = NULL)
 	{
 		$this->log->log("Get Nick from JID $jid", PichiLog::LEVEL_VERBOSE);
 		if(strpos($jid, "@") === FALSE)
 			return $jid;
 		if(strpos($jid, "/") === FALSE)
 		{
-			$this->db->query("SELECT `nick` FROM users WHERE jid = '" . $this->db->db->escapeString($jid) . "';");
+			if($room == NULL)
+				$room = $this->room[0]; // main room
+			$this->db->query("SELECT `nick` FROM users WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND room = '" . $this->db->db->escapeString($room) . "';");
 			$name = $this->db->fetchColumn(0);
 			if($name != NULL)
 				return $name;
@@ -456,10 +471,10 @@ class PichiCore
 			switch(rand(1,2))
 			{
 				case 1:
-					$this->jabber->message($this->room, $user[rand(0, $n-1)] . ": " . $this->syntax->returnText(), "groupchat");
+					$this->jabber->message($this->room[0], $user[rand(0, $n-1)] . ": " . $this->syntax->returnText(), "groupchat");
 					break;
 				case 2:
-					$this->jabber->message($this->room, $user[rand(0, $n-1)] . ", " . $this->syntax->returnText(), "groupchat");
+					$this->jabber->message($this->room[0], $user[rand(0, $n-1)] . ", " . $this->syntax->returnText(), "groupchat");
 					break;		
 			}
 		}
