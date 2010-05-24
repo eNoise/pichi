@@ -19,7 +19,7 @@
 			
 			PichiLang::set('help_command_description_wiki', 'Gets the text of the article from mediawiki (the wiki engine). The second parameter is an alias of wiki. For example "!wiki en online" - get the text of the article "Network" from English wiki', 'en');
 			PichiLang::set('help_command_description_wikiraw', 'Gets the text in original version. Watch command  !wiki.', 'en');
-			PichiLang::set('help_command_description_wikilist', 'The list of available aliases of different wiki's. Used to !wiki and !wikiraw', 'en');
+			PichiLang::set('help_command_description_wikilist', 'The list of available aliases of different wiki\'s. Used to !wiki and !wikiraw', 'en');
 		]]></hook>
 		<hook name="commands_fetch"><![CDATA[
 			$wikilist = array('ru' => 'http://ru.wikipedia.org/w/', 'en' => 'http://en.wikipedia.org/w/', 'u3' => 'http://wiki.uruchie.org/wikipedia/');
