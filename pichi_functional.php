@@ -244,7 +244,6 @@ class Pichi extends CommandHandler
 			$this->sendAnswer($list_rev);
 		else
 			$this->sendAnswer(PichiLang::get('command_wiki_nodef'));
-		break;
 	}
 	
 	protected function command_wtfset()
