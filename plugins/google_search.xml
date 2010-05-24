@@ -13,7 +13,7 @@
 		<hook name="main_init_translations"><![CDATA[
 			PichiLang::set('help_command_google_show, 'Поиск в гугле', 'ru');
 			PichiLang::set('help_command_description_google', 'Поиск указанного текста в поисковой системе Google.', 'ru');
-			PichiLang::set('help_command_google_show, 'Google Search', 'en');
+			PichiLang::set('help_command_google_show', 'Google Search', 'en');
 			PichiLang::set('help_command_description_google', 'Find the specified text in the Google search engine', 'en');
 		]]></hook>
 		<hook name="commands_fetch"><![CDATA[
