@@ -35,6 +35,12 @@ class PichiLang
 	{
 		self::$language = array();
 	}
+	
+	public static function reload()
+	{
+		self::clear();
+		self::load(self::$lastlang);
+	}
 
 	public static function get($name, $param = array())
 	{
