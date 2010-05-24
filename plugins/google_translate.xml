@@ -16,6 +16,10 @@
 			PichiLang::set('help_command_description_translate', 'Перевести указанный текст при помощи сервиса Google Translate. (Необходимо чтобы был выставлен язык перевода, см !translate_language)', 'ru');
 			PichiLang::set('help_command_description_tr', 'Быстрый перевод текста. Вторым параметром является укороченный вариант с_какого_языка2в_какой_язык. Например: "!tr en2ru this" переведет слово this с английского на русский.', 'ru');
 			PichiLang::set('help_command_description_translate_language', 'Устанавливает язык перевода для вашего аккаунта. Первый параметр - с какого. Второй - в какой. Например "!translate_language en ru" установит язык перевода с английского на русский. После уставновки этого параметра можно использовать комманду !translate', 'ru');
+			
+			PichiLang::set('help_command_description_translate', 'Translate text using the Google Translate. (You need to put up a target language, see !translate_language)', 'en');
+			PichiLang::set('help_command_description_tr', 'Quick translation of the text. The second parameter is the shortened version of from_language2to_language. For example: "!tr en2ru this" translate the word "this" from English into Russian.', 'en');
+			PichiLang::set('help_command_description_translate_language', 'Sets the target language for your account. The first option is "from language". Second - "to language". For example use "!translate_language en ru" to set the language of translation from English into Russian. After setup this option, you can use the command !translate', 'en');
 		]]></hook>
 		<hook name="commands_fetch"><![CDATA[
 			if(!function_exists('google_translate'))

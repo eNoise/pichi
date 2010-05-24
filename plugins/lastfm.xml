@@ -14,6 +14,9 @@
 		<hook name="main_init_translations"><![CDATA[
 			PichiLang::set('help_command_description_lastfm_setuser', 'Связывает вас с Last.fm аккаунтом.', 'ru');
 			PichiLang::set('help_command_description_lastfm', 'Отображает последний прослушанные композиции для вашего аккаунта', 'ru');
+			
+			PichiLang::set('help_command_description_lastfm_setuser', 'Connect your jabber user with Last.fm account.', 'en');
+			PichiLang::set('help_command_description_lastfm_setuser', 'This option displays the last listened compositions.', 'en');
 		]]></hook>
 		<hook name="commands_fetch"><![CDATA[ 
 			if($command == 'lastfm')

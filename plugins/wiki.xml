@@ -16,6 +16,10 @@
 			PichiLang::set('help_command_description_wiki', 'Получает текст статьи с mediawiki (движка википедии). Вторым параметром является псевдоним вики. Например "!wiki ru сети" - получит текст статьи "сети" c русской википедии', 'ru');
 			PichiLang::set('help_command_description_wikiraw', 'Получить текст статьи в исходном варианте. Смотреть комманду !wiki.', 'ru');
 			PichiLang::set('help_command_description_wikilist', 'Список доступных псевдонимов различных вики. Используется для !wiki и !wikiraw', 'ru');
+			
+			PichiLang::set('help_command_description_wiki', 'Gets the text of the article from mediawiki (the wiki engine). The second parameter is an alias of wiki. For example "!wiki en online" - get the text of the article "Network" from English wiki', 'en');
+			PichiLang::set('help_command_description_wikiraw', 'Gets the text in original version. Watch command  !wiki.', 'en');
+			PichiLang::set('help_command_description_wikilist', 'The list of available aliases of different wiki's. Used to !wiki and !wikiraw', 'en');
 		]]></hook>
 		<hook name="commands_fetch"><![CDATA[
 			$wikilist = array('ru' => 'http://ru.wikipedia.org/w/', 'en' => 'http://en.wikipedia.org/w/', 'u3' => 'http://wiki.uruchie.org/wikipedia/');
