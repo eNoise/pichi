@@ -424,6 +424,7 @@ class XMPPHP_XMLStream {
 					}
 				}
 				$this->log->log("RECV: $buff",  XMPPHP_Log::LEVEL_VERBOSE);
+				$this->reciveData($buff);
 				xml_parse($this->parser, $buff, false);
 			} else {
 				# $updated == 0 means no changes during timeout.
@@ -438,6 +439,7 @@ class XMPPHP_XMLStream {
 	}
 	
 	protected function __post_process(){}
+	protected function reciveData($data){} // need for data abstraction
 	
 	/**
 	 * Process
