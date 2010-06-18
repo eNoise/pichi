@@ -296,7 +296,7 @@ class Pichi extends CommandHandler
 		{
 			$from = $this->getJID($this->getName($fr['from']));
 			if(!$from)
-				continue;
+				$from = $fr['from'];
 			if($tmp["$from"] == NULL)
 			{
 				$tmp["$from"] = 0;
