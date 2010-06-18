@@ -209,7 +209,8 @@ class PichiCore
 	}
 
 	// get JID from nick
-	public function getJID($nick, $room = NULL)
+	// full_search - search in nick history (security hole!!! use it only when it's really needed)
+	public function getJID($nick, $room = NULL, $full_search = false)
 	{
 		$this->log->log("Get JID from $nick", PichiLog::LEVEL_VERBOSE);
 		if(strpos($nick, "@") === FALSE)
@@ -220,9 +221,20 @@ class PichiCore
 			$this->db->query("SELECT `jid` FROM users WHERE nick = '" . $this->db->db->escapeString($nick) . "' AND room = '" . $this->db->db->escapeString($room) . "';");
 			$jid = $this->db->fetchColumn(0);
 			if($jid != NULL)
+			{
 				return $jid;
+			}
 			else
+			{
+				if($full_search)
+				{
+					$this->db->query("SELECT `jid` FROM users_nick WHERE nick = '" . $this->db->db->escapeString($nick) . "' AND room = '" . $this->db->db->escapeString($room) . "';");
+					$jid = $this->db->fetchColumn(0);
+					if($jid != NULL)
+						return $jid;
+				}
 				return false;
+			}
 		}
 		else
 		{
@@ -417,6 +429,10 @@ class PichiCore
 			if($this->db->fetchColumn() == 0)
 				($hook = PichiPlugin::fetch_hook('pichicore_status_create')) ? eval($hook) : false;
 		}
+		
+		$this->db->query("SELECT COUNT(*) FROM users_nick WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND nick = '" . $this->db->db->escapeString($nick) . "' AND room = '" . $this->db->db->escapeString($room) . "';");
+		if($this->db->fetchColumn() === 0)
+			$this->db->query("INSERT INTO users_nick (`jid`,`nick`,`room`,`time`) VALUES ('" . $this->db->db->escapeString($jid) . "','".$this->db->db->escapeString($nick)."','" . $this->db->db->escapeString($room) . "','" . time() . "');");
 	}
     
         private function isCommand($command)

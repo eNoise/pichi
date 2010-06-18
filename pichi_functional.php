@@ -294,9 +294,9 @@ class Pichi extends CommandHandler
 		$i = 0;
 		while(($fr = $this->db->fetchArray($query)) && $i < 10)
 		{
-			$from = $this->getJID($this->getName($fr['from']));
+			$from = $this->getJID($this->getName($fr['from']), NULL, TRUE);
 			if(!$from)
-				$from = $fr['from'];
+				continue;
 			if($tmp["$from"] == NULL)
 			{
 				$tmp["$from"] = 0;
