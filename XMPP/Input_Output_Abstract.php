@@ -17,8 +17,8 @@ abstract class XMPP_InputOutput_Abstract extends XMPPHP_XMPP
 	}
 	
 	abstract protected function createReciver();
-	abstract protected function readReciver();
-	protected function writeReciver()
+	abstract protected function getReciver();
+	protected function sendReciver()
 	{
 		$this->send($this->reciver_write);
 		$this->reciver_write = NULL;
@@ -27,7 +27,7 @@ abstract class XMPP_InputOutput_Abstract extends XMPPHP_XMPP
 	protected function reciveData($data)
 	{
 		$this->reciver_read = $data;
-		$this->readReciver();
+		$this->getReciver();
 		$this->reciver_read = NULL;
 	}
 	
