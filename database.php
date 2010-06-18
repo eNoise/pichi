@@ -50,12 +50,15 @@ class PichiDatabase
 		}
 	}
 
-	public function fetchArray()
+	public function fetchArray(& $array_object = NULL)
 	{
 		switch($this->type)
 		{
 			default:
-				return $this->last_query->fetchArray();
+				if($array_object != NULL && is_object($array_object))
+					return $array_object->fetchArray();
+				else
+					return $this->last_query->fetchArray();
 		}
 	}
       

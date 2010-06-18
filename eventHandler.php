@@ -14,7 +14,7 @@ class eventHandler
 	public function catchEvent($action, $coincidence = NULL)
 	{
 		$this->db->query("SELECT `do`, `option`,`value`,`coincidence` FROM actions WHERE action = '$action' AND coincidence='" . (($coincidence != NULL) ? $this->db->db->escapeString($coincidence) : "" ) . "';");
-		while($actions = $this->db->fetch_array())
+		while($actions = $this->db->fetchArray())
 		{
 			$this->doAction($actions['do'], $actions['value'], $actions['option'], $actions['coincidence']);
 		}

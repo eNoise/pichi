@@ -230,7 +230,7 @@ class SyntaxAnalizer
 	{
 		$this->try_count++; //очередная попытка
 		$this->db->query("SELECT message FROM log ORDER BY RANDOM() LIMIT 0,10;");
-		while($text = $this->db->fetch_array())
+		while($text = $this->db->fetchArray())
 			if(count(explode(" ", $text['message'])) <= $words_limit)
 				return $text['message'];
 		return $dafault;
@@ -240,7 +240,7 @@ class SyntaxAnalizer
 	{
 		$answers = array();
 		$i = 0;
-		while($data = $this->db->fetch_array())
+		while($data = $this->db->fetchArray())
 		{
 			$answers[$i]['lexeme'] = $data['lexeme'];
 			$answers[$i]['count'] = $data['count'];
@@ -259,7 +259,7 @@ class SyntaxAnalizer
 		$test2 = explode(":",$text);
 		$ignore_nick = array();
 		$this->db->query("SELECT nick FROM users WHERE status='available';");
-		while($u = $this->db->fetch_array())
+		while($u = $this->db->fetchArray())
 			$ignore_nick[] = $u['nick'];
 		if(in_array($test1[0], $ignore_nick))
 		{
