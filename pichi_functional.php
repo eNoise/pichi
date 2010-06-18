@@ -293,16 +293,17 @@ class Pichi extends CommandHandler
 		$tmp = array();
 		while($fr = $this->db->fetch_array())
 		{
-			if($tmp["{$fr['from']}"] == NULL)
-				$tmp["{$fr['from']}"] = 0;
-			$tmp["{$fr['from']}"]++;
+			$from = $this->getJID($fr['from']);
+			if($tmp["$from"] == NULL)
+				$tmp["$from"] = 0;
+			$tmp["$from"]++;
 		}
 		arsort($tmp);
 		$i = 0;
 		foreach($tmp as $key=>$val)
 		{
 			$i++;
-			$ans .= PichiLang::get('command_talkers_list', array($i,$this->getName($key),$val)) . "\n";
+			$ans .= PichiLang::get('command_talkers_list', array($i,$this->getName($key), $val)) . "\n";
 			if($i>=10)
 				break;
 		}
