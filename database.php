@@ -50,7 +50,7 @@ class PichiDatabase
 		}
 	}
 
-	public function fetch_array()
+	public function fetchArray()
 	{
 		switch($this->type)
 		{

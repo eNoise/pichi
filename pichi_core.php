@@ -96,7 +96,7 @@ class PichiCore
 			// ----------------------
 			// Unban
 			$this->db->query("SELECT `jid`,`value`,`name`,`groupid` FROM users_data WHERE name = 'ban' OR name = 'kick';");
-			while($bans = $this->db->fetch_array())
+			while($bans = $this->db->fetchArray())
 			{
 				if((int)$bans['value'] <= time())
 				{
@@ -300,7 +300,7 @@ class PichiCore
 		else
 		{	  
 			$this->db->query("SELECT `jid`,`nick` FROM users WHERE status = 'available';");
-			while($users = $this->db->fetch_array())
+			while($users = $this->db->fetchArray())
 			{
 				if($users['nick'] == $this->getName($user))
 					if(in_array($users['jid'], $array_users))
@@ -325,7 +325,7 @@ class PichiCore
 	protected function isOnline($user, $room = NULL)
 	{
 		$this->db->query("SELECT `jid`,`nick` FROM users WHERE status = 'available'" . (($room != NULL) ? " AND room = '" . $this->db->db->escapeString($room) . "'" : "") . ";");
-		while($users = $this->db->fetch_array())
+		while($users = $this->db->fetchArray())
 		{
 			if($users['nick'] == $user || $users['jid'] == $user)
 				return true;
@@ -347,7 +347,7 @@ class PichiCore
 	{
 		$this->db->query("SELECT * FROM settings;");
 		$this->log->log("Parse Settings", PichiLog::LEVEL_DEBUG);
-		while($data = $this->db->fetch_array())
+		while($data = $this->db->fetchArray())
 		{
 			$this->options[$data['name']] = $data['value'];
 			$this->log->log("$data[name] = $data[value]", PichiLog::LEVEL_VERBOSE);
@@ -470,7 +470,7 @@ class PichiCore
 			$this->db->query("SELECT `nick` FROM users WHERE status = 'available';");
 			$user = array();
 			$n = 0;
-			while($users = $this->db->fetch_array())
+			while($users = $this->db->fetchArray())
 			{
 				$n++;
 				$user[] = $users['nick'];
@@ -526,7 +526,7 @@ class PichiCore
 	{
 		$array = FALSE; // изначально не масив =)
 		$this->db->query("SELECT * FROM users_data WHERE jid = '" . $this->db->db->escapeString($jid) . "'" . (($name != NULL) ? " AND name = '" . $this->db->db->escapeString($name) . "'" : "") . (($groupid != NULL) ? " AND groupid = '" . $this->db->db->escapeString($groupid) . "'" : "") . ";");
-		while($data = $this->db->fetch_array())
+		while($data = $this->db->fetchArray())
 			$array[$data['name']] = $data['value'];
 		return $array;
 	}

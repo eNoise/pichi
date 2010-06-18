@@ -149,7 +149,7 @@ class Pichi extends CommandHandler
 	{
 		$this->db->query("SELECT `jid`,`value` FROM users_data WHERE name = 'ban';");
 		$banlist = "";
-		while($bans = $this->db->fetch_array())
+		while($bans = $this->db->fetchArray())
 		{
 			$banlist .= $bans['jid'] . " " . date("d.m.y \в H:i:s", $bans['value']) . "\n";
 		}
@@ -164,7 +164,7 @@ class Pichi extends CommandHandler
 		$n = ($n[1] != NULL) ? ((int)$n[1]) : 20;
 		$i = 0;
 		$log = "\n-----------------------------------------------------------------------\n";
-		while($data = $this->db->fetch_array())
+		while($data = $this->db->fetchArray())
 		{
 			if($i < $n && $i < 50 && $qu_i <= $n)
 			{
@@ -193,7 +193,7 @@ class Pichi extends CommandHandler
 		if($this->db->numRows(true) > 0)
 		{
 			$tmp_ar = array();
-			while($tmp = $this->db->fetch_array())
+			while($tmp = $this->db->fetchArray())
 				$tmp_ar[] = $tmp['name'];
 			$tmp_ar = array_unique($tmp_ar);
 			$wtfnum = count($tmp_ar);
@@ -238,7 +238,7 @@ class Pichi extends CommandHandler
 		$w = $this->seperate($this->last_message);
 		$this->db->query("SELECT * FROM wiki WHERE name = '" . $this->db->db->escapeString($w[1]) . "' ORDER BY revision DESC;");
 		$list_rev = NULL;
-		while($tmp = $this->db->fetch_array())
+		while($tmp = $this->db->fetchArray())
 			$list_rev .= "\n------- ".PichiLang::get('command_wiki_revision')." {$tmp['revision']} ({$tmp['name']}) -------\n{$tmp['value']}\n---------------------";
 		if($list_rev != NULL)
 			$this->sendAnswer($list_rev);
@@ -272,7 +272,7 @@ class Pichi extends CommandHandler
 		$this->sendAnswer(PichiLang::get('command_top10'));
 		$ans = "";
 		$ix = 0;
-		while($lex = $this->db->fetch_array())
+		while($lex = $this->db->fetchArray())
 		{
 			$ix++;
 			$tmp = explode(" ", $lex['lexeme']);
@@ -291,9 +291,9 @@ class Pichi extends CommandHandler
 		$this->sendAnswer(PichiLang::get('command_talkers'));
 		$ans = "";
 		$tmp = array();
-		while($fr = $this->db->fetch_array())
+		while($fr = $this->db->fetchArray())
 		{
-			$from = $this->getJID($fr['from']);
+			$from = $this->getJID($this->getName($fr['from']));
 			if($tmp["$from"] == NULL)
 				$tmp["$from"] = 0;
 			$tmp["$from"]++;
@@ -303,7 +303,7 @@ class Pichi extends CommandHandler
 		foreach($tmp as $key=>$val)
 		{
 			$i++;
-			$ans .= PichiLang::get('command_talkers_list', array($i,$this->getName($key), $val)) . "\n";
+			$ans .= PichiLang::get('command_talkers_list', array($i, $this->getName($key), $val)) . "\n";
 			if($i>=10)
 				break;
 		}
@@ -371,7 +371,7 @@ class Pichi extends CommandHandler
       
 		$w = $this->seperate($this->last_message);
 		$this->db->query("SELECT * FROM settings" . (($w[1] != NULL) ? " WHERE name='".$this->db->db->escapeString($w[1])."'" : "") . ";");
-		while($data = $this->db->fetch_array())
+		while($data = $this->db->fetchArray())
 		{
 			$this->sendAnswer($data['name'] . " = " . $data['value'] . " //{$data['description']}");
 			$this->log->log("User request setting: {$data['name']} = {$data['value']}", PichiLog::LEVEL_VERBOSE);
@@ -390,7 +390,7 @@ class Pichi extends CommandHandler
 			$userlist = "".PichiLang::get('command_users_list_seen').":\n";
 			$online = $offline = "";
 			$n = $f = 0;
-			while($data = $this->db->fetch_array())
+			while($data = $this->db->fetchArray())
 			{
 				$roomname = explode("@", $data['room']);
 				$roomname = $roomname[0];
@@ -413,7 +413,7 @@ class Pichi extends CommandHandler
 		}
 		else
 		{
-			while($data = $this->db->fetch_array())
+			while($data = $this->db->fetchArray())
 			{
 				if($data['nick'] == $w[1] || $data['jid'] == $w[1])
 				{
