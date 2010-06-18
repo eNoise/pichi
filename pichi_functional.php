@@ -287,28 +287,26 @@ class Pichi extends CommandHandler
 
   	protected function command_talkers()
 	{
-		$query = $this->db->query("SELECT `from` FROM log;");
+		$query = $this->db->query("SELECT `from`, COUNT(*) AS `counter` FROM log GROUP BY `from` ORDER BY `counter` DESC;");
 		$this->sendAnswer(PichiLang::get('command_talkers'));
 		$ans = "";
 		$tmp = array();
-		while($fr = $this->db->fetchArray($query))
+		$i = 0;
+		while(($fr = $this->db->fetchArray($query)) && $i < 10)
 		{
 			$from = $this->getJID($this->getName($fr['from']));
 			if(!$from)
 				continue;
 			if($tmp["$from"] == NULL)
+			{
 				$tmp["$from"] = 0;
-			$tmp["$from"]++;
+				$i++;
+			}
+			$tmp["$from"] += (int) $fr['counter'];
 		}
-		arsort($tmp);
 		$i = 0;
 		foreach($tmp as $key=>$val)
-		{
-			$i++;
-			$ans .= PichiLang::get('command_talkers_list', array($i, $this->getName($key), $val)) . "\n";
-			if($i>=10)
-				break;
-		}
+			$ans .= PichiLang::get('command_talkers_list', array(++$i, $this->getName($key), $val)) . "\n";
 		$this->sendAnswer($ans);
 	}
 	
