@@ -464,8 +464,8 @@ class Pichi extends CommandHandler
 		$w = $this->seperate($this->last_message);
 		$this->db->query("SELECT `nick` FROM users_nick WHERE `jid` = '" . $this->db->db->escapeString($this->getJID($w[1])) . "';");
 		while($data = $this->db->fetchArray())
-			$ans .= $data['nick'] . '\n';
-		$this->sendAnswer(PichiLang::get('command_nicks') . '\n' . $ans);
+			$ans .= $data['nick'] . "\n";
+		$this->sendAnswer(PichiLang::get('command_nicks') . "\n" . $ans);
 	}
 	
 	protected function command_idle()
