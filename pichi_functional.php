@@ -462,7 +462,7 @@ class Pichi extends CommandHandler
 	{
 		$ans = "";
 		$w = $this->seperate($this->last_message);
-		$this->db->query("SELECT `nick` FROM users_nick WHERE `jid` = '" . $this->db->db->escapeString($this->getJID($w[1])) . "';");
+		$this->db->query("SELECT `nick` FROM users_nick WHERE `jid` = '" . $this->db->db->escapeString($this->getJID($w[1])) . "' GROUP BY `nick`;");
 		while($data = $this->db->fetchArray())
 			$ans .= $data['nick'] . "\n";
 		$this->sendAnswer(PichiLang::get('command_nicks') . "\n" . $ans);
