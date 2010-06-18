@@ -63,6 +63,7 @@ class Pichi extends CommandHandler
 		$help .= "!top - ".PichiLang::get('help_command_description_top')."\n";
 		$help .= "!count - ".PichiLang::get('help_command_description_count')."\n";
 		$help .= "!talkers - ".PichiLang::get('help_command_description_talkers')."\n";
+		$help .= "!nicks ".PichiLang::get('help_command_usage_param')." - ".PichiLang::get('help_command_description_nicks')."\n";
 
 		$help .= "=====  " . PichiLang::get('help_other_commands') . "  =====\n";
 		($hook = PichiPlugin::fetch_hook('commands_show_help')) ? eval($hook) : false;
@@ -455,6 +456,16 @@ class Pichi extends CommandHandler
 			$room = $this->room[0];
 		$w = $this->seperate($this->last_message);
 		$this->jabber->setTopic($room, $w[1]);
+	}
+	
+	protected function command_nicks()
+	{
+		$ans = "";
+		$w = $this->seperate($this->last_message);
+		$this->db->query("SELECT `nick` FROM users_nick WHERE `jid` = '" . $this->db->db->escapeString($w[1]) . "';");
+		while($data = $this->db->fetchArray())
+			$ans .= $data['nick'] . '\n';
+		$this->sendAnswer(PichiLang::get('command_nicks') . '\n' . $ans);
 	}
 	
 	protected function command_idle()
