@@ -465,6 +465,8 @@ class Pichi extends CommandHandler
 		$this->db->query("SELECT `nick` FROM users_nick WHERE `jid` = '" . $this->db->db->escapeString($this->getJID($w[1])) . "' GROUP BY `nick`;");
 		while($data = $this->db->fetchArray())
 			$ans .= $data['nick'] . "\n";
+		if($ans == NULL)
+			return;
 		$this->sendAnswer(PichiLang::get('command_nicks') . "\n" . $ans);
 	}
 	
