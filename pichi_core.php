@@ -228,7 +228,7 @@ class PichiCore
 			{
 				if($full_search)
 				{
-					$this->db->query("SELECT `jid` FROM users_nick WHERE nick = '" . $this->db->db->escapeString($nick) . "' AND room = '" . $this->db->db->escapeString($room) . "';");
+					$this->db->query("SELECT `jid` FROM users_nick WHERE nick = '" . $this->db->db->escapeString($nick) . "' AND room = '" . $this->db->db->escapeString($room) . "' ORDER BY `time` ASC;");
 					$jid = $this->db->fetchColumn(0);
 					if($jid != NULL)
 						return $jid;
