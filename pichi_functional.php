@@ -231,7 +231,6 @@ class Pichi extends CommandHandler
 			$this->sendAnswer("".PichiLang::get('command_wiki_revision').": " . $this->db->fetchColumn(0));
 		else
 			$this->sendAnswer(PichiLang::get('command_wiki_nodef'));
-		break;
 	}
 	
 	protected function command_wtfull()
