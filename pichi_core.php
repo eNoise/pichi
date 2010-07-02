@@ -7,6 +7,8 @@ require_once("eventHandler.php");
 /* Main Functional Core */
 class PichiCore
 {
+	protected $enabled = TRUE; // global on-off of bot
+	
 	// Base objects
 	protected $db;
 	protected $jabber;
@@ -67,6 +69,11 @@ class PichiCore
 	public function _log(& $log)
 	{
 		$this->log = $log;
+	}
+
+	public function isEnabled()
+	{
+		return $this->enabled;
 	}
 
 	public static function str_split_unicode($string, $splitsize = 1)
