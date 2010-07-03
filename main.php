@@ -206,24 +206,51 @@ while(!$jabber->isDisconnected()) {
 				$log->log("Recive PRESENCE Handler from: {$data['from']} [{$data['show']}] {$data['status']}",PichiLog::LEVEL_DEBUG);
 				if($data['type'] == 'available' || $data['type'] == 'unavailable')
 				{
-					unset($jid, $role);
-					$nick = $pichi->getName($data['from']);
-					$jid = $pichi->getJID($nick);
+					unset($jid, $role, $room, $nick);
+					// ------------------------------------------------
+					
+					// From room data
 					foreach($data['xml']->subs as $x)
 					{
 						if($x->name == 'x' && $x->subs[0]->attrs['jid'])
+						{
 							$jid = $pichi->getJID($x->subs[0]->attrs['jid']);
+							$temp = explode('/', $data['from']);
+							if(isRoom($temp[0]))
+							{
+								$room = $temp[0];
+								$nick = $temp[1];
+							}
+						}
 						if($x->name == 'x' && $x->subs[0]->attrs['role'])
 							$role = $x->subs[0]->attrs['role'];
 					}
 					
 					if(!$jid)
+					{
+						//From real jid
+						$temp = explode('/', $data['from']);
+						if(!isRoom($temp[0]))
+							$jid = $temp[0];
+					}
+					
+					if(!$jid)
+					{
+						// From history
+						$nick = $pichi->getName($data['from']);
+						$jid = $pichi->getJID($nick);
+					}
+					
+					// ------------------------------------------------
+					// begin
+					if(!$jid)
+					{
+						$log->log(PichiLang::get('warn_cant_recive_jid'),PichiLog::LEVEL_WARNING);
 						break;
-					$room = $pichi->getJID($data['from']);
-					if(isRoom($room))
-						$pichi->setUserInfo($jid, $nick, $role, $room, $data['type']);
-					else
-						$pichi->setUserInfo($jid, $nick, $role, NULL, $data['type']);
+					}
+					
+					$pichi->setUserInfo($jid, $nick, $role, $room, $data['type']);
+
 				}
 				break;
 			case 'session_start':

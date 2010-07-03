@@ -14,6 +14,7 @@
                 <option name="info_timer_sync" type="string">Синхронизация таймера</option>
                 <option name="info_session_begin" type="string">Начало сессии</option>
                 <option name="info_send_random_message" type="string">Отправка случайного сообщения</option>
+                <option name="warn_cant_recive_jid" type="string">Не удается узнать JID участника. Это может происходить из-за неправильных настроек комнаты. Работа бота в таком режиме не гарантируется.</option>
                 
                 <option name="help_syntaxis_info" type="string">Основы управления:
 Все команды начинаются с !
