@@ -14,12 +14,27 @@ $args->addOption('database', array(
     'default'     => "{$config['db_file']}" // a default value
 ));
 
-// add a global option to make the program verbose
-$args->addOption('daemon', array(
-    'short_name'  => '-d',
-    'long_name'   => '--daemon',
-    'action'      => 'StoreTrue',
-    'description' => 'Run pichi as daemon (Only Linux)'
+
+$args->addOption('user', array(
+    'short_name'  => '-u',
+    'long_name'   => '--user',
+    'action'      => 'StoreInt',
+    'description' => 'As userid of system'
+));
+
+$args->addOption('group', array(
+    'short_name'  => '-g',
+    'long_name'   => '--group',
+    'action'      => 'StoreInt',
+    'description' => 'As usergroup of system'
+));
+
+$args->addOption('database', array(
+    'short_name'  => '-b',
+    'long_name'   => '--db',
+    'action'      => 'StoreString',
+    'description' => 'Database name',
+    'default'     => "{$config['db_file']}" // a default value
 ));
 
 
@@ -45,6 +60,10 @@ try
 		System_Daemon::setOption("appDir", dirname(__FILE__));
 		System_Daemon::setOption("logLocation", dirname(__FILE__) . "/pichi.log");
 		System_Daemon::setOption("appPidLocation", dirname(__FILE__) . "/" . System_Daemon::getOption("appName") . "/pichi.pid");
+		if($arg->options['group'])
+			System_Daemon::setOption("appRunAsGID", $arg->options['group']);
+		if($arg->options['user'])
+			System_Daemon::setOption("appRunAsGID", $arg->options['user']);
 		System_Daemon::start();
 		$config['daemon_mode'] = TRUE;
 	}
