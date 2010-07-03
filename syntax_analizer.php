@@ -145,7 +145,7 @@ class SyntaxAnalizer
 		if($limit == NULL)
 			$limit = rand(5,20);
 		$this->try_count++; //очередная попытка
-		$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '#beg# %' ORDER BY `count` DESC;");
+		$this->db->query("SELECT * FROM lexems WHERE lexeme LIKE '#beg# %' ORDER BY RANDOM() LIMIT 0,1;");
 		if($this->db->numRows(true) == 0)
 			return; //пусто
 		$last = $this->choseLexem($this->buildArray());
