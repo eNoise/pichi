@@ -37,7 +37,7 @@ class PichiLog {
 		global $config;
 		if(RUN_OS == "Nix")
 			if($config['daemon_mode'])
-				System_Daemon::log(System_Daemon::LOG_INFO, "[".$this->names[$runlevel]."]: ".$msg."\n");
+				System_Daemon::log(System_Daemon::LOG_INFO, "[".$this->names[$runlevel]."]: " . $msg);
 			else
 				echo Console_Color::convert($this->colors[$runlevel] . "(" . date('Y-m-d H:i:s', $time).") [".$this->names[$runlevel]."]: ".$msg."%n\n");
 		else if(RUN_OS == "Windows")
