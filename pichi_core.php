@@ -479,7 +479,7 @@ class PichiCore
 			$this->last_room = NULL;
 		
 		if($this->last_type == "groupchat")
-			$this->last_jid = $this->getJID($this->getNick($this->last_from), $this->last_room);
+			$this->last_jid = $this->getJID($this->getName($this->last_from), $this->last_room);
 		else
 			$this->last_jid = $this->getJID($this->last_from);
 	
