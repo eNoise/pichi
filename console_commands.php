@@ -48,7 +48,7 @@ $args->addOption('pid', array(
     'long_name'   => '--pid',
     'action'      => 'StoreString',
     'description' => 'Pid file',
-    'default'     => dirname(__FILE__) . "/pichi.pid"
+    'default'     => dirname(__FILE__) . "/" . System_Daemon::getOption("appName") . "/pichi.pid"
 ));
 
 $args->addOption('database', array(
