@@ -1,7 +1,7 @@
 <?php
 
 ### Some settings ###
-$config['db_version'] = 18; // Work only parram
+$config['db_version'] = 19; // Work only parram
 $config['min_version'] = 8; // Min version of config
 $config['pichi_version'] = "0.5.0 (dev)"; //Pichi version
 
@@ -130,8 +130,7 @@ $pichi->user = $config['user'];
 $pichi->server = $config['server'];
 $pichi->room_service = $config['room_service'];
 $pichi->room_user = $config['room_user'];
-$pichi->ignore[] = $config['user'] . "@" . $config['server'];
-$pichi->admins = $config['admins'];
+$config['ignore'][] = $config['user'] . "@" . $config['server'];
 $pichi->wait_time = $config['wait_time'];
 // Settings XMPPHP
 $jabber->autoSubscribe(); // Auto subscribe
@@ -144,7 +143,7 @@ if(!$db_exist)
 	$pichi->_db()->query("CREATE TABLE lexems (`lexeme` TEXT, `count` INT);");
 	$pichi->_db()->query("CREATE TABLE wiki (`name` TEXT, `revision` INT, `value` TEXT);");
 	$pichi->_db()->query("CREATE TABLE settings (`name` TEXT, `value` TEXT, `description` TEXT);");
-	$pichi->_db()->query("CREATE TABLE users (`jid` TEXT, `nick` TEXT, `role` TEXT, `room` TEXT, `time` TEXT, `status` TEXT);");
+	$pichi->_db()->query("CREATE TABLE users (`jid` TEXT, `nick` TEXT, `role` TEXT, `room` TEXT, `time` TEXT, `status` TEXT, `level` INT);");
 	$pichi->_db()->query("CREATE TABLE users_data (`jid` TEXT, `name` TEXT, `value` TEXT, `groupid` TEXT);");
 	$pichi->_db()->query("CREATE TABLE users_nick (`jid` TEXT, `nick` TEXT, `room` TEXT, `time` TEXT);");
 	$pichi->_db()->query("CREATE TABLE stats (`name` TEXT, `value` TEXT);");

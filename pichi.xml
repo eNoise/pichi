@@ -20,6 +20,7 @@
                 
                 <option Name="global_admins" type="bool">1</option>
                 <option Name="admins" type="array" sepperator=",">deg@jabber.uruchie.org</option>
+                <option Name="ignore" type="array" sepperator=","></option>
                 
                 <!-- DO NOT MODIFY! -->
                 <option Name="ping_time" type="int">5</option>  <!-- If reconnect problem (in openfire) -->

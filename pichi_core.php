@@ -32,6 +32,7 @@ class PichiCore
 	protected $last_type;
 	protected $last_room;
 	protected $last_jid;
+	protected $last_level;
 	// Last data recive settings
 	public $last_id;                                           
 	public $last_data;
@@ -40,12 +41,6 @@ class PichiCore
 	public $wait;
 	public $wait_time = 5;
 	public $cycle_interval = 5;
-    
-	// Privilegy
-	public $admins = array();
-	public $ignore = array();
-    
-	
 	
 	public function __construct(&$jabber)
 	{
@@ -309,39 +304,26 @@ class PichiCore
 		$this->log->log("Send answer to $to:\n$message", PichiLog::LEVEL_VERBOSE);
 	}
 
-	//Вспомогательная функция с поиском пользователя в списке
-	//допустемые значения: jid, ник
-	protected function inUser(&$array_users, $user)
+	// room hook - disable default room
+	protected function isAccess($level = 2, $jid = NULL, $room = NULL, $room_hook = FALSE)
 	{
-		if(in_array($this->getJID($user), $array_users))
-		{
+		if($jid == NULL)
+			$jid = $this->last_jid;
+		
+		if($room == NULL && !$room_hook)
+			$room = $this->room[0]; // main room
+		
+		$this->db->query("SELECT `level` FROM users WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND room = '" . $this->db->db->escapeString($room) . "';");
+		$dblevel = (int)$this->db->fetchColumn(0);
+		
+		$this->log->log("Test access to {$jid}: {$dblevel} >= {$level}", PichiLog::LEVEL_VERBOSE);
+		
+		if($dblevel >= $level)
 			return true;
-		}
 		else
-		{	  
-			$this->db->query("SELECT `jid`,`nick` FROM users WHERE status = 'available';");
-			while($users = $this->db->fetchArray())
-			{
-				if($users['nick'] == $this->getName($user))
-					if(in_array($users['jid'], $array_users))
-						return true;
-			}
-		}
-		return false;
-	}
-
-	protected function isAccess()
-	{
-		$this->log->log("Test access ". $this->last_from . " in admins", PichiLog::LEVEL_VERBOSE);
-		return $this->inUser($this->admins, $this->last_from);
+			return false;
 	}
 	
-	protected function isIgnore()
-	{
-		$this->log->log("Test ignore ". $this->last_from . " in ignorelist", PichiLog::LEVEL_VERBOSE);
-		return $this->inUser($this->ignore, $this->last_from);
-	}
-    
 	protected function isOnline($user, $room = NULL)
 	{
 		$this->db->query("SELECT `jid`,`nick` FROM users WHERE status = 'available'" . (($room != NULL) ? " AND room = '" . $this->db->db->escapeString($room) . "'" : "") . ";");
@@ -400,7 +382,10 @@ class PichiCore
 	{      
 		if($role == NULL)
 			$role = "participant"; //Default permission
-			
+		
+		// default level
+		$level = 1;
+		
 		// Old status test
 		$this->db->query("SELECT `status` FROM users WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND room = '" . $this->db->db->escapeString($room) . "';");
 		$old_status = $this->db->fetchColumn(0);
@@ -409,8 +394,20 @@ class PichiCore
 		global $config;
 		if($config['global_admins'])
 		{
-			if(!in_array($jid, $this->admins) && $role == "moderator")
-				$this->admins[] = $jid;
+			if($role == "moderator")
+				$level = 2;
+		}
+		
+		if(count($config['admins']) > 0)
+		{
+			if(in_array($jid, $config['admins']))
+				$level = 3;
+		}
+		
+		if(count($config['ignore']) > 0)
+		{
+			if(in_array($jid, $config['ignore']))
+				$level = 0;
 		}
 		
 		if(time() - $this->wait > $this->wait_time)
@@ -435,12 +432,12 @@ class PichiCore
 		$this->db->query("SELECT COUNT(*) FROM users WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND room = '" . $this->db->db->escapeString($room) . "';");
 		if($this->db->fetchColumn() > 0)
 		{
-			$this->db->query("UPDATE users SET nick = '".$this->db->db->escapeString($nick)."', time = '".time()."', status = '".$status."', role = '" . $this->db->db->escapeString($role) . "' WHERE jid = '".$this->db->db->escapeString($jid)."' AND room = '". $this->db->db->escapeString($room) ."';");
+			$this->db->query("UPDATE users SET nick = '".$this->db->db->escapeString($nick)."', time = '".time()."', status = '".$status."', role = '" . $this->db->db->escapeString($role) . "', level = '{$level}' WHERE jid = '".$this->db->db->escapeString($jid)."' AND room = '". $this->db->db->escapeString($room) ."';");
 			($hook = PichiPlugin::fetch_hook('pichicore_status_update')) ? eval($hook) : false;
 		}
 		else
 		{
-			$this->db->query("INSERT INTO users (`jid`,`nick`,`role`,`room`,`time`,`status`) VALUES ('" . $this->db->db->escapeString($jid) . "','".$this->db->db->escapeString($nick)."','" . $this->db->db->escapeString($role) . "','". $this->db->db->escapeString($room) ."','".time()."','".$status."');");
+			$this->db->query("INSERT INTO users (`jid`,`nick`,`role`,`room`,`time`,`status`,`level`) VALUES ('" . $this->db->db->escapeString($jid) . "','".$this->db->db->escapeString($nick)."','" . $this->db->db->escapeString($role) . "','". $this->db->db->escapeString($room) ."','".time()."','".$status."', '{$level}');");
 			$this->db->query("SELECT COUNT(*) FROM users WHERE jid = '" . $this->db->db->escapeString($jid) . "';");
 			if($this->db->fetchColumn() == 0)
 				($hook = PichiPlugin::fetch_hook('pichicore_status_create')) ? eval($hook) : false;
@@ -483,6 +480,12 @@ class PichiCore
 		else
 			$this->last_jid = $this->getJID($this->last_from);
 	
+		if(!$this->isAccess(1, $this->last_jid, $this->last_room, TRUE))
+		{
+			$this->log->log("Ignore this message", PichiLog::LEVEL_DEBUG);
+			return false;
+		}
+			
 		($hook = PichiPlugin::fetch_hook('pichicore_message_recive_begin')) ? eval($hook) : false;
 		$this->log->log("Call message method", PichiLog::LEVEL_DEBUG);
 		
@@ -490,7 +493,7 @@ class PichiCore
 			$this->db->query("INSERT INTO log (`from`,`time`,`type`,`message`) VALUES ('".$this->db->db->escapeString($this->last_from)."','".$this->db->db->escapeString(time())."','".$this->db->db->escapeString($this->last_type)."','".$this->db->db->escapeString($this->last_message)."');");
 		
 		//to lexems massges
-		if(!$this->isIgnore() && !$this->isCommand($this->last_message) && $this->options['answer_remember'] == 1)
+		if(!$this->isCommand($this->last_message) && $this->options['answer_remember'] == 1)
 			$this->syntax->parseText($this->last_message);
 		
 		($hook = PichiPlugin::fetch_hook('pichicore_message_recive_complete')) ? eval($hook) : false;
