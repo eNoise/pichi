@@ -128,11 +128,10 @@ class CommandHandler extends PichiCore
 	  
 		($hook = PichiPlugin::fetch_hook('commands_message_recive_begin')) ? eval($hook) : false;
 		// Command send
-		if(!$this->isIgnore())
-			$this->fetchCommand();
+		$this->fetchCommand();
 	
 		//test message
-		if(!$this->isIgnore() && !$this->isCommand($this->last_message) && $this->options['answer_mode'] == 1)
+		if(!$this->isCommand($this->last_message) && $this->options['answer_mode'] == 1)
 		{
 			if((int)$this->options['answer_random'] === 0 || rand(1, (int)$this->options['answer_random']) === 1)
 			{
