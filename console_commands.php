@@ -69,7 +69,7 @@ try
 		if($arg->options['group'])
 			System_Daemon::setOption("appRunAsGID", $arg->options['group']);
 		if($arg->options['user'])
-			System_Daemon::setOption("appRunAsGID", $arg->options['user']);
+			System_Daemon::setOption("appRunAsUID", $arg->options['user']);
 		System_Daemon::start();
 		$config['daemon_mode'] = TRUE;
 	}
