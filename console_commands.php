@@ -14,6 +14,12 @@ $args->addOption('database', array(
     'default'     => "{$config['db_file']}" // a default value
 ));
 
+$args->addOption('daemon', array(
+    'short_name'  => '-d',
+    'long_name'   => '--daemon',
+    'action'      => 'StoreTrue',
+    'description' => 'Run pichi as daemon (Only Linux)'
+));
 
 $args->addOption('user', array(
     'short_name'  => '-u',
