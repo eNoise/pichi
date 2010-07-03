@@ -48,7 +48,7 @@ $args->addOption('pid', array(
     'long_name'   => '--pid',
     'action'      => 'StoreString',
     'description' => 'Pid file',
-    'default'     => dirname(__FILE__) . "/pichi/pichi.pid"
+    'default'     => dirname(__FILE__) . "/pichi-bot/pichi.pid"
 ));
 
 $args->addOption('database', array(
@@ -78,7 +78,7 @@ try
 	}
 	if($arg->options['daemon'] && RUN_OS == "Nix")
 	{
-		System_Daemon::setOption("appName", "pichi");
+		System_Daemon::setOption("appName", "pichi-bot");
 		System_Daemon::setOption("appDir", dirname(__FILE__));
 		System_Daemon::setOption("logLocation", $arg->options['log']);
 		System_Daemon::setOption("appPidLocation", $arg->options['pid']);
