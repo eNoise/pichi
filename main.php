@@ -2,7 +2,7 @@
 
 ### Some settings ###
 $config['db_version'] = 18; // Work only parram
-$config['min_version'] = 7; // Min version of config
+$config['min_version'] = 8; // Min version of config
 $config['pichi_version'] = "0.5.0 (dev)"; //Pichi version
 
 ### Begin basic settings end checks ###
@@ -67,12 +67,6 @@ function php_extension_load($ext)
 	}
 }
 
-function isRoom($test)
-{
-	global $config;
-	return (strpos($test, "@") !== FALSE) && (strpos($test, $config['room_service']) !== FALSE) && (strpos($test, $config['server']) !== FALSE);
-}
-
 php_extension_load("sqlite3");
 php_extension_load("mbstring");
 php_extension_load("openssl");
@@ -131,7 +125,7 @@ else
 $log->log("Pichi Init",PichiLog::LEVEL_VERBOSE);
 $pichi = new Pichi($jabber);
 $pichi->_log($log);
-$pichi->room[] = $config['room'];
+$pichi->room = $config['room'];
 $pichi->user = $config['user'];
 $pichi->server = $config['server'];
 $pichi->room_service = $config['room_service'];
@@ -216,7 +210,7 @@ while(!$jabber->isDisconnected()) {
 						{
 							$jid = $pichi->getJID($x->subs[0]->attrs['jid']);
 							$temp = explode('/', $data['from']);
-							if(isRoom($temp[0]))
+							if($pichi->isRoom($temp[0]))
 							{
 								$room = $temp[0];
 								$nick = $temp[1];
@@ -230,7 +224,7 @@ while(!$jabber->isDisconnected()) {
 					{
 						//From real jid
 						$temp = explode('/', $data['from']);
-						if(!isRoom($temp[0]))
+						if(!$pichi->isRoom($temp[0]))
 							$jid = $temp[0];
 					}
 					

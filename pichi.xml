@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <PichiConfig>
-	<version>7</version>
+	<version>8</version>
         <config>
                 <option Name="server" type="string">jabber.uruchie.org</option>
                 <option Name="port" type="int">5222</option>
                 <option Name="room_service" type="string">conference</option>
-                <option Name="room" type="string">main@conference.jabber.uruchie.org</option>
+                <option Name="room" type="array" sepperator=",">main@conference.jabber.uruchie.org,forum@conference.jabber.uruchie.org</option>
                 <option Name="db_file" type="string">pichi.db</option>
                 <option Name="debug" type="bool">0</option>
                 <option Name="debug_level" type="int">5</option>

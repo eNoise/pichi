@@ -351,6 +351,14 @@ class PichiCore
 		}
 		return false;
 	}
+	
+	public function isRoom($room)
+	{
+		if(in_array($room, $this->room))
+			return true;
+		else
+			return false;
+	}
     
 	public function doExit()
 	{
