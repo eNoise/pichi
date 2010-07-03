@@ -392,6 +392,8 @@ class Pichi extends CommandHandler
 			$n = $f = 0;
 			while($data = $this->db->fetchArray())
 			{
+				if($data['room'] == NULL)
+					continue;
 				$roomname = explode("@", $data['room']);
 				$roomname = $roomname[0];
 				if($data['status'] == 'available')
@@ -494,6 +496,8 @@ class Pichi extends CommandHandler
 	
 	protected function command_quit()
 	{
+		if(!$this->isAccess(3))
+			return;
 		$this->doExit();
 	}
 }
