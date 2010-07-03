@@ -33,6 +33,8 @@ class Pichi extends CommandHandler
 		$help .= "!greet ".PichiLang::get('help_command_usage_jid')." ".PichiLang::get('help_command_usage_room')." ".PichiLang::get('help_command_usage_message')." - ".PichiLang::get('help_command_description_greet')."\n";
 		$help .= "!farewell ".PichiLang::get('help_command_usage_jid')." ".PichiLang::get('help_command_usage_room')." ".PichiLang::get('help_command_usage_message')." - ".PichiLang::get('help_command_description_farewell')."\n";
 		$help .= "!idle ".PichiLang::get('help_command_usage_nick')." - ".PichiLang::get('help_command_description_idle')."\n";
+		$help .= "!on - ".PichiLang::get('help_command_description_on')."\n";
+		$help .= "!off - ".PichiLang::get('help_command_description_off')."\n";
 		$help .= "!quit - ".PichiLang::get('help_command_description_quit')."\n";
 		$help .= "!version - ".PichiLang::get('help_command_description_version')."\n";
 		
@@ -499,6 +501,22 @@ class Pichi extends CommandHandler
 		if(!$this->isAccess(3))
 			return;
 		$this->doExit();
+	}
+	
+	protected function command_on()
+	{
+		if(!$this->isAccess(3))
+			return;
+		$this->enabled = TRUE;
+		$this->sendAnswer("Updated!");
+	}
+	
+	protected function command_off()
+	{
+		if(!$this->isAccess(3))
+			return;
+		$this->enabled = FALSE;
+		$this->sendAnswer("Updated!");
 	}
 }
 

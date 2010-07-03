@@ -57,6 +57,8 @@
 		<option name="help_command_description_count" type="string">Показать количество слов-связок в базе.</option>
 		<option name="help_command_description_talkers" type="string">Топ10 наиболее "разговорчивых" пользователей</option>
 		<option name="help_command_description_nicks" type="string">Отображает все ники указанного пользователя</option>
+		<option name="help_command_description_on" type="string">Включает бота</option>
+		<option name="help_command_description_off" type="string">Отключает бота</option>
 		
 		<option name="help_command_usage_param" type="string">параметр</option>
 		<option name="help_command_usage_value" type="string">значение</option>

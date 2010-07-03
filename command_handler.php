@@ -113,10 +113,13 @@ class CommandHandler extends PichiCore
 			
 			$command = $this->getCommand($this->last_message);
 			$command = substr($command, 1);
-			if(method_exists($this, "command_{$command}"))
-				$this->{"command_$command"}();
-			else
-				($hook = PichiPlugin::fetch_hook('commands_fetch')) ? eval($hook) : false;
+			if($this->enabled || $this->isAccess(3))
+			{
+				if(method_exists($this, "command_{$command}"))
+					$this->{"command_$command"}();
+				else
+					($hook = PichiPlugin::fetch_hook('commands_fetch')) ? eval($hook) : false;
+			}
 		}
 	
 	}
@@ -131,7 +134,7 @@ class CommandHandler extends PichiCore
 		$this->fetchCommand();
 	
 		//test message
-		if(!$this->isCommand($this->last_message) && $this->options['answer_mode'] == 1)
+		if($this->enabled && !$this->isCommand($this->last_message) && $this->options['answer_mode'] == 1)
 		{
 			if((int)$this->options['answer_random'] === 0 || rand(1, (int)$this->options['answer_random']) === 1)
 			{

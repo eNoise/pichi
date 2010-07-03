@@ -489,11 +489,11 @@ class PichiCore
 		($hook = PichiPlugin::fetch_hook('pichicore_message_recive_begin')) ? eval($hook) : false;
 		$this->log->log("Call message method", PichiLog::LEVEL_DEBUG);
 		
-		if(!$this->isCommand($message) && $this->options['log_enabled'] == 1)
+		if($this->enabled && !$this->isCommand($message) && $this->options['log_enabled'] == 1)
 			$this->db->query("INSERT INTO log (`from`,`time`,`type`,`message`) VALUES ('".$this->db->db->escapeString($this->last_from)."','".$this->db->db->escapeString(time())."','".$this->db->db->escapeString($this->last_type)."','".$this->db->db->escapeString($this->last_message)."');");
 		
 		//to lexems massges
-		if(!$this->isCommand($this->last_message) && $this->options['answer_remember'] == 1)
+		if($this->enabled && !$this->isCommand($this->last_message) && $this->options['answer_remember'] == 1)
 			$this->syntax->parseText($this->last_message);
 		
 		($hook = PichiPlugin::fetch_hook('pichicore_message_recive_complete')) ? eval($hook) : false;

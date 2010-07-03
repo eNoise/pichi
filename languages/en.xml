@@ -57,6 +57,8 @@ parameter1|parameter2 - parameter1 OR parameter2 (one of)
 		<option name="help_command_description_count" type="string">Show count of words-lexems in base.</option>
 		<option name="help_command_description_talkers" type="string">TOP10 the most 'talkative' users</option>
 		<option name="help_command_description_nicks" type="string">Show all nicks of user.</option>
+		<option name="help_command_description_on" type="string">Enable all functions of bot.</option>
+		<option name="help_command_description_off" type="string">Disable all functions of bot.</option>
 		
 		<option name="help_command_usage_param" type="string">parameter</option>
 		<option name="help_command_usage_value" type="string">value</option>
