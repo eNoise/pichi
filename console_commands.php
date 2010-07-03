@@ -35,6 +35,22 @@ $args->addOption('group', array(
     'description' => 'As usergroup of system'
 ));
 
+$args->addOption('log', array(
+    'short_name'  => '-l',
+    'long_name'   => '--log',
+    'action'      => 'StoreString',
+    'description' => 'Log file',
+    'default'     => dirname(__FILE__) . "/pichi.log"
+));
+
+$args->addOption('pid', array(
+    'short_name'  => '-p',
+    'long_name'   => '--pid',
+    'action'      => 'StoreString',
+    'description' => 'Pid file',
+    'default'     => dirname(__FILE__) . "/pichi.pid"
+));
+
 $args->addOption('database', array(
     'short_name'  => '-b',
     'long_name'   => '--db',
@@ -64,8 +80,8 @@ try
 	{
 		System_Daemon::setOption("appName", "pichi-bot");
 		System_Daemon::setOption("appDir", dirname(__FILE__));
-		System_Daemon::setOption("logLocation", dirname(__FILE__) . "/pichi.log");
-		System_Daemon::setOption("appPidLocation", dirname(__FILE__) . "/" . System_Daemon::getOption("appName") . "/pichi.pid");
+		System_Daemon::setOption("logLocation", $arg->options['log']);
+		System_Daemon::setOption("appPidLocation", $arg->options['pid']);
 		if($arg->options['group'])
 			System_Daemon::setOption("appRunAsGID", $arg->options['group']);
 		if($arg->options['user'])
