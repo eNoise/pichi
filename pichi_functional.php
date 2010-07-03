@@ -287,7 +287,7 @@ class Pichi extends CommandHandler
 
   	protected function command_talkers()
 	{
-		$query = $this->db->query("SELECT `from`, COUNT(*) AS `counter` FROM log WHERE level > 0 GROUP BY `from` ORDER BY `counter` DESC;");
+		$query = $this->db->query("SELECT `from`, COUNT(*) AS `counter` FROM log GROUP BY `from` ORDER BY `counter` DESC;");
 		$this->sendAnswer(PichiLang::get('command_talkers'));
 		$ans = "";
 		$tmp = array();
