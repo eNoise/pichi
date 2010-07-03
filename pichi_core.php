@@ -31,6 +31,7 @@ class PichiCore
 	protected $last_from;
 	protected $last_type;
 	protected $last_room;
+	protected $last_jid;
 	// Last data recive settings
 	public $last_id;                                           
 	public $last_data;
@@ -294,7 +295,7 @@ class PichiCore
 		
 		if(strlen($message) > $this->options['msg_limit'] && $this->options['msg_limit'] > 1 && $this->last_type == "groupchat")
 		{
-			$to = $this->getJID($this->getName($this->last_from));
+			$to = $this->last_jid;
 			$type = 'chat';
 		}
 		($hook = PichiPlugin::fetch_hook('pichicore_answer_send')) ? eval($hook) : false;
@@ -476,6 +477,11 @@ class PichiCore
 			$this->last_room = $this->getJID($this->last_from);
 		else
 			$this->last_room = NULL;
+		
+		if($this->last_type == "groupchat")
+			$this->last_jid = $this->getJID($this->getNick($this->last_from), $this->last_room);
+		else
+			$this->last_jid = $this->getJID($this->last_from);
 	
 		($hook = PichiPlugin::fetch_hook('pichicore_message_recive_begin')) ? eval($hook) : false;
 		$this->log->log("Call message method", PichiLog::LEVEL_DEBUG);
