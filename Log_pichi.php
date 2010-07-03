@@ -35,10 +35,11 @@ class PichiLog {
 	protected function writeLine($msg, $runlevel, $time)
 	{
 		global $config;
-		if($config['daemon_mode'])
-			System_Daemon::log(System_Daemon::LOG_INFO, "[".$this->names[$runlevel]."]: ".$msg."\n");
 		if(RUN_OS == "Nix")
-			echo Console_Color::convert($this->colors[$runlevel] . "(" . date('Y-m-d H:i:s', $time).") [".$this->names[$runlevel]."]: ".$msg."%n\n");
+			if($config['daemon_mode'])
+				System_Daemon::log(System_Daemon::LOG_INFO, "[".$this->names[$runlevel]."]: ".$msg."\n");
+			else
+				echo Console_Color::convert($this->colors[$runlevel] . "(" . date('Y-m-d H:i:s', $time).") [".$this->names[$runlevel]."]: ".$msg."%n\n");
 		else if(RUN_OS == "Windows")
 			echo iconv("UTF-8","cp866","(" . date('Y-m-d H:i:s', $time).") [".$this->names[$runlevel]."]: ".$msg."\n");
 		else
