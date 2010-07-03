@@ -252,7 +252,8 @@ while(!$jabber->isDisconnected()) {
 				$pichi->_db()->query("UPDATE users SET status = 'unavailable';");
 				$jabber->getRoster();
 				$jabber->presence($config['status']);
-				$pichi->joinRoom($config['room'], $config['room_user'], "BotWorld!");
+				foreach($pichi->room as $room)
+					$pichi->joinRoom($room, $config['room_user'], "BotWorld!");
 				$pichi->wait = $time_session = time();
 				($hook = PichiPlugin::fetch_hook('main_session_start')) ? eval($hook) : false;
 				break;
