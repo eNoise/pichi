@@ -3,7 +3,7 @@
 ### Some settings ###
 $config['db_version'] = 19; // Work only parram
 $config['min_version'] = 8; // Min version of config
-$config['pichi_version'] = "0.5.0 (dev)"; //Pichi version
+$config['pichi_version'] = "0.5.1"; //Pichi version
 
 ### Begin basic settings end checks ###
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
