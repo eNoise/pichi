@@ -346,16 +346,17 @@ void commandbase::command_top(std::string arg)
 }
 
 void commandbase::command_talkers(std::string arg)
-{
-	pichi->sql->query("SELECT `from`, COUNT(*) AS `counter` FROM log GROUP BY `from` ORDER BY `counter` DESC;");
+{  
+	sqlite::q* qqr = pichi->sql->squery("SELECT `from`, COUNT(*) AS `counter` FROM log GROUP BY `from` ORDER BY `counter` DESC;");
 	//pichi->sendAnswer(PichiLang::get('command_talkers'));
 	pichi->sendAnswer("топ говорливых:");
 	std::string ans;
 	std::map<std::string, std::string> fr;
 	typedef std::map< std::string, std::pair<std::string, size_t> > p_t;
+	typedef std::map< size_t, std::pair<std::string, size_t> > p_t2;
 	p_t tmp;
 	int i = 0;
-	while(!(fr = pichi->sql->fetchArray()).empty() && i < 10)
+	while(!(fr = pichi->sql->fetchArray(qqr)).empty() && i < 10)
 	{
 		std::string from = pichi->getJID(pichi->getName(fr["from"]), "", true);
 		if(from == "")
@@ -369,8 +370,13 @@ void commandbase::command_talkers(std::string arg)
 		tmp[from].second += system::atot(fr["counter"]);
 	}
 	i = 0;
-	 
-	 BOOST_FOREACH(p_t::value_type &p, tmp)
+	
+	delete qqr;
+	p_t2 tmp2;
+	for(p_t::iterator it = tmp.begin(); it != tmp.end(); it++)
+		tmp2[it->second.second] = it->second;
+	
+	 BOOST_REVERSE_FOREACH(p_t2::value_type &p, tmp2)
 	 {
 		//ans += PichiLang::get('command_talkers_list', array(++$i, $this->getName($key), $val)) . "\n";
 		ans += system::itoa(++i) + ". " + pichi->getName(p.second.first) + " (" + system::ttoa(p.second.second) + ")\n";

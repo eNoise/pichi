@@ -40,26 +40,46 @@ sqlite::~sqlite()
 
 bool sqlite::query(std::string sql)
 {  
-	if(sql != last_query_string)
+	if(sql != mainquery.query_string)
 	{
 		finalize();
-		last_query_string = sql;
-		last_query_status = sqlite3_prepare_v2(db, sql.c_str(), -1, &statement, 0);
+		mainquery.query_string = sql;
+		mainquery.query_status = sqlite3_prepare_v2(db, sql.c_str(), -1, &(mainquery.statement), 0);
 		
 		// begin count rows
-		if(last_query_status != SQLITE_OK)
+		if(mainquery.query_status != SQLITE_OK)
 			return false;
 
-		while(sqlite3_step(statement) == SQLITE_ROW)
-			rows_count++;
+		while(sqlite3_step(mainquery.statement) == SQLITE_ROW)
+			mainquery.rows_count++;
 		reset();
 	}
 		
-	if(last_query_status == SQLITE_OK)
+	if(mainquery.query_status == SQLITE_OK)
 		return true;
 	else
 		return false;
 }
+
+
+sqlite::q* sqlite::squery(std::string sql)
+{
+	q* ret = new q();
+	ret->query_string = sql;
+	ret->query_status = sqlite3_prepare_v2(db, sql.c_str(), -1, &(ret->statement), 0);
+	if(mainquery.query_status != SQLITE_OK)
+	{
+		delete ret;
+		return NULL; // null pointer
+	}
+	ret->rows_count = 0;
+	while(sqlite3_step(ret->statement) == SQLITE_ROW)
+		ret->rows_count++;
+	sqlite3_reset(ret->statement);
+	
+	return ret;
+}
+
 
 bool sqlite::exec(std::string sql)
 {
@@ -75,44 +95,54 @@ bool sqlite::exec(std::string sql)
 	return true;
 }
 
-std::map<std::string, std::string> sqlite::fetchArray()
+std::map<std::string, std::string> sqlite::fetchArray(q* state)
 {
+	bool nullstate = false;
+	if(state == NULL)
+	{
+		state = new q();
+		*state = mainquery;
+		nullstate = true;
+	}
+  
 	std::map<std::string, std::string> row;
 	
-	last_result_status = sqlite3_step(statement);
-	if(last_result_status == SQLITE_ROW)
+	state->result_status = sqlite3_step(state->statement);
+	if(state->result_status == SQLITE_ROW)
 	{
-		int cols = sqlite3_column_count(statement);
+		int cols = sqlite3_column_count(state->statement);
 		for(int col = 0; col < cols; col++)
-			row.insert(std::pair<std::string, std::string>((char*)sqlite3_column_name(statement, col), (char*)sqlite3_column_text(statement, col)));
+			row.insert(std::pair<std::string, std::string>((char*)sqlite3_column_name(state->statement, col), (char*)sqlite3_column_text(state->statement, col)));
 	}
 	
+	if(nullstate)
+		delete state;
 	return row;
 }
 
 std::string sqlite::fetchColumn(int num, bool stay)
 {
 	if(!stay)
-		last_result_status = sqlite3_step(statement);
-	if(last_result_status == SQLITE_ROW)
-		return static_cast<std::string>((char*)sqlite3_column_text(statement, num));
+		mainquery.result_status = sqlite3_step(mainquery.statement);
+	if(mainquery.result_status == SQLITE_ROW)
+		return static_cast<std::string>((char*)sqlite3_column_text(mainquery.statement, num));
 	else
 		return std::string();
 }
   
 const int sqlite::numColumns() const
 {
-	return sqlite3_column_count(statement);
+	return sqlite3_column_count(mainquery.statement);
 }
 
 const int sqlite::numRows() const
 {
-	return rows_count;
+	return mainquery.rows_count;
 }
 
 bool sqlite::reset()
 {
-	if (sqlite3_reset(statement) == SQLITE_OK)
+	if (sqlite3_reset(mainquery.statement) == SQLITE_OK)
 		return true;
 	else
 		return false;
@@ -120,9 +150,9 @@ bool sqlite::reset()
 
 void sqlite::finalize()
 {
-	sqlite3_finalize(statement);
-	last_query_string = "";
-	rows_count = 0;
+	sqlite3_finalize(mainquery.statement);
+	mainquery.query_string = "";
+	mainquery.rows_count = 0;
 }
 
 const std::string sqlite::escapeString(std::string sql)

@@ -27,21 +27,21 @@
 
 class sqlite
 {
-	private:
-		std::string dbfile;
-		
-		std::string last_query_string;
-		int last_query_status;
-		int rows_count;
-		int last_result_status;
-		
-		sqlite3 *db;
-		sqlite3_stmt *statement;
 	public:
+		struct q // query struct
+		{
+			sqlite3_stmt *statement;
+			std::string query_string;
+			int query_status;
+			int result_status;
+			int rows_count;
+		};
+	  
 		sqlite(std::string f);
 		bool query(std::string);
+		q* squery(std::string);
 		bool exec(std::string);
-		std::map<std::string, std::string> fetchArray(void);
+		std::map<std::string, std::string> fetchArray(q* state = NULL);
 		std::string fetchColumn(int num, bool stay = false);
 		const int numColumns() const;
 		const int numRows() const;
@@ -49,6 +49,11 @@ class sqlite
 		bool reset();
 		void finalize();
 		~sqlite();
+	private:
+		std::string dbfile;
+		sqlite3 *db;
+
+		q mainquery;
 };
 
 #endif // SQLITE_H
