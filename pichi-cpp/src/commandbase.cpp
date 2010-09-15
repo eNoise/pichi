@@ -36,6 +36,9 @@ commandbase::commandbase(pichicore* p): commandhandler(p)
 	commands["wtfset"] = &commandbase::command_wtfset;
 	commands["top"] = &commandbase::command_top;
 	commands["talkers"] = &commandbase::command_talkers;
+	commands["count"] = &commandbase::command_count;
+	commands["dfn"] = &commandbase::command_dfn;
+	commands["set"] = &commandbase::command_set;
 }
 
 void commandbase::fetchCommand(std::string command)
@@ -382,4 +385,47 @@ void commandbase::command_talkers(std::string arg)
 		ans += system::itoa(++i) + ". " + pichi->getName(p.second.first) + " (" + system::ttoa(p.second.second) + ")\n";
 	 }
 	pichi->sendAnswer(ans);
+}
+
+void commandbase::command_count(std::string arg)
+{
+	pichi->sql->query("SELECT COUNT(*) FROM lexems;");
+	size_t lexnum = system::atot(pichi->sql->fetchColumn(0));
+	//pichi->sendAnswer(PichiLang::get('command_count', array($lexnum)));
+	pichi->sendAnswer(system::ttoa(lexnum));
+}
+
+void commandbase::command_dfn(std::string arg)
+{
+	std::vector< std::string > w = seperate(arg, 2);
+
+	pichi->sql->query("SELECT revision FROM wiki WHERE name = '" + pichi->sql->escapeString(w[0]) + "' ORDER BY revision DESC LIMIT 0,1;");
+	size_t rev;
+	if(pichi->sql->numRows() > 0)
+	{
+		rev = system::atot(pichi->sql->fetchColumn(0));
+		pichi->sql->query("INSERT INTO wiki (`name`,`revision`,`value`) VALUES ('" + pichi->sql->escapeString(w[0]) + "','" + pichi->sql->escapeString(system::ttoa(rev + 1)) + "','" + pichi->sql->escapeString(w[1]) + "');");
+	}
+	else
+	{
+		pichi->sql->query("INSERT INTO wiki (`name`,`revision`,`value`) VALUES ('" + pichi->sql->escapeString(w[0]) + "','1','" + pichi->sql->escapeString(w[1]) + "');");
+	}
+	
+	//$this->log->log("User set wiki page $w[1] = $w[2]", PichiLog::LEVEL_DEBUG);
+	//$this->sendAnswer(PichiLang::get('command_dfn'));
+	pichi->sendAnswer("Поставили");
+}
+
+void commandbase::command_set(std::string arg)
+{
+	if(!pichi->isAccess())
+		return;
+     
+	std::vector< std::string > w = seperate(arg, 2);
+	if(pichi->setOption(w[0], w[1]))
+		//pichi->sendAnswer(PichiLang::get('command_set'));
+		pichi->sendAnswer("Установлено");
+	else	
+		//pichi->sendAnswer(PichiLang::get('command_nosuch'));
+		pichi->sendAnswer("фэйл");
 }

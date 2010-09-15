@@ -285,3 +285,24 @@ bool pichicore::isCommand(std::string& str)
 {
 	return (str.substr(0,1) == "!");
 }
+
+bool pichicore::setOption(std::string option, std::string value)
+{
+  /*
+	sql->query("SELECT COUNT(*) FROM settings WHERE name = '" + sql->escapeString(option) + "';");
+	if(sql->fetchColumn(0) > 0)
+	{
+		sql->query("UPDATE settings SET value = '" + sql->escapeString(value) + "'  WHERE name = '" + sql->escapeString(option) + "';");
+		$this->parseOptions();
+		$this->log->log("Updated option $option = $value", PichiLog::LEVEL_DEBUG);
+		return true;
+	}
+	else
+	{
+		$this->log->log("Can't set $option. There is no such option.", PichiLog::LEVEL_DEBUG);
+		return false;
+	}
+	
+    */
+    return true; //stub
+}

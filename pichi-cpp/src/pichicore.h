@@ -56,6 +56,7 @@ class pichicore : public pichiconfig, lastmessage, public pichioptions
 		std::string getDefaultRoom(void);
 		bool isCommand(std::string& str);
 		bool isAccess(int level = 2, std::string jid = "", std::string room = "", bool room_hook = false);
+		bool setOption(std::string option, std::string value);
 		
 		pichicore();
 		~pichicore();
