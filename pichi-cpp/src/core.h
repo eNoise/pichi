@@ -30,6 +30,7 @@
 #include <gloox/loghandler.h>
 #include <gloox/connectionlistener.h>
 #include <gloox/presence.h>
+#include <gloox/eventhandler.h>
 #include <iostream>
 #include <list>
 #include <time.h>
@@ -39,7 +40,7 @@
 
 using namespace gloox;
 
-class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListener, PresenceHandler
+class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListener, PresenceHandler, public EventHandler
 {
 	private:
 		std::string name;
@@ -53,14 +54,14 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
 		JID roomjid;
 	protected:
 		pichicore* pichi;
-	  	Client* client;
-		
+	  
 		void botstart(void);
 		void initDBStruct(void);
 	public:
 		core(std::string n, std::string p, std::string s);
                 ~core();
 		
+		Client* client;
 		std::list< std::pair<JID, MUCRoom*> > rooms;
 		
 		void sendMessage(JID jid, std::string message);
@@ -89,6 +90,8 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
                 void handleLog (LogLevel level, LogArea area, const std::string &message);
 		
 		void handlePresence(const Presence& presence );
+		
+		void handleEvent (const Event &event);
 
 };
 

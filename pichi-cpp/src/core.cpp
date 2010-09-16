@@ -181,3 +181,9 @@ void core::initDBStruct(void)
 		pichi->sql = new sqlite("pichi.db");
 	}
 }
+
+void core::handleEvent(const Event& event)
+{
+	if(event.eventType() == Event::PingPong)
+		pichi->pingRecive(event.stanza()->from().bare());
+}

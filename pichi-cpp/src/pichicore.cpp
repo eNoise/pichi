@@ -307,3 +307,27 @@ bool pichicore::setOption(std::string option, std::string value)
     */
     return true; //stub
 }
+
+bool pichicore::isOnline(std::string user, std::string room)
+{
+	sql->query("SELECT `jid`,`nick` FROM users WHERE status = 'available'" + ((room != "") ? " AND room = '" + sql->escapeString(room) + "'" : "") + ";");
+	std::map<std::string, std::string> users;
+	while(!(users = sql->fetchArray()).empty())
+	{
+		if(users["nick"] == user || users["jid"] == user)
+			return true;
+	}
+	return false;
+}
+
+void pichicore::ping(std::string jid)
+{
+	reciver["ping_" + jid] = boost::lexical_cast<std::string>(clock());
+	jabber->client->xmppPing(JID(jid), jabber);  	
+}
+
+void pichicore::pingRecive(std::string jid)
+{
+	sendAnswer( boost::lexical_cast<std::string>( (boost::lexical_cast<clock_t>(reciver["ping_" + jid])) - clock() ) );
+	reciver.erase("ping_" + jid);
+}

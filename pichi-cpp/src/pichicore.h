@@ -43,6 +43,7 @@ class pichicore : public pichiconfig, lastmessage, public pichioptions
 		
 		time_t wait;
 		time_t wait_time;
+		std::map<std::string, std::string> reciver;
 		
 		bool isEnabled(void);
 		void setUserInfo(std::string, std::string, std::string, std::string, std::string, std::string);
@@ -57,6 +58,9 @@ class pichicore : public pichiconfig, lastmessage, public pichioptions
 		bool isCommand(std::string& str);
 		bool isAccess(int level = 2, std::string jid = "", std::string room = "", bool room_hook = false);
 		bool setOption(std::string option, std::string value);
+		bool isOnline(std::string user, std::string room = "");
+		void ping(std::string jid);
+		void pingRecive(std::string id);
 		
 		pichicore();
 		~pichicore();

@@ -41,6 +41,8 @@ commandbase::commandbase(pichicore* p): commandhandler(p)
 	commands["dfn"] = &commandbase::command_dfn;
 	commands["set"] = &commandbase::command_set;
 	commands["msg"] = &commandbase::command_msg;
+	commands["gc"] = &commandbase::command_gc;
+	commands["ping"] = &commandbase::command_ping;
 }
 
 void commandbase::fetchCommand(std::string command)
@@ -441,4 +443,98 @@ void commandbase::command_msg(std::string arg)
 
 	pichi->jabber->sendMessage(JID(pichi->getJID(w[0])), w[1]);
 	//$this->log->log("Send message to $user: $message", PichiLog::LEVEL_DEBUG);
+}
+
+
+void commandbase::command_gc(std::string arg)
+{
+	if(!pichi->isAccess())
+		return;
+     
+	pichi->sql->query("SELECT * FROM settings" + ((arg != "") ? " WHERE name='" + pichi->sql->escapeString(arg) + "'" : "") + ";");
+	std::map<std::string, std::string> data;
+	std::string show = "\n";
+	while(!(data = pichi->sql->fetchArray()).empty())
+	{
+		show += data["name"] + " = " + data["value"] + " // " + data["description"] + "\n";
+		//$this->log->log("User request setting: {$data['name']} = {$data['value']}", PichiLog::LEVEL_VERBOSE);
 	}
+	pichi->sendAnswer(show);
+}
+
+/*
+	
+	protected function command_users()
+	{
+		$w = $this->seperate($this->last_message);
+      
+		$this->db->query("SELECT * FROM users;");
+      
+		if($w[1] == NULL)
+		{
+			$this->log->log("Begin creting user list", PichiLog::LEVEL_DEBUG);
+			$userlist = "".PichiLang::get('command_users_list_seen').":\n";
+			$online = $offline = "";
+			$n = $f = 0;
+			while($data = $this->db->fetchArray())
+			{
+				if($data['room'] == NULL)
+					continue;
+				$roomname = explode("@", $data['room']);
+				$roomname = $roomname[0];
+				if($data['status'] == 'available')
+				{
+					$n++;
+					$online .= PichiLang::get('command_users_online_seen',array($n, $data['nick'], $roomname)) . "\n";
+					$this->log->log("User $data[nick]: online", PichiLog::LEVEL_VERBOSE);
+				}
+				else
+				{
+					$f++;
+					$offline .= PichiLang::get('command_users_offline_seen',array($f, $data['nick'], date("d.m.y \в H:i:s", $data['time']), $roomname)) . "\n";
+					$this->log->log("User $data[nick]: offline", PichiLog::LEVEL_VERBOSE);
+				}
+			}
+			$userlist .= "".PichiLang::get('command_users_online').":\n" . $online;
+			$userlist .= "".PichiLang::get('command_users_offline').":\n" . $offline;
+			$this->sendAnswer($userlist);
+		}
+		else
+		{
+			while($data = $this->db->fetchArray())
+			{
+				if($data['nick'] == $w[1] || $data['jid'] == $w[1])
+				{
+					$this->log->log("User {$data['nick']} founded!", PichiLog::LEVEL_VERBOSE);
+					$this->sendAnswer(PichiLang::get('command_status', array($data['nick'], (($data['status'] == 'available') ? PichiLang::get('command_status_online') : PichiLang::get('command_status_offline')))));
+				}
+			}
+		}
+	}
+
+	protected function command_join()
+	{
+		if(!$this->isAccess())
+			return;
+		$w = $this->seperate($this->last_message, 3);
+		$this->joinRoom($w[1], $w[2], $w[3]);
+	}
+	
+	protected function command_left()
+	{
+		if(!$this->isAccess())
+			return;
+		$w = $this->seperate($this->last_message, 3);
+		$this->leftRoom($w[1], $w[2], $w[3]);
+	}
+	
+*/
+
+void commandbase::command_ping(std::string arg)
+{
+	if(pichi->isOnline(arg))
+		pichi->ping(pichi->getJID(pichi->getName(arg)));
+	else
+		//$this->sendAnswer(PichiLang::get('command_ping_nouser'));
+		pichi->sendAnswer("не пингует");
+}
