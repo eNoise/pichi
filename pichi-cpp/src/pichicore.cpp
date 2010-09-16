@@ -187,6 +187,7 @@ bool pichicore::isAccess(int level, std::string jid, std::string room, bool room
 	if(room == std::string() && !room_hook)
 		room = getDefaultRoom(); // main room
 	
+	jid = getJID(getName(jid, room), room); // current access
 	sql->query("SELECT `level` FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
 	std::string tempresult = sql->fetchColumn(0);
 	if(tempresult == "")

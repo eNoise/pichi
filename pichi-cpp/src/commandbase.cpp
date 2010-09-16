@@ -20,6 +20,7 @@
 
 #include "commandbase.h"
 #include "pichicore.h"
+#include "core.h"
 
 commandbase::commandbase(pichicore* p): commandhandler(p)
 {
@@ -39,6 +40,7 @@ commandbase::commandbase(pichicore* p): commandhandler(p)
 	commands["count"] = &commandbase::command_count;
 	commands["dfn"] = &commandbase::command_dfn;
 	commands["set"] = &commandbase::command_set;
+	commands["msg"] = &commandbase::command_msg;
 }
 
 void commandbase::fetchCommand(std::string command)
@@ -429,3 +431,14 @@ void commandbase::command_set(std::string arg)
 		//pichi->sendAnswer(PichiLang::get('command_nosuch'));
 		pichi->sendAnswer("фэйл");
 }
+
+void commandbase::command_msg(std::string arg)
+{
+	if(!pichi->isAccess())
+		return;
+     
+	std::vector< std::string > w = seperate(arg, 1);
+
+	pichi->jabber->sendMessage(JID(pichi->getJID(w[0])), w[1]);
+	//$this->log->log("Send message to $user: $message", PichiLog::LEVEL_DEBUG);
+	}

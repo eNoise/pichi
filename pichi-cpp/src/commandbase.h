@@ -52,6 +52,7 @@ class commandbase : public commandhandler
 	  void command_count(std::string arg);
 	  void command_dfn(std::string arg);
 	  void command_set(std::string arg);
+	  void command_msg(std::string arg);
 };
 
 #endif // COMMANDBASE_H
