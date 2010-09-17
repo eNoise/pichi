@@ -43,6 +43,9 @@ commandbase::commandbase(pichicore* p): commandhandler(p)
 	commands["msg"] = &commandbase::command_msg;
 	commands["gc"] = &commandbase::command_gc;
 	commands["ping"] = &commandbase::command_ping;
+	commands["topic"] = &commandbase::command_topic;
+	commands["nicks"] = &commandbase::command_nicks;
+	commands["idle"] = &commandbase::command_idle;
 }
 
 void commandbase::fetchCommand(std::string command)
@@ -537,4 +540,35 @@ void commandbase::command_ping(std::string arg)
 	else
 		//$this->sendAnswer(PichiLang::get('command_ping_nouser'));
 		pichi->sendAnswer("не пингует");
+}
+
+void commandbase::command_topic(std::string arg)
+{
+  /*
+	if(arg == ")
+		room = pichi->getDefaultRoom();
+	$w = $this->seperate($this->last_message);
+	$this->jabber->setTopic($room, $w[1]);
+  */
+}
+
+void commandbase::command_nicks(std::string arg)
+{
+	std::string ans;
+	pichi->sql->query("SELECT `nick` FROM users_nick WHERE `jid` = '" + pichi->sql->escapeString(pichi->getJID(pichi->getName(arg))) + "' GROUP BY `nick`;");
+	std::map<std::string, std::string> data;
+	while(!(data = pichi->sql->fetchArray()).empty())
+		ans += data["nick"] + "\n";
+	if(ans == "")
+		return;
+	//pichi->sendAnswer(PichiLang::get('command_nicks') . "\n" . $ans);
+	pichi->sendAnswer("ники\n" + ans);
+}
+
+void commandbase::command_idle(std::string arg)
+{
+	pichi->sql->query("SELECT `time` FROM log WHERE `from` = '" + pichi->sql->escapeString(arg) + "' OR `from` LIKE '%/" + pichi->sql->escapeString(pichi->getName(arg)) + "' ORDER BY time DESC;");
+	time_t date = boost::lexical_cast<time_t>(pichi->sql->fetchColumn(0));
+	if(date > 0)
+		pichi->sendAnswer(system::timeToString(date, "%d.%m.%Y в %H:%M:%S"));
 }
