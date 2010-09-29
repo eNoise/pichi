@@ -18,24 +18,30 @@
 
 */
 
-#ifndef PICHICONFIG_H
-#define PICHICONFIG_H
+#ifndef LANGUAGES_H
+#define LANGUAGES_H
 
 #include <map>
 #include <string>
 #include "xmlsimple.h"
+#include "system.h"
+#include <vector>
+#include <stdarg.h>
+#include <boost/algorithm/string/replace.hpp>
+//#include <boost/regex.hpp>
+#include <stdio.h>
 
-class pichiconfig : public xmlsimple
-{
+class languages : public xmlsimple
+{  
   protected:
-	 std::map<std::string, std::string> config;
-	 int version;
+	 std::map<std::string, std::string> language;
+	 std::string choise;
   public:
-	 pichiconfig();
+	 languages();
+	 languages(std::string lan);
 	 bool loadXmlConfig(std::string);
-	 std::string setConfigOption(std::string, std::string);
-	 std::string getConfigOption(std::string);
 	 std::string operator[] (std::string);
+         std::string operator() (std::string first, ...);
 };
 
-#endif // PICHICONFIG_H
+#endif // LANGUAGES_H

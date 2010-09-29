@@ -33,10 +33,9 @@ std::string pichiconfig::setConfigOption(std::string name, std::string value)
 
 bool pichiconfig::loadXmlConfig(std::string file)
 {
-	xmlfile = new TiXmlDocument(file);
-	if(!xmlfile->LoadFile())
+	if(!xmlsimple::loadXmlConfig(file))
 		return false;
-	
+  
 	TiXmlElement *xmllevel = 0;
 	xmllevel = xmlfile->FirstChildElement("PichiConfig");
 	
@@ -64,10 +63,8 @@ pichiconfig::pichiconfig()
 	loadXmlConfig("pichi.xml");
 }
 
-
-pichiconfig::~pichiconfig()
+std::string pichiconfig::operator[](std::string str)
 {
-	delete xmlfile;
+	return config[str];
 }
-
 

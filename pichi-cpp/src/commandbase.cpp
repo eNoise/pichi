@@ -572,3 +572,44 @@ void commandbase::command_idle(std::string arg)
 	if(date > 0)
 		pichi->sendAnswer(system::timeToString(date, "%d.%m.%Y в %H:%M:%S"));
 }
+
+/*
+
+	protected function command_greet()
+	{
+		$w = $this->seperate($this->last_message, 3);
+		if(!$this->isAccess())
+			return;
+		$action = ($w[0] == "!greet") ? "user_join_room" : "user_left_room";
+		$this->db->query("SELECT COUNT(*) FROM actions WHERE action = '$action' AND coincidence='room=" . $this->db->db->escapeString($w[2]) . ",jid=" . $this->db->db->escapeString($w[1]) . "';");
+		if($this->db->fetchColumn() > 0)
+			$this->db->query("UPDATE actions SET value = '".$this->db->db->escapeString($w[3])."'  WHERE action = '$action' AND coincidence='room=" . $this->db->db->escapeString($w[2]) . ",jid=" . $this->db->db->escapeString($w[1]) . "';");
+		else
+			$this->db->query("INSERT INTO actions (`action`,`coincidence`,`do`,`option`,`value`) VALUES ('$action', 'room=" . $this->db->db->escapeString($w[2]) . ",jid=" . $this->db->db->escapeString($w[1]) . "', 'send_message', '', '".$this->db->db->escapeString($w[3])."');");
+		$this->sendAnswer("Updated!");
+	}
+	
+	protected function command_quit()
+	{
+		if(!$this->isAccess(3))
+			return;
+		$this->doExit();
+	}
+	
+	protected function command_on()
+	{
+		if(!$this->isAccess(3))
+			return;
+		$this->enabled = TRUE;
+		$this->sendAnswer("Updated!");
+	}
+	
+	protected function command_off()
+	{
+		if(!$this->isAccess(3))
+			return;
+		$this->enabled = FALSE;
+		$this->sendAnswer("Updated!");
+	}
+
+*/

@@ -18,24 +18,18 @@
 
 */
 
-#ifndef PICHICONFIG_H
-#define PICHICONFIG_H
-
-#include <map>
-#include <string>
 #include "xmlsimple.h"
 
-class pichiconfig : public xmlsimple
+bool xmlsimple::loadXmlConfig(std::string file)
 {
-  protected:
-	 std::map<std::string, std::string> config;
-	 int version;
-  public:
-	 pichiconfig();
-	 bool loadXmlConfig(std::string);
-	 std::string setConfigOption(std::string, std::string);
-	 std::string getConfigOption(std::string);
-	 std::string operator[] (std::string);
-};
+	xmlfile = new TiXmlDocument(file);
+	if(!xmlfile->LoadFile())
+		return false;
+	
+	return true;
+}
 
-#endif // PICHICONFIG_H
+xmlsimple::~xmlsimple()
+{
+	delete xmlfile;
+}
