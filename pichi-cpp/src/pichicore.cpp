@@ -28,6 +28,8 @@ pichicore::pichicore()
 	sql_options = & sql;
 	// init commander
 	commander = new commandbase(this);
+	//translater
+	lang = new languages("ru");
 }
 
 pichicore::~pichicore()
@@ -35,6 +37,7 @@ pichicore::~pichicore()
 	delete commander;
 	delete sql;
 	delete jabber;
+	delete lang;
 }
 
 bool pichicore::isEnabled(void)

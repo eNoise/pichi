@@ -31,10 +31,13 @@ class sqlite
 		struct q // query struct
 		{
 			sqlite3_stmt *statement;
+			bool is_statement;
 			std::string query_string;
 			int query_status;
 			int result_status;
 			int rows_count;
+			q();
+			void finalize(void);
 		};
 	  
 		sqlite(std::string f);

@@ -26,6 +26,11 @@
 #include <string>
 #include <algorithm>
 
+#define TR(x) (*(pichi->lang))(x)
+#define TR2(x,y) (*(pichi->lang))(x,y)
+#define TR3(x,y,z) (*(pichi->lang))(x,y,z)
+#define TR4(x,y,z,v) (*(pichi->lang))(x,y,z,v)
+
 class pichicore;
 
 class commandbase : public commandhandler
@@ -38,6 +43,7 @@ class commandbase : public commandhandler
 	  std::map<std::string, void (commandbase::*)(std::string)> commands;
 	  
 	  void command_version(std::string);
+	  void command_help(std::string arg);
 	  void command_enable(std::string arg);
 	  void command_disable(std::string arg);
 	  void command_log(std::string arg);

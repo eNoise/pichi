@@ -45,7 +45,7 @@ bool sqlite::query(std::string sql)
 		finalize();
 		mainquery.query_string = sql;
 		mainquery.query_status = sqlite3_prepare_v2(db, sql.c_str(), -1, &(mainquery.statement), 0);
-		
+		mainquery.is_statement = true;
 		// begin count rows
 		if(mainquery.query_status != SQLITE_OK)
 			return false;
@@ -67,6 +67,7 @@ sqlite::q* sqlite::squery(std::string sql)
 	q* ret = new q();
 	ret->query_string = sql;
 	ret->query_status = sqlite3_prepare_v2(db, sql.c_str(), -1, &(ret->statement), 0);
+	ret->is_statement = true;
 	if(mainquery.query_status != SQLITE_OK)
 	{
 		delete ret;
@@ -150,7 +151,11 @@ bool sqlite::reset()
 
 void sqlite::finalize()
 {
-	sqlite3_finalize(mainquery.statement);
+        if(mainquery.is_statement)
+        {
+               sqlite3_finalize(mainquery.statement);
+               mainquery.is_statement = false;
+        }
 	mainquery.query_string = "";
 	mainquery.rows_count = 0;
 }
@@ -158,4 +163,18 @@ void sqlite::finalize()
 const std::string sqlite::escapeString(std::string sql)
 {
 	return static_cast<std::string>(sqlite3_mprintf("%q", sql.c_str())); 
+}
+
+sqlite::q::q()
+{
+       is_statement = false;
+}
+
+void sqlite::q::finalize(void )
+{
+	if(is_statement)
+	{
+		sqlite3_finalize(statement);
+		is_statement = false;
+	}
 }

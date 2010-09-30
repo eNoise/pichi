@@ -31,6 +31,7 @@
 #include <time.h>
 #include <gloox/jid.h>
 #include "commandbase.h"
+#include "languages.h"
 
 class core;
 
@@ -40,6 +41,7 @@ class pichicore : public pichiconfig, lastmessage, public pichioptions
 		sqlite *sql;
 		core *jabber;
 		commandbase *commander;
+		languages *lang;
 		
 		time_t wait;
 		time_t wait_time;
