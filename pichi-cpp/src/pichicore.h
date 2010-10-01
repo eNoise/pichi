@@ -32,6 +32,7 @@
 #include <gloox/jid.h>
 #include "commandbase.h"
 #include "languages.h"
+#include "lexemes.h"
 
 class core;
 
@@ -42,6 +43,7 @@ class pichicore : public pichiconfig, lastmessage, public pichioptions
 		core *jabber;
 		commandbase *commander;
 		languages *lang;
+		lexemes *lex;
 		
 		time_t wait;
 		time_t wait_time;

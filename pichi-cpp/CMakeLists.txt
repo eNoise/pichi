@@ -9,7 +9,8 @@ LINK_LIBRARIES(sqlite3)
 LINK_LIBRARIES(tinyxml)
 LINK_LIBRARIES(boost_regex)
 
-ADD_EXECUTABLE(pichi 	src/languages.cpp    
+ADD_EXECUTABLE(pichi 	src/lexemes.cpp 	
+			src/languages.cpp    
 			src/xmlsimple.cpp 
 			src/commandbase.cpp
 			src/pichioptions.cpp

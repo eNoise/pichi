@@ -30,6 +30,7 @@ pichicore::pichicore()
 	commander = new commandbase(this);
 	//translater
 	lang = new languages("ru");
+	lex = new lexemes(&sql);
 }
 
 pichicore::~pichicore()
@@ -38,6 +39,7 @@ pichicore::~pichicore()
 	delete sql;
 	delete jabber;
 	delete lang;
+	delete lex;
 }
 
 bool pichicore::isEnabled(void)
@@ -249,8 +251,8 @@ bool pichicore::reciveMessage(std::string message, std::string type, std::string
 		sql->exec("INSERT INTO log (`from`,`time`,`type`,`message`) VALUES ('" + sql->escapeString(last_from) + "','" + sql->escapeString(system::stringTime(time(NULL))) + "','" + sql->escapeString(last_type) + "','" + sql->escapeString(last_message) + "');");
 		
 	//to lexems massges
-	//if($this->enabled && !$this->isCommand($this->last_message) && $this->options['answer_remember'] == 1)
-	//	$this->syntax->parseText($this->last_message);
+	if(enabled && !isCommand(last_message) && options["answer_remember"] == "1")
+		lex->parseText(last_message);
 		
 	//($hook = PichiPlugin::fetch_hook('pichicore_message_recive_complete')) ? eval($hook) : false;
 		
