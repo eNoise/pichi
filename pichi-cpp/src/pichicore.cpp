@@ -249,7 +249,11 @@ bool pichicore::reciveMessage(std::string message, std::string type, std::string
 	
 	if(enabled && !isCommand(last_message) && options["log_enabled"] == "1")
 		sql->exec("INSERT INTO log (`from`,`time`,`type`,`message`) VALUES ('" + sql->escapeString(last_from) + "','" + sql->escapeString(system::stringTime(time(NULL))) + "','" + sql->escapeString(last_type) + "','" + sql->escapeString(last_message) + "');");
-		
+	
+	//ME breaker
+	if(last_jid == jabber->getMyJID().bare())
+		return true;
+	
 	//to lexems massges
 	if(enabled && !isCommand(last_message) && options["answer_remember"] == "1")
 		lex->parseText(last_message);

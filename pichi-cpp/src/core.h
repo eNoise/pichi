@@ -67,6 +67,7 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
 		void sendMessage(JID jid, std::string message);
 		void enterRoom(JID room);
 		void leftRoom(JID room);
+		JID& getMyJID(void);
 		
 		// stubs
                 void onConnect();

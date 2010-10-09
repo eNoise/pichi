@@ -187,3 +187,8 @@ void core::handleEvent(const Event& event)
 	if(event.eventType() == Event::PingPong)
 		pichi->pingRecive(event.stanza()->from().bare());
 }
+
+gloox::JID& core::getMyJID(void )
+{
+	return jid;
+}
