@@ -25,18 +25,32 @@
 #include <string>
 #include <vector>
 #include "system.h"
+#include <time.h>
+#include <stdio.h>
 
 class lexemes
 {
   public:
 	lexemes(sqlite** s);
 	int lexeme_limit;
+	int query_limit;
 	void parseText(std::string text);
 	void addLexema(std::string lex);
+	
+	std::string genFullRandom();
   protected:
 	sqlite **sql;
 	std::string user_text;
 	std::string send_text;
+	
+	void buildArray(void);
+	std::string choiseWord(void);
+	void clean(void);
+	
+
+  private:
+	std::vector< std::pair< int, std::string > > answers;
+	std::string sqlquery;
 };
 
 #endif // LEXEMES_H

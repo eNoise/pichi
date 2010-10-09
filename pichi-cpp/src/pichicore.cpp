@@ -260,9 +260,37 @@ bool pichicore::reciveMessage(std::string message, std::string type, std::string
 		
 	//($hook = PichiPlugin::fetch_hook('pichicore_message_recive_complete')) ? eval($hook) : false;
 		
-	
 	if(isCommand(last_message))
 		commander->fetchCommand(last_message);
+	
+	if(enabled && !isCommand(last_message) && options["answer_mode"] == "1")
+	{
+		if(options["answer_random"] == "0" || (1 + rand() % system::atoi(options["answer_random"])) == 1)
+		{
+		  /*
+			$this->syntax->generate();
+			if(rand(1, (int)$this->options['treatment_coincidence']) === 1 && $this->options['treatment_coincidence'] > 0)
+			{
+				switch(rand(1,2))
+				{
+					case 1:
+						$this->sendAnswer($this->getName($this->last_from) . ": " . $this->syntax->returnText());
+						break;
+					case 2:
+						$this->sendAnswer($this->getName($this->last_from) . ", " . $this->syntax->returnText());
+						break;		
+				}
+			}
+			else
+			{
+				$this->sendAnswer($this->syntax->returnText());
+			}
+		    */
+		    sendAnswer(lex->genFullRandom());
+		}
+	}
+		
+	//($hook = PichiPlugin::fetch_hook('commands_message_recive_complete')) ? eval($hook) : false;
 	
 	return true;
 }
@@ -298,22 +326,20 @@ bool pichicore::isCommand(std::string& str)
 
 bool pichicore::setOption(std::string option, std::string value)
 {
-  /*
+
 	sql->query("SELECT COUNT(*) FROM settings WHERE name = '" + sql->escapeString(option) + "';");
-	if(sql->fetchColumn(0) > 0)
+	if(system::atoi(sql->fetchColumn(0)) > 0)
 	{
-		sql->query("UPDATE settings SET value = '" + sql->escapeString(value) + "'  WHERE name = '" + sql->escapeString(option) + "';");
-		$this->parseOptions();
-		$this->log->log("Updated option $option = $value", PichiLog::LEVEL_DEBUG);
+		setSqlOption(option, value);
+		//$this->log->log("Updated option $option = $value", PichiLog::LEVEL_DEBUG);
 		return true;
 	}
 	else
 	{
-		$this->log->log("Can't set $option. There is no such option.", PichiLog::LEVEL_DEBUG);
+		//$this->log->log("Can't set $option. There is no such option.", PichiLog::LEVEL_DEBUG);
 		return false;
 	}
 	
-    */
     return true; //stub
 }
 
