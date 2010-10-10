@@ -24,6 +24,7 @@ lexemes::lexemes(sqlite** s) : sql(s)
 {
 	lexeme_limit = 1000;
 	query_limit = 10;
+	is_answer_limit = false;
 }
 
 void lexemes::parseText(std::string text)
@@ -92,8 +93,9 @@ void lexemes::clean(void )
 
 std::string lexemes::genFullRandom()
 {
-	//if($limit == NULL)
-		int limit = 5 + rand() % 20;
+	int limit;
+	if(is_answer_limit)
+		limit = 5 + rand() % 20;
 	//$this->try_count++; //очередная попытка
 	(*sql)->query("SELECT * FROM lexems WHERE lexeme LIKE '#beg# %' ORDER BY RANDOM() LIMIT 0,1;");
 	if((*sql)->numRows() == 0)
@@ -107,7 +109,7 @@ std::string lexemes::genFullRandom()
 	if(lastx[2] == "#end#")
 		return genans;
 
-	for(int i=0; i < limit; i++)
+	for(int i=0; ((is_answer_limit) ? i < limit : true); i++)
 	{
 		(*sql)->query("SELECT * FROM lexems WHERE lexeme LIKE '" + (*sql)->escapeString(last) + " %' ORDER BY `count` DESC LIMIT 0," + system::itoa(query_limit) + ";");
 		if((*sql)->numRows() == 0)
@@ -124,6 +126,7 @@ std::string lexemes::genFullRandom()
 		genans += " " + lastx[2];
 	}
 	//if($genans != $this->user_text)
+		clean();
 		return genans;
 	//else
 	//	return $this->randFromLog(); //возращать тоже самое нехорошо, вернем что-нибудь из лога

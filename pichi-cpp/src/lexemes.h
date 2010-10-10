@@ -32,6 +32,7 @@ class lexemes
 {
   public:
 	lexemes(sqlite** s);
+	bool is_answer_limit;
 	int lexeme_limit;
 	int query_limit;
 	void parseText(std::string text);
