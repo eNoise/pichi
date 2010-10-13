@@ -36,7 +36,7 @@
 
 class core;
 
-class pichicore : public pichiconfig, lastmessage, public pichioptions
+class pichicore : public pichiconfig, public lastmessage, public pichioptions
 {
 	public:
 		sqlite *sql;

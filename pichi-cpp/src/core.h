@@ -37,6 +37,7 @@
 
 #include "pichicore.h"
 #include "system.h"
+#include "log.h"
 
 using namespace gloox;
 

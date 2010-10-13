@@ -22,6 +22,7 @@
 
 void core::botstart(void)
 {
+	LOG("Start Pichi", LOG::INFO);
 	client = new Client( jid, password );
 	client->logInstance().registerLogHandler(LogLevelDebug, LogAreaAll, this);
 	client->registerConnectionListener( this );
@@ -119,12 +120,12 @@ void core::handleMUCParticipantPresence (MUCRoom *thisroom, const MUCRoomPartici
 	
 	if(presence.presence() != Presence::Unavailable)
 	{
-		std::cout << "Онлайн: [" << participant.jid->full() << "] " << std::endl;
+		LOG("Пользователь в комнате онлайн: " + participant.jid->full(), LOG::INFO);
 		pichi->setUserInfo(participant.jid->bare(), participant.nick->resource(), "available", participant.nick->bare(), role, participant.status);
 	}
 	else
 	{
-		std::cout << "Оффлайн: " << participant.jid->full() << std::endl;
+		LOG("Пользователь вышел из комнаты: " + participant.jid->full(), LOG::INFO);
 		pichi->setUserInfo(participant.jid->bare(), participant.nick->resource(), "unavailable", participant.nick->bare(), role, participant.status);
 	}
 }
@@ -133,12 +134,12 @@ void core::handlePresence(const Presence& presence)
 {
 	if(presence.presence() != Presence::Unavailable)
 	{
-		std::cout << "Онлайн контакт: [" << presence.from().bare() << "] " << std::endl;
+		LOG("Пользователь онлайн: " + presence.from().bare(), LOG::INFO);
 		pichi->setUserInfo(presence.from().bare(), "", "available", "", "participant", presence.status());
 	}
 	else
 	{
-		std::cout << "Оффлайн контакт: " << presence.from().bare() << std::endl;
+		LOG("Пользователь вышел: " + presence.from().bare(), LOG::INFO);
 		pichi->setUserInfo(presence.from().bare(), "", "unavailable", "", "participant", presence.status());
 	}
 }
