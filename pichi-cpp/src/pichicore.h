@@ -66,6 +66,10 @@ class pichicore : public pichiconfig, public lastmessage, public pichioptions
 		void ping(std::string jid);
 		void pingRecive(std::string id);
 		
+		void setJIDinfo(std::string jid, std::string name, std::string value, int groupid = 0);
+		std::map<std::string, std::string> getJIDinfo(std::string jid, std::string name = "", int groupid = 0);
+		void delJIDinfo(std::string jid, std::string name = "", int groupid = 0);
+		
 		pichicore();
 		~pichicore();
 	protected:

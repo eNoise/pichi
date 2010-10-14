@@ -366,3 +366,30 @@ void pichicore::pingRecive(std::string jid)
 	sendAnswer( boost::lexical_cast<std::string>( (boost::lexical_cast<clock_t>(reciver["ping_" + jid])) - clock() ) );
 	reciver.erase("ping_" + jid);
 }
+
+// устанавливает информацию о jid
+void pichicore::setJIDinfo(std::string jid, std::string name, std::string value, int groupid)
+{
+	sql->query("SELECT COUNT(*) FROM users_data WHERE jid = '" + sql->escapeString(jid) + "' AND name = '" + sql->escapeString(name) + "'" + ((groupid != 0) ? " AND groupid = '" + sql->escapeString(system::itoa(groupid)) + "'" : "") + ";");
+	if(system::atoi(sql->fetchColumn(0)) > 0)
+		sql->exec("UPDATE users_data SET value = '" + sql->escapeString(value) + "'  WHERE jid = '" + sql->escapeString(jid) + "' AND name = '" + sql->escapeString(name) + "'" + ((groupid != 0) ? " AND groupid = '" + sql->escapeString(system::itoa(groupid)) + "'" : "") + ";");
+	else
+		sql->exec("INSERT INTO users_data (`jid`,`name`,`value`,`groupid`) VALUES ('" + sql->escapeString(jid) + "','" + sql->escapeString(name) + "','" + sql->escapeString(value) + "','" + ((groupid != 0) ? sql->escapeString(system::itoa(groupid)) : "") + "');");
+}
+
+// а теперь получить инфу
+std::map<std::string, std::string> pichicore::getJIDinfo(std::string jid, std::string name, int groupid)
+{
+	std::map<std::string, std::string> retmap, data;
+	sql->query("SELECT * FROM users_data WHERE jid = '" + sql->escapeString(jid) + "'" + ((name != "") ? " AND name = '" + sql->escapeString(name) + "'" : "") + ((groupid != 0) ? " AND groupid = '" + sql->escapeString(system::itoa(groupid)) + "'" : "") + ";");
+	while(!(data = sql->fetchArray()).empty())
+		retmap[data["name"]] = data["value"];
+	return retmap;
+}
+
+// ну и удалить
+void pichicore::delJIDinfo(std::string jid, std::string name, int groupid)
+{
+	sql->exec("DELETE FROM users_data WHERE jid = '" + sql->escapeString(jid) + "'" + ((name != "") ? " AND name = '" + sql->escapeString(name) + "'" : "") + ((groupid != 0) ? " AND groupid = '" + sql->escapeString(system::itoa(groupid)) + "'" : "") + ";");
+}
+
