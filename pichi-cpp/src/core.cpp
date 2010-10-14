@@ -23,7 +23,16 @@
 void core::botstart(void)
 {
 	LOG("Start Pichi", LOG::INFO);
-	client = new Client( jid, password );
+	if(pichi->getConfigOption("debug") == "1")
+	{
+		LOG::LEVEL = system::atoi(pichi->getConfigOption("debug_level"));
+		LOG("Debug enabled at level: " + pichi->getConfigOption("debug_level"), LOG::INFO);
+	}
+	if(pichi->getConfigOption("port") != "5222")
+		client = new Client( jid, password, system::atoi(pichi->getConfigOption("port")) );
+	else
+		client = new Client( jid, password );
+	client->setResource(pichi->getConfigOption("resource"));
 	client->logInstance().registerLogHandler(LogLevelDebug, LogAreaAll, this);
 	client->registerConnectionListener( this );
 	client->registerMessageHandler( this );
@@ -151,14 +160,14 @@ void core::handlePresence(const Presence& presence)
 
 void core::handleLog (LogLevel level, LogArea area, const std::string &message)
 {
-	//std::cout << message << std::endl;
+	LOG("[GLOOX]" + message, LOG::DEBUG);
 }
 
 void core::initDBStruct(void)
 {
-	if(!system::fileExists("pichi.db"))
+	if(!system::fileExists(pichi->getConfigOption("db_file")))
 	{
-		pichi->sql = new sqlite("pichi.db");
+		pichi->sql = new sqlite(pichi->getConfigOption("db_file"));
 		pichi->sql->exec("CREATE TABLE log (`from` TEXT, `time` TEXT, `type` TEXT, `message` TEXT);");
 		pichi->sql->exec("CREATE TABLE lexems (`lexeme` TEXT, `count` INT);");
 		pichi->sql->exec("CREATE TABLE wiki (`name` TEXT, `revision` INT, `value` TEXT);");
@@ -183,7 +192,7 @@ void core::initDBStruct(void)
 	}
 	else
 	{
-		pichi->sql = new sqlite("pichi.db");
+		pichi->sql = new sqlite(pichi->getConfigOption("db_file"));
 	}
 }
 

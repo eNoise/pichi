@@ -24,12 +24,12 @@
 pichicore::pichicore()
 {
 	enabled = true;
-	wait_time = 5;
+	wait_time = system::atoi(config["wait_time"]);
 	sql_options = & sql;
 	// init commander
 	commander = new commandbase(this);
 	//translater
-	lang = new languages("ru");
+	lang = new languages(config["language"]);
 	lex = new lexemes(&sql);
 }
 
