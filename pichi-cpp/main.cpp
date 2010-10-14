@@ -2,6 +2,6 @@
 
 int main(void)
 {
-    core bot("pichi", "iampichi", "jabber.uruchie.org");      
+    core bot;      
     return 0;
 }

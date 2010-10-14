@@ -28,23 +28,27 @@ void core::botstart(void)
 	client->registerConnectionListener( this );
 	client->registerMessageHandler( this );
 	client->registerPresenceHandler( this );
-	enterRoom(roomjid);
+	BOOST_FOREACH( std::string room, system::explode(",", pichi->getConfigOption("room")) )
+		enterRoom(JID(room + "/" + nick));
 	client->connect();
 }
 
-core::core(std::string n, std::string p, std::string s) : name(n), password(p), server(s)
+core::core()
 {
-	nick = name;
-	jid = name + "@" + server;
-	roomname = "main";
-	roomservice = "conference";
-	roomjid = JID(roomname + "@" + roomservice + "." + server + "/" + nick);
-	// Init pichi
+  	// Init pichi
 	pichi = new pichicore();
 	pichi->jabber = this;
 	// ----------
 	initDBStruct();
 	pichi->reloadSqlConfig();
+  
+	name = pichi->getConfigOption("user");
+	nick = pichi->getConfigOption("room_user");
+	password = pichi->getConfigOption("password");
+	server = pichi->getConfigOption("server");
+	jid = name + "@" + server;
+	roomservice = pichi->getConfigOption("room_service");
+
 	botstart();
 }
 

@@ -49,17 +49,15 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
 		std::string password;
 		std::string server;
 		std::string port;
-		std::string roomname;
                 std::string roomservice;
 		JID jid;
-		JID roomjid;
 	protected:
 		pichicore* pichi;
 	  
 		void botstart(void);
 		void initDBStruct(void);
 	public:
-		core(std::string n, std::string p, std::string s);
+		core();
                 ~core();
 		
 		Client* client;
