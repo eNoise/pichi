@@ -47,6 +47,7 @@ commandbase::commandbase(pichicore* p): commandhandler(p)
 	commands["topic"] = &commandbase::command_topic;
 	commands["nicks"] = &commandbase::command_nicks;
 	commands["idle"] = &commandbase::command_idle;
+	commands["q"] = &commandbase::command_q;
 }
 
 void commandbase::fetchCommand(std::string command)
@@ -525,12 +526,9 @@ void commandbase::command_ping(std::string arg)
 
 void commandbase::command_topic(std::string arg)
 {
-  /*
-	if(arg == ")
-		room = pichi->getDefaultRoom();
-	$w = $this->seperate($this->last_message);
-	$this->jabber->setTopic($room, $w[1]);
-  */
+	for(std::list< std::pair<JID, MUCRoom*> >::iterator it = pichi->jabber->rooms.begin(); it != pichi->jabber->rooms.end(); it++)
+		if(it->first = JID(pichi->getLastRoom()))
+			it->second->setSubject(arg);
 }
 
 void commandbase::command_nicks(std::string arg)
@@ -551,6 +549,11 @@ void commandbase::command_idle(std::string arg)
 	time_t date = boost::lexical_cast<time_t>(pichi->sql->fetchColumn(0));
 	if(date > 0)
 		pichi->sendAnswer(system::timeToString(date, "%d.%m.%Y в %H:%M:%S"));
+}
+
+void commandbase::command_q(std::string arg)
+{
+	pichi->sendAnswer(pichi->lex->genFromWord(arg));
 }
 
 /*

@@ -20,3 +20,8 @@
 
 #include "lastmessage.h"
 
+std::string lastmessage::getLastRoom(void )
+{
+	return last_room;
+}
+

@@ -39,6 +39,7 @@ class lexemes
 	void addLexema(std::string lex);
 	
 	std::string genFullRandom();
+	std::string genFromWord(std::string word);
   protected:
 	sqlite **sql;
 	std::string user_text;

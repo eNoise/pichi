@@ -28,6 +28,7 @@ class lastmessage
 {
 	public:
 		virtual bool reciveMessage(std::string message, std::string type, std::string from, std::string jid = "", std::string room = "", int level = 2) = 0;
+		std::string getLastRoom(void);
 	protected:
 		std::string last_message;
 		std::string last_from;

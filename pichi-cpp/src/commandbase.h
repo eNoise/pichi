@@ -64,6 +64,7 @@ class commandbase : public commandhandler
 	  void command_topic(std::string arg);
 	  void command_nicks(std::string arg);
 	  void command_idle(std::string arg);
+	  void command_q(std::string arg);
 };
 
 #endif // COMMANDBASE_H
