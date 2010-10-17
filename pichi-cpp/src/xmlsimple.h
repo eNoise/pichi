@@ -22,6 +22,7 @@
 #define XMLSIMPLE_H
 
 #include <tinyxml.h>
+#include <string>
 
 class xmlsimple
 {

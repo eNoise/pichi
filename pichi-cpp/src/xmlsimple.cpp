@@ -22,7 +22,7 @@
 
 bool xmlsimple::loadXmlConfig(std::string file)
 {
-	xmlfile = new TiXmlDocument(file);
+	xmlfile = new TiXmlDocument(file.c_str());
 	if(!xmlfile->LoadFile())
 		return false;
 	
