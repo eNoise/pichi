@@ -24,6 +24,10 @@
 #include <iostream>
 #include <string>
 
+// Mingw fix
+#define TEMPERROR ERROR
+#undef ERROR
+
 class LOG
 {
   public:
@@ -38,5 +42,7 @@ class LOG
 	};
 	LOG(std::string, LogType);
 };
+
+#define ERROR TEMPERROR
 
 #endif // LOG_H
