@@ -22,6 +22,9 @@
 
 void core::botstart(void)
 {
+#ifdef WIN32
+	std::setlocale(LC_ALL, ".ACP");
+#endif
 	LOG("Start Pichi", LOG::INFO);
 	if(pichi->getConfigOption("debug") == "1")
 	{
