@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<PichiLanguage>
+        <language>
+                <option name="error_cant_load_extension" type="string">Не могу загрузить расширение {1}</option>
+                <option name="error_config_old" type="string">Не могу загрузить расширение {1}</option>
+                <option name="error_config_old_version" type="string">Ваша версия конфига {1}. Необходима {2}.</option>
+                <option name="info_start_connecting" type="string">Попытка соединиться с сервером</option>
+                <option name="error_connect_failed" type="string">Соединение не удалось. Выход с ошибкой: {1}</option>
+                <option name="info_connect_success" type="string">Соединено успешно.</option>
+                <option name="info_no_database" type="string">База данных не существует.</option>
+                <option name="info_database_exists" type="string">База данных существует.</option>
+                <option name="error_database_old" type="string">База данных устарела.</option>
+                <option name="error_database_old_need" type="string">Версия вашей базы данных {1}. Необходима {2}.</option>
+                <option name="info_timer_sync" type="string">Синхронизация таймера</option>
+                <option name="info_session_begin" type="string">Начало сессии</option>
+                <option name="info_send_random_message" type="string">Отправка случайного сообщения</option>
+                <option name="warn_cant_recive_jid" type="string">Не удается узнать JID участника. Это может происходить из-за неправильных настроек комнаты. Работа бота в таком режиме не гарантируется.</option>
+                
+                <option name="help_syntaxis_info" type="string">Основы управления:
+Все команды начинаются с !
+После команды указываются параметры:
+параметр - обязательный параметр
+параметр1|параметр2 - параметр1 или параметр2 (один из)
+[параметр] - необязательный параметр</option>
+		<option name="help_main_commands" type="string">Основные команды</option>
+		<option name="help_command_description_set" type="string">Устанавливает значение опции. Пример: !set answer_mode=1</option>
+		<option name="help_command_description_gc" type="string">Получить значение опции. Можно вызывать без параметра, тогда покажет значения всех опций. С параметром - только для определённой. Пример: !gc answer_mode.</option>
+		<option name="help_command_description_log" type="string">Показать последние n сообщений конференции. Пример: !log 10</option>
+		<option name="help_command_description_users" type="string">Показать список пользователей. Показывает пользователей которые онлайн или когда-либо были онлайн. Узнать статус определенного пользователя можно указав JID или ник как параметр. Пример: !users deg</option>
+		<option name="help_command_description_msg" type="string">Отправить сообщение пользователю. Первым параметром является адрес (пользователь или комната). Второй - тип: chat или groupchat (для комнаты). Третий - текст сообщения. Пример: !msg "room@conference.jabber.ru" "groupchat" "Пример сообщения".</option>
+		<option name="help_command_description_ping" type="string">Показать время отклика от пользователя (пинг пользователя). Пример: !ping deg</option>
+		<option name="help_command_description_join" type="string">Войти в комнату. Пример: !join room@conference.jabber.ru</option>
+		<option name="help_command_description_left" type="string">Покинуть команату. Пример: !left room@conference.jabber.ru</option>
+		<option name="help_command_description_greet" type="string">Установить приветствие пользователя. Пример: !greet "nagg@jabber.ru" "room@conference.jabber.ru" "С возращением, nagg!"</option>
+		<option name="help_command_description_farewell" type="string">Установить прощание (Сообщение при уходе пользователя). Пример: !farewell "nagg@jabber.ru" "room@conference.jabber.ru" "nagg ушел"</option>
+		<option name="help_command_description_idle" type="string">Показать время бездействия (время, прошедшее с момента последнего активного действия пользователя) в комнате. Пример: !idle deg</option>
+		<option name="help_command_description_quit" type="string">Покинуть сервер (бот покидает сервер и отключается).</option>
+		<option name="help_command_description_version" type="string">Показать версию бот.</option>
+		<option name="help_command_description_topic" type="string">Установить тему в комнате. Пример: !topic тема</option>
+		<option name="help_command_description_ban" type="string">Забанить пользователя. Первым параметром является ник или jid пользователя. Второй - время (можно использовать сокращения вида 5m - 5 минут, 5h - 5 часов, 3M - 3 месяца). Если указано время, бан будет автоматически снят спустя указанный промежуток времени. Третий параметр - причина (опционально). Пример: !ban "vovan" "5h" "причина"</option>
+		<option name="help_command_description_unban" type="string">Снять бан с указанного пользователя. Пример: !unban vovan@jabber.uruchie.org</option>
+		<option name="help_command_description_banlist" type="string">Показать список заблокированных пользователей.</option>
+		<option name="help_command_description_kick" type="string">Выгнать пользователя из комнаты. Если указано время, пользователя (при попытках зайти) будет автоматически сразу выгонять из комнаты на протяжении указанного времени. Первый параметр - jid или ник. Второй - время (см !ban). Третий - причина (опционально). Пример: !kick vovan 5m просто_так</option>
+		<option name="help_command_description_unckick" type="string">Прервать действие команды !kick. Необходима только, если команда !kick была использована с параметром "время". Пример: !unkick vovan</option>
+		<option name="help_command_description_plugins" type="string">Показать список всех плагинов.</option>
+		<option name="help_command_description_enable" type="string">Включить указанный плагин. Пример: !enable lastfm</option>
+		<option name="help_command_description_disable" type="string">Отключить указанный плагин. Пример: !disable lastfm</option>
+		<option name="help_command_description_reload" type="string">Перезагрузить все плагины. Полезно если внесены изменения в плагины.</option>
+		<option name="help_command_description_dfn" type="string">Установить определение для встроенной базы. Пример: !dfn wow=игра</option>
+		<option name="help_command_description_wtf" type="string">Показать определение из базы. Пример: !wtf wow покажет "игра"</option>
+		<option name="help_command_description_wtfcount" type="string">Показать число определений в базе.</option>
+		<option name="help_command_description_wtfrand" type="string">Показать случайное определение из базы.</option>
+		<option name="help_command_description_wtfrev" type="string">Показать текущую ревизию определения. Пример: !wtfrev wow покажет "1"</option>
+		<option name="help_command_description_wtffull" type="string">Показать текст всех ревизий данного определения. Пример: "!wtffull wow" покажет и определение и ревизию.</option>
+		<option name="help_command_description_wtfset" type="string">Откатить статью до определённой ревизии. Пример: "!wtfset wow 1" откатит статью к указанной ревизии.</option>
+		<option name="help_command_description_top" type="string">Показать топ10 слов-связок в базе.</option>
+		<option name="help_command_description_count" type="string">Показать количество слов-связок в базе.</option>
+		<option name="help_command_description_talkers" type="string">Топ10 наиболее "разговорчивых" пользователей</option>
+		<option name="help_command_description_nicks" type="string">Отображает все ники указанного пользователя</option>
+		<option name="help_command_description_on" type="string">Включает бота</option>
+		<option name="help_command_description_off" type="string">Отключает бота</option>
+		
+		<option name="help_command_usage_param" type="string">параметр</option>
+		<option name="help_command_usage_value" type="string">значение</option>
+		<option name="help_command_usage_jid" type="string">jid</option>
+		<option name="help_command_usage_nick" type="string">ник</option>
+		<option name="help_command_usage_room" type="string">комната (конференция)</option>
+		<option name="help_command_usage_message" type="string">сообщение</option>
+		<option name="help_command_usage_status" type="string">статус</option>
+		<option name="help_command_usage_reason" type="string">причина</option>
+		<option name="help_command_usage_time" type="string">время</option>
+		<option name="help_command_usage_variable" type="string">переменная</option>
+		
+		<option name="help_plugins" type="string">Система плагинов</option>
+		<option name="help_admin_commands" type="string">Команды администратора</option>
+		<option name="help_wiki_inline" type="string">Встроенная вики</option>
+		<option name="help_other_commands" type="string">Другие команды</option>
+		<option name="help_lexems" type="string">Разговорник</option>
+		
+		<option name="command_version_plugins" type="string">Список плагинов</option>
+		<option name="command_banlist_lock" type="string">Список "забаненных"</option>
+		<option name="command_wiki_count" type="string">Количество определений в базе вики</option>
+		<option name="command_wiki_nodef" type="string">В базе вики нету этого определения</option>
+		<option name="command_wiki_revision" type="string">Ревизия</option>
+		<option name="command_wiki_revision_set" type="string">Установлена ревизия {1}.</option>
+		<option name="command_top10" type="string">Топ 10 самых популярных связок слов</option>
+		<option name="command_top10_begin" type="string">начало</option>
+		<option name="command_top10_end" type="string">конец</option>
+		<option name="command_talkers" type="string">Топ 10 самых разговорчивых пользователей</option>
+		<option name="command_talkers_list" type="string">{1}. {2} c {3} фразами</option>
+		<option name="command_count" type="string">Количество слов-связок: {1}</option>
+		<option name="command_dfn" type="string">Определение обновлено.</option>
+		<option name="command_set" type="string">Значение опции установлено.</option>
+		<option name="command_set_nosuch" type="string">Нет такой опции.</option>
+		<option name="command_users_list_seen" type="string">Пользователи, которых я видел:</option>
+		<option name="command_users_online_seen" type="string">{1}. {2} в комнате {3}</option>
+		<option name="command_users_offline_seen" type="string">{1}. {2} (Последний раз был в {3} в комнате {4})</option>
+		<option name="command_users_online" type="string">Присутствующие пользователи</option>
+		<option name="command_users_offline" type="string">Отсутствующие пользователи</option>
+		<option name="command_status" type="string">Пользователь {1} сейчас {2}</option>
+		<option name="command_status_online" type="string">на связи</option>
+		<option name="command_status_offline" type="string">отсутствует</option>
+		<option name="command_ping_nouser" type="string">Нет такого пользователя</option>
+		<option name="command_nicks" type="string">Ники пользователя:</option>
+        </language>
+</PichiLanguage>
