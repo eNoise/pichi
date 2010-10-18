@@ -76,5 +76,5 @@ endif(MINGW AND WIN32)
 ADD_EXECUTABLE(pichi ${PICHI_CPP})
 target_link_libraries (pichi ${LINK_LIBS})
 
-
-
+install (TARGETS pichi DESTINATION .)
+install (FILES pichi.xml DESTINATION .)
