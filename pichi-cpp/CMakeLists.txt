@@ -13,16 +13,11 @@ CHECK_INCLUDE_FILE (sys/stat.h HAVE_SYS_STAT_H)
 find_package (Sqlite3 REQUIRED)
 find_package (Boost REQUIRED)
 find_package (BoostRegex REQUIRED)
-#find_package (Pthread REQUIRED)
 
 if (LOCAL_GLOOX)
-  if (WIN32)
-    add_subdirectory(gloox)
-    include_directories ("${PROJECT_SOURCE_DIR}")
-    set (GLOOX_LIBRARIES "gloox")
-  else (WIN32)
-    find_package (Gloox REQUIRED)
-  endif (WIN32)
+  add_subdirectory(gloox)
+  include_directories ("${PROJECT_SOURCE_DIR}")
+  set (GLOOX_LIBRARIES "gloox")
 else (LOCAL_GLOOX)
   find_package (Gloox REQUIRED)
 endif (LOCAL_GLOOX)
@@ -35,7 +30,21 @@ else (LOCAL_TINYXML)
   find_package (TinyXml REQUIRED)
 endif (LOCAL_TINYXML)
 
-LINK_LIBRARIES(pthread)
+set(LINK_LIBS 	pthread
+		${GLOOX_LIBRARIES}
+		${TINYXML_LIBRARIES}
+		${SQLITE3_LIBRARIES}
+		${BOOST_REGEX_LIBRARIES}
+)
+
+#gloox fix
+if(WIN32)
+	set(LINK_LIBS ${LINK_LIBS} 
+		      dnsapi
+		      secur32
+		      ws2_32
+	)
+endif(WIN32)
 
 ADD_EXECUTABLE(pichi 	src/log.cpp
 			src/lexemes.cpp
@@ -51,4 +60,4 @@ ADD_EXECUTABLE(pichi 	src/log.cpp
 			src/sqlite.cpp
 			src/pichicore.cpp
 			main.cpp)
-target_link_libraries (pichi ${GLOOX_LIBRARIES} ${TINYXML_LIBRARIES} ${SQLITE3_LIBRARIES} ${BOOST_REGEX_LIBRARIES})
+target_link_libraries (pichi ${LINK_LIBS})
