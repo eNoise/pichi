@@ -78,4 +78,5 @@ target_link_libraries (pichi ${LINK_LIBS})
 
 install (TARGETS pichi DESTINATION .)
 install (FILES pichi.xml DESTINATION .)
-install (FILES languages/* DESTINATION languages)
+install (DIRECTORY languages/ DESTINATION languages
+        PATTERN ".svn" EXCLUDE)
