@@ -10,4 +10,4 @@ mingw32-make install
 cd pichi
 cp /usr/i686-pc-mingw32/sys-root/mingw/bin/{boost_regex-gcc44-mt-1_41.dll,libsqlite3-0.dll,libgcc_s_sjlj-1.dll} ./
 cd ../
-zip -r pichi_r${rev_ver}.zip EiskaltDC++/
+zip -r pichi_r${rev_ver}.zip pichi/
