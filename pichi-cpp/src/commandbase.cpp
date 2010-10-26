@@ -43,6 +43,7 @@ commandbase::commandbase(pichicore* p): commandhandler(p)
 	commands["set"] = &commandbase::command_set;
 	commands["msg"] = &commandbase::command_msg;
 	commands["gc"] = &commandbase::command_gc;
+	commands["users"] = &commandbase::command_users;
 	commands["ping"] = &commandbase::command_ping;
 	commands["topic"] = &commandbase::command_topic;
 	commands["nicks"] = &commandbase::command_nicks;
@@ -448,56 +449,53 @@ void commandbase::command_gc(std::string arg)
 	pichi->sendAnswer(show);
 }
 
-/*
 	
-	protected function command_users()
+void commandbase::command_users(std::string arg)
+{
+	pichi->sql->query("SELECT * FROM users;");
+	std::string userlist, online, offline;
+	std::map<std::string, std::string> data;
+	if(arg == "")
 	{
-		$w = $this->seperate($this->last_message);
-      
-		$this->db->query("SELECT * FROM users;");
-      
-		if($w[1] == NULL)
+		//$this->log->log("Begin creting user list", PichiLog::LEVEL_DEBUG);
+		userlist = "" + TR("command_users_list_seen") + ":\n";
+		int n=0, f=0;
+		while(!(data = pichi->sql->fetchArray()).empty())
 		{
-			$this->log->log("Begin creting user list", PichiLog::LEVEL_DEBUG);
-			$userlist = ""+TR("command_users_list_seen")+":\n";
-			$online = $offline = "";
-			$n = $f = 0;
-			while($data = $this->db->fetchArray())
+			if(data["room"] == "")
+				continue;
+			std::string roomname = system::explode("@", data["room"]).at(0);
+			if(data["status"] == "available")
 			{
-				if($data['room'] == NULL)
-					continue;
-				$roomname = explode("@", $data['room']);
-				$roomname = $roomname[0];
-				if($data['status'] == 'available")
-				{
-					$n++;
-					$online .= TR("command_users_online_seen',array($n, $data['nick'], $roomname)) + "\n";
-					$this->log->log("User $data[nick]: online", PichiLog::LEVEL_VERBOSE);
-				}
-				else
-				{
-					$f++;
-					$offline .= TR("command_users_offline_seen',array($f, $data['nick'], date("d.m.y \в H:i:s", $data['time']), $roomname)) + "\n";
-					$this->log->log("User $data[nick]: offline", PichiLog::LEVEL_VERBOSE);
-				}
+				n++;
+				online += TR4("command_users_online_seen", system::itoa(n).c_str(), data["nick"].c_str(), roomname.c_str()) + "\n";
+				//$this->log->log("User $data[nick]: online", PichiLog::LEVEL_VERBOSE);
 			}
-			$userlist .= ""+TR("command_users_online")+":\n" + $online;
-			$userlist .= ""+TR("command_users_offline")+":\n" + $offline;
-			pichi->sendAnswer($userlist);
-		}
-		else
-		{
-			while($data = $this->db->fetchArray())
+			else
 			{
-				if($data['nick'] == $w[1] || $data['jid'] == $w[1])
-				{
-					$this->log->log("User {$data['nick']} founded!", PichiLog::LEVEL_VERBOSE);
-					pichi->sendAnswer(TR("command_status', array($data['nick'], (($data['status'] == 'available") ? TR("command_status_online") : TR("command_status_offline")))));
-				}
+				f++;
+				offline += TR5("command_users_offline_seen", system::itoa(f).c_str(), data["nick"].c_str(), system::timeToString(boost::lexical_cast<time_t>(data["time"]), "%d.%m.%Y в %H:%M:%S").c_str(), roomname.c_str()) + "\n";
+				//$this->log->log("User $data[nick]: offline", PichiLog::LEVEL_VERBOSE);
+			}
+		}
+		userlist += "" + TR("command_users_online") + ":\n" + online;
+		userlist += "" + TR("command_users_offline") + ":\n" + offline;
+		pichi->sendAnswer(userlist);
+	}
+	else
+	{
+		while(!(data = pichi->sql->fetchArray()).empty())
+		{
+			if(data["nick"] == arg || data["jid"] == arg)
+			{
+				//$this->log->log("User {$data['nick']} founded!", PichiLog::LEVEL_VERBOSE);
+				pichi->sendAnswer(TR3("command_status", data["nick"].c_str(), ((data["status"] == "available") ? TR("command_status_online").c_str() : TR("command_status_offline").c_str())));
 			}
 		}
 	}
+}
 
+/*
 	protected function command_join()
 	{
 		if(!$this->isAccess())

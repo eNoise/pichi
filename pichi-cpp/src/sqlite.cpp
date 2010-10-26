@@ -108,12 +108,21 @@ std::map<std::string, std::string> sqlite::fetchArray(q* state)
   
 	std::map<std::string, std::string> row;
 	
+	char* column_data;
 	state->result_status = sqlite3_step(state->statement);
 	if(state->result_status == SQLITE_ROW)
 	{
 		int cols = sqlite3_column_count(state->statement);
 		for(int col = 0; col < cols; col++)
-			row.insert(std::pair<std::string, std::string>((char*)sqlite3_column_name(state->statement, col), (char*)sqlite3_column_text(state->statement, col)));
+		{
+			column_data = (char*)sqlite3_column_text(state->statement, col);
+			row.insert(
+				std::pair<std::string, std::string>(
+					(char*)sqlite3_column_name(state->statement, col), 
+					( (column_data != NULL) ? column_data : "" )
+				)
+			);
+		}
 	}
 	
 	if(nullstate)

@@ -30,6 +30,7 @@
 #define TR2(x,y) (*(pichi->lang))(x,y)
 #define TR3(x,y,z) (*(pichi->lang))(x,y,z)
 #define TR4(x,y,z,v) (*(pichi->lang))(x,y,z,v)
+#define TR5(x,y,z,v,n) (*(pichi->lang))(x,y,z,v,n)
 
 class pichicore;
 
@@ -60,6 +61,7 @@ class commandbase : public commandhandler
 	  void command_set(std::string arg);
 	  void command_msg(std::string arg);
 	  void command_gc(std::string arg);
+	  void command_users(std::string arg);
 	  void command_ping(std::string arg);
 	  void command_topic(std::string arg);
 	  void command_nicks(std::string arg);
