@@ -49,6 +49,9 @@ commandbase::commandbase(pichicore* p): commandhandler(p)
 	commands["nicks"] = &commandbase::command_nicks;
 	commands["idle"] = &commandbase::command_idle;
 	commands["q"] = &commandbase::command_q;
+	commands["quit"] = &commandbase::command_quit;
+	commands["on"] = &commandbase::command_on;
+	commands["off"] = &commandbase::command_off;
 	
 	commands["lastfm"] = &commandbase::command_lastfm;
 }
@@ -571,31 +574,27 @@ void commandbase::command_q(std::string arg)
 			$this->db->query("INSERT INTO actions (`action`,`coincidence`,`do`,`option`,`value`) VALUES ('$action', 'room=" + $this->db->db->escapeString($w[2]) + ",jid=" + $this->db->db->escapeString($w[1]) + "', 'send_message', '', '"+$this->db->db->escapeString($w[3])+"');");
 		pichi->sendAnswer("Updated!");
 	}
-	
-	protected function command_quit()
-	{
-		if(!$this->isAccess(3))
-			return;
-		$this->doExit();
-	}
-	
-	protected function command_on()
-	{
-		if(!$this->isAccess(3))
-			return;
-		$this->enabled = TRUE;
-		pichi->sendAnswer("Updated!");
-	}
-	
-	protected function command_off()
-	{
-		if(!$this->isAccess(3))
-			return;
-		$this->enabled = FALSE;
-		pichi->sendAnswer("Updated!");
-	}
-
 */
+void commandbase::command_quit(std::string arg)
+{
+	if(!pichi->isAccess(3))
+		return;
+	pichi->jabber->client->disconnect(); // call destructor
+}
+	
+void commandbase::command_on(std::string arg)
+{
+	if(!pichi->isAccess(3))
+		return;
+	pichi->on();
+}
+	
+void commandbase::command_off(std::string arg)
+{
+	if(!pichi->isAccess(3))
+		return;
+	pichi->off();
+}
 
 // ---------------------------------------------------------------
 

@@ -47,6 +47,16 @@ bool pichicore::isEnabled(void)
 	return enabled;
 }
 
+void pichicore::off(void )
+{
+	enabled = false;
+}
+
+void pichicore::on(void )
+{
+	enabled = true;
+}
+
 void pichicore::setUserInfo(std::string jid, std::string nick, std::string state, std::string room, std::string role, std::string status)
 {
 	//if($role == NULL)

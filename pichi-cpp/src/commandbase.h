@@ -68,6 +68,9 @@ class commandbase : public commandhandler
 	  void command_nicks(std::string arg);
 	  void command_idle(std::string arg);
 	  void command_q(std::string arg);
+	  void command_quit(std::string arg);
+	  void command_on(std::string arg);
+	  void command_off(std::string arg);
 	  
 	  void command_lastfm(std::string arg);
 	  void command_lastfm_user(std::string arg);

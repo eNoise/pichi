@@ -51,6 +51,9 @@ class pichicore : public pichiconfig, public lastmessage, public pichioptions
 		std::map<std::string, std::string> reciver;
 		//boost::timer timer;
 		
+		void on(void);
+		void off(void);
+		
 		bool isEnabled(void);
 		void setUserInfo(std::string, std::string, std::string, std::string, std::string, std::string);
 		void cleanUserInfo(void);
