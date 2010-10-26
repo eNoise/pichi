@@ -43,7 +43,7 @@ set(PICHI_CPP 	src/log.cpp
 		src/core.cpp
 		src/sqlite.cpp
 		src/pichicore.cpp
-		main.cpp
+		src/pichi.cpp
 )
 
 set(LINK_LIBS 	pthread

@@ -357,14 +357,17 @@ bool pichicore::isOnline(std::string user, std::string room)
 
 void pichicore::ping(std::string jid)
 {
-	reciver["ping_" + jid] = boost::lexical_cast<std::string>(clock());
-	jabber->client->xmppPing(JID(jid), jabber);  	
+	//timer = boost::timer();
+	//reciver["ping_" + jid] = boost::lexical_cast<std::string>(clock());
+	//jabber->client->xmppPing(JID(jid), jabber);  	
 }
 
 void pichicore::pingRecive(std::string jid)
 {
-	sendAnswer( boost::lexical_cast<std::string>( (boost::lexical_cast<clock_t>(reciver["ping_" + jid])) - clock() ) );
-	reciver.erase("ping_" + jid);
+	//sendAnswer(boost::lexical_cast<std::string>(timer.elapsed()));
+	//sendAnswer( boost::lexical_cast<std::string>( ( clock() - (boost::lexical_cast<clock_t>(reciver["ping_" + jid])) ) / CLOCKS_PER_SEC ) );
+	//sendAnswer( boost::lexical_cast<std::string>( std::difftime(clock(), boost::lexical_cast<clock_t>(reciver["ping_" + jid])) ) );
+	//reciver.erase("ping_" + jid);
 }
 
 // устанавливает информацию о jid

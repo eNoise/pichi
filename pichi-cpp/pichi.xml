@@ -10,7 +10,7 @@
                 <option Name="debug" type="bool">0</option>
                 <option Name="debug_level" type="int">5</option>
                 
-                <option Name="language" type="string">ru</option>
+                <option Name="language" type="string">en</option>
                 
                 <option Name="user" type="string">pichi</option>
                 <option Name="room_user" type="string">pichi</option>

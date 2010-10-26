@@ -33,6 +33,7 @@
 #include "commandbase.h"
 #include "languages.h"
 #include "lexemes.h"
+//#include <boost/timer.hpp>
 
 class core;
 
@@ -48,6 +49,7 @@ class pichicore : public pichiconfig, public lastmessage, public pichioptions
 		time_t wait;
 		time_t wait_time;
 		std::map<std::string, std::string> reciver;
+		//boost::timer timer;
 		
 		bool isEnabled(void);
 		void setUserInfo(std::string, std::string, std::string, std::string, std::string, std::string);
