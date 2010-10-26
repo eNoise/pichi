@@ -13,6 +13,7 @@ CHECK_INCLUDE_FILE (sys/stat.h HAVE_SYS_STAT_H)
 find_package (Sqlite3 REQUIRED)
 find_package (Boost REQUIRED)
 find_package (BoostRegex REQUIRED)
+find_package (CURL REQUIRED)
 
 if (LOCAL_GLOOX)
   add_subdirectory(gloox)
@@ -30,7 +31,8 @@ else (LOCAL_TINYXML)
   find_package (TinyXml REQUIRED)
 endif (LOCAL_TINYXML)
 
-set(PICHI_CPP 	src/log.cpp
+set(PICHI_CPP  	src/log.cpp
+		src/pichicurl.cpp
 		src/lexemes.cpp
 		src/languages.cpp    
 		src/xmlsimple.cpp 
@@ -51,6 +53,7 @@ set(LINK_LIBS 	pthread
 		${TINYXML_LIBRARIES}
 		${SQLITE3_LIBRARIES}
 		${BOOST_REGEX_LIBRARIES}
+		${CURL_LIBRARIES}
 )
 
 #gloox fix

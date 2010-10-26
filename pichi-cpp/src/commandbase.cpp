@@ -49,6 +49,8 @@ commandbase::commandbase(pichicore* p): commandhandler(p)
 	commands["nicks"] = &commandbase::command_nicks;
 	commands["idle"] = &commandbase::command_idle;
 	commands["q"] = &commandbase::command_q;
+	
+	commands["lastfm"] = &commandbase::command_lastfm;
 }
 
 void commandbase::fetchCommand(std::string command)
@@ -594,3 +596,17 @@ void commandbase::command_q(std::string arg)
 	}
 
 */
+
+// ---------------------------------------------------------------
+
+
+void commandbase::command_lastfm(std::string arg)
+{
+	std::map<std::string, std::string> user = pichi->getJIDinfo(pichi->getJIDlast(), "lastfm_user");
+	if(user["lastfm_user"] != "")
+	{
+		pichicurl* curl = new pichicurl();
+		std::string data = curl->readurl("http://ws.audioscrobbler.com/1.0/user/" + user["lastfm_user"] + "/recenttracks.txt");
+		pichi->sendAnswer( "слушает: " + (system::explode("," , (system::explode("\n", data).at(0)))).at(1) );
+	}
+}

@@ -396,3 +396,7 @@ void pichicore::delJIDinfo(std::string jid, std::string name, int groupid)
 	sql->exec("DELETE FROM users_data WHERE jid = '" + sql->escapeString(jid) + "'" + ((name != "") ? " AND name = '" + sql->escapeString(name) + "'" : "") + ((groupid != 0) ? " AND groupid = '" + sql->escapeString(system::itoa(groupid)) + "'" : "") + ";");
 }
 
+std::string pichicore::getJIDlast(void )
+{
+	return last_jid;
+}

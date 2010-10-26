@@ -25,6 +25,7 @@
 #include <map>
 #include <string>
 #include <algorithm>
+#include "pichicurl.h"
 
 #define TR(x) (*(pichi->lang))(x)
 #define TR2(x,y) (*(pichi->lang))(x,y)
@@ -67,6 +68,9 @@ class commandbase : public commandhandler
 	  void command_nicks(std::string arg);
 	  void command_idle(std::string arg);
 	  void command_q(std::string arg);
+	  
+	  void command_lastfm(std::string arg);
+	  void command_lastfm_user(std::string arg);
 };
 
 #endif // COMMANDBASE_H

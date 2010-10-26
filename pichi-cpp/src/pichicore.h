@@ -67,6 +67,7 @@ class pichicore : public pichiconfig, public lastmessage, public pichioptions
 		bool isOnline(std::string user, std::string room = "");
 		void ping(std::string jid);
 		void pingRecive(std::string id);
+		std::string getJIDlast(void);
 		
 		void setJIDinfo(std::string jid, std::string name, std::string value, int groupid = 0);
 		std::map<std::string, std::string> getJIDinfo(std::string jid, std::string name = "", int groupid = 0);
