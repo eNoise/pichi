@@ -624,6 +624,9 @@ void commandbase::command_lastfm_user(std::string arg)
 
 std::string commandbase::func_command_googletranslate(std::string text, std::string from, std::string to, std::string server)
 {
+	if(text == "" || from == "" || to = "" || server == "")
+		return "";
+  
 	pichicurl* curl = new pichicurl();
 	curl->setUrl("http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=" + curl->urlencode(text) + "&langpair=" + curl->urlencode(from + "|" + to));
 	curl->setReferer(server);
