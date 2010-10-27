@@ -116,13 +116,13 @@ void core::onConnect()
 
 void core::handleMessage( const Message& msg, MessageSession* session = 0 )
 {
-	std::cout << msg.body()  << std::endl;
+	std::cout << "[" << system::timeToString(time(NULL), "%H:%M:%S") << "]" << " <" << msg.from().full() << "> " << msg.body() << std::endl;
 	pichi->reciveMessage(msg.body(), "chat", msg.from().full());
 }
 
 void core::handleMUCMessage (MUCRoom *thisroom, const Message &msg, bool priv )
 {
-	std::cout << msg.body()  << std::endl;
+	std::cout << "[" << system::timeToString(time(NULL), "%H:%M:%S") << "]" << " <" << msg.from().resource() << "> " << msg.body() << std::endl;
 	pichi->reciveMessage(msg.body(), "groupchat", msg.from().full());
 }
 
