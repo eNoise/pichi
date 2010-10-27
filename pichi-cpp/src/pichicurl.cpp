@@ -49,8 +49,7 @@ int pichicurl::writer(char* data, size_t size, size_t nmemb, std::string* buf)
 
 std::string pichicurl::readurl(std::string u)
 {
-	url = u;
-	curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+	setUrl(u);
 	return read();
 }
 
@@ -63,3 +62,24 @@ std::string pichicurl::read(void )
 		return std::string();
 }
 
+void pichicurl::setUrl(std::string u)
+{
+	url = u;
+	curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+}
+
+void pichicurl::setReferer(std::string u)
+{
+	curl_easy_setopt(curl, CURLOPT_REFERER, u.c_str());
+}
+
+std::string pichicurl::urlencode(std::string u)
+{
+	return curl_easy_escape(curl, u.c_str(), u.length());
+}
+
+std::string pichicurl::urldecode(std::string u)
+{
+	int size;
+	return curl_easy_unescape(curl, u.c_str(), u.length(), &size);
+}

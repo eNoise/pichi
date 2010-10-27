@@ -54,6 +54,11 @@ commandbase::commandbase(pichicore* p): commandhandler(p)
 	commands["off"] = &commandbase::command_off;
 	
 	commands["lastfm"] = &commandbase::command_lastfm;
+	commands["lastfm_user"] = &commandbase::command_lastfm_user;
+	
+	commands["translate"] = &commandbase::command_translate;
+	commands["tr"] = &commandbase::command_tr;
+	commands["translate_language"] = &commandbase::command_translate_language;;
 }
 
 void commandbase::fetchCommand(std::string command)
@@ -606,6 +611,56 @@ void commandbase::command_lastfm(std::string arg)
 	{
 		pichicurl* curl = new pichicurl();
 		std::string data = curl->readurl("http://ws.audioscrobbler.com/1.0/user/" + user["lastfm_user"] + "/recenttracks.txt");
-		pichi->sendAnswer( "слушает: " + (system::explode("," , (system::explode("\n", data).at(0)))).at(1) );
+		pichi->sendAnswer(pichi->getName(pichi->getJIDlast()) + " слушает: " + (system::explode("," , (system::explode("\n", data).at(0)))).at(1) );
 	}
+}
+
+void commandbase::command_lastfm_user(std::string arg)
+{
+	pichi->setJIDinfo(pichi->getJIDlast(), "lastfm_user", arg);
+}
+
+
+
+std::string commandbase::func_command_googletranslate(std::string text, std::string from, std::string to, std::string server)
+{
+	pichicurl* curl = new pichicurl();
+	curl->setUrl("http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=" + curl->urlencode(text) + "&langpair=" + curl->urlencode(from + "|" + to));
+	curl->setReferer(server);
+	std::string ret = curl->read();
+	delete curl;
+	
+	boost::property_tree::ptree ptree;
+	std::stringstream stream(ret);
+	boost::property_tree::json_parser::read_json(stream, ptree);
+
+	if(ptree.get("responseStatus", "") == "200")
+		return ptree.get_child("responseData").get("translatedText", "");
+	else
+		return "";
+}
+
+void commandbase::command_translate(std::string arg)
+{
+	std::string jid = pichi->getJIDlast();
+	std::map<std::string, std::string> t_from = pichi->getJIDinfo(jid, "translate_from");
+	std::map<std::string, std::string> t_to = pichi->getJIDinfo(jid, "translate_to");
+	
+	pichi->sendAnswer(func_command_googletranslate(arg, t_from["translate_from"], t_to["translate_to"], "http://google.com"));
+}
+
+void commandbase::command_tr(std::string arg)
+{
+	std::vector< std::string > w = seperate(arg, 1);
+	std::vector< std::string > langs = system::explode("2", w[0]);
+	
+	pichi->sendAnswer(func_command_googletranslate(w[1], langs[0], langs[1], "http://google.com"));
+}
+
+void commandbase::command_translate_language(std::string arg)
+{
+	std::vector< std::string > w = seperate(arg, 1);
+	std::string jid = pichi->getJIDlast();
+	pichi->setJIDinfo(jid, "translate_from", w[0]);
+	pichi->setJIDinfo(jid, "translate_to", w[1]);
 }

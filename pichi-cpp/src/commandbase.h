@@ -27,6 +27,8 @@
 #include <algorithm>
 #include "pichicurl.h"
 
+#include <boost/property_tree/json_parser.hpp>
+
 #define TR(x) (*(pichi->lang))(x)
 #define TR2(x,y) (*(pichi->lang))(x,y)
 #define TR3(x,y,z) (*(pichi->lang))(x,y,z)
@@ -74,6 +76,11 @@ class commandbase : public commandhandler
 	  
 	  void command_lastfm(std::string arg);
 	  void command_lastfm_user(std::string arg);
+	  
+	  std::string func_command_googletranslate(std::string text, std::string from, std::string to, std::string server = "http://google.com");
+	  void command_translate(std::string arg);
+	  void command_tr(std::string arg);
+	  void command_translate_language(std::string arg);
 };
 
 #endif // COMMANDBASE_H
