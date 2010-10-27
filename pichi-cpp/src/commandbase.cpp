@@ -624,7 +624,7 @@ void commandbase::command_lastfm_user(std::string arg)
 
 std::string commandbase::func_command_googletranslate(std::string text, std::string from, std::string to, std::string server)
 {
-	if(text == "" || from == "" || to = "" || server == "")
+	if(text == "" || from == "" || to == "" || server == "")
 		return "";
   
 	pichicurl* curl = new pichicurl();
