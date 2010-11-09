@@ -2,7 +2,7 @@
 
 if(WIN32)
 	if(Boost_FOUND)
-		set(BOOST_REGEX_LIBRARIES ${Boost_LIB_PREFIX}boost_regex-gcc44${_boost_MULTITHREADED}-${Boost_LIB_VERSION} )
+		set(BOOST_REGEX_LIBRARIES ${Boost_LIB_PREFIX}boost_regex-gcc45${_boost_MULTITHREADED}-${Boost_LIB_VERSION} )
 	endif(Boost_FOUND)
 else(WIN32)
 	FIND_LIBRARY( BOOST_REGEX_LIBRARIES ${Boost_LIB_PREFIX}boost_regex${_boost_COMPILER}${_boost_MULTITHREADED}-${Boost_LIB_VERSION} )
