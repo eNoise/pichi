@@ -73,5 +73,5 @@ void commandhandler::operator()(std::string command)
 
 commandhandler::~commandhandler()
 {
-	delete pichi;
+	//delete pichi;
 }

@@ -31,7 +31,8 @@ else (LOCAL_TINYXML)
   find_package (TinyXml REQUIRED)
 endif (LOCAL_TINYXML)
 
-set(PICHI_CPP  	src/log.cpp
+set(PICHI_CPP	src/pichievent.cpp
+		src/log.cpp
 		src/pichicurl.cpp
 		src/lexemes.cpp
 		src/languages.cpp    

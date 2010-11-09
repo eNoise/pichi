@@ -49,6 +49,7 @@ commandbase::commandbase(pichicore* p): commandhandler(p)
 	commands["nicks"] = &commandbase::command_nicks;
 	commands["idle"] = &commandbase::command_idle;
 	commands["q"] = &commandbase::command_q;
+	commands["greet"] = &commandbase::command_greet;
 	commands["quit"] = &commandbase::command_quit;
 	commands["on"] = &commandbase::command_on;
 	commands["off"] = &commandbase::command_off;
@@ -564,22 +565,19 @@ void commandbase::command_q(std::string arg)
 	pichi->sendAnswer(pichi->lex->genFromWord(arg));
 }
 
-/*
+void commandbase::command_greet(std::string arg)
+{
+	std::vector< std::string > w = seperate(arg, 2);
+	if(!pichi->isAccess())
+		return;
+	pichi->sql->query("SELECT COUNT(*) FROM actions WHERE action = 'user_join_room' AND coincidence='room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "';");
+	if(system::atoi(pichi->sql->fetchColumn(0)) > 0)
+		pichi->sql->exec("UPDATE actions SET value = '" + pichi->sql->escapeString(w[2]) + "'  WHERE action = 'user_join_room' AND coincidence='room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[1]) + "';");
+	else
+		pichi->sql->exec("INSERT INTO actions (`action`,`coincidence`,`do`,`option`,`value`) VALUES ('user_join_room', 'room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "', 'send_message', '', '" + pichi->sql->escapeString(w[2]) + "');");
+	pichi->sendAnswer("Updated!");
+}
 
-	protected function command_greet()
-	{
-		$w = $this->seperate($this->last_message, 3);
-		if(!$this->isAccess())
-			return;
-		$action = ($w[0] == "!greet") ? "user_join_room" : "user_left_room";
-		$this->db->query("SELECT COUNT(*) FROM actions WHERE action = '$action' AND coincidence='room=" + $this->db->db->escapeString($w[2]) + ",jid=" + $this->db->db->escapeString($w[1]) + "';");
-		if($this->db->fetchColumn() > 0)
-			$this->db->query("UPDATE actions SET value = '"+$this->db->db->escapeString($w[3])+"'  WHERE action = '$action' AND coincidence='room=" + $this->db->db->escapeString($w[2]) + ",jid=" + $this->db->db->escapeString($w[1]) + "';");
-		else
-			$this->db->query("INSERT INTO actions (`action`,`coincidence`,`do`,`option`,`value`) VALUES ('$action', 'room=" + $this->db->db->escapeString($w[2]) + ",jid=" + $this->db->db->escapeString($w[1]) + "', 'send_message', '', '"+$this->db->db->escapeString($w[3])+"');");
-		pichi->sendAnswer("Updated!");
-	}
-*/
 void commandbase::command_quit(std::string arg)
 {
 	if(!pichi->isAccess(3))

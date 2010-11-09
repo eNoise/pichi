@@ -33,6 +33,7 @@
 #include "commandbase.h"
 #include "languages.h"
 #include "lexemes.h"
+#include "pichievent.h"
 //#include <boost/timer.hpp>
 
 class core;
@@ -45,6 +46,7 @@ class pichicore : public pichiconfig, public lastmessage, public pichioptions
 		commandbase *commander;
 		languages *lang;
 		lexemes *lex;
+		PichiEvent *event;
 		
 		time_t wait;
 		time_t wait_time;

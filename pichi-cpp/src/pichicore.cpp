@@ -31,6 +31,7 @@ pichicore::pichicore()
 	//translater
 	lang = new languages(config["language"]);
 	lex = new lexemes(&sql);
+	event = new PichiEvent(this);
 }
 
 pichicore::~pichicore()
@@ -40,6 +41,7 @@ pichicore::~pichicore()
 	delete jabber;
 	delete lang;
 	delete lex;
+	delete event;
 }
 
 bool pichicore::isEnabled(void)
@@ -87,7 +89,7 @@ void pichicore::setUserInfo(std::string jid, std::string nick, std::string state
 	{
 		if(state == "available" && old_state == "unavailable")
 		{
-			//$this->event->catchEvent("user_join_room", "room=$room,jid=$jid");
+			event->callEvent("user_join_room", "room=" + room + ",jid=" + jid);
 			// autokick
 			//	$this->db->query("SELECT COUNT(*) FROM users_data WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND name = 'kick' AND groupid = '" . $this->db->db->escapeString($room) ."';");
 			//	if($this->db->fetchColumn() > 0)
@@ -95,7 +97,7 @@ void pichicore::setUserInfo(std::string jid, std::string nick, std::string state
 			}
 		else if(state == "unavailable" && old_state == "available")
 		{
-			//$this->event->catchEvent("user_left_room", "room=$room,jid=$jid");
+			event->callEvent("user_left_room", "room=" + room + ",jid=" + jid);
 		}
 	}
 	
