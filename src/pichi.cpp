@@ -1,4 +1,4 @@
-#include "src/core.h"
+#include "core.h"
 
 int main(void)
 {

@@ -1,4 +1,3 @@
 [Project]
 Name=pichi
 Manager=KDevCMakeManager
-VersionControl=kdevsubversion

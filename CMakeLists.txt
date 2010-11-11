@@ -24,8 +24,7 @@ CHECK_INCLUDE_FILE (time.h HAVE_TIME_H)
 CHECK_INCLUDE_FILE (sys/stat.h HAVE_SYS_STAT_H)
 
 find_package (Sqlite3 REQUIRED)
-find_package (Boost REQUIRED)
-find_package (BoostRegex REQUIRED)
+find_package (Boost REQUIRED COMPONENTS regex)
 find_package (CURL REQUIRED)
 
 if (LOCAL_GLOOX)
@@ -66,7 +65,7 @@ set(LINK_LIBS 	pthread
 		${GLOOX_LIBRARIES}
 		${TINYXML_LIBRARIES}
 		${SQLITE3_LIBRARIES}
-		${BOOST_REGEX_LIBRARIES}
+		${Boost_LIBRARIES}
 		${CURL_LIBRARIES}
 )
 
