@@ -88,6 +88,29 @@ void core::sendMessage(JID jid, std::string message)
 	client->send( m );
 }
 
+void core::ban(const std::string& nick, JID room, std::string message)
+{
+	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
+	{
+		if((*it).first.bare() == room.full())
+		{
+			it->second->ban(nick, message);
+		}
+	}
+}
+
+void core::kick(const std::string& nick, JID room, std::string message)
+{
+	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
+	{
+		if((*it).first.bare() == room.full())
+		{
+			it->second->kick(nick, message);
+		}
+	}
+}
+
+
 void core::enterRoom(JID room)
 {
 	MUCRoom* newroom = new MUCRoom(client, room, this, NULL);

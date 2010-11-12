@@ -67,6 +67,8 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
 		void enterRoom(JID room);
 		void leftRoom(JID room);
 		JID& getMyJID(void);
+		void kick(const std::string &nick, JID room, std::string message = "");
+		void ban(const std::string &nick, JID room, std::string message = "");
 		
 		// stubs
                 void onConnect();

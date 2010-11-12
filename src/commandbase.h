@@ -71,6 +71,7 @@ class commandbase : public commandhandler
 	  void command_idle(std::string arg);
 	  void command_q(std::string arg);
 	  void command_greet(std::string arg);
+	  void command_farewell(std::string arg);
 	  void command_quit(std::string arg);
 	  void command_on(std::string arg);
 	  void command_off(std::string arg);

@@ -91,9 +91,9 @@ void pichicore::setUserInfo(std::string jid, std::string nick, std::string state
 		{
 			event->callEvent("user_join_room", "room=" + room + ",jid=" + jid);
 			// autokick
-			//	$this->db->query("SELECT COUNT(*) FROM users_data WHERE jid = '" . $this->db->db->escapeString($jid) . "' AND name = 'kick' AND groupid = '" . $this->db->db->escapeString($room) ."';");
-			//	if($this->db->fetchColumn() > 0)
-			//		$this->jabber->kick($this->getName($this->getJID($jid, $room), $room), $room, NULL);
+				sql->query("SELECT COUNT(*) FROM users_data WHERE jid = '" + sql->escapeString(jid) + "' AND name = 'kick' AND groupid = '" + sql->escapeString(room) + "';");
+				if(system::atoi(sql->fetchColumn(0)) > 0)
+					jabber->kick(getName(getJID(jid, room), room), JID(room), "Auto-kick");
 			}
 		else if(state == "unavailable" && old_state == "available")
 		{
