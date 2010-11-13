@@ -56,6 +56,10 @@ class pichicore : public pichiconfig, public lastmessage, public pichioptions
 		void on(void);
 		void off(void);
 		
+		void cronDo(std::string eventer = "");
+		bool canCron(std::string crn);
+		std::map< std::string, std::map< std::string, time_t > > crons;
+		
 		bool isEnabled(void);
 		void setUserInfo(std::string, std::string, std::string, std::string, std::string, std::string);
 		void cleanUserInfo(void);

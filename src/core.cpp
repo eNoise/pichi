@@ -140,12 +140,14 @@ void core::onConnect()
 void core::handleMessage( const Message& msg, MessageSession* session = 0 )
 {
 	std::cout << "[" << system::timeToString(time(NULL), "%H:%M:%S") << "]" << " <" << msg.from().full() << "> " << msg.body() << std::endl;
+	pichi->cronDo("message");
 	pichi->reciveMessage(msg.body(), "chat", msg.from().full());
 }
 
 void core::handleMUCMessage (MUCRoom *thisroom, const Message &msg, bool priv )
 {
 	std::cout << "[" << system::timeToString(time(NULL), "%H:%M:%S") << "]" << " <" << msg.from().resource() << "> " << msg.body() << std::endl;
+	pichi->cronDo("muc_message");
 	pichi->reciveMessage(msg.body(), "groupchat", msg.from().full());
 }
 
@@ -156,6 +158,8 @@ void core::handleMUCParticipantPresence (MUCRoom *thisroom, const MUCRoomPartici
 		role = "moderator";
 	else
 		role = "participant";
+	
+	pichi->cronDo("muc_presence");
 	
 	if(presence.presence() != Presence::Unavailable)
 	{
@@ -171,6 +175,8 @@ void core::handleMUCParticipantPresence (MUCRoom *thisroom, const MUCRoomPartici
 
 void core::handlePresence(const Presence& presence)
 {
+	pichi->cronDo("presence");
+  
 	if(presence.presence() != Presence::Unavailable)
 	{
 		LOG("Пользователь онлайн: " + presence.from().bare(), LOG::INFO);

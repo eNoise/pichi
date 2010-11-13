@@ -108,7 +108,7 @@ void commandbase::command_help(std::string arg)
 	help += "!ban " + TR("help_command_usage_jid") + "|" + TR("help_command_usage_nick") + " [" + TR("help_command_usage_time") + "] [" + TR("help_command_usage_reason") + "] - " + TR("help_command_description_ban") + "\n";
 	help += "!unban " + TR("help_command_usage_jid") + " - " + TR("help_command_description_jid") + "\n";
 	help += "!banlist - " + TR("help_command_description_banlist") + "\n";
-	help += "!banlist - " + "киклист" + "\n";
+	help += "!banlist - " + static_cast<std::string>("киклист") + "\n";
 	help += "!kick " + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + " [" + TR("help_command_usage_time") + "] [" + TR("help_command_usage_reason") + "] - " + TR("help_command_description_kick") + "\n";
 	help += "!unkick " + TR("help_command_usage_jid") + " - " + TR("help_command_description_unkick") + "\n";
 	

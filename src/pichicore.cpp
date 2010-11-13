@@ -32,6 +32,10 @@ pichicore::pichicore()
 	lang = new languages(config["language"]);
 	lex = new lexemes(&sql);
 	event = new PichiEvent(this);
+	
+	//timers
+	crons["bans"]["last"] = time(NULL);
+	crons["bans"]["interval"] = 5;
 }
 
 pichicore::~pichicore()
@@ -500,3 +504,33 @@ time_t pichicore::convertTime(std::string time)
 			break;
 	}
 }
+
+// Действие по крону
+void pichicore::cronDo(std::string eventer)
+{
+    if(canCron("bans"))
+    {
+	LOG("[CRON] Bans", LOG::INFO);
+	//Check bans and kicks
+	sql->query("SELECT `jid`,`value`,`name`,`groupid` FROM users_data WHERE name = 'ban' OR name = 'kick';");
+	std::map<std::string, std::string> bans;
+	while(!(bans = sql->fetchArray()).empty())
+	{
+		if(system::atot(bans["value"]) <= time(NULL))
+		{
+			if(bans["name"] == "ban")
+				unban(bans["jid"], bans["groupid"]);
+			else if(bans["name"] == "kick")
+				unkick(bans["jid"], bans["groupid"]);
+		}
+	}
+	
+	crons["bans"]["last"] = time(NULL); 
+    }
+}
+
+bool pichicore::canCron(std::string crn)
+{
+	return (time(NULL) - crons[crn]["last"] > crons[crn]["interval"]);
+}
+
