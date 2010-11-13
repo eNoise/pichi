@@ -26,6 +26,7 @@
 #include <string>
 #include <algorithm>
 #include "pichicurl.h"
+#include "config.h"
 
 #include <boost/property_tree/json_parser.hpp>
 

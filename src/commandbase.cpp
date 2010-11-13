@@ -145,7 +145,7 @@ void commandbase::command_help(std::string arg)
 void commandbase::command_version(std::string null)
 {
 	//global $config;
-	pichi->sendAnswer("Pichi Bot v.C++");
+	pichi->sendAnswer(static_cast<std::string>("Pichi Bot v.") + PICHI_VERSION);
 	//($hook = PichiPlugin::fetch_hook("commands_show_version")) ? eval($hook) : false;
 	//pichi->sendAnswer(""+TR("command_version_plugins")+":\n" + PichiPlugin::show_plugin_list());
 }
