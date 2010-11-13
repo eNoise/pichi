@@ -436,7 +436,7 @@ void pichicore::unban(std::string jid, std::string reason, std::string room)
 	if(room == "")
 		room = getDefaultRoom(); // main room
 	jid = getJID(jid, room);
-	//jabber->unban(jid, room, reason);
+	jabber->unban(jid, JID(room), reason);
 	delJIDinfo(jid, "ban", room);
 	delJIDinfo(jid, "ban_reason", room);
 	delJIDinfo(jid, "ban_room", room);

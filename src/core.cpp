@@ -99,6 +99,17 @@ void core::ban(const std::string& nick, JID room, std::string message)
 	}
 }
 
+void core::unban(const std::string& nick, JID room, std::string message)
+{
+	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
+	{
+		if((*it).first.bare() == room.full())
+		{
+			it->second->setAffiliation(nick, AffiliationNone, message);
+		}
+	}
+}
+
 void core::kick(const std::string& nick, JID room, std::string message)
 {
 	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
