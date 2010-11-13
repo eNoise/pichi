@@ -108,6 +108,7 @@ void commandbase::command_help(std::string arg)
 	help += "!ban " + TR("help_command_usage_jid") + "|" + TR("help_command_usage_nick") + " [" + TR("help_command_usage_time") + "] [" + TR("help_command_usage_reason") + "] - " + TR("help_command_description_ban") + "\n";
 	help += "!unban " + TR("help_command_usage_jid") + " - " + TR("help_command_description_jid") + "\n";
 	help += "!banlist - " + TR("help_command_description_banlist") + "\n";
+	help += "!banlist - " + "киклист" + "\n";
 	help += "!kick " + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + " [" + TR("help_command_usage_time") + "] [" + TR("help_command_usage_reason") + "] - " + TR("help_command_description_kick") + "\n";
 	help += "!unkick " + TR("help_command_usage_jid") + " - " + TR("help_command_description_unkick") + "\n";
 	
@@ -131,6 +132,7 @@ void commandbase::command_help(std::string arg)
 	help += "!count - " + TR("help_command_description_count") + "\n";
 	help += "!talkers - " + TR("help_command_description_talkers") + "\n";
 	help += "!nicks " + TR("help_command_usage_param") + " - " + TR("help_command_description_nicks") + "\n";
+	help += "!q " + TR("help_command_usage_param") + " - " + "Попросить бота сказать фразу с заданным словом" + "\n";
 
 	help += "=====  " +  TR("help_other_commands")  + "  =====\n";
 	//($hook = PichiPlugin::fetch_hook("commands_show_help")) ? eval($hook) : false;
