@@ -383,32 +383,120 @@ void pichicore::pingRecive(std::string jid)
 }
 
 // устанавливает информацию о jid
-void pichicore::setJIDinfo(std::string jid, std::string name, std::string value, int groupid)
+void pichicore::setJIDinfo(std::string jid, std::string name, std::string value, std::string groupid)
 {
-	sql->query("SELECT COUNT(*) FROM users_data WHERE jid = '" + sql->escapeString(jid) + "' AND name = '" + sql->escapeString(name) + "'" + ((groupid != 0) ? " AND groupid = '" + sql->escapeString(system::itoa(groupid)) + "'" : "") + ";");
+	sql->query("SELECT COUNT(*) FROM users_data WHERE jid = '" + sql->escapeString(jid) + "' AND name = '" + sql->escapeString(name) + "'" + ((groupid != "") ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
 	if(system::atoi(sql->fetchColumn(0)) > 0)
-		sql->exec("UPDATE users_data SET value = '" + sql->escapeString(value) + "'  WHERE jid = '" + sql->escapeString(jid) + "' AND name = '" + sql->escapeString(name) + "'" + ((groupid != 0) ? " AND groupid = '" + sql->escapeString(system::itoa(groupid)) + "'" : "") + ";");
+		sql->exec("UPDATE users_data SET value = '" + sql->escapeString(value) + "'  WHERE jid = '" + sql->escapeString(jid) + "' AND name = '" + sql->escapeString(name) + "'" + ((groupid != "") ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
 	else
-		sql->exec("INSERT INTO users_data (`jid`,`name`,`value`,`groupid`) VALUES ('" + sql->escapeString(jid) + "','" + sql->escapeString(name) + "','" + sql->escapeString(value) + "','" + ((groupid != 0) ? sql->escapeString(system::itoa(groupid)) : "") + "');");
+		sql->exec("INSERT INTO users_data (`jid`,`name`,`value`,`groupid`) VALUES ('" + sql->escapeString(jid) + "','" + sql->escapeString(name) + "','" + sql->escapeString(value) + "','" + ((groupid != "") ? sql->escapeString(groupid) : "") + "');");
 }
 
 // а теперь получить инфу
-std::map<std::string, std::string> pichicore::getJIDinfo(std::string jid, std::string name, int groupid)
+std::map<std::string, std::string> pichicore::getJIDinfo(std::string jid, std::string name, std::string groupid)
 {
 	std::map<std::string, std::string> retmap, data;
-	sql->query("SELECT * FROM users_data WHERE jid = '" + sql->escapeString(jid) + "'" + ((name != "") ? " AND name = '" + sql->escapeString(name) + "'" : "") + ((groupid != 0) ? " AND groupid = '" + sql->escapeString(system::itoa(groupid)) + "'" : "") + ";");
+	sql->query("SELECT * FROM users_data WHERE jid = '" + sql->escapeString(jid) + "'" + ((name != "") ? " AND name = '" + sql->escapeString(name) + "'" : "") + ((groupid != "") ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
 	while(!(data = sql->fetchArray()).empty())
 		retmap[data["name"]] = data["value"];
 	return retmap;
 }
 
 // ну и удалить
-void pichicore::delJIDinfo(std::string jid, std::string name, int groupid)
+void pichicore::delJIDinfo(std::string jid, std::string name, std::string groupid)
 {
-	sql->exec("DELETE FROM users_data WHERE jid = '" + sql->escapeString(jid) + "'" + ((name != "") ? " AND name = '" + sql->escapeString(name) + "'" : "") + ((groupid != 0) ? " AND groupid = '" + sql->escapeString(system::itoa(groupid)) + "'" : "") + ";");
+	sql->exec("DELETE FROM users_data WHERE jid = '" + sql->escapeString(jid) + "'" + ((name != "") ? " AND name = '" + sql->escapeString(name) + "'" : "") + ((groupid != "") ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
 }
 
 std::string pichicore::getJIDlast(void )
 {
 	return last_jid;
+}
+
+void pichicore::ban(std::string jid, std::string time, std::string reason, std::string room)
+{
+	if(room == "")
+		room = getDefaultRoom(); // main room
+	jabber->ban((jid = getJID(jid, room)), JID(room), reason);
+	if(time != "")
+	{
+		time_t tm = convertTime(time);
+		setJIDinfo(jid, "ban", system::stringTime(tm + ::time(NULL)), room);
+		setJIDinfo(jid, "ban_reason", reason, room);
+		setJIDinfo(jid, "ban_room", room, room);
+	}
+}
+        
+void pichicore::unban(std::string jid, std::string reason, std::string room)
+{
+	if(room == "")
+		room = getDefaultRoom(); // main room
+	jid = getJID(jid, room);
+	//jabber->unban(jid, room, reason);
+	delJIDinfo(jid, "ban", room);
+	delJIDinfo(jid, "ban_reason", room);
+	delJIDinfo(jid, "ban_room", room);
+}
+        
+void pichicore::kick(std::string jid, std::string time, std::string reason, std::string room)
+{
+	if(room == "")
+		room = getDefaultRoom(); // main room
+	jabber->kick(getName(jid = getJID(jid, room), room), JID(room), reason);
+	if(time != "")
+	{
+		time_t tm = convertTime(time);
+		setJIDinfo(jid, "kick", system::stringTime(tm + ::time(NULL)), room);
+		setJIDinfo(jid, "kick_reason", reason, room);
+		setJIDinfo(jid, "kick_room", room, room);
+	}
+}
+        
+void pichicore::unkick(std::string jid, std::string room)
+{
+	if(room == "")
+		room = getDefaultRoom(); // main room
+	jid = getJID(jid, room);
+	delJIDinfo(jid, "kick", room);
+	delJIDinfo(jid, "kick_reason", room);
+	delJIDinfo(jid, "kick_room", room);
+}
+
+time_t pichicore::convertTime(std::string time)
+{
+	if(time == "")
+		return 0;
+        
+	time_t realtime;
+	
+	switch(boost::lexical_cast<char>(time.substr(time.length()-1).c_str()))
+	{
+		case 'm':
+			realtime = system::atot(time.substr(0,time.length()-1));
+			return realtime * 60;
+			break;
+		case 'h':
+			realtime = system::atot(time.substr(0,time.length()-1));
+			return realtime * 60 * 60;
+			break;
+		case 'd':
+			realtime = system::atot(time.substr(0,time.length()-1));
+			return realtime * 60 * 60 * 24;
+			break;
+		case 'w':
+			realtime = system::atot(time.substr(0,time.length()-1));
+			return realtime * 60 * 60 * 24 * 7;
+			break;
+		case 'M':
+			realtime = system::atot(time.substr(0,time.length()-1));
+			return realtime * 60 * 60 * 24 * 30;
+			break;
+		case 'Y':
+			realtime = system::atot(time.substr(0,time.length()-1));
+			return realtime * 60 * 60 * 24 * 30 * 12;
+				break;
+		default:
+			return system::atot(time);
+			break;
+	}
 }

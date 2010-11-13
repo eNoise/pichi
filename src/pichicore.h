@@ -74,9 +74,16 @@ class pichicore : public pichiconfig, public lastmessage, public pichioptions
 		void pingRecive(std::string id);
 		std::string getJIDlast(void);
 		
-		void setJIDinfo(std::string jid, std::string name, std::string value, int groupid = 0);
-		std::map<std::string, std::string> getJIDinfo(std::string jid, std::string name = "", int groupid = 0);
-		void delJIDinfo(std::string jid, std::string name = "", int groupid = 0);
+		void setJIDinfo(std::string jid, std::string name, std::string value, std::string groupid = "");
+		std::map<std::string, std::string> getJIDinfo(std::string jid, std::string name = "", std::string groupid = "");
+		void delJIDinfo(std::string jid, std::string name = "", std::string groupid = "");
+		
+		void ban(std::string jid, std::string time = "", std::string reason = "", std::string room = "");
+		void unban(std::string jid, std::string reason = "", std::string room = "");
+		void kick(std::string jid, std::string time = "", std::string reason = "", std::string room = "");
+		void unkick(std::string jid, std::string room = "");
+		
+		time_t convertTime(std::string time);
 		
 		pichicore();
 		~pichicore();

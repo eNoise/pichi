@@ -29,6 +29,12 @@ commandbase::commandbase(pichicore* p): commandhandler(p)
 	commands["version"] = &commandbase::command_version;
 	commands["enable"] = &commandbase::command_enable;
 	commands["disable"] = &commandbase::command_disable;
+	commands["ban"] = &commandbase::command_ban;
+	commands["unban"] = &commandbase::command_unban;
+	commands["kick"] = &commandbase::command_kick;
+	commands["unkick"] = &commandbase::command_unkick;
+	commands["banlist"] = &commandbase::command_banlist;
+	commands["kicklist"] = &commandbase::command_kicklist;
 	commands["log"] = &commandbase::command_log;
 	commands["wtf"] = &commandbase::command_wtf;
 	commands["wtfcount"] = &commandbase::command_wtfcount;
@@ -171,60 +177,64 @@ void commandbase::command_disable(std::string arg)
 	}
 */
 
-/*
-	protected function command_kick()
-	{
-		if(!$this->isAccess())
-			return;
-		
-		$w = $this->seperate($this->last_message, 3);
-		$this->kick($w[1], $w[2], $w[3]);
-	}
+void commandbase::command_kick(std::string arg)
+{
+	if(!pichi->isAccess())
+		return;
 	
-	protected function command_unkick()
-	{
-		if(!$this->isAccess())
-			return;
-		
-		$w = $this->seperate($this->last_message);
-		$this->unkick($w[1]);
-	}
-*/
+	std::vector< std::string > w = seperate(arg, 2);
+	pichi->kick(w[0], w[1], w[2]);
+}
 
-/*
-
-	protected function command_ban()
-	{
-		if(!$this->isAccess())
-			return;
-		
-		$w = $this->seperate($this->last_message, 3);
-		$this->ban($w[1], $w[2], $w[3]);
-	}
+void commandbase::command_unkick(std::string arg)
+{
+	if(!pichi->isAccess())
+		return;
 	
-	protected function command_unban()
-	{
-		if(!$this->isAccess())
-			return;
-		
-		$w = $this->seperate($this->last_message, 2);
-		$this->unban($w[1], $w[2]);
-	}
+	pichi->unkick(arg);
+}
 
-*/
+void commandbase::command_ban(std::string arg)
+{
+	if(!pichi->isAccess())
+		return;
+	
+	std::vector< std::string > w = seperate(arg, 2);
+	pichi->ban(w[0], w[1], w[2]);
+}
 
-/*
-	protected function command_banlist()
+void commandbase::command_unban(std::string arg)
+{
+	if(!pichi->isAccess())
+		return;
+	
+	std::vector< std::string > w = seperate(arg, 1);
+	pichi->unban(w[0], w[1]);
+}
+
+void commandbase::command_banlist(std::string arg)
+{
+	pichi->sql->query("SELECT `jid`,`value` FROM users_data WHERE name = 'ban';");
+	std::string banlist = "";
+	std::map<std::string, std::string> bans;
+	while(!(bans = pichi->sql->fetchArray()).empty())
 	{
-		$this->db->query("SELECT `jid`,`value` FROM users_data WHERE name = 'ban';");
-		$banlist = "";
-		while($bans = $this->db->fetchArray())
-		{
-			$banlist .= $bans['jid'] + " " + date("d.m.y \в H:i:s", $bans['value']) + "\n";
-		}
-		pichi->sendAnswer(""+TR("command_banlist_lock")+":\n" + $banlist);
+		banlist += bans["jid"] + " " + system::timeToString(system::atot(bans["value"]), "%d.%m.%Y в %H:%M:%S") + "\n";
 	}
-*/
+	pichi->sendAnswer(TR("command_banlist_lock") + ":\n" + banlist);
+}
+
+void commandbase::command_kicklist(std::string arg)
+{
+	pichi->sql->query("SELECT `jid`,`value` FROM users_data WHERE name = 'kick';");
+	std::string kicklist = "";
+	std::map<std::string, std::string> kicks;
+	while(!(kicks = pichi->sql->fetchArray()).empty())
+	{
+		kicklist += kicks["jid"] + " " + system::timeToString(system::atot(kicks["value"]), "%d.%m.%Y в %H:%M:%S") + "\n";
+	}
+	pichi->sendAnswer("Закиканые до смерти:\n" + kicklist);
+}
 
 void commandbase::command_log(std::string arg)
 {
