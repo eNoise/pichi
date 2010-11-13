@@ -71,6 +71,8 @@ class commandbase : public commandhandler
 	  void command_msg(std::string arg);
 	  void command_gc(std::string arg);
 	  void command_users(std::string arg);
+	  void command_join(std::string arg);
+	  void command_left(std::string arg);
 	  void command_ping(std::string arg);
 	  void command_topic(std::string arg);
 	  void command_nicks(std::string arg);

@@ -50,6 +50,8 @@ commandbase::commandbase(pichicore* p): commandhandler(p)
 	commands["msg"] = &commandbase::command_msg;
 	commands["gc"] = &commandbase::command_gc;
 	commands["users"] = &commandbase::command_users;
+	commands["join"] = &commandbase::command_join;
+	commands["left"] = &commandbase::command_left;
 	commands["ping"] = &commandbase::command_ping;
 	commands["topic"] = &commandbase::command_topic;
 	commands["nicks"] = &commandbase::command_nicks;
@@ -519,24 +521,20 @@ void commandbase::command_users(std::string arg)
 	}
 }
 
-/*
-	protected function command_join()
-	{
-		if(!$this->isAccess())
-			return;
-		$w = $this->seperate($this->last_message, 3);
-		$this->joinRoom($w[1], $w[2], $w[3]);
-	}
-	
-	protected function command_left()
-	{
-		if(!$this->isAccess())
-			return;
-		$w = $this->seperate($this->last_message, 3);
-		$this->leftRoom($w[1], $w[2], $w[3]);
-	}
-	
-*/
+
+void commandbase::command_join(std::string arg)
+{
+	if(!pichi->isAccess())
+		return;
+	pichi->jabber->enterRoom(JID(arg));
+}
+
+void commandbase::command_left(std::string arg)
+{
+	if(!pichi->isAccess())
+		return;
+	pichi->jabber->leftRoom(JID(arg));
+}
 
 void commandbase::command_ping(std::string arg)
 {

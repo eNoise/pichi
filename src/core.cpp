@@ -132,7 +132,7 @@ void core::leftRoom(JID room)
 {
 	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
 	{
-		if(it->first == room)
+		if(it->first.bareJID() == room || it->first == room)
 		{
 			it->second->leave();
 			delete (it->second);
