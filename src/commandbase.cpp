@@ -145,7 +145,13 @@ void commandbase::command_help(std::string arg)
 void commandbase::command_version(std::string null)
 {
 	//global $config;
-	pichi->sendAnswer(static_cast<std::string>("Pichi Bot v.") + PICHI_VERSION);
+	pichi->sendAnswer(
+		static_cast<std::string>("Pichi Bot v.") + PICHI_VERSION
+		+ "\nSystem environment:\n" +
+		+ "SQLite version: " + SQLITE_VERSION + "\n" +
+		+ "CURL version: " + curl_version() + "\n" +
+		+ "Boost version: " + BOOST_LIB_VERSION
+	);
 	//($hook = PichiPlugin::fetch_hook("commands_show_version")) ? eval($hook) : false;
 	//pichi->sendAnswer(""+TR("command_version_plugins")+":\n" + PichiPlugin::show_plugin_list());
 }
@@ -155,6 +161,7 @@ void commandbase::command_enable(std::string arg)
 	if(!pichi->isAccess())
 		return;
 	
+	pichi->sendAnswer("Sorry, Plugin system deprecated");
 	//PichiPlugin::enable(system::atoi(arg));
 }
 
@@ -163,6 +170,7 @@ void commandbase::command_disable(std::string arg)
 	if(!pichi->isAccess())
 		return;
 	
+	pichi->sendAnswer("Sorry, Plugin system deprecated");
 	//PichiPlugin::disable(system::atoi(arg));
 }
 
@@ -244,6 +252,8 @@ void commandbase::command_log(std::string arg)
 {
 	 	pichi->sql->query("SELECT * FROM log ORDER BY time;");
 		int qu_i = pichi->sql->numRows();
+		if(arg.length() > 5)
+			return;
 		int n = (arg != "") ? (system::atoi(arg)) : 20;
 		int i = 0;
 		std::string log = "\n-----------------------------------------------------------------------\n";
@@ -365,7 +375,7 @@ void commandbase::command_top(std::string arg)
 			tmp[0] = "("+TR("command_top10_begin")+")";
 		if(tmp[2] == "#end#")
 			tmp[2] = "("+TR("command_top10_end")+")";
-		ans += system::itoa(ix) + "+ " + system::implode(" ", tmp) + " [" + lex["count"] + "]" + "\n";
+		ans += system::itoa(ix) + ". " + system::implode(" ", tmp) + " [" + lex["count"] + "]" + "\n";
 	}
 	pichi->sendAnswer(ans);
 }
@@ -633,7 +643,11 @@ void commandbase::command_lastfm(std::string arg)
 	{
 		pichicurl* curl = new pichicurl();
 		std::string data = curl->readurl("http://ws.audioscrobbler.com/1.0/user/" + user["lastfm_user"] + "/recenttracks.txt");
-		pichi->sendAnswer(pichi->getName(pichi->getJIDlast()) + " слушает: " + (system::explode("," , (system::explode("\n", data).at(0)))).at(1) );
+		if(data != "")
+			pichi->sendAnswer(pichi->getName(pichi->getJIDlast()) + " слушает: " + (system::explode("," , (system::explode("\n", data).at(0)))).at(1) );
+		else
+			LOG("Music read from last.fm failed. Check internet connection.", LOG::WARNING);
+		delete curl;
 	}
 }
 
@@ -654,6 +668,12 @@ std::string commandbase::func_command_googletranslate(std::string text, std::str
 	curl->setReferer(server);
 	std::string ret = curl->read();
 	delete curl;
+	
+	if(ret == "")
+	{
+		LOG("Google translate can failed.", LOG::DEBUG);
+		return ret;
+	}
 	
 	boost::property_tree::ptree ptree;
 	std::stringstream stream(ret);
