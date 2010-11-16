@@ -754,9 +754,4 @@ void commandbase::command_google(std::string arg)
 		}
 		pichi->sendAnswer(ans);
 	}
-	/*
-		return ptree.get_child("responseData").get("translatedText", "");
-	else
-		return "";
-	*/
 }
