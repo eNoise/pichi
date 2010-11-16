@@ -26,9 +26,9 @@ sqlite::sqlite(std::string f):dbfile(f)
 	rc = sqlite3_open(dbfile.c_str(), &db);
 	if( rc )
 	{
-		std::cout << static_cast<std::string>("Db file open failed with error: ") + sqlite3_errmsg(db) << std::endl;
+		std::string err = sqlite3_errmsg(db);
 		sqlite3_close(db);
-		return;
+		throw PichiException("Database error: " + err);
 	}
 }
 

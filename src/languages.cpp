@@ -34,7 +34,7 @@ languages::languages(std::string lan): choise(lan)
 bool languages::loadXmlConfig(std::string file)
 {
 	if(!xmlsimple::loadXmlConfig(file))
-		return false;
+		throw PichiException("Translation file read error. Check this.");
 	
 	TiXmlElement *xmllevel = 0;
 	xmllevel = xmlfile->FirstChildElement("PichiLanguage");

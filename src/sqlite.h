@@ -24,6 +24,7 @@
 #include <sqlite3.h>
 #include <iostream>
 #include <map>
+#include "pichiexception.h"
 
 class sqlite
 {

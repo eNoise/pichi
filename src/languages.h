@@ -24,6 +24,7 @@
 #include <map>
 #include <string>
 #include "xmlsimple.h"
+#include "pichiexception.h"
 #include "system.h"
 #include <vector>
 #include <stdarg.h>
