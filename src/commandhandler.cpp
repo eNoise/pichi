@@ -53,6 +53,7 @@ std::vector< std::string > commandhandler::seperate(std::string str, int level)
 	}
 	else
 	{
+		level--;
 		std::vector< std::string > w = system::explode(" ", str);
 		std::vector< std::string > ret, temp;
 		std::vector< std::string >::iterator it = w.begin();

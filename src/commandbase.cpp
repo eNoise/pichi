@@ -194,7 +194,7 @@ void commandbase::command_kick(std::string arg)
 	if(!pichi->isAccess())
 		return;
 	
-	std::vector< std::string > w = seperate(arg, 2);
+	std::vector< std::string > w = seperate(arg, 3);
 	pichi->kick(w[0], w[1], w[2]);
 }
 
@@ -211,7 +211,7 @@ void commandbase::command_ban(std::string arg)
 	if(!pichi->isAccess())
 		return;
 	
-	std::vector< std::string > w = seperate(arg, 2);
+	std::vector< std::string > w = seperate(arg, 3);
 	pichi->ban(w[0], w[1], w[2]);
 }
 
@@ -220,7 +220,7 @@ void commandbase::command_unban(std::string arg)
 	if(!pichi->isAccess())
 		return;
 	
-	std::vector< std::string > w = seperate(arg, 1);
+	std::vector< std::string > w = seperate(arg, 2);
 	pichi->unban(w[0], w[1]);
 }
 
@@ -332,7 +332,7 @@ void commandbase::command_wtfull(std::string arg)
 	std::string list_rev;
 	std::map<std::string, std::string> tmp;
 	while(!(tmp = pichi->sql->fetchArray()).empty())
-		list_rev += "\n------- " + TR("command_wiki_revision") + tmp["revision"] + "(" + tmp["name"] + ")" + "-------\n" + tmp["value"] + "\n---------------------";
+		list_rev += "\n------- " + TR("command_wiki_revision") + " " + tmp["revision"] + " " + "(" + tmp["name"] + ")" + " -------\n" + tmp["value"] + "\n------------------------------------------";
 	if(list_rev != "")
 		pichi->sendAnswer(list_rev);
 	else
@@ -341,7 +341,7 @@ void commandbase::command_wtfull(std::string arg)
 
 void commandbase::command_wtfset(std::string arg)
 {
-	std::vector< std::string > w = seperate(arg, 2);
+	std::vector< std::string > w = seperate(arg, 3);
 	pichi->sql->query("SELECT name,revision,value FROM wiki WHERE name = '" + pichi->sql->escapeString(w[0]) + "' AND revision='" + pichi->sql->escapeString(w[1]) + "' LIMIT 0,1;");
 	if(pichi->sql->numRows() > 0)
 	{
@@ -361,7 +361,19 @@ void commandbase::command_wtfset(std::string arg)
 
 void commandbase::command_top(std::string arg)
 {
-	pichi->sql->query("SELECT `lexeme`,`count` FROM lexems ORDER BY count DESC LIMIT 0,10;");
+	int ct = 10;
+	if(arg != "" && arg.length() <= 2)
+	{
+		try
+		{
+			ct = system::atoi(arg);
+		}
+		catch(boost::bad_lexical_cast e)
+		{
+			pichi->sendAnswer("Плохой аргумент");
+		}
+	}
+	pichi->sql->query("SELECT `lexeme`,`count` FROM lexems ORDER BY count DESC LIMIT 0," + system::itoa(ct) + ";");
 	pichi->sendAnswer(TR("command_top10"));
 	std::string ans;
 	int ix = 0;
@@ -427,7 +439,7 @@ void commandbase::command_count(std::string arg)
 
 void commandbase::command_dfn(std::string arg)
 {
-	std::vector< std::string > w = seperate(arg, 2);
+	std::vector< std::string > w = seperate(arg, 3);
 
 	pichi->sql->query("SELECT revision FROM wiki WHERE name = '" + pichi->sql->escapeString(w[0]) + "' ORDER BY revision DESC LIMIT 0,1;");
 	size_t rev;
@@ -450,7 +462,7 @@ void commandbase::command_set(std::string arg)
 	if(!pichi->isAccess())
 		return;
      
-	std::vector< std::string > w = seperate(arg, 2);
+	std::vector< std::string > w = seperate(arg, 3);
 	if(pichi->setOption(w[0], w[1]))
 		pichi->sendAnswer(TR("command_set"));
 	else	
@@ -462,7 +474,7 @@ void commandbase::command_msg(std::string arg)
 	if(!pichi->isAccess())
 		return;
      
-	std::vector< std::string > w = seperate(arg, 1);
+	std::vector< std::string > w = seperate(arg, 2);
 
 	pichi->jabber->sendMessage(JID(pichi->getJID(w[0])), w[1]);
 	//$this->log->log("Send message to $user: $message", PichiLog::LEVEL_DEBUG);
@@ -588,7 +600,7 @@ void commandbase::command_q(std::string arg)
 
 void commandbase::command_greet(std::string arg)
 {
-	std::vector< std::string > w = seperate(arg, 2);
+	std::vector< std::string > w = seperate(arg, 3);
 	if(!pichi->isAccess())
 		return;
 	pichi->sql->query("SELECT COUNT(*) FROM actions WHERE action = 'user_join_room' AND coincidence='room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "';");
@@ -601,7 +613,7 @@ void commandbase::command_greet(std::string arg)
 
 void commandbase::command_farewell(std::string arg)
 {
-	std::vector< std::string > w = seperate(arg, 2);
+	std::vector< std::string > w = seperate(arg, 3);
 	if(!pichi->isAccess())
 		return;
 	pichi->sql->query("SELECT COUNT(*) FROM actions WHERE action = 'user_left_room' AND coincidence='room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "';");
@@ -696,7 +708,7 @@ void commandbase::command_translate(std::string arg)
 
 void commandbase::command_tr(std::string arg)
 {
-	std::vector< std::string > w = seperate(arg, 1);
+	std::vector< std::string > w = seperate(arg, 2);
 	std::vector< std::string > langs = system::explode("2", w[0]);
 	
 	pichi->sendAnswer(func_command_googletranslate(w[1], langs[0], langs[1], "http://google.com"));
@@ -704,7 +716,7 @@ void commandbase::command_tr(std::string arg)
 
 void commandbase::command_translate_language(std::string arg)
 {
-	std::vector< std::string > w = seperate(arg, 1);
+	std::vector< std::string > w = seperate(arg, 2);
 	std::string jid = pichi->getJIDlast();
 	pichi->setJIDinfo(jid, "translate_from", w[0]);
 	pichi->setJIDinfo(jid, "translate_to", w[1]);

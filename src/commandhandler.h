@@ -39,7 +39,7 @@ class commandhandler
     pichicore* pichi;
     std::string last_command;
     std::string last_args;
-    std::vector< std::string > seperate(std::string str, int level = 1);
+    std::vector< std::string > seperate(std::string str, int level = 2);
 };
 
 #endif // COMMANDHANDLER_H
