@@ -68,7 +68,8 @@ commandbase::commandbase(pichicore* p): commandhandler(p)
 	
 	commands["translate"] = &commandbase::command_translate;
 	commands["tr"] = &commandbase::command_tr;
-	commands["translate_language"] = &commandbase::command_translate_language;;
+	commands["translate_language"] = &commandbase::command_translate_language;
+	commands["google"] = &commandbase::command_google;
 }
 
 void commandbase::fetchCommand(std::string command)
@@ -720,4 +721,42 @@ void commandbase::command_translate_language(std::string arg)
 	std::string jid = pichi->getJIDlast();
 	pichi->setJIDinfo(jid, "translate_from", w[0]);
 	pichi->setJIDinfo(jid, "translate_to", w[1]);
+}
+
+void commandbase::command_google(std::string arg)
+{
+	pichicurl* curl = new pichicurl();
+	curl->setUrl("http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=" + curl->urlencode(arg));
+	curl->setReferer("http://google.com");
+	std::string ret = curl->read();
+	delete curl;
+	
+	if(ret == "")
+	{
+		LOG("Google search can failed.", LOG::DEBUG);
+		return;
+	}
+	
+	boost::property_tree::ptree ptree, result;
+	std::stringstream stream(ret);
+	boost::property_tree::json_parser::read_json(stream, ptree);
+
+	std::string ans = "";
+	
+	if(ptree.get("responseStatus", "") == "200")
+	{
+		result = ptree.get_child("responseData").get_child("results");
+		BOOST_FOREACH(boost::property_tree::ptree::value_type &ptree, result)
+		{
+		      ans += "\n" + ptree.second.get("url","") + " - " 
+			+ ptree.second.get("titleNoFormatting","") + "\n" 
+			+ "(" + ptree.second.get("content","") + ")\n";
+		}
+		pichi->sendAnswer(ans);
+	}
+	/*
+		return ptree.get_child("responseData").get("translatedText", "");
+	else
+		return "";
+	*/
 }

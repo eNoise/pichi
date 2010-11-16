@@ -92,6 +92,7 @@ class commandbase : public commandhandler
 	  void command_translate(std::string arg);
 	  void command_tr(std::string arg);
 	  void command_translate_language(std::string arg);
+	  void command_google(std::string arg);
 };
 
 #endif // COMMANDBASE_H

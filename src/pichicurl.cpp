@@ -38,13 +38,10 @@ pichicurl::~pichicurl()
 
 int pichicurl::writer(char* data, size_t size, size_t nmemb, std::string* buf)
 {
-	int result = 0;  
-    
-	buf->clear();
-	buf->append(data, size * nmemb);  
-	result = size * nmemb;  
-  
-	return result;
+	int rslt = 0;
+	buf->append(data, size * nmemb);
+	rslt = size * nmemb;
+	return rslt;
 }
 
 std::string pichicurl::readurl(std::string u)
@@ -55,7 +52,8 @@ std::string pichicurl::readurl(std::string u)
 
 std::string pichicurl::read(void )
 {
-	curl_easy_perform(curl);
+	buffer.clear();
+	result = curl_easy_perform(curl);
 	if (result == CURLE_OK)
 		return buffer;
 	else
