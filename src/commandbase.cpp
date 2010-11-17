@@ -501,10 +501,38 @@ void commandbase::command_gc(std::string arg)
 	
 void commandbase::command_users(std::string arg)
 {
-	pichi->sql->query("SELECT * FROM users;");
+  	int ct = 20;
+	bool individual = false;
+	if(arg != "")
+	{
+		if(arg.substr(0,1) != "!")
+		{
+			try
+			{
+				ct = system::atoi(arg);
+			}
+			catch(boost::bad_lexical_cast e)
+			{
+				individual = true;
+			}
+		}
+		else
+		{
+			arg = arg.substr(1);
+			individual = true;
+		}
+	}
+  
+	pichi->sql->query("SELECT COUNT(*) FROM users WHERE status = 'available';");
+	int avl = system::atoi(pichi->sql->fetchColumn(0));
+	pichi->sql->query("SELECT COUNT(*) FROM users WHERE status = 'unavailable';");
+	int navl = system::atoi(pichi->sql->fetchColumn(0));
+	
+	pichi->sql->query("SELECT * FROM users LIMIT 0," + system::itoa(ct) + ";");
 	std::string userlist, online, offline;
 	std::map<std::string, std::string> data;
-	if(arg == "")
+	bool isfind = false;
+	if(!individual)
 	{
 		//$this->log->log("Begin creting user list", PichiLog::LEVEL_DEBUG);
 		userlist = "" + TR("command_users_list_seen") + ":\n";
@@ -527,6 +555,8 @@ void commandbase::command_users(std::string arg)
 				//$this->log->log("User $data[nick]: offline", PichiLog::LEVEL_VERBOSE);
 			}
 		}
+		online += "Показано " + system::itoa(n) + " пользователей из " + system::itoa(avl) + "\n";
+		offline += "Показано " + system::itoa(f) + " пользователей из " + system::itoa(navl) + "\n";
 		userlist += "" + TR("command_users_online") + ":\n" + online;
 		userlist += "" + TR("command_users_offline") + ":\n" + offline;
 		pichi->sendAnswer(userlist);
@@ -537,10 +567,13 @@ void commandbase::command_users(std::string arg)
 		{
 			if(data["nick"] == arg || data["jid"] == arg)
 			{
+				isfind = true;
 				//$this->log->log("User {$data['nick']} founded!", PichiLog::LEVEL_VERBOSE);
 				pichi->sendAnswer(TR3("command_status", data["nick"].c_str(), ((data["status"] == "available") ? TR("command_status_online").c_str() : TR("command_status_offline").c_str())));
 			}
 		}
+		if(!isfind)
+			pichi->sendAnswer("Пользователь " + arg + " не найден.");
 	}
 }
 
