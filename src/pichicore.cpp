@@ -42,7 +42,6 @@ pichicore::~pichicore()
 {
 	delete commander;
 	delete sql;
-	delete jabber;
 	delete lang;
 	delete lex;
 	delete event;
