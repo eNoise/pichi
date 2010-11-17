@@ -639,7 +639,7 @@ void commandbase::command_greet(std::string arg)
 		return;
 	pichi->sql->query("SELECT COUNT(*) FROM actions WHERE action = 'user_join_room' AND coincidence='room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "';");
 	if(system::atoi(pichi->sql->fetchColumn(0)) > 0)
-		pichi->sql->exec("UPDATE actions SET value = '" + pichi->sql->escapeString(w[2]) + "'  WHERE action = 'user_join_room' AND coincidence='room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[1]) + "';");
+		pichi->sql->exec("UPDATE actions SET value = '" + pichi->sql->escapeString(w[2]) + "'  WHERE action = 'user_join_room' AND coincidence='room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "';");
 	else
 		pichi->sql->exec("INSERT INTO actions (`action`,`coincidence`,`do`,`option`,`value`) VALUES ('user_join_room', 'room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "', 'send_message', '', '" + pichi->sql->escapeString(w[2]) + "');");
 	pichi->sendAnswer("Updated!");
@@ -652,7 +652,7 @@ void commandbase::command_farewell(std::string arg)
 		return;
 	pichi->sql->query("SELECT COUNT(*) FROM actions WHERE action = 'user_left_room' AND coincidence='room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "';");
 	if(system::atoi(pichi->sql->fetchColumn(0)) > 0)
-		pichi->sql->exec("UPDATE actions SET value = '" + pichi->sql->escapeString(w[2]) + "'  WHERE action = 'user_left_room' AND coincidence='room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[1]) + "';");
+		pichi->sql->exec("UPDATE actions SET value = '" + pichi->sql->escapeString(w[2]) + "'  WHERE action = 'user_left_room' AND coincidence='room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "';");
 	else
 		pichi->sql->exec("INSERT INTO actions (`action`,`coincidence`,`do`,`option`,`value`) VALUES ('user_left_room', 'room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "', 'send_message', '', '" + pichi->sql->escapeString(w[2]) + "');");
 	pichi->sendAnswer("Updated!");
