@@ -320,7 +320,10 @@ void pichicore::sendAnswer(std::string message)
 		to = last_from;
 	
 	if(message.size() > system::atoi(options["msg_limit"]) && system::atoi(options["msg_limit"]) > 1 && last_type == "groupchat")
+	{
+		jabber->sendMessage(JID(last_room), "Сообщение слишком длинное, ответ будет отправлен в личку.");
 		to = last_jid;
+	}
 	//($hook = PichiPlugin::fetch_hook('pichicore_answer_send')) ? eval($hook) : false;
 	
 	if(to == "")
