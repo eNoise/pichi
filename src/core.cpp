@@ -265,6 +265,10 @@ void *core::cron(void *context)
 			((core *)context)->client->whitespacePing();
 		}
 		((core *)context)->pichi->cronDo("cron");
+#ifndef WIN32
 		sleep(1);
+#else
+		Sleep(1);
+#endif
 	}
 }
