@@ -15,7 +15,10 @@
                 <option name="info_session_begin" type="string">Start session</option>
                 <option name="info_send_random_message" type="string">Sending random message</option>
                 <option name="warn_cant_recive_jid" type="string">Can't find JID of occupant. This may occur because of incorrect settings of the room. The work of bot in this mode is not guaranteed.</option>
-                
+                <option name="message_to_private_chat" type="string">The message is too long, the answer will be send to private chat.</option>
+		<option name="bad_argument" type="string">Bad argument.</option>
+		<option name="updated" type="string">Updated</option>
+		
                 <option name="help_syntaxis_info" type="string">Basics of guidance:
 All commands begins with !
 After the command must be specified parameters:
@@ -26,7 +29,7 @@ parameter1|parameter2 - parameter1 OR parameter2 (one of)
 		<option name="help_command_description_set" type="string">Set value of option. Example: !set answer_mode=1</option>
 		<option name="help_command_description_gc" type="string">Get value of option. Can be enter without parameter, then show the value of all options. With a parameter it will show only for specified. Example: !gc answer_mode.</option>
 		<option name="help_command_description_log" type="string">Show last n conference messages. Example: !log 10</option>
-		<option name="help_command_description_users" type="string">Show list of users. Shows users that are online or have ever been online. To get status of defined user enter JID or nick as a parameter. Example: !users deg</option>
+		<option name="help_command_description_users" type="string">Show list of users. Shows users that are online or have ever been online. To get status of defined user enter JID or nick as a parameter. Example: !users - displays info about all users. !users deg - shows info about user with nick deg. !users 10 - shows info about 10 users. !users !10 - displays info about user with nick "10".</option>
 		<option name="help_command_description_msg" type="string">Send message to user. First parameter is address (user OR room (conference)). Second parameter is type: chat OR groupchat (for room (conference)). The third is text of message. Example: !msg "room@conference.jabber.ru" "groupchat" "Example message".</option>
 		<option name="help_command_description_ping" type="string">Show response time from the user (ping of user). Example: !ping deg</option>
 		<option name="help_command_description_join" type="string">Enter into the room. Example: !join room@conference.jabber.ru</option>
@@ -40,6 +43,7 @@ parameter1|parameter2 - parameter1 OR parameter2 (one of)
 		<option name="help_command_description_ban" type="string">Ban the user. First parameter is nick or jid of user. The second is time (You can use abbreviation like 5m - 5 minutes, 5h - 5 hours, 3M - 3 months). If time is specified, ban will be automatically removed after specified period of time. Third parameter is reason (optional). Example: !ban "vovan" "5h" "There is a reason"</option>
 		<option name="help_command_description_unban" type="string">Unban specified user. Example: !unban vovan@jabber.uruchie.org</option>
 		<option name="help_command_description_banlist" type="string">Show banlist.</option>
+		<option name="help_command_description_kicklist" type="string">Show kicklist.</option>
 		<option name="help_command_description_kick" type="string">Kick user from the room. If time is specified the user (if user trying to enter) will be automatically kicked during the specified time. First parameter is jid Or nick. The second is time (see above !ban). The third is reason (optional). Example: !kick vovan 5m just_so</option>
 		<option name="help_command_description_unckick" type="string">Cancel operation of the '!kick' command. This command need only if '!kick' command was entered with a parameter 'time'. Example: !unkick vovan</option>
 		<option name="help_command_description_plugins" type="string">Show list of all plugins.</option>
@@ -59,6 +63,7 @@ parameter1|parameter2 - parameter1 OR parameter2 (one of)
 		<option name="help_command_description_nicks" type="string">Show all nicks of user.</option>
 		<option name="help_command_description_on" type="string">Enable all functions of bot.</option>
 		<option name="help_command_description_off" type="string">Disable all functions of bot.</option>
+		<option name="help_command_description_q" type="string">Ask the bot to say a phrase with the specified word</option>
 		
 		<option name="help_command_usage_param" type="string">parameter</option>
 		<option name="help_command_usage_value" type="string">value</option>
@@ -70,6 +75,7 @@ parameter1|parameter2 - parameter1 OR parameter2 (one of)
 		<option name="help_command_usage_reason" type="string">reason</option>
 		<option name="help_command_usage_time" type="string">time</option>
 		<option name="help_command_usage_variable" type="string">variable</option>
+		<option name="help_command_usage_number" type="string">number</option>
 		
 		<option name="help_plugins" type="string">Plug-ins system</option>
 		<option name="help_admin_commands" type="string">Administrator's commands</option>
@@ -78,7 +84,10 @@ parameter1|parameter2 - parameter1 OR parameter2 (one of)
 		<option name="help_lexems" type="string">Talking</option>
 		
 		<option name="command_version_plugins" type="string">List of plug-ins</option>
+		<option name="command_version_environment" type="string">System environment</option>
+		<option name="command_plugins_no_sorry" type="string">Sorry, the plugin system temporarily disabled.</option>
 		<option name="command_banlist_lock" type="string">Banlist</option>
+		<option name="command_kicklist_lock" type="string">Kicklist</option>
 		<option name="command_wiki_count" type="string">Ddefinitions' count in the database.</option>
 		<option name="command_wiki_nodef" type="string">No definition in database.</option>
 		<option name="command_wiki_revision" type="string">Revision</option>
@@ -97,6 +106,8 @@ parameter1|parameter2 - parameter1 OR parameter2 (one of)
 		<option name="command_users_offline_seen" type="string">{1}. {2} (The last time was at {3} in room {4})</option>
 		<option name="command_users_online" type="string">Users online</option>
 		<option name="command_users_offline" type="string">Users offline</option>
+		<option name="command_users_limitshow" type="string">Display {1} user(s) from {2}</option>
+		<option name="command_users_nouser" type="string">User {1} doesn't exist</option>
 		<option name="command_status" type="string">User {1} now {2}</option>
 		<option name="command_status_online" type="string">online</option>
 		<option name="command_status_offline" type="string">offline</option>
