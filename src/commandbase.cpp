@@ -70,6 +70,8 @@ commandbase::commandbase(pichicore* p): commandhandler(p)
 	commands["tr"] = &commandbase::command_tr;
 	commands["translate_language"] = &commandbase::command_translate_language;
 	commands["google"] = &commandbase::command_google;
+	
+	commands["urlshort"] = &commandbase::command_urlshort;
 }
 
 void commandbase::fetchCommand(std::string command)
@@ -138,6 +140,7 @@ void commandbase::command_help(std::string arg)
 	help += "!q " + TR("help_command_usage_param") + " - " + TR("help_command_description_q") + "\n";
 
 	help += "=====  " +  TR("help_other_commands")  + "  =====\n";
+	help += "!urlshort " + TR("help_command_usage_param") + " - " + "Показывает укороченный url через сервис ur.ly" + "\n";
 	//($hook = PichiPlugin::fetch_hook("commands_show_help")) ? eval($hook) : false;
 		
 	pichi->sendAnswer(help);
@@ -787,4 +790,25 @@ void commandbase::command_google(std::string arg)
 		}
 		pichi->sendAnswer(ans);
 	}
+}
+
+void commandbase::command_urlshort(std::string arg)
+{
+	pichicurl* curl = new pichicurl();
+	curl->setUrl("http://ur.ly/new.json?href=" + curl->urlencode(arg));
+	std::string ret = curl->read();
+	delete curl;
+	
+	if(ret == "" || ret.substr(0,1) != "{")
+	{
+		LOG("UL.ly failed.", LOG::DEBUG);
+		pichi->sendAnswer("Сервис недоступен, либо некорректный url.");
+		return;
+	}
+	
+	boost::property_tree::ptree ptree;
+	std::stringstream stream(ret);
+	boost::property_tree::json_parser::read_json(stream, ptree);
+	
+	pichi->sendAnswer("http://ur.ly/" + ptree.get("code",""));
 }
