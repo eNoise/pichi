@@ -20,7 +20,7 @@
 
 #include "sqlite.h"
 
-sqlite::sqlite(std::string f):dbfile(f)
+sqlite::sqlite(const std::string& f):dbfile(f)
 {
 	int rc;
 	rc = sqlite3_open(dbfile.c_str(), &db);
@@ -38,7 +38,7 @@ sqlite::~sqlite()
 	sqlite3_close(db);
 }
 
-bool sqlite::query(std::string sql)
+bool sqlite::query(const std::string& sql)
 {  
 	if(sql != mainquery.query_string)
 	{
@@ -62,7 +62,7 @@ bool sqlite::query(std::string sql)
 }
 
 
-sqlite::q* sqlite::squery(std::string sql)
+sqlite::q* sqlite::squery(const std::string& sql)
 {
 	q* ret = new q();
 	ret->query_string = sql;
@@ -82,7 +82,7 @@ sqlite::q* sqlite::squery(std::string sql)
 }
 
 
-bool sqlite::exec(std::string sql)
+bool sqlite::exec(const std::string& sql)
 {
 	char *errtext = NULL;
   
@@ -130,7 +130,7 @@ std::map<std::string, std::string> sqlite::fetchArray(q* state)
 	return row;
 }
 
-std::string sqlite::fetchColumn(int num, bool stay)
+std::string sqlite::fetchColumn(const int num, bool stay)
 {
 	if(!stay)
 		mainquery.result_status = sqlite3_step(mainquery.statement);
@@ -169,7 +169,7 @@ void sqlite::finalize()
 	mainquery.rows_count = 0;
 }
 
-const std::string sqlite::escapeString(std::string sql)
+const std::string sqlite::escapeString(const std::string& sql)
 {
 	return static_cast<std::string>(sqlite3_mprintf("%q", sql.c_str())); 
 }

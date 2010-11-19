@@ -41,15 +41,15 @@ class sqlite
 			void finalize(void);
 		};
 	  
-		sqlite(std::string f);
-		bool query(std::string);
-		q* squery(std::string);
-		bool exec(std::string);
+		sqlite(const std::string& f);
+		bool query(const std::string&);
+		q* squery(const std::string&);
+		bool exec(const std::string&);
 		std::map<std::string, std::string> fetchArray(q* state = NULL);
-		std::string fetchColumn(int num, bool stay = false);
+		std::string fetchColumn(const int num, bool stay = false);
 		const int numColumns() const;
 		const int numRows() const;
-		const std::string escapeString(std::string);
+		const std::string escapeString(const std::string&);
 		bool reset();
 		void finalize();
 		~sqlite();
