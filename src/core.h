@@ -34,6 +34,7 @@
 #include <iostream>
 #include <list>
 #include <time.h>
+#include <pthread.h>
 
 #include "pichicore.h"
 #include "system.h"
@@ -54,8 +55,11 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
 	protected:
 		pichicore* pichi;
 	  
+		time_t white_ping;
+		pthread_t thread;
 		void botstart(void);
 		void initDBStruct(void);
+		static void *cron(void *context);
 	public:
 		core();
                 ~core();

@@ -42,6 +42,9 @@ void core::botstart(void)
 	client->registerPresenceHandler( this );
 	BOOST_FOREACH( std::string room, system::explode(",", pichi->getConfigOption("room")) )
 		enterRoom(JID(room + "/" + nick));
+	white_ping = time(NULL);
+	if(pthread_create(&thread, NULL, &core::cron, (void*)this) > 0)
+		throw PichiException("Error in cron thread");
 	client->connect();
 }
 
@@ -248,4 +251,20 @@ void core::handleEvent(const Event& event)
 gloox::JID& core::getMyJID(void )
 {
 	return jid;
+}
+
+void *core::cron(void *context)
+{
+	while(true)
+	{
+		if(time(NULL) - ((core *)context)->white_ping > 5 * 60)
+		{
+			((core *)context)->white_ping = time(NULL);
+			LOG("[CRON] Ping of live", LOG::INFO);
+		
+			((core *)context)->client->whitespacePing();
+		}
+		((core *)context)->pichi->cronDo("cron");
+		sleep(1);
+	}
 }
