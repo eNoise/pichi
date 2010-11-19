@@ -15,7 +15,10 @@
                 <option name="info_session_begin" type="string">Начало сессии</option>
                 <option name="info_send_random_message" type="string">Отправка случайного сообщения</option>
                 <option name="warn_cant_recive_jid" type="string">Не удается узнать JID участника. Это может происходить из-за неправильных настроек комнаты. Работа бота в таком режиме не гарантируется.</option>
-                
+                <option name="message_to_private_chat" type="string">Сообщение слишком длинное, ответ будет отправлен в личку.</option>
+		<option name="bad_argument" type="string">Плохой аргумент</option>
+		<option name="updated" type="string">Обновлено</option>
+		
                 <option name="help_syntaxis_info" type="string">Основы управления:
 Все команды начинаются с !
 После команды указываются параметры:
@@ -26,7 +29,7 @@
 		<option name="help_command_description_set" type="string">Устанавливает значение опции. Пример: !set answer_mode=1</option>
 		<option name="help_command_description_gc" type="string">Получить значение опции. Можно вызывать без параметра, тогда покажет значения всех опций. С параметром - только для определённой. Пример: !gc answer_mode.</option>
 		<option name="help_command_description_log" type="string">Показать последние n сообщений конференции. Пример: !log 10</option>
-		<option name="help_command_description_users" type="string">Показать список пользователей. Показывает пользователей которые онлайн или когда-либо были онлайн. Узнать статус определенного пользователя можно указав JID или ник как параметр. Пример: !users deg</option>
+		<option name="help_command_description_users" type="string">Показать список пользователей. Показывает пользователей которые онлайн или когда-либо были онлайн. Узнать статус определенного пользователя можно указав JID или ник как параметр. Пример: !users - покажет информацию о всех пользователя. !users deg - покажет информацию о пользователе с ником deg. !users 10 - покажет информацию о 10 пользователях. !users !10 - покажет информацию о человеке с ником "10".</option>
 		<option name="help_command_description_msg" type="string">Отправить сообщение пользователю. Первым параметром является адрес (пользователь или комната). Второй - тип: chat или groupchat (для комнаты). Третий - текст сообщения. Пример: !msg "room@conference.jabber.ru" "groupchat" "Пример сообщения".</option>
 		<option name="help_command_description_ping" type="string">Показать время отклика от пользователя (пинг пользователя). Пример: !ping deg</option>
 		<option name="help_command_description_join" type="string">Войти в комнату. Пример: !join room@conference.jabber.ru</option>
@@ -40,6 +43,7 @@
 		<option name="help_command_description_ban" type="string">Забанить пользователя. Первым параметром является ник или jid пользователя. Второй - время (можно использовать сокращения вида 5m - 5 минут, 5h - 5 часов, 3M - 3 месяца). Если указано время, бан будет автоматически снят спустя указанный промежуток времени. Третий параметр - причина (опционально). Пример: !ban "vovan" "5h" "причина"</option>
 		<option name="help_command_description_unban" type="string">Снять бан с указанного пользователя. Пример: !unban vovan@jabber.uruchie.org</option>
 		<option name="help_command_description_banlist" type="string">Показать список заблокированных пользователей.</option>
+		<option name="help_command_description_kicklist" type="string">Показать список закиканых пользователей.</option>
 		<option name="help_command_description_kick" type="string">Выгнать пользователя из комнаты. Если указано время, пользователя (при попытках зайти) будет автоматически сразу выгонять из комнаты на протяжении указанного времени. Первый параметр - jid или ник. Второй - время (см !ban). Третий - причина (опционально). Пример: !kick vovan 5m просто_так</option>
 		<option name="help_command_description_unckick" type="string">Прервать действие команды !kick. Необходима только, если команда !kick была использована с параметром "время". Пример: !unkick vovan</option>
 		<option name="help_command_description_plugins" type="string">Показать список всех плагинов.</option>
@@ -59,6 +63,7 @@
 		<option name="help_command_description_nicks" type="string">Отображает все ники указанного пользователя</option>
 		<option name="help_command_description_on" type="string">Включает бота</option>
 		<option name="help_command_description_off" type="string">Отключает бота</option>
+		<option name="help_command_description_q" type="string">Попросить бота сказать фразу с заданным словом</option>
 		
 		<option name="help_command_usage_param" type="string">параметр</option>
 		<option name="help_command_usage_value" type="string">значение</option>
@@ -70,6 +75,7 @@
 		<option name="help_command_usage_reason" type="string">причина</option>
 		<option name="help_command_usage_time" type="string">время</option>
 		<option name="help_command_usage_variable" type="string">переменная</option>
+		<option name="help_command_usage_number" type="string">число</option>
 		
 		<option name="help_plugins" type="string">Система плагинов</option>
 		<option name="help_admin_commands" type="string">Команды администратора</option>
@@ -78,7 +84,10 @@
 		<option name="help_lexems" type="string">Разговорник</option>
 		
 		<option name="command_version_plugins" type="string">Список плагинов</option>
+		<option name="command_version_environment" type="string">Программное обеспечение</option>
+		<option name="command_plugins_no_sorry" type="string">Извините, система плагинов временно отключена.</option>
 		<option name="command_banlist_lock" type="string">Список "забаненных"</option>
+		<option name="command_kicklist_lock" type="string">Список "закиканых"</option>
 		<option name="command_wiki_count" type="string">Количество определений в базе вики</option>
 		<option name="command_wiki_nodef" type="string">В базе вики нету этого определения</option>
 		<option name="command_wiki_revision" type="string">Ревизия</option>
@@ -97,6 +106,8 @@
 		<option name="command_users_offline_seen" type="string">{1}. {2} (Последний раз был в {3} в комнате {4})</option>
 		<option name="command_users_online" type="string">Присутствующие пользователи</option>
 		<option name="command_users_offline" type="string">Отсутствующие пользователи</option>
+		<option name="command_users_limitshow" type="string">Показано {1} пользователей из {2}</option>
+		<option name="command_users_nouser" type="string">Пользователь {1} не найден</option>
 		<option name="command_status" type="string">Пользователь {1} сейчас {2}</option>
 		<option name="command_status_online" type="string">на связи</option>
 		<option name="command_status_offline" type="string">отсутствует</option>

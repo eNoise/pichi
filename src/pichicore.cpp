@@ -64,9 +64,6 @@ void pichicore::on(void )
 
 void pichicore::setUserInfo(std::string jid, std::string nick, std::string state, std::string room, std::string role, std::string status)
 {
-	//if($role == NULL)
-	//	$role = "participant"; //Default permission
-  
 	int level = 1; // defaul access level
 	
 	sql->query("SELECT `status` FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
@@ -105,7 +102,7 @@ void pichicore::setUserInfo(std::string jid, std::string nick, std::string state
 	}
 	
 	//($hook = PichiPlugin::fetch_hook('pichicore_status_set')) ? eval($hook) : false;
-	//$this->log->log("Updating user status for $nick($jid) in $room = $status", PichiLog::LEVEL_DEBUG);
+	LOG("Updating user " + nick + "(" + jid + ")[" + status + "] in " + room, LOG::DEBUG);
 	
 	sql->query("SELECT COUNT(*) FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
 	if(system::atoi(sql->fetchColumn(0)) > 0)
@@ -139,7 +136,7 @@ bool pichicore::isJID(std::string& jid)
 
 std::string pichicore::getJID(std::string nick, std::string room, bool full_search)
 {
-	//$this->log->log("Get JID from $nick", PichiLog::LEVEL_VERBOSE);
+	LOG("Get JID from " + nick, LOG::VERBOSE);
 	if(isJID(nick))
 	{
 		std::vector< std::string > exp = system::explode("/", nick);
@@ -178,7 +175,7 @@ std::string pichicore::getDefaultRoom(void)
 
 std::string pichicore::getName(std::string jid, std::string room)
 {
-	//$this->log->log("Get Nick from JID $jid", PichiLog::LEVEL_VERBOSE);
+	LOG("Get Nick from JID " + jid, LOG::VERBOSE);
 	if(!isJID(jid))
 		return jid;
 	
@@ -214,7 +211,7 @@ bool pichicore::isAccess(int level, std::string jid, std::string room, bool room
 		return false;
 	int dblevel = system::atoi(tempresult);
 	
-	//$this->log->log("Test access to {$jid}: {$dblevel} >= {$level}", PichiLog::LEVEL_VERBOSE);
+	LOG("Test access to " + jid + ": " + tempresult + " >= " + system::itoa(level), LOG::VERBOSE);
 	
 	if(dblevel >= level)
 		return true;
@@ -226,7 +223,7 @@ bool pichicore::reciveMessage(std::string message, std::string type, std::string
 {
 	if(time(NULL) - wait < wait_time)
 	{
-		//$this->log->log("Ignore Message: <$from> $message", PichiLog::LEVEL_DEBUG);
+		LOG("Ignore Message", LOG::DEBUG);
 		return false;
 	}
   
@@ -255,7 +252,7 @@ bool pichicore::reciveMessage(std::string message, std::string type, std::string
 		
 	if(!isAccess(1, last_jid, last_room, true))
 	{
-		//$this->log->log("Ignore this message", PichiLog::LEVEL_DEBUG);
+		LOG("Acess denied", LOG::DEBUG);
 		return false;
 	}
 	
@@ -320,7 +317,7 @@ void pichicore::sendAnswer(std::string message)
 	
 	if(message.size() > system::atoi(options["msg_limit"]) && system::atoi(options["msg_limit"]) > 1 && last_type == "groupchat")
 	{
-		jabber->sendMessage(JID(last_room), "Сообщение слишком длинное, ответ будет отправлен в личку.");
+		jabber->sendMessage(JID(last_room), (*lang)("message_to_private_chat"));
 		to = last_jid;
 	}
 	//($hook = PichiPlugin::fetch_hook('pichicore_answer_send')) ? eval($hook) : false;
@@ -349,12 +346,12 @@ bool pichicore::setOption(std::string option, std::string value)
 	if(system::atoi(sql->fetchColumn(0)) > 0)
 	{
 		setSqlOption(option, value);
-		//$this->log->log("Updated option $option = $value", PichiLog::LEVEL_DEBUG);
+		LOG("Updated option '" + option + "' = " + value, LOG::DEBUG);
 		return true;
 	}
 	else
 	{
-		//$this->log->log("Can't set $option. There is no such option.", PichiLog::LEVEL_DEBUG);
+		LOG("Can't set '" + option + "'. There is no such option.", LOG::DEBUG);
 		return false;
 	}
 	

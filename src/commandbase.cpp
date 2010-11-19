@@ -93,8 +93,8 @@ void commandbase::command_help(std::string arg)
 	help += "!set " + TR("help_command_usage_variable") + "=" + TR("help_command_usage_value") + " - " + TR("help_command_description_set") + "\n";
 	help += "!gc [" + TR("help_command_usage_variable") + "] - " + TR("help_command_description_gc") + "\n";
 	help += "!log " + TR("help_command_usage_param") + " - " + TR("help_command_description_log") + "\n";
-	help += "!users [" + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + "] - " + TR("help_command_description_users") + "\n";		
-	help += "!msg [" + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + "|" + TR("help_command_usage_room") + "] [type] message - " + TR("help_command_description_msg") + "\n";
+	help += "!users [" + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + "|" + TR("help_command_usage_number") + "] - " + TR("help_command_description_users") + "\n";		
+	help += "!msg [" + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + "|" + TR("help_command_usage_room") + "] " + TR("help_command_usage_message") + " - " + TR("help_command_description_msg") + "\n";
 	help += "!ping [" + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + "] - " + TR("help_command_description_ping") + "\n";
 	help += "!join " + TR("help_command_usage_room") + " " + TR("help_command_usage_nick") + " [" + TR("help_command_usage_status") + "] - " + TR("help_command_description_join") + "\n";
 	help += "!left " + TR("help_command_usage_room") + " " + TR("help_command_usage_nick") + " [" + TR("help_command_usage_status") + "] - " + TR("help_command_description_left") + "\n";
@@ -111,7 +111,7 @@ void commandbase::command_help(std::string arg)
 	help += "!ban " + TR("help_command_usage_jid") + "|" + TR("help_command_usage_nick") + " [" + TR("help_command_usage_time") + "] [" + TR("help_command_usage_reason") + "] - " + TR("help_command_description_ban") + "\n";
 	help += "!unban " + TR("help_command_usage_jid") + " - " + TR("help_command_description_jid") + "\n";
 	help += "!banlist - " + TR("help_command_description_banlist") + "\n";
-	help += "!banlist - " + static_cast<std::string>("киклист") + "\n";
+	help += "!kicklist - " + TR("help_command_description_kicklist") + "\n";
 	help += "!kick " + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + " [" + TR("help_command_usage_time") + "] [" + TR("help_command_usage_reason") + "] - " + TR("help_command_description_kick") + "\n";
 	help += "!unkick " + TR("help_command_usage_jid") + " - " + TR("help_command_description_unkick") + "\n";
 	
@@ -135,7 +135,7 @@ void commandbase::command_help(std::string arg)
 	help += "!count - " + TR("help_command_description_count") + "\n";
 	help += "!talkers - " + TR("help_command_description_talkers") + "\n";
 	help += "!nicks " + TR("help_command_usage_param") + " - " + TR("help_command_description_nicks") + "\n";
-	help += "!q " + TR("help_command_usage_param") + " - " + "Попросить бота сказать фразу с заданным словом" + "\n";
+	help += "!q " + TR("help_command_usage_param") + " - " + TR("help_command_description_q") + "\n";
 
 	help += "=====  " +  TR("help_other_commands")  + "  =====\n";
 	//($hook = PichiPlugin::fetch_hook("commands_show_help")) ? eval($hook) : false;
@@ -148,7 +148,7 @@ void commandbase::command_version(std::string null)
 	//global $config;
 	pichi->sendAnswer(
 		static_cast<std::string>("Pichi Bot v.") + PICHI_VERSION
-		+ "\nSystem environment:\n" +
+		+ "\n" + TR("command_version_environment") + "\n" +
 		+ "SQLite version: " + SQLITE_VERSION + "\n" +
 		+ "CURL version: " + curl_version() + "\n" +
 		+ "Boost version: " + BOOST_LIB_VERSION
@@ -162,7 +162,7 @@ void commandbase::command_enable(std::string arg)
 	if(!pichi->isAccess())
 		return;
 	
-	pichi->sendAnswer("Sorry, Plugin system deprecated");
+	pichi->sendAnswer(TR("command_plugins_no_sorry"));
 	//PichiPlugin::enable(system::atoi(arg));
 }
 
@@ -171,7 +171,7 @@ void commandbase::command_disable(std::string arg)
 	if(!pichi->isAccess())
 		return;
 	
-	pichi->sendAnswer("Sorry, Plugin system deprecated");
+	pichi->sendAnswer(TR("command_plugins_no_sorry"));
 	//PichiPlugin::disable(system::atoi(arg));
 }
 
@@ -246,7 +246,7 @@ void commandbase::command_kicklist(std::string arg)
 	{
 		kicklist += kicks["jid"] + " " + system::timeToString(system::atot(kicks["value"]), "%d.%m.%Y в %H:%M:%S") + "\n";
 	}
-	pichi->sendAnswer("Закиканые до смерти:\n" + kicklist);
+	pichi->sendAnswer(TR("command_kicklist_lock") + ":\n" + kicklist);
 }
 
 void commandbase::command_log(std::string arg)
@@ -371,7 +371,7 @@ void commandbase::command_top(std::string arg)
 		}
 		catch(boost::bad_lexical_cast e)
 		{
-			pichi->sendAnswer("Плохой аргумент");
+			pichi->sendAnswer(TR("bad_argument"));
 		}
 	}
 	pichi->sql->query("SELECT `lexeme`,`count` FROM lexems ORDER BY count DESC LIMIT 0," + system::itoa(ct) + ";");
@@ -555,8 +555,8 @@ void commandbase::command_users(std::string arg)
 				//$this->log->log("User $data[nick]: offline", PichiLog::LEVEL_VERBOSE);
 			}
 		}
-		online += "Показано " + system::itoa(n) + " пользователей из " + system::itoa(avl) + "\n";
-		offline += "Показано " + system::itoa(f) + " пользователей из " + system::itoa(navl) + "\n";
+		online += TR3("command_users_limitshow", system::itoa(n).c_str(), system::itoa(avl).c_str()) + "\n";
+		offline += TR3("command_users_limitshow", system::itoa(f).c_str(), system::itoa(navl).c_str()) + "\n";
 		userlist += "" + TR("command_users_online") + ":\n" + online;
 		userlist += "" + TR("command_users_offline") + ":\n" + offline;
 		pichi->sendAnswer(userlist);
@@ -573,7 +573,7 @@ void commandbase::command_users(std::string arg)
 			}
 		}
 		if(!isfind)
-			pichi->sendAnswer("Пользователь " + arg + " не найден.");
+			pichi->sendAnswer(TR2("command_users_nouser", arg.c_str()));
 	}
 }
 
@@ -655,7 +655,7 @@ void commandbase::command_farewell(std::string arg)
 		pichi->sql->exec("UPDATE actions SET value = '" + pichi->sql->escapeString(w[2]) + "'  WHERE action = 'user_left_room' AND coincidence='room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "';");
 	else
 		pichi->sql->exec("INSERT INTO actions (`action`,`coincidence`,`do`,`option`,`value`) VALUES ('user_left_room', 'room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "', 'send_message', '', '" + pichi->sql->escapeString(w[2]) + "');");
-	pichi->sendAnswer("Updated!");
+	pichi->sendAnswer(TR("updated"));
 }
 
 void commandbase::command_quit(std::string arg)
