@@ -66,7 +66,7 @@ set(PICHI_CPP 	src/pichiexception.cpp
 		src/pichi.cpp
 )
 
-set(LINK_LIBS 	pthread
+set(LINK_LIBS	
 		${GLOOX_LIBRARIES}
 		${TINYXML_LIBRARIES}
 		${SQLITE3_LIBRARIES}
