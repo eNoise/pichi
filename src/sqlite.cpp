@@ -187,3 +187,13 @@ void sqlite::q::finalize(void )
 		is_statement = false;
 	}
 }
+
+sqlite* sqlite::clone() const
+{
+	return new sqlite( *this );
+}
+
+sqlite::sqlite(const sqlite& sqlcp)
+{
+	sqlite(sqlcp.dbfile);
+}

@@ -43,6 +43,7 @@ void core::botstart(void)
 	BOOST_FOREACH( std::string room, system::explode(",", pichi->getConfigOption("room")) )
 		enterRoom(JID(room + "/" + nick));
 	white_ping = time(NULL);
+	pichi->cronsql = pichi->sql->clone();
 	if(pthread_create(&thread, NULL, &core::cron, (void*)this) > 0)
 		throw PichiException("Error in cron thread");
 	client->connect();

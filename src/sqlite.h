@@ -40,8 +40,9 @@ class sqlite
 			q();
 			void finalize(void);
 		};
-	  
+		sqlite* clone() const;
 		sqlite(const std::string& f);
+		sqlite(const sqlite& sqlcp);
 		bool query(const std::string&);
 		q* squery(const std::string&);
 		bool exec(const std::string&);
