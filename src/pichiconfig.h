@@ -24,7 +24,6 @@
 #include <map>
 #include <string>
 #include "xmlsimple.h"
-#include "pichiexception.h"
 
 class pichiconfig : public xmlsimple
 {
@@ -33,10 +32,10 @@ class pichiconfig : public xmlsimple
 	 int version;
   public:
 	 pichiconfig();
-	 bool loadXmlConfig(std::string);
-	 std::string setConfigOption(std::string, std::string);
-	 std::string getConfigOption(std::string);
-	 std::string operator[] (std::string);
+	 void loadXmlConfig(const std::string &);
+	 std::string setConfigOption(const std::string &, const std::string &);
+	 std::string getConfigOption(const std::string &);
+	 std::string operator[] (const std::string &);
 };
 
 #endif // PICHICONFIG_H

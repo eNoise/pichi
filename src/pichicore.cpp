@@ -128,13 +128,13 @@ void pichicore::cleanUserInfo(void)
 	sql->exec("UPDATE users SET status = 'unavailable';");
 }
 
-bool pichicore::isJID(std::string& jid)
+bool pichicore::isJID(const std::string& jid)
 {
 	return (std::find(jid.begin(), jid.end(), '@') != jid.end());
 }
 
 
-std::string pichicore::getJID(std::string nick, std::string room, bool full_search)
+std::string pichicore::getJID(const std::string& nick, std::string room, bool full_search)
 {
 	LOG("Get JID from " + nick, LOG::VERBOSE);
 	if(isJID(nick))
@@ -173,7 +173,7 @@ std::string pichicore::getDefaultRoom(void)
 	return (*first_room).first.bare();
 }
 
-std::string pichicore::getName(std::string jid, std::string room)
+std::string pichicore::getName(const std::string& jid, std::string room)
 {
 	LOG("Get Nick from JID " + jid, LOG::VERBOSE);
 	if(!isJID(jid))

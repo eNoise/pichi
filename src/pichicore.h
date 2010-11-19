@@ -66,9 +66,9 @@ class pichicore : public pichiconfig, public lastmessage, public pichioptions
 		bool reciveMessage(std::string message, std::string type, std::string from, std::string jid = "", std::string room = "", int level = 2);
 		void sendAnswer(std::string message);
 		
-		bool isJID(std::string&);
-		std::string getJID(std::string nick, std::string room = "", bool full_search = false);
-		std::string getName(std::string jid, std::string room = "");
+		bool isJID(const std::string&);
+		std::string getJID(const std::string& nick, std::string room = "", bool full_search = false);
+		std::string getName(const std::string& jid, std::string room = "");
 		std::string getDefaultRoom(void);
 		bool isCommand(std::string& str);
 		bool isAccess(int level = 2, std::string jid = "", std::string room = "", bool room_hook = false);

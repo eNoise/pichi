@@ -23,13 +23,14 @@
 
 #include <tinyxml.h>
 #include <string>
+#include "pichiexception.h"
 
 class xmlsimple
 {
   protected:
   	 TiXmlDocument* xmlfile;
   public:
-	 bool loadXmlConfig(std::string);
+	 void loadXmlConfig(const std::string &);
 	 ~xmlsimple();
   
 };

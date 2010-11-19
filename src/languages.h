@@ -24,7 +24,6 @@
 #include <map>
 #include <string>
 #include "xmlsimple.h"
-#include "pichiexception.h"
 #include "system.h"
 #include <vector>
 #include <stdarg.h>
@@ -37,12 +36,13 @@ class languages : public xmlsimple
   protected:
 	 std::map<std::string, std::string> language;
 	 std::string choise;
+	 std::string default_lang;
   public:
 	 languages();
-	 languages(std::string lan);
-	 bool loadXmlConfig(std::string);
-	 std::string operator[] (std::string);
-         std::string operator() (std::string first, ...);
+	 languages(const std::string& lan);
+	 void loadLanguage(const std::string&, bool reload = false);
+	 std::string operator[] (const std::string&);
+         std::string operator() (const std::string& first, ...);
 };
 
 #endif // LANGUAGES_H

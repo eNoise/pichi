@@ -20,16 +20,15 @@
 
 #include "xmlsimple.h"
 
-bool xmlsimple::loadXmlConfig(std::string file)
+void xmlsimple::loadXmlConfig(const std::string &file)
 {
 	xmlfile = new TiXmlDocument(file.c_str());
 	if(!xmlfile->LoadFile())
-		return false;
-	
-	return true;
+		throw PichiException("File " + file + " can not been readed");
 }
 
 xmlsimple::~xmlsimple()
 {
 	delete xmlfile;
+	xmlfile = 0;
 }

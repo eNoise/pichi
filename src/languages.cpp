@@ -22,19 +22,27 @@
 
 languages::languages()
 {
-	choise = "en"; // default language
-	loadXmlConfig("languages/" + choise + ".xml");
+	default_lang = "en";
+	choise = default_lang; // default language
+	loadLanguage("languages/" + choise + ".xml");
 }
 
-languages::languages(std::string lan): choise(lan)
+languages::languages(const std::string& lan): choise(lan)
 {
-	loadXmlConfig("languages/" + choise + ".xml");	
+	default_lang = "en";
+	loadLanguage("languages/" + default_lang + ".xml");
+	loadLanguage("languages/" + choise + ".xml");	
 }
 
-bool languages::loadXmlConfig(std::string file)
+void languages::loadLanguage(const std::string& file, bool reload)
 {
-	if(!xmlsimple::loadXmlConfig(file))
-		throw PichiException("Translation file read error. Check this.");
+	if(xmlfile)
+		delete xmlfile;
+  
+	xmlsimple::loadXmlConfig(file);
+
+	if(reload)
+		language.clear();
 	
 	TiXmlElement *xmllevel = 0;
 	xmllevel = xmlfile->FirstChildElement("PichiLanguage");
@@ -50,15 +58,14 @@ bool languages::loadXmlConfig(std::string file)
 	} 
 	
 	delete xmllevel;
-	return true;
 }
 
-std::string languages::operator[](std::string name)
+std::string languages::operator[](const std::string& name)
 {
 	return language[name];
 }
 
-std::string languages::operator()(std::string first, ...)
+std::string languages::operator()(const std::string& first, ...)
 {
 	va_list marker;
 	va_start(marker, first);

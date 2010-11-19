@@ -21,20 +21,19 @@
 #include "pichiconfig.h"
 
 
-std::string pichiconfig::getConfigOption(std::string name)
+std::string pichiconfig::getConfigOption(const std::string& name)
 {
 	return config[name];
 }
 
-std::string pichiconfig::setConfigOption(std::string name, std::string value)
+std::string pichiconfig::setConfigOption(const std::string& name, const std::string& value)
 {
 	config[name] = value;
 }
 
-bool pichiconfig::loadXmlConfig(std::string file)
+void pichiconfig::loadXmlConfig(const std::string& file)
 {
-	if(!xmlsimple::loadXmlConfig(file))
-		throw PichiException("Config file read error. Check this.");
+	xmlsimple::loadXmlConfig(file);
   
 	TiXmlElement *xmllevel = 0;
 	xmllevel = xmlfile->FirstChildElement("PichiConfig");
@@ -53,7 +52,6 @@ bool pichiconfig::loadXmlConfig(std::string file)
 	} 
 	
 	delete xmllevel;
-	return true;
 }
 
 
@@ -63,8 +61,8 @@ pichiconfig::pichiconfig()
 	loadXmlConfig("pichi.xml");
 }
 
-std::string pichiconfig::operator[](std::string str)
+std::string pichiconfig::operator[](const std::string& str)
 {
-	return config[str];
+	return getConfigOption(str);
 }
 
