@@ -28,23 +28,23 @@ LOG::LOG(std::string lst, LOG::LogType type)
 	{
 	  case ERROR:
 		if(LEVEL > 0)
-			std::cout << "[ERROR] " << lst << std::endl;
+			std::cout << "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][ERROR] " << lst << std::endl;
 		break;
 	  case WARNING:
 		if(LEVEL > 1)
-			std::cout << "[WARNING] " << lst << std::endl;
+			std::cout << "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][WARNING] " << lst << std::endl;
 		break;
 	  case INFO:
 		if(LEVEL > 2)
-			std::cout << "[INFO] " << lst << std::endl;
+			std::cout << "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][INFO] " << lst << std::endl;
 		break;
 	  case DEBUG:
 		if(LEVEL > 3)
-			std::cout << "[DEBUG] " << lst << std::endl;
+			std::cout << "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][DEBUG] " << lst << std::endl;
 		break;
 	  case VERBOSE:
 		if(LEVEL > 4)
-			std::cout << "[VERBOSE] " << lst << std::endl;
+			std::cout << "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][VERBOSE] " << lst << std::endl;
 		break;
 	}
 }

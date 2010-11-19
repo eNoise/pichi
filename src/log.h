@@ -23,6 +23,7 @@
 
 #include <iostream>
 #include <string>
+#include "system.h"
 
 // Mingw fix
 #define TEMPERROR ERROR
