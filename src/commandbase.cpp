@@ -523,9 +523,9 @@ void commandbase::command_users(std::string arg)
 		}
 	}
   
-	pichi->sql->query("SELECT COUNT(*) FROM users WHERE status = 'available';");
+	pichi->sql->query("SELECT COUNT(*) FROM users WHERE status = 'available' AND room != '';");
 	int avl = system::atoi(pichi->sql->fetchColumn(0));
-	pichi->sql->query("SELECT COUNT(*) FROM users WHERE status = 'unavailable';");
+	pichi->sql->query("SELECT COUNT(*) FROM users WHERE status = 'unavailable' AND room != '';");
 	int navl = system::atoi(pichi->sql->fetchColumn(0));
 	
 	pichi->sql->query("SELECT * FROM users LIMIT 0," + system::itoa(ct) + ";");

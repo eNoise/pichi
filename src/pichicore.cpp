@@ -374,7 +374,7 @@ void pichicore::ping(std::string jid)
 {
 	//timer = boost::timer();
 	//reciver["ping_" + jid] = boost::lexical_cast<std::string>(clock());
-	//jabber->client->xmppPing(JID(jid), jabber);  	
+	jabber->client->xmppPing(JID(jid), jabber);  	
 }
 
 void pichicore::pingRecive(std::string jid)
@@ -383,6 +383,7 @@ void pichicore::pingRecive(std::string jid)
 	//sendAnswer( boost::lexical_cast<std::string>( ( clock() - (boost::lexical_cast<clock_t>(reciver["ping_" + jid])) ) / CLOCKS_PER_SEC ) );
 	//sendAnswer( boost::lexical_cast<std::string>( std::difftime(clock(), boost::lexical_cast<clock_t>(reciver["ping_" + jid])) ) );
 	//reciver.erase("ping_" + jid);
+	sendAnswer("Понг. А время считай сам.");
 }
 
 // устанавливает информацию о jid
