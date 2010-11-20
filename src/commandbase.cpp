@@ -114,7 +114,7 @@ void commandbase::command_help(std::string arg)
 	help += "=====  " +  TR("help_admin_commands")  + "  =====\n";
 	help += "!topic " + TR("help_command_usage_param") + " - " + TR("help_command_description_topic") + "\n";
 	help += "!ban " + TR("help_command_usage_jid") + "|" + TR("help_command_usage_nick") + " [" + TR("help_command_usage_time") + "] [" + TR("help_command_usage_reason") + "] - " + TR("help_command_description_ban") + "\n";
-	help += "!unban " + TR("help_command_usage_jid") + " - " + TR("help_command_description_jid") + "\n";
+	help += "!unban " + TR("help_command_usage_jid") + " - " + TR("help_command_description_unban") + "\n";
 	help += "!banlist - " + TR("help_command_description_banlist") + "\n";
 	help += "!kicklist - " + TR("help_command_description_kicklist") + "\n";
 	help += "!kick " + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + " [" + TR("help_command_usage_time") + "] [" + TR("help_command_usage_reason") + "] - " + TR("help_command_description_kick") + "\n";
@@ -721,7 +721,7 @@ std::string commandbase::func_command_googletranslate(std::string text, std::str
 	std::string ret = curl->read();
 	delete curl;
 	
-	if(ret == "")
+	if(ret == "" || ret.substr(0,1) != "{")
 	{
 		LOG("Google translate can failed.", LOG::DEBUG);
 		return ret;
@@ -770,7 +770,7 @@ void commandbase::command_google(std::string arg)
 	std::string ret = curl->read();
 	delete curl;
 	
-	if(ret == "")
+	if(ret == "" || ret.substr(0,1) != "{")
 	{
 		LOG("Google search can failed.", LOG::DEBUG);
 		return;
