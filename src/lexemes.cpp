@@ -20,6 +20,9 @@
 
 #include "lexemes.h"
 
+namespace pichi
+{
+
 lexemes::lexemes(sqlite** s) : sql(s)
 {
 	lexeme_limit = 1000;
@@ -184,4 +187,6 @@ std::string lexemes::genFromWord(std::string word)
 		return answer;
 	//else
 	//	return $this->randFromLog(); //возращать тоже самое нехорошо, вернем что-нибудь из лога
+}
+
 }

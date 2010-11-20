@@ -20,6 +20,9 @@
 
 #include "commandhandler.h"
 
+namespace pichi
+{
+
 commandhandler::commandhandler(pichicore* p)
 {
 	pichi = p;
@@ -75,4 +78,6 @@ void commandhandler::operator()(std::string command)
 commandhandler::~commandhandler()
 {
 	//delete pichi;
+}
+
 }

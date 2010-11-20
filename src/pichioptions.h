@@ -25,6 +25,9 @@
 #include <map>
 #include <string>
 
+namespace pichi
+{
+
 class pichioptions
 {
   public:
@@ -35,5 +38,7 @@ class pichioptions
 	sqlite **sql_options;
 	std::map<std::string, std::string> options;
 };
+
+}
 
 #endif // PICHIOPTIONS_H

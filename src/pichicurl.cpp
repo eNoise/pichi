@@ -20,6 +20,9 @@
 
 #include "pichicurl.h"
 
+namespace pichi
+{
+
 pichicurl::pichicurl()
 {
 	curl = curl_easy_init();
@@ -80,4 +83,6 @@ std::string pichicurl::urldecode(std::string u)
 {
 	int size;
 	return curl_easy_unescape(curl, u.c_str(), u.length(), &size);
+}
+
 }

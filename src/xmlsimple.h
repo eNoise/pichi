@@ -25,6 +25,9 @@
 #include <string>
 #include "pichiexception.h"
 
+namespace pichi
+{
+
 class xmlsimple
 {
   protected:
@@ -34,5 +37,7 @@ class xmlsimple
 	 ~xmlsimple();
   
 };
+
+}
 
 #endif // XMLSIMPLE_H

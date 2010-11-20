@@ -29,6 +29,9 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/foreach.hpp>
 
+namespace pichi
+{
+
 class system
 {
   protected:
@@ -49,5 +52,7 @@ class system
 	static std::string ttoa(size_t);
 	template<typename compT> static bool in_array(compT&, std::vector<compT>&);
 };
+
+}
 
 #endif // SYSTEM_H

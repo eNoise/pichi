@@ -20,6 +20,9 @@
 
 #include "xmlsimple.h"
 
+namespace pichi
+{
+
 void xmlsimple::loadXmlConfig(const std::string &file)
 {
 	xmlfile = new TiXmlDocument(file.c_str());
@@ -31,4 +34,6 @@ xmlsimple::~xmlsimple()
 {
 	delete xmlfile;
 	xmlfile = 0;
+}
+
 }

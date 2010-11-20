@@ -36,6 +36,9 @@
 #include "pichievent.h"
 //#include <boost/timer.hpp>
 
+namespace pichi
+{
+
 class core;
 
 class pichicore : public pichiconfig, public lastmessage, public pichioptions
@@ -96,5 +99,7 @@ class pichicore : public pichiconfig, public lastmessage, public pichioptions
 		bool enabled;
 	private:
 };
+
+}
 
 #endif // PICHICORE_H

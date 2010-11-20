@@ -28,6 +28,9 @@
 #include <time.h>
 #include <stdio.h>
 
+namespace pichi
+{
+  
 class lexemes
 {
   public:
@@ -54,5 +57,7 @@ class lexemes
 	std::vector< std::pair< int, std::string > > answers;
 	std::string sqlquery;
 };
+
+}
 
 #endif // LEXEMES_H

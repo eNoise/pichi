@@ -25,10 +25,13 @@
 #include <string>
 #include "system.h"
 
+namespace pichi
+{
+
 // Mingw fix
 #define TEMPERROR ERROR
 #undef ERROR
-
+  
 class LOG
 {
   public:
@@ -45,5 +48,7 @@ class LOG
 };
 
 #define ERROR TEMPERROR
+
+}
 
 #endif // LOG_H

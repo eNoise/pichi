@@ -22,6 +22,9 @@
 #include "pichicore.h"
 #include "core.h"
 
+namespace pichi
+{
+
 PichiEvent::PichiEvent(pichicore* p)
 {
 	pichi = p;
@@ -70,3 +73,4 @@ void PichiEvent::doAction(std::string action, std::string value, std::string opt
 	//($hook = PichiPlugin::fetch_hook('event_action')) ? eval($hook) : false;
 }
 
+}

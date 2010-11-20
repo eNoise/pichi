@@ -20,6 +20,9 @@
 
 #include "system.h"
 
+namespace pichi
+{
+
 bool system::fileExists(std::string file)
 {
 	struct stat stFileInfo;
@@ -106,3 +109,4 @@ std::string system::ttoa(size_t t)
 	return boost::lexical_cast<std::string>( t );
 }
 
+}

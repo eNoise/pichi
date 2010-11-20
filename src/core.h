@@ -40,6 +40,9 @@
 #include "system.h"
 #include "log.h"
 
+namespace pichi
+{
+
 using namespace gloox;
 
 class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListener, PresenceHandler, public EventHandler
@@ -101,5 +104,7 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
 		void handleEvent (const Event &event);
 
 };
+
+}
 
 #endif // CORE_H

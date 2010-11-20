@@ -22,6 +22,9 @@
 #include "pichicore.h"
 #include "core.h"
 
+namespace pichi
+{
+
 commandbase::commandbase(pichicore* p): commandhandler(p)
 {
 	//base command array
@@ -811,4 +814,6 @@ void commandbase::command_urlshort(std::string arg)
 	boost::property_tree::json_parser::read_json(stream, ptree);
 	
 	pichi->sendAnswer("http://ur.ly/" + ptree.get("code",""));
+}
+
 }

@@ -20,8 +20,12 @@
 
 #include "lastmessage.h"
 
+namespace pichi
+{
+
 std::string lastmessage::getLastRoom(void )
 {
 	return last_room;
 }
 
+}

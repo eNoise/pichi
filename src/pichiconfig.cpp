@@ -20,7 +20,9 @@
 
 #include "pichiconfig.h"
 
-
+namespace pichi
+{
+  
 std::string pichiconfig::getConfigOption(const std::string& name)
 {
 	return config[name];
@@ -66,3 +68,4 @@ std::string pichiconfig::operator[](const std::string& str)
 	return getConfigOption(str);
 }
 
+}

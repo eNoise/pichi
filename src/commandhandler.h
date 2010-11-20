@@ -26,6 +26,9 @@
 #include "system.h"
 #include <algorithm>
 
+namespace pichi
+{
+
 class pichicore;
 
 class commandhandler
@@ -41,5 +44,7 @@ class commandhandler
     std::string last_args;
     std::vector< std::string > seperate(std::string str, int level = 2);
 };
+
+}
 
 #endif // COMMANDHANDLER_H

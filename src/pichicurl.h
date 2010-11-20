@@ -24,6 +24,9 @@
 #include <curl/curl.h>
 #include <string>
 
+namespace pichi
+{
+
 class pichicurl
 {
   public:
@@ -44,5 +47,7 @@ class pichicurl
 	static int writer(char *data, size_t size, size_t nmemb,  
                   std::string *buffer);
 };
+
+}
 
 #endif // PICHICURL_H

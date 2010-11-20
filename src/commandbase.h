@@ -36,6 +36,9 @@
 #define TR4(x,y,z,v) (*(pichi->lang))(x,y,z,v)
 #define TR5(x,y,z,v,n) (*(pichi->lang))(x,y,z,v,n)
 
+namespace pichi
+{
+
 class pichicore;
 
 class commandbase : public commandhandler
@@ -97,4 +100,5 @@ class commandbase : public commandhandler
 	  void command_urlshort(std::string arg);
 };
 
+}
 #endif // COMMANDBASE_H

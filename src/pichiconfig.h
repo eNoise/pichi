@@ -25,6 +25,9 @@
 #include <string>
 #include "xmlsimple.h"
 
+namespace pichi
+{
+
 class pichiconfig : public xmlsimple
 {
   protected:
@@ -37,5 +40,7 @@ class pichiconfig : public xmlsimple
 	 std::string getConfigOption(const std::string &);
 	 std::string operator[] (const std::string &);
 };
+
+}
 
 #endif // PICHICONFIG_H

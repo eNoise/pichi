@@ -20,6 +20,9 @@
 
 #include "log.h"
 
+namespace pichi
+{
+
 int LOG::LEVEL = 3; //default
 
 LOG::LOG(std::string lst, LOG::LogType type)
@@ -47,4 +50,6 @@ LOG::LOG(std::string lst, LOG::LogType type)
 			std::cout << "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][VERBOSE] " << lst << std::endl;
 		break;
 	}
+}
+
 }

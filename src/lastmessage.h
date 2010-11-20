@@ -24,6 +24,9 @@
 #include <string>
 #include <time.h>
 
+namespace pichi
+{
+  
 class lastmessage
 {
 	public:
@@ -38,5 +41,7 @@ class lastmessage
 		time_t last_time;
 		int last_level;
 };
+
+}
 
 #endif // LASTMESSAGE_H

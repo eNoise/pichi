@@ -25,6 +25,10 @@
 #include <map>
 #include "system.h"
 #include <vector>
+
+namespace pichi
+{
+
 class pichicore;
 
 class PichiEvent
@@ -37,5 +41,7 @@ private:
     pichicore* pichi;
     void doAction(std::string action, std::string value, std::string option, std::string coincidence = "");
 };
+
+}
 
 #endif // PICHIEVENT_H

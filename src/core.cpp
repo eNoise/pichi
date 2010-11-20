@@ -20,6 +20,9 @@
 
 #include "core.h"
 
+namespace pichi
+{
+
 void core::botstart(void)
 {
 #ifdef WIN32
@@ -272,4 +275,6 @@ void *core::cron(void *context)
 		Sleep(1);
 #endif
 	}
+}
+
 }

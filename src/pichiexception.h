@@ -24,11 +24,16 @@
 #include <stdexcept>
 #include <string>
 
+namespace pichi
+{
+
 class PichiException : public std::runtime_error
 {
 
 public:
     PichiException(const std::string& message);
 };
+
+}
 
 #endif // PICHIEXCEPTION_H

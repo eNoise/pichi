@@ -31,6 +31,9 @@
 //#include <boost/regex.hpp>
 #include <stdio.h>
 
+namespace pichi
+{
+
 class languages : public xmlsimple
 {  
   protected:
@@ -44,5 +47,7 @@ class languages : public xmlsimple
 	 std::string operator[] (const std::string&);
          std::string operator() (const std::string& first, ...);
 };
+
+}
 
 #endif // LANGUAGES_H

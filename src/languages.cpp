@@ -20,6 +20,9 @@
 
 #include "languages.h"
 
+namespace pichi
+{
+
 languages::languages()
 {
 	default_lang = "en";
@@ -107,3 +110,4 @@ std::string languages::operator()(const std::string& first, ...)
 	return text;
 }
 
+}

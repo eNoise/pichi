@@ -20,6 +20,9 @@
 
 #include "pichioptions.h"
 
+namespace pichi
+{
+
 bool pichioptions::reloadSqlConfig(void )
 {
 	(*sql_options)->query("SELECT * FROM settings;");
@@ -49,4 +52,6 @@ void pichioptions::setSqlOption(std::string name, std::string value)
 std::string pichioptions::getSqlOption(std::string name)
 {
 	return (options[ name ]);
+}
+
 }

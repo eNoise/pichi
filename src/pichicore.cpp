@@ -21,6 +21,9 @@
 #include "pichicore.h"
 #include "core.h"
 
+namespace pichi
+{
+
 pichicore::pichicore()
 {
 	enabled = true;
@@ -544,3 +547,4 @@ bool pichicore::canCron(std::string crn)
 	return (time(NULL) - crons[crn]["last"] > crons[crn]["interval"]);
 }
 
+}

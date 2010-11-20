@@ -26,6 +26,9 @@
 #include <map>
 #include "pichiexception.h"
 
+namespace pichi
+{
+
 class sqlite
 {
 	public:
@@ -60,5 +63,7 @@ class sqlite
 
 		q mainquery;
 };
+
+}
 
 #endif // SQLITE_H

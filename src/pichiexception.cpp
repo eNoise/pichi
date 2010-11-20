@@ -20,6 +20,11 @@
 
 #include "pichiexception.h"
 
+namespace pichi
+{
+
 PichiException::PichiException(const std::string& message) : std::runtime_error(message)
 {
+}
+
 }

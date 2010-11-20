@@ -20,6 +20,9 @@
 
 #include "sqlite.h"
 
+namespace pichi
+{
+  
 sqlite::sqlite(const std::string& f):dbfile(f)
 {
 	int rc;
@@ -196,4 +199,6 @@ sqlite* sqlite::clone() const
 sqlite::sqlite(const sqlite& sqlcp)
 {
 	sqlite(sqlcp.dbfile);
+}
+
 }
