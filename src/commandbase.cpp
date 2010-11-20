@@ -65,6 +65,7 @@ commandbase::commandbase(pichicore* p): commandhandler(p)
 	commands["quit"] = &commandbase::command_quit;
 	commands["on"] = &commandbase::command_on;
 	commands["off"] = &commandbase::command_off;
+	commands["uptime"] = &commandbase::command_uptime;
 	
 	commands["lastfm"] = &commandbase::command_lastfm;
 	commands["lastfm_user"] = &commandbase::command_lastfm_user;
@@ -106,6 +107,7 @@ void commandbase::command_help(std::string arg)
 	help += "!greet " + TR("help_command_usage_jid") + " " + TR("help_command_usage_room") + " " + TR("help_command_usage_message") + " - " + TR("help_command_description_greet") + "\n";
 	help += "!farewell " + TR("help_command_usage_jid") + " " + TR("help_command_usage_room") + " " + TR("help_command_usage_message") + " - " + TR("help_command_description_farewell") + "\n";
 	help += "!idle " + TR("help_command_usage_nick") + " - " + TR("help_command_description_idle") + "\n";
+	help += "!uptime - " + "Сколько времени работает бот" + "\n";
 	help += "!on - " + TR("help_command_description_on") + "\n";
 	help += "!off - " + TR("help_command_description_off") + "\n";
 	help += "!quit - " + TR("help_command_description_quit") + "\n";
@@ -814,6 +816,32 @@ void commandbase::command_urlshort(std::string arg)
 	boost::property_tree::json_parser::read_json(stream, ptree);
 	
 	pichi->sendAnswer("http://ur.ly/" + ptree.get("code",""));
+}
+
+void commandbase::command_uptime(std::string arg)
+{
+	time_t diff = time(NULL) - pichi->jabber->times["start"];
+	std::vector<time_t> undiff;
+	int ar[6] = {60,60,24,30,12,5000};
+	std::vector<std::string> whatis;
+	whatis.push_back("секунд(ы)");
+	whatis.push_back("минут(ы)");
+	whatis.push_back("часа(ов)");
+	whatis.push_back("дня(ей)");
+	whatis.push_back("месяца(ов)");
+	whatis.push_back("лет");
+	int i = 0;
+	while(diff > ar[i])
+	{
+		undiff.push_back(diff % ar[i]);
+		diff /= ar[i];
+		i++;
+	}
+	std::string ans = system::ttoa(diff) + " " + whatis[i];
+	for(; i>0; i--)
+		ans += " " + system::ttoa(undiff[i-1]) + " " + whatis[i-1];
+	pichi->sendAnswer("\nВремя старта бота: " + system::timeToString(pichi->jabber->times["start"],"%d.%m.%Y в %H:%M:%S") 
+			 + "\nБот работает: " + ans);
 }
 
 }
