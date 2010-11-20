@@ -32,12 +32,12 @@ class pichicurl
   public:
     pichicurl();
     ~pichicurl();
-    std::string readurl(std::string u);
+    std::string readurl(const std::string& u);
     std::string read(void);
-    void setUrl(std::string u);
-    void setReferer(std::string u);
-    std::string urlencode(std::string u);
-    std::string urldecode(std::string u);
+    void setUrl(const std::string& u);
+    void setReferer(const std::string& u);
+    const std::string urlencode(const std::string& u) const;
+    const std::string urldecode(const std::string& u) const;
   private:
 	char errorBuffer[CURL_ERROR_SIZE];
 	std::string buffer;
