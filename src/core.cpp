@@ -45,7 +45,7 @@ void core::botstart(void)
 	client->registerPresenceHandler( this );
 	BOOST_FOREACH( std::string room, system::explode(",", pichi->getConfigOption("room")) )
 		enterRoom(JID(room + "/" + nick));
-	white_ping = time(NULL);
+	times["white_ping"] = times["start"] = time(NULL);
 	pichi->cronsql = pichi->sql->clone();
 	if(pthread_create(&thread, NULL, &core::cron, (void*)this) > 0)
 		throw PichiException("Error in cron thread");
@@ -151,7 +151,7 @@ void core::onConnect()
 {
 	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
 		it->second->join();
-	pichi->wait = time(NULL);
+	times["wait"] = time(NULL);
 	pichi->cleanUserInfo();
 }
 
@@ -261,9 +261,9 @@ void *core::cron(void *context)
 {
 	while(true)
 	{
-		if(time(NULL) - ((core *)context)->white_ping > 5 * 60)
+		if(time(NULL) - ((core *)context)->times["white_ping"] > 5 * 60)
 		{
-			((core *)context)->white_ping = time(NULL);
+			((core *)context)->times["white_ping"] = time(NULL);
 			LOG("[CRON] Ping of live", LOG::INFO);
 		
 			((core *)context)->client->whitespacePing();

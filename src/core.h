@@ -35,6 +35,7 @@
 #include <list>
 #include <time.h>
 #include <pthread.h>
+#include <map>
 
 #include "pichicore.h"
 #include "system.h"
@@ -58,7 +59,6 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
 	protected:
 		pichicore* pichi;
 	  
-		time_t white_ping;
 		pthread_t thread;
 		void botstart(void);
 		void initDBStruct(void);
@@ -69,6 +69,7 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
 		
 		Client* client;
 		std::list< std::pair<JID, MUCRoom*> > rooms;
+		std::map< std::string, time_t > times;
 		
 		void sendMessage(JID jid, std::string message);
 		void enterRoom(JID room);

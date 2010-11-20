@@ -52,7 +52,6 @@ class pichicore : public pichiconfig, public lastmessage, public pichioptions
 		lexemes *lex;
 		PichiEvent *event;
 		
-		time_t wait;
 		time_t wait_time;
 		std::map<std::string, std::string> reciver;
 		//boost::timer timer;

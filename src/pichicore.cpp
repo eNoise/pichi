@@ -88,7 +88,7 @@ void pichicore::setUserInfo(std::string jid, std::string nick, std::string state
 		if(system::in_array(jid, ignore))
 			level = 0;
 
-	if(time(NULL) - wait > wait_time)
+	if(time(NULL) - jabber->times["wait"] > wait_time)
 	{
 		if(state == "available" && old_state == "unavailable")
 		{
@@ -224,7 +224,7 @@ bool pichicore::isAccess(int level, std::string jid, std::string room, bool room
 
 bool pichicore::reciveMessage(std::string message, std::string type, std::string from, std::string jid, std::string room, int level)
 {
-	if(time(NULL) - wait < wait_time)
+	if(time(NULL) - jabber->times["wait"] < wait_time)
 	{
 		LOG("Ignore Message", LOG::DEBUG);
 		return false;
