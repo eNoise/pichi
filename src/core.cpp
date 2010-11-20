@@ -166,7 +166,7 @@ void core::handleMUCMessage (MUCRoom *thisroom, const Message &msg, bool priv )
 {
 	std::cout << "[" << system::timeToString(time(NULL), "%H:%M:%S") << "]" << " <" << msg.from().resource() << "> " << msg.body() << std::endl;
 	pichi->cronDo("muc_message");
-	pichi->reciveMessage(msg.body(), "groupchat", msg.from().full());
+	pichi->reciveMessage(msg.body(), ((priv) ? "chatgroup" : "groupchat"), msg.from().full());
 }
 
 void core::handleMUCParticipantPresence (MUCRoom *thisroom, const MUCRoomParticipant  participant, const Presence &presence)

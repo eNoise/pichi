@@ -240,6 +240,8 @@ bool pichicore::reciveMessage(std::string message, std::string type, std::string
 	if(room == "")
 		if(last_type == "groupchat")
 			last_room = getJID(last_from);
+		else if(last_type == "chatgroup")
+			last_room = getJID(last_from);
 		else
 			last_room = "";
 	else
@@ -247,6 +249,8 @@ bool pichicore::reciveMessage(std::string message, std::string type, std::string
 	
 	if(jid == "")
 		if(last_type == "groupchat")
+			last_jid = getJID(getName(last_from), last_room);
+		else if(last_type == "chatgroup")
 			last_jid = getJID(getName(last_from), last_room);
 		else
 			last_jid = getJID(last_from);
