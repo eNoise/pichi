@@ -71,7 +71,7 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
 		std::list< std::pair<JID, MUCRoom*> > rooms;
 		std::map< std::string, time_t > times;
 		
-		void sendMessage(JID jid, std::string message);
+		void sendMessage(JID jid, const std::string& message);
 		void enterRoom(JID room);
 		void leftRoom(JID room);
 		JID& getMyJID(void);

@@ -314,7 +314,7 @@ bool pichicore::reciveMessage(std::string message, std::string type, std::string
 	return true;
 }
 
-void pichicore::sendAnswer(std::string message)
+void pichicore::sendAnswer(const std::string& message)
 {
 	std::string to;
 	if(last_type == "groupchat")

@@ -80,7 +80,7 @@ core::~core()
 }
 
 
-void core::sendMessage(JID jid, std::string message)
+void core::sendMessage(JID jid, const std::string& message)
 {
 	Message::MessageType type = Message::Chat;
 	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)

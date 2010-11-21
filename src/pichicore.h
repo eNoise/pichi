@@ -67,7 +67,7 @@ class pichicore : public pichiconfig, public lastmessage, public pichioptions
 		void setUserInfo(std::string, std::string, std::string, std::string, std::string, std::string);
 		void cleanUserInfo(void);
 		bool reciveMessage(std::string message, std::string type, std::string from, std::string jid = "", std::string room = "", int level = 2);
-		void sendAnswer(std::string message);
+		void sendAnswer(const std::string& message);
 		
 		bool isJID(const std::string&);
 		std::string getJID(const std::string& nick, std::string room = "", bool full_search = false);
