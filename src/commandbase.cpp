@@ -192,9 +192,14 @@ void commandbase::command_help(std::string arg)
 	if(arg != "")
 	{
 		if(help[arg] != "")
+		{
+			boost::erase_all(help[arg], "\n");
 			pichi->sendAnswer(help[arg]);
+		}
 		else
+		{
 			pichi->sendAnswer("Нету такой команды");
+		}
 		
 		return;
 	}

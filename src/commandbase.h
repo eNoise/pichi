@@ -29,6 +29,7 @@
 #include "config.h"
 
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/algorithm/string/erase.hpp>
 
 #define TR(x) (*(pichi->lang))(x)
 #define TR2(x,y) (*(pichi->lang))(x,y)
