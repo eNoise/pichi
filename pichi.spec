@@ -1,11 +1,13 @@
+%define beta beta3
+
 Name:           pichi
-Version:        0.6.0-b2
-Release:        1%{?dist}
+Version:        0.6.0
+Release:        0.1.%{beta}%{?dist}
 Summary:        Pichi is a jabber(xmpp) bot writen on C++. It is based on sulci facilities.
 Group:          Applications/Internet
 License:        GPLv2
 URL:            http://code.google.com/p/pichi
-Source0:        http://pichi.googlecode.com/files/%{name}-%{version}.tar.gz
+Source0:        http://pichi.googlecode.com/files/%{name}-%{version}.%{beta}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -53,6 +55,6 @@ rm -rf %{buildroot}
 %{_datadir}/pichi/config/pichi.xml
 
 %changelog
-* Sun Jan 17 2010 Alexey Kasyanchuk <deg@uruchie.org> - 0.6.0-b2-1
+* Sun Nov 21 2010 Alexey Kasyanchuk <deg@uruchie.org> - 0.6.0-0.1.beta3
 - Initial package
  
