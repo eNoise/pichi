@@ -49,7 +49,8 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc README.md
 %{_bindir}/pichi
-
+%{_datadir}/pichi/languages/*.xml
+%{_datadir}/pichi/config/pichi.xml
 
 %changelog
 * Sun Jan 17 2010 Alexey Kasyanchuk <deg@uruchie.org> - 0.6.0-b2-1

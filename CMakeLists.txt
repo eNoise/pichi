@@ -97,7 +97,30 @@ endif(MINGW AND WIN32)
 ADD_EXECUTABLE(pichi ${PICHI_CPP})
 target_link_libraries (pichi ${LINK_LIBS})
 
-install (TARGETS pichi DESTINATION .)
-install (FILES pichi.xml DESTINATION .)
-install (DIRECTORY languages/ DESTINATION languages
-        PATTERN ".svn" EXCLUDE)
+if(WIN32)
+  set (BIN_DIR .)
+else(WIN32)
+  set (BIN_DIR bin)
+endif(WIN32)
+
+if (NOT SHARE_DIR)
+  set (SHARE_DIR "share")
+endif (NOT SHARE_DIR)
+
+if (APPLE)
+  set (CLIENT_DATA_DIR "${PROJECT_NAME_GLOBAL}.app")
+elseif (WIN32)
+  set (CLIENT_DATA_DIR ".")
+else (APPLE)
+  set (CLIENT_DATA_DIR "${CMAKE_INSTALL_PREFIX}/${SHARE_DIR}/${PROJECT_NAME_GLOBAL}")
+endif (APPLE)
+
+
+install (TARGETS pichi DESTINATION ${BIN_DIR})
+if(WIN32)
+  install (FILES pichi.xml DESTINATION ${CLIENT_DATA_DIR})
+else(WIN32)
+  install (FILES pichi.xml DESTINATION "${CLIENT_DATA_DIR}/config")
+endif(WIN32)
+install (DIRECTORY languages/ DESTINATION "${CLIENT_DATA_DIR}/languages")
+
