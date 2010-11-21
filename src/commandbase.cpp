@@ -95,6 +95,47 @@ void commandbase::command_help(std::string arg)
 	help["header"] += TR("help_syntaxis_info")  + "\n";
 	help["header"] += "--------------------------------------------\n";
 	
+	std::map < std::string, std::vector< std::string > > helpmap;
+	helpmap["commands_main"].push_back("set");
+	helpmap["commands_main"].push_back("gc");
+	helpmap["commands_main"].push_back("log");
+	helpmap["commands_main"].push_back("users");
+	helpmap["commands_main"].push_back("msg");
+	helpmap["commands_main"].push_back("ping");
+	helpmap["commands_main"].push_back("join");
+	helpmap["commands_main"].push_back("left");
+	helpmap["commands_main"].push_back("greet");
+	helpmap["commands_main"].push_back("farewell");
+	helpmap["commands_main"].push_back("idle");
+	helpmap["commands_main"].push_back("uptime");
+	helpmap["commands_main"].push_back("on");
+	helpmap["commands_main"].push_back("off");
+	helpmap["commands_main"].push_back("version");
+	helpmap["commands_admin"].push_back("topic");
+	helpmap["commands_admin"].push_back("ban");
+	helpmap["commands_admin"].push_back("unban");
+	helpmap["commands_admin"].push_back("banlist");
+	helpmap["commands_admin"].push_back("kick");
+	helpmap["commands_admin"].push_back("unkick");
+	helpmap["commands_admin"].push_back("kicklist");
+	helpmap["commands_plugins"].push_back("plugins");
+	helpmap["commands_plugins"].push_back("disable");
+	helpmap["commands_plugins"].push_back("enable");
+	helpmap["commands_plugins"].push_back("reload");
+	helpmap["commands_wiki"].push_back("dfn");
+	helpmap["commands_wiki"].push_back("wtf");
+	helpmap["commands_wiki"].push_back("wtfcount");
+	helpmap["commands_wiki"].push_back("wtfrand");
+	helpmap["commands_wiki"].push_back("wtfset");
+	helpmap["commands_wiki"].push_back("wtfull");
+	helpmap["commands_wiki"].push_back("wtfrev");
+	helpmap["commands_lexems"].push_back("top");
+	helpmap["commands_lexems"].push_back("count");
+	helpmap["commands_lexems"].push_back("talkers");
+	helpmap["commands_lexems"].push_back("nick");
+	helpmap["commands_lexems"].push_back("q");
+	helpmap["commands_other"].push_back("q");
+	
 	help["commands_main"] = "=====  " +  TR("help_main_commands")  + "  =====\n";
 	help["set"] = "!set " + TR("help_command_usage_variable") + "=" + TR("help_command_usage_value") + " - " + TR("help_command_description_set") + "\n";
 	help["gc"] = "!gc [" + TR("help_command_usage_variable") + "] - " + TR("help_command_description_gc") + "\n";
@@ -133,7 +174,7 @@ void commandbase::command_help(std::string arg)
 	help["wtf"] = "!wtf " + TR("help_command_usage_param") + " - " + TR("help_command_description_wtf") + "\n";
 	help["wtfcount"] = "!wtfcount - " + TR("help_command_description_wtfcount") + "\n";
 	help["wtfrand"] = "!wtfrand - " + TR("help_command_description_wtfrand") + "\n";
-	help["wtfset"] = "!wtfrev " + TR("help_command_usage_param") + " - " + TR("help_command_description_wtfrev") + "\n";
+	help["wtfrev"] = "!wtfrev " + TR("help_command_usage_param") + " - " + TR("help_command_description_wtfrev") + "\n";
 	help["wtfull"] = "!wtfull " + TR("help_command_usage_param") + " - " + TR("help_command_description_wtffull") + "\n";
 	help["wtfset"] = "!wtfset " + TR("help_command_usage_param") + " - " + TR("help_command_description_wtfset") + "\n";
 
@@ -160,11 +201,12 @@ void commandbase::command_help(std::string arg)
 	
 	std::string helpshow = "\n" + help["header"];
 	
-	for(std::map< std::string, std::string >::iterator it = help.begin(); it != help.end(); it++)
+	for(std::map < std::string, std::vector< std::string > >::iterator it = helpmap.begin(); it != helpmap.end(); it++)
 	{
-		if(it->first.substr(0,8) == "commands" || it->first == "header")
-			continue;
-		helpshow += it->second;
+		helpshow += help[it->first];
+		for(std::vector< std::string >::iterator itx = it->second.begin(); itx != it->second.end(); itx++)
+			helpshow += help[(*itx)];
+		helpshow += "\n";
 	}
 	
 	pichi->sendAnswer(helpshow);
