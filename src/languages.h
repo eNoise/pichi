@@ -41,6 +41,7 @@ class languages : public xmlsimple
 	 std::map<std::string, std::string> language;
 	 std::string choise;
 	 std::string default_lang;
+	 const std::string findLangDir(void);
   public:
 	 languages();
 	 languages(const std::string& lan);

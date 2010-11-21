@@ -23,19 +23,6 @@
 namespace pichi
 {
 
-bool system::fileExists(std::string file)
-{
-	struct stat stFileInfo;
-	int intStat;
-
-	intStat = stat(file.c_str(),&stFileInfo);
-	if(intStat == 0) {
-		return true;
-	} else {
-		return false;
-	} 
-}
-
 std::string system::timeToString(time_t t, std::string format)
 {
 	struct tm * ptm = localtime(&t);
@@ -117,5 +104,10 @@ const std::string system::getFullPath(const std::string& dir)
 	return (home + dir.substr(1));
 }
 
+bool system::fileExists(const std::string& file)
+{
+	struct stat st;
+	return (stat(getFullPath(file).c_str(), &st ) == 0);
+}
 
 }

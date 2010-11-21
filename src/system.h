@@ -41,7 +41,6 @@ class system
 	system();
 	~system();
 	
-	static bool fileExists(std::string);
 	static std::vector< std::string > explode(std::string seperator, std::string str);
 	static std::string implode(std::string, std::vector< std::string >);
 	static std::string timeToString(time_t, std::string);
@@ -52,6 +51,7 @@ class system
 	static size_t atot(std::string);
 	static std::string ttoa(size_t);
 	static const std::string getFullPath(const std::string& dir);
+	static bool fileExists(const std::string& file);
 	template<typename compT> static bool in_array(compT&, std::vector<compT>&);
 };
 

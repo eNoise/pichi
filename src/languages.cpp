@@ -23,18 +23,31 @@
 namespace pichi
 {
 
+const std::string languages::findLangDir(void )
+{
+	if(system::fileExists(system::getFullPath(PICHI_CONFIG_DIR) + "languages/"))
+		return (system::getFullPath(PICHI_CONFIG_DIR) + "languages/");
+	else if(system::fileExists("/usr/share/pichi/languages/"))
+		return "/usr/share/pichi/languages/";
+	else
+		throw PichiException("No language directory's founded...");
+	return "";
+}  
+  
 languages::languages()
 {
 	default_lang = "en";
 	choise = default_lang; // default language
-	loadLanguage(system::getFullPath(PICHI_CONFIG_DIR) + "languages/" + choise + ".xml");
+	std::string dir = findLangDir();
+	loadLanguage(dir + choise + ".xml");
 }
 
 languages::languages(const std::string& lan): choise(lan)
 {
 	default_lang = "en";
-	loadLanguage(system::getFullPath(PICHI_CONFIG_DIR) + "languages/" + default_lang + ".xml");
-	loadLanguage(system::getFullPath(PICHI_CONFIG_DIR) + "languages/" + choise + ".xml");	
+	std::string dir = findLangDir();
+	loadLanguage(dir + default_lang + ".xml");
+	loadLanguage(dir + choise + ".xml");	
 }
 
 void languages::loadLanguage(const std::string& file, bool reload)

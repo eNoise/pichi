@@ -36,6 +36,8 @@
 #include <time.h>
 #include <pthread.h>
 #include <map>
+#include <sys/stat.h>
+#include <fstream>
 
 #include "pichicore.h"
 #include "system.h"
@@ -64,6 +66,7 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
 		void botstart(void);
 		void initDBStruct(void);
 		static void *cron(void *context);
+		void firstStart(void);
 	public:
 		core();
                 ~core();

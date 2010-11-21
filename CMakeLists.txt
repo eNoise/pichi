@@ -21,6 +21,7 @@ option (LOCAL_GLOOX "Use local gloox lib" OFF)
 option (LOCAL_TINYXML "Use local tinyxml lib" OFF)
 
 CHECK_INCLUDE_FILE (time.h HAVE_TIME_H)
+CHECK_INCLUDE_FILE (stdlib.h HAVE_STDLIB_H)
 CHECK_INCLUDE_FILE (sys/stat.h HAVE_SYS_STAT_H)
 
 find_package (Sqlite3 REQUIRED)

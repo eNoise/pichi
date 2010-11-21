@@ -23,6 +23,26 @@
 namespace pichi
 {
 
+/*
+ *	Only on linux 
+ */
+void core::firstStart(void )
+{
+#ifndef WIN32
+	LOG("First StartUp. Creating Structure...", LOG::WARNING);
+	std::string dir = system::getFullPath(PICHI_CONFIG_DIR);
+	
+	mkdir(dir.c_str(), 0775);
+	
+	std::ifstream ifs("/usr/share/pichi/config/pichi.xml", std::ios::binary);
+	std::ofstream ofs((dir + "pichi.xml").c_str(), std::ios::binary);
+	ofs << ifs.rdbuf();
+	
+	LOG("Check ~/.pichi/pichi.xml config. Then start pichi again.", LOG::WARNING);
+	throw PichiException("Check ~/.pichi/pichi.xml config. Then start pichi again.");
+#endif
+}
+  
 void core::botstart(void)
 {
 #ifdef WIN32
@@ -54,7 +74,12 @@ void core::botstart(void)
 
 core::core()
 {
-  	// Init pichi
+	// First start checks (create dir on linux)
+#ifndef WIN32
+	if(!system::fileExists(PICHI_CONFIG_DIR))
+		firstStart();
+#endif
+	// Init pichi
 	pichi = new pichicore();
 	pichi->jabber = this;
 	// ----------
@@ -215,7 +240,7 @@ void core::handleLog (LogLevel level, LogArea area, const std::string &message)
 
 void core::initDBStruct(void)
 {
-	if(!system::fileExists(system::getFullPath(PICHI_CONFIG_DIR) + pichi->getConfigOption("db_file")))
+	if(!system::fileExists(PICHI_CONFIG_DIR + pichi->getConfigOption("db_file")))
 	{
 		pichi->sql = new sqlite(system::getFullPath(PICHI_CONFIG_DIR) + pichi->getConfigOption("db_file"));
 		pichi->sql->exec("CREATE TABLE log (`from` TEXT, `time` TEXT, `type` TEXT, `message` TEXT);");
