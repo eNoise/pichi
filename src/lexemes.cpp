@@ -96,7 +96,7 @@ void lexemes::clean(void )
 
 std::string lexemes::genFullRandom()
 {
-	int limit;
+	int limit = 10;
 	if(is_answer_limit)
 		limit = 5 + rand() % 20;
 	//$this->try_count++; //очередная попытка
@@ -137,7 +137,7 @@ std::string lexemes::genFullRandom()
 
 std::string lexemes::genFromWord(std::string word)
 {
-	int limit;
+	int limit = 10;
 	if(is_answer_limit)
 		limit = 7 + rand() % 12;
 	std::string answer = word, first, last, third, second;

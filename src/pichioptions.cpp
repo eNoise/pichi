@@ -23,7 +23,7 @@
 namespace pichi
 {
 
-bool pichioptions::reloadSqlConfig(void )
+void pichioptions::reloadSqlConfig(void )
 {
 	(*sql_options)->query("SELECT * FROM settings;");
 	//$this->log->log("Parse Settings", PichiLog::LEVEL_DEBUG);

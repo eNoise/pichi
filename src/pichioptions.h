@@ -31,7 +31,7 @@ namespace pichi
 class pichioptions
 {
   public:
-	bool reloadSqlConfig(void);
+	void reloadSqlConfig(void);
 	void setSqlOption(std::string name, std::string value);
 	std::string getSqlOption(std::string name);
   protected:
