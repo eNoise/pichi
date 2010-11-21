@@ -87,68 +87,87 @@ void commandbase::fetchCommand(std::string command)
 
 void commandbase::command_help(std::string arg)
 {
-	std::string help = "\n";
-	help += "-------------------------\n";
-	help += "        Pichi Bot        \n";
-	help += "-------------------------\n";
-	help += "--------------------------------------------\n";
-	help += TR("help_syntaxis_info")  + "\n";
-	help += "--------------------------------------------\n";
+	std::map< std::string, std::string > help;
+	help["header"] = "-------------------------\n";
+	help["header"] += "        Pichi Bot        \n";
+	help["header"] += "-------------------------\n";
+	help["header"] += "--------------------------------------------\n";
+	help["header"] += TR("help_syntaxis_info")  + "\n";
+	help["header"] += "--------------------------------------------\n";
 	
-	help += "=====  " +  TR("help_main_commands")  + "  =====\n";
-	help += "!set " + TR("help_command_usage_variable") + "=" + TR("help_command_usage_value") + " - " + TR("help_command_description_set") + "\n";
-	help += "!gc [" + TR("help_command_usage_variable") + "] - " + TR("help_command_description_gc") + "\n";
-	help += "!log " + TR("help_command_usage_param") + " - " + TR("help_command_description_log") + "\n";
-	help += "!users [" + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + "|" + TR("help_command_usage_number") + "] - " + TR("help_command_description_users") + "\n";		
-	help += "!msg [" + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + "|" + TR("help_command_usage_room") + "] " + TR("help_command_usage_message") + " - " + TR("help_command_description_msg") + "\n";
-	help += "!ping [" + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + "] - " + TR("help_command_description_ping") + "\n";
-	help += "!join " + TR("help_command_usage_room") + " " + TR("help_command_usage_nick") + " [" + TR("help_command_usage_status") + "] - " + TR("help_command_description_join") + "\n";
-	help += "!left " + TR("help_command_usage_room") + " " + TR("help_command_usage_nick") + " [" + TR("help_command_usage_status") + "] - " + TR("help_command_description_left") + "\n";
-	help += "!greet " + TR("help_command_usage_jid") + " " + TR("help_command_usage_room") + " " + TR("help_command_usage_message") + " - " + TR("help_command_description_greet") + "\n";
-	help += "!farewell " + TR("help_command_usage_jid") + " " + TR("help_command_usage_room") + " " + TR("help_command_usage_message") + " - " + TR("help_command_description_farewell") + "\n";
-	help += "!idle " + TR("help_command_usage_nick") + " - " + TR("help_command_description_idle") + "\n";
-	help += "!uptime - Сколько времени работает бот\n";
-	help += "!on - " + TR("help_command_description_on") + "\n";
-	help += "!off - " + TR("help_command_description_off") + "\n";
-	help += "!quit - " + TR("help_command_description_quit") + "\n";
-	help += "!version - " + TR("help_command_description_version") + "\n";
+	help["commands_main"] = "=====  " +  TR("help_main_commands")  + "  =====\n";
+	help["set"] = "!set " + TR("help_command_usage_variable") + "=" + TR("help_command_usage_value") + " - " + TR("help_command_description_set") + "\n";
+	help["gc"] = "!gc [" + TR("help_command_usage_variable") + "] - " + TR("help_command_description_gc") + "\n";
+	help["log"] = "!log " + TR("help_command_usage_param") + " - " + TR("help_command_description_log") + "\n";
+	help["users"] = "!users [" + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + "|" + TR("help_command_usage_number") + "] - " + TR("help_command_description_users") + "\n";		
+	help["msg"] = "!msg [" + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + "|" + TR("help_command_usage_room") + "] " + TR("help_command_usage_message") + " - " + TR("help_command_description_msg") + "\n";
+	help["ping"] = "!ping [" + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + "] - " + TR("help_command_description_ping") + "\n";
+	help["join"] = "!join " + TR("help_command_usage_room") + " " + TR("help_command_usage_nick") + " [" + TR("help_command_usage_status") + "] - " + TR("help_command_description_join") + "\n";
+	help["left"] = "!left " + TR("help_command_usage_room") + " " + TR("help_command_usage_nick") + " [" + TR("help_command_usage_status") + "] - " + TR("help_command_description_left") + "\n";
+	help["greet"] = "!greet " + TR("help_command_usage_jid") + " " + TR("help_command_usage_room") + " " + TR("help_command_usage_message") + " - " + TR("help_command_description_greet") + "\n";
+	help["farewell"] = "!farewell " + TR("help_command_usage_jid") + " " + TR("help_command_usage_room") + " " + TR("help_command_usage_message") + " - " + TR("help_command_description_farewell") + "\n";
+	help["idle"] = "!idle " + TR("help_command_usage_nick") + " - " + TR("help_command_description_idle") + "\n";
+	help["uptime"] = "!uptime - Сколько времени работает бот\n";
+	help["on"] = "!on - " + TR("help_command_description_on") + "\n";
+	help["off"] = "!off - " + TR("help_command_description_off") + "\n";
+	help["quit"] = "!quit - " + TR("help_command_description_quit") + "\n";
+	help["version"] = "!version - " + TR("help_command_description_version") + "\n";
 		
-	help += "=====  " +  TR("help_admin_commands")  + "  =====\n";
-	help += "!topic " + TR("help_command_usage_param") + " - " + TR("help_command_description_topic") + "\n";
-	help += "!ban " + TR("help_command_usage_jid") + "|" + TR("help_command_usage_nick") + " [" + TR("help_command_usage_time") + "] [" + TR("help_command_usage_reason") + "] - " + TR("help_command_description_ban") + "\n";
-	help += "!unban " + TR("help_command_usage_jid") + " - " + TR("help_command_description_unban") + "\n";
-	help += "!banlist - " + TR("help_command_description_banlist") + "\n";
-	help += "!kicklist - " + TR("help_command_description_kicklist") + "\n";
-	help += "!kick " + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + " [" + TR("help_command_usage_time") + "] [" + TR("help_command_usage_reason") + "] - " + TR("help_command_description_kick") + "\n";
-	help += "!unkick " + TR("help_command_usage_jid") + " - " + TR("help_command_description_unkick") + "\n";
+	help["commands_admin"] = "=====  " +  TR("help_admin_commands")  + "  =====\n";
+	help["topic"] = "!topic " + TR("help_command_usage_param") + " - " + TR("help_command_description_topic") + "\n";
+	help["ban"] = "!ban " + TR("help_command_usage_jid") + "|" + TR("help_command_usage_nick") + " [" + TR("help_command_usage_time") + "] [" + TR("help_command_usage_reason") + "] - " + TR("help_command_description_ban") + "\n";
+	help["unban"] = "!unban " + TR("help_command_usage_jid") + " - " + TR("help_command_description_unban") + "\n";
+	help["banlist"] = "!banlist - " + TR("help_command_description_banlist") + "\n";
+	help["kicklist"] = "!kicklist - " + TR("help_command_description_kicklist") + "\n";
+	help["kick"] = "!kick " + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + " [" + TR("help_command_usage_time") + "] [" + TR("help_command_usage_reason") + "] - " + TR("help_command_description_kick") + "\n";
+	help["unkick"] = "!unkick " + TR("help_command_usage_jid") + " - " + TR("help_command_description_unkick") + "\n";
 	
-	help += "=====  " +  TR("help_plugins")  + "  =====\n";
-	help += "!plugins - " + TR("help_command_description_plugins") + "\n";
-	help += "!enable " + TR("help_command_usage_param") + " - " + TR("help_command_description_enable") + "\n";
-	help += "!disable " + TR("help_command_usage_param") + " - " + TR("help_command_description_disable") + "\n";
-	help += "!reload - " + TR("help_command_description_reload") + "\n";
+	help["commands_plugins"] = "=====  " +  TR("help_plugins")  + "  =====\n";
+	help["plugins"] = "!plugins - " + TR("help_command_description_plugins") + "\n";
+	help["enable"] = "!enable " + TR("help_command_usage_param") + " - " + TR("help_command_description_enable") + "\n";
+	help["disable"] = "!disable " + TR("help_command_usage_param") + " - " + TR("help_command_description_disable") + "\n";
+	help["reload"] = "!reload - " + TR("help_command_description_reload") + "\n";
 
-	help += "=====  " +  TR("help_wiki_inline")  + "  =====\n";
-	help += "!dfn " + TR("help_command_usage_param") + "=" + TR("help_command_usage_value") + " - " + TR("help_command_description_dfn") + "\n";
-	help += "!wtf " + TR("help_command_usage_param") + " - " + TR("help_command_description_wtf") + "\n";
-	help += "!wtfcount - " + TR("help_command_description_wtfcount") + "\n";
-	help += "!wtfrand - " + TR("help_command_description_wtfrand") + "\n";
-	help += "!wtfrev " + TR("help_command_usage_param") + " - " + TR("help_command_description_wtfrev") + "\n";
-	help += "!wtfull " + TR("help_command_usage_param") + " - " + TR("help_command_description_wtffull") + "\n";
-	help += "!wtfset " + TR("help_command_usage_param") + " - " + TR("help_command_description_wtfset") + "\n";
+	help["commands_wiki"] = "=====  " +  TR("help_wiki_inline")  + "  =====\n";
+	help["dfn"] = "!dfn " + TR("help_command_usage_param") + "=" + TR("help_command_usage_value") + " - " + TR("help_command_description_dfn") + "\n";
+	help["wtf"] = "!wtf " + TR("help_command_usage_param") + " - " + TR("help_command_description_wtf") + "\n";
+	help["wtfcount"] = "!wtfcount - " + TR("help_command_description_wtfcount") + "\n";
+	help["wtfrand"] = "!wtfrand - " + TR("help_command_description_wtfrand") + "\n";
+	help["wtfset"] = "!wtfrev " + TR("help_command_usage_param") + " - " + TR("help_command_description_wtfrev") + "\n";
+	help["wtfull"] = "!wtfull " + TR("help_command_usage_param") + " - " + TR("help_command_description_wtffull") + "\n";
+	help["wtfset"] = "!wtfset " + TR("help_command_usage_param") + " - " + TR("help_command_description_wtfset") + "\n";
 
-	help += "=====  " +  TR("help_lexems")  + "  =====\n";
-	help += "!top - " + TR("help_command_description_top") + "\n";
-	help += "!count - " + TR("help_command_description_count") + "\n";
-	help += "!talkers - " + TR("help_command_description_talkers") + "\n";
-	help += "!nicks " + TR("help_command_usage_param") + " - " + TR("help_command_description_nicks") + "\n";
-	help += "!q " + TR("help_command_usage_param") + " - " + TR("help_command_description_q") + "\n";
+	help["commands_lexems"] = "=====  " +  TR("help_lexems")  + "  =====\n";
+	help["top"] = "!top - " + TR("help_command_description_top") + "\n";
+	help["count"] = "!count - " + TR("help_command_description_count") + "\n";
+	help["talkers"] = "!talkers - " + TR("help_command_description_talkers") + "\n";
+	help["nicks"] = "!nicks " + TR("help_command_usage_param") + " - " + TR("help_command_description_nicks") + "\n";
+	help["q"] = "!q " + TR("help_command_usage_param") + " - " + TR("help_command_description_q") + "\n";
 
-	help += "=====  " +  TR("help_other_commands")  + "  =====\n";
-	help += "!urlshort " + TR("help_command_usage_param") + " - " + "Показывает укороченный url через сервис ur.ly" + "\n";
+	help["commands_other"] = "=====  " +  TR("help_other_commands")  + "  =====\n";
+	help["urlshort"] = "!urlshort " + TR("help_command_usage_param") + " - " + "Показывает укороченный url через сервис ur.ly" + "\n";
 	//($hook = PichiPlugin::fetch_hook("commands_show_help")) ? eval($hook) : false;
+	
+	if(arg != "")
+	{
+		if(help[arg] != "")
+			pichi->sendAnswer(help[arg]);
+		else
+			pichi->sendAnswer("Нету такой команды");
 		
-	pichi->sendAnswer(help);
+		return;
+	}
+	
+	std::string helpshow = "\n" + help["header"];
+	
+	for(std::map< std::string, std::string >::iterator it = help.begin(); it != help.end(); it++)
+	{
+		if(it->first.substr(0,8) == "commands" || it->first == "header")
+			continue;
+		helpshow += it->second;
+	}
+	
+	pichi->sendAnswer(helpshow);
 }
 
 void commandbase::command_version(std::string null)
