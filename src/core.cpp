@@ -215,9 +215,9 @@ void core::handleLog (LogLevel level, LogArea area, const std::string &message)
 
 void core::initDBStruct(void)
 {
-	if(!system::fileExists(pichi->getConfigOption("db_file")))
+	if(!system::fileExists(system::getFullPath(PICHI_CONFIG_DIR) + pichi->getConfigOption("db_file")))
 	{
-		pichi->sql = new sqlite(pichi->getConfigOption("db_file"));
+		pichi->sql = new sqlite(system::getFullPath(PICHI_CONFIG_DIR) + pichi->getConfigOption("db_file"));
 		pichi->sql->exec("CREATE TABLE log (`from` TEXT, `time` TEXT, `type` TEXT, `message` TEXT);");
 		pichi->sql->exec("CREATE TABLE lexems (`lexeme` TEXT, `count` INT);");
 		pichi->sql->exec("CREATE TABLE wiki (`name` TEXT, `revision` INT, `value` TEXT);");
@@ -242,7 +242,7 @@ void core::initDBStruct(void)
 	}
 	else
 	{
-		pichi->sql = new sqlite(pichi->getConfigOption("db_file"));
+		pichi->sql = new sqlite(system::getFullPath(PICHI_CONFIG_DIR) + pichi->getConfigOption("db_file"));
 	}
 }
 

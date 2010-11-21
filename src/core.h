@@ -40,6 +40,7 @@
 #include "pichicore.h"
 #include "system.h"
 #include "log.h"
+#include "config.h"
 
 namespace pichi
 {

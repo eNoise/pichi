@@ -30,6 +30,7 @@
 #include <boost/algorithm/string/replace.hpp>
 //#include <boost/regex.hpp>
 #include <stdio.h>
+#include "config.h"
 
 namespace pichi
 {

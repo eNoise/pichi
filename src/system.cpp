@@ -109,4 +109,13 @@ std::string system::ttoa(size_t t)
 	return boost::lexical_cast<std::string>( t );
 }
 
+const std::string system::getFullPath(const std::string& dir)
+{
+	if (dir[0] != '~')
+		return dir;
+	std::string home = getenv("HOME");
+	return (home + dir.substr(1));
+}
+
+
 }

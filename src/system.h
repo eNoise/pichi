@@ -28,6 +28,7 @@
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/foreach.hpp>
+#include <stdlib.h>
 
 namespace pichi
 {
@@ -50,6 +51,7 @@ class system
 	static int atoi(std::string);
 	static size_t atot(std::string);
 	static std::string ttoa(size_t);
+	static const std::string getFullPath(const std::string& dir);
 	template<typename compT> static bool in_array(compT&, std::vector<compT>&);
 };
 

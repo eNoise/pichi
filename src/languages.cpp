@@ -27,14 +27,14 @@ languages::languages()
 {
 	default_lang = "en";
 	choise = default_lang; // default language
-	loadLanguage("languages/" + choise + ".xml");
+	loadLanguage(system::getFullPath(PICHI_CONFIG_DIR) + "languages/" + choise + ".xml");
 }
 
 languages::languages(const std::string& lan): choise(lan)
 {
 	default_lang = "en";
-	loadLanguage("languages/" + default_lang + ".xml");
-	loadLanguage("languages/" + choise + ".xml");	
+	loadLanguage(system::getFullPath(PICHI_CONFIG_DIR) + "languages/" + default_lang + ".xml");
+	loadLanguage(system::getFullPath(PICHI_CONFIG_DIR) + "languages/" + choise + ".xml");	
 }
 
 void languages::loadLanguage(const std::string& file, bool reload)

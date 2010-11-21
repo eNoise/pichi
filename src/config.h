@@ -23,4 +23,10 @@
 
 #define PICHI_VERSION "0.6.0 (dev)"
 
+#ifndef WIN32
+#define PICHI_CONFIG_DIR "~/.pichi/"
+#else
+#define PICHI_CONFIG_DIR ""
+#endif
+
 #endif // CONFIG_H

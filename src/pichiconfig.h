@@ -24,6 +24,8 @@
 #include <map>
 #include <string>
 #include "xmlsimple.h"
+#include "config.h"
+#include "system.h"
 
 namespace pichi
 {
