@@ -38,7 +38,7 @@ class pichiconfig : public xmlsimple
   public:
 	 pichiconfig();
 	 void loadXmlConfig(const std::string &);
-	 std::string setConfigOption(const std::string &, const std::string &);
+	 void setConfigOption(const std::string &, const std::string &);
 	 std::string getConfigOption(const std::string &);
 	 std::string operator[] (const std::string &);
 };

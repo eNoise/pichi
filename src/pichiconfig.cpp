@@ -28,7 +28,7 @@ std::string pichiconfig::getConfigOption(const std::string& name)
 	return config[name];
 }
 
-std::string pichiconfig::setConfigOption(const std::string& name, const std::string& value)
+void pichiconfig::setConfigOption(const std::string& name, const std::string& value)
 {
 	config[name] = value;
 }
