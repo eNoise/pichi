@@ -69,7 +69,7 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
 		void firstStart(void);
 	public:
 		core();
-                ~core();
+                ~core() throw();
 		
 		Client* client;
 		std::list< std::pair<JID, MUCRoom*> > rooms;

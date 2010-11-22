@@ -96,7 +96,7 @@ core::core()
 	botstart();
 }
 
-core::~core()
+core::~core() throw()
 {
 	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
 		delete (it->second);
