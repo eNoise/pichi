@@ -46,7 +46,8 @@ void core::firstStart(void )
 void core::botstart(void)
 {
 #ifdef WIN32
-	std::setlocale(LC_ALL, ".ACP");
+	UINT oldcodepage = GetConsoleOutputCP();
+	SetConsoleOutputCP(65001);
 #endif
 	LOG("Start Pichi", LOG::INFO);
 	if(pichi->getConfigOption("debug") == "1")
@@ -70,6 +71,10 @@ void core::botstart(void)
 	if(pthread_create(&thread, NULL, &core::cron, (void*)this) > 0)
 		throw PichiException("Error in cron thread");
 	client->connect();
+#ifdef WIN32
+	SetConsoleOutputCP(oldcodepage);
+	system("pause");
+#endif
 }
 
 core::core()
