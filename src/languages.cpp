@@ -36,6 +36,7 @@ const std::string languages::findLangDir(void )
   
 languages::languages()
 {
+	xmlfile = 0;
 	default_lang = "en";
 	choise = default_lang; // default language
 	std::string dir = findLangDir();
@@ -44,6 +45,7 @@ languages::languages()
 
 languages::languages(const std::string& lan): choise(lan)
 {
+	xmlfile = 0;
 	default_lang = "en";
 	std::string dir = findLangDir();
 	loadLanguage(dir + default_lang + ".xml");
