@@ -191,6 +191,7 @@ void commandbase::command_help(std::string arg)
 	
 	if(arg != "")
 	{
+		boost::erase_all(arg, "!");
 		if(help[arg] != "")
 		{
 			boost::erase_all(help[arg], "\n");
