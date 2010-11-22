@@ -75,7 +75,7 @@ void core::botstart(void)
 		LOG("Pichi didn't connect to the xmpp server. Check connection settings.", LOG::WARNING);
 #ifdef WIN32
 	SetConsoleOutputCP(oldcodepage);
-	system("pause");
+	::system("pause");
 #endif
 }
 
