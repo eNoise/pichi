@@ -71,6 +71,8 @@ void core::botstart(void)
 	if(pthread_create(&thread, NULL, &core::cron, (void*)this) > 0)
 		throw PichiException("Error in cron thread");
 	client->connect();
+	if(!was_connected)
+		LOG("Pichi didn't connect to the xmpp server. Check connection settings.", LOG::WARNING);
 #ifdef WIN32
 	SetConsoleOutputCP(oldcodepage);
 	system("pause");
@@ -85,6 +87,7 @@ core::core()
 		firstStart();
 #endif
 	// Init pichi
+	was_connected = false; // true if connect was successful
 	pichi = new pichicore();
 	pichi->jabber = this;
 	// ----------
@@ -179,6 +182,7 @@ void core::leftRoom(JID room)
 
 void core::onConnect()
 {
+	was_connected = true;
 	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
 		it->second->join();
 	times["wait"] = time(NULL);

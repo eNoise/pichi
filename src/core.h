@@ -59,6 +59,7 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
 		std::string port;
                 std::string roomservice;
 		JID jid;
+		bool was_connected;
 	protected:
 		pichicore* pichi;
 	  
