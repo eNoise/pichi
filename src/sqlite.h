@@ -41,6 +41,7 @@ class sqlite
 			int result_status;
 			int rows_count;
 			q();
+			~q();
 			void finalize(void);
 		};
 		sqlite* clone() const;

@@ -193,6 +193,11 @@ sqlite::q::q()
        is_statement = false;
 }
 
+sqlite::q::~q()
+{
+	finalize();
+}
+
 void sqlite::q::finalize(void )
 {
 	if(is_statement)
