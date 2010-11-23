@@ -45,7 +45,6 @@ class pichicore : public pichiconfig, public lastmessage, public pichioptions
 {
 	public:
 		sqlite *sql;
-		sqlite *cronsql;
 		core *jabber;
 		commandbase *commander;
 		languages *lang;
@@ -81,14 +80,14 @@ class pichicore : public pichiconfig, public lastmessage, public pichioptions
 		void pingRecive(std::string id);
 		std::string getJIDlast(void);
 		
-		void setJIDinfo(std::string jid, std::string name, std::string value, std::string groupid = "", sqlite* db = NULL);
-		std::map<std::string, std::string> getJIDinfo(std::string jid, std::string name = "", std::string groupid = "", sqlite* db = NULL);
-		void delJIDinfo(std::string jid, std::string name = "", std::string groupid = "", sqlite* db = NULL);
+		void setJIDinfo(std::string jid, std::string name, std::string value, std::string groupid = "");
+		std::map<std::string, std::string> getJIDinfo(std::string jid, std::string name = "", std::string groupid = "");
+		void delJIDinfo(std::string jid, std::string name = "", std::string groupid = "");
 		
 		void ban(std::string jid, std::string time = "", std::string reason = "", std::string room = "");
-		void unban(std::string jid, std::string reason = "", std::string room = "", sqlite* db = NULL);
+		void unban(std::string jid, std::string reason = "", std::string room = "");
 		void kick(std::string jid, std::string time = "", std::string reason = "", std::string room = "");
-		void unkick(std::string jid, std::string room = "", sqlite* db = NULL);
+		void unkick(std::string jid, std::string room = "");
 		
 		time_t convertTime(std::string time);
 		

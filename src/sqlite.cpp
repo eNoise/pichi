@@ -71,7 +71,7 @@ sqlite::q* sqlite::squery(const std::string& sql)
 	ret->query_string = sql;
 	ret->query_status = sqlite3_prepare_v2(db, sql.c_str(), -1, &(ret->statement), 0);
 	ret->is_statement = true;
-	if(mainquery.query_status != SQLITE_OK)
+	if(ret->query_status != SQLITE_OK)
 	{
 		delete ret;
 		return NULL; // null pointer
@@ -142,6 +142,17 @@ std::string sqlite::fetchColumn(const int num, bool stay)
 	else
 		return std::string();
 }
+
+std::string sqlite::fetchColumn(sqlite::q* state, const int num, bool stay)
+{
+	if(!stay)
+		state->result_status = sqlite3_step(state->statement);
+	if(state->result_status == SQLITE_ROW)
+		return static_cast<std::string>((char*)sqlite3_column_text(state->statement, num));
+	else
+		return std::string();
+}
+
   
 const int sqlite::numColumns() const
 {
