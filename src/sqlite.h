@@ -54,7 +54,9 @@ class sqlite
 		std::string fetchColumn(const int num, bool stay = false);
 		std::string fetchColumn(q* state, const int num, bool stay = false);
 		const int numColumns() const;
+		const int numColumns(q* state) const;
 		const int numRows() const;
+		const int numRows(q* state) const;
 		const std::string escapeString(const std::string&);
 		bool reset();
 		void finalize();

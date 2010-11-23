@@ -101,13 +101,8 @@ bool sqlite::exec(const std::string& sql)
 
 std::map<std::string, std::string> sqlite::fetchArray(q* state)
 {
-	bool nullstate = false;
 	if(state == NULL)
-	{
-		state = new q();
-		*state = mainquery;
-		nullstate = true;
-	}
+		state = &mainquery;
   
 	std::map<std::string, std::string> row;
 	
@@ -128,8 +123,6 @@ std::map<std::string, std::string> sqlite::fetchArray(q* state)
 		}
 	}
 	
-	if(nullstate)
-		delete state;
 	return row;
 }
 
@@ -159,9 +152,19 @@ const int sqlite::numColumns() const
 	return sqlite3_column_count(mainquery.statement);
 }
 
+const int sqlite::numColumns(sqlite::q* state) const
+{
+	return sqlite3_column_count(state->statement);
+}
+
 const int sqlite::numRows() const
 {
 	return mainquery.rows_count;
+}
+
+const int sqlite::numRows(sqlite::q* state) const
+{
+	return state->rows_count;
 }
 
 bool sqlite::reset()
