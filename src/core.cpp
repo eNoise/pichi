@@ -295,14 +295,17 @@ void *core::cron(void *context)
 {
 	while(true)
 	{
-		if(time(NULL) - ((core *)context)->times["white_ping"] > 5 * 60)
+		if(((core *)context)->was_connected)
 		{
-			((core *)context)->times["white_ping"] = time(NULL);
-			LOG("[CRON] Ping of live", LOG::INFO);
+			if(time(NULL) - ((core *)context)->times["white_ping"] > 5 * 60)
+			{
+				((core *)context)->times["white_ping"] = time(NULL);
+				LOG("[CRON] Ping of live", LOG::INFO);
 		
-			((core *)context)->client->whitespacePing();
+				((core *)context)->client->whitespacePing();
+			}
+			((core *)context)->pichi->cronDo("cron");
 		}
-		((core *)context)->pichi->cronDo("cron");
 #ifndef WIN32
 		sleep(1);
 #else

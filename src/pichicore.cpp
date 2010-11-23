@@ -120,10 +120,14 @@ void pichicore::setUserInfo(std::string jid, std::string nick, std::string state
 		//if($this->db->fetchColumn() == 0)
 		//		($hook = PichiPlugin::fetch_hook('pichicore_status_create')) ? eval($hook) : false;
 	}
-		
+	
+	// Insert Nick info
+	if(nick != "")
+	{
 		sql->query("SELECT COUNT(*) FROM users_nick WHERE jid = '" + sql->escapeString(jid) + "' AND nick = '" + sql->escapeString(nick) + "' AND room = '" + sql->escapeString(room) + "';");
 		if(system::atoi(sql->fetchColumn(0)) == 0)
 			sql->exec("INSERT INTO users_nick (`jid`,`nick`,`room`,`time`) VALUES ('" + sql->escapeString(jid) + "','" + sql->escapeString(nick) + "','" + sql->escapeString(room) + "','" + system::stringTime(time(NULL)) + "');");
+	}
 }
 
 void pichicore::cleanUserInfo(void)
