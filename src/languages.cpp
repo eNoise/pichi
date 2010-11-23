@@ -25,12 +25,16 @@ namespace pichi
 
 const std::string languages::findLangDir(void )
 {
+#ifndef WIN32
 	if(system::fileExists(system::getFullPath(PICHI_CONFIG_DIR) + "languages/"))
 		return (system::getFullPath(PICHI_CONFIG_DIR) + "languages/");
 	else if(system::fileExists("/usr/share/pichi/languages/"))
 		return "/usr/share/pichi/languages/";
 	else
 		throw PichiException("No language directory's founded...");
+#else
+	return system::getFullPath(PICHI_CONFIG_DIR) + "languages/";
+#endif
 	return "";
 }  
   

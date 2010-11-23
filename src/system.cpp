@@ -100,8 +100,12 @@ const std::string system::getFullPath(const std::string& dir)
 {
 	if (dir[0] != '~')
 		return dir;
+#ifndef WIN32
 	std::string home = getenv("HOME");
 	return (home + dir.substr(1));
+#else
+	return dir;
+#endif
 }
 
 bool system::fileExists(const std::string& file)
