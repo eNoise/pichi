@@ -263,19 +263,28 @@ void core::initDBStruct(void)
 		pichi->sql->exec("CREATE TABLE db_version (`version` TEXT, `value` TEXT);");
   
 		pichi->sql->exec("INSERT INTO db_version (`version`) VALUES ('19');");
-		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_mode','1','Режим ответа на сообщения. [0 - выключить; 1 - включить][По умолчанию: 1]');"); // Отвечать после сообщений пользователей
-		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_random','0','Не всегда ответь при получении сообщения. [0 - всегда отвечать; >100 фактически всегда молчать][По умолчанию: 0]');"); // отвечать не всегда (0 - всегда)
-		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_remember','1','Разбивать на связки слов. [0 - выключить; 1 - включить][По умолчанию: 1]');"); // запоминать и разбивать на лексемы
-		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_word_limit','10','Максимальное количество связок слов в расмотрении. Влияет на алгоритм построения фраз, так же как и на нагрузку. [Рекомендуется >3 и <50][По умолчанию: 10]');"); // limit для запросов в лексемах
-		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('log_enabled','1','Вести лог? [0 - выключить; 1 - включить][По умолчанию: 1]');"); // вести лог ?
-		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('treatment_coincidence','3','Вероятность вставки обращений. [1 - всегда; >100 фактически никогда][По умолчанию: 3]');"); // вставлять обращение, совпадения (3 из 1)
-		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('rand_message','0','Переодически отправлять случайные фразы в главный чат. [0 - выключить; 1 - включить][По умолчанию: 0]');"); // случайны ответ когда скучно
-		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('msg_limit','500','Максимальное количество символов, допустимое в главном чате (в противном случае пишет в личку) [По умолчанию: 500]');"); // лимит символов, после чего отправляет ответ в личку
-		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('msg_max_limit','0','Верхний предел для сообщения, после которого сообщение разобьет на несколько [По умолчанию: 0]');"); // вверхний предел
+		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_mode','1','" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_answer_mode"]) + "');"); // Отвечать после сообщений пользователей
+		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_random','0','" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_answer_random"]) + "');"); // отвечать не всегда (0 - всегда)
+		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_remember','1','" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_answer_remember"]) + "');"); // запоминать и разбивать на лексемы
+		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_word_limit','10','" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_answer_word_limit"]) + "');"); // limit для запросов в лексемах
+		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('log_enabled','1','" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_log_enabled"]) + "');"); // вести лог ?
+		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('treatment_coincidence','3','" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_treatment_coincidence"]) + "');"); // вставлять обращение, совпадения (3 из 1)
+		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('rand_message','0','" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_rand_message"]) + "');"); // случайны ответ когда скучно
+		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('msg_limit','500','" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_msg_limit"]) + "');"); // лимит символов, после чего отправляет ответ в личку
+		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('msg_max_limit','0','" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_msg_max_limit"]) + "');"); // вверхний предел
 	}
 	else
 	{
 		pichi->sql = new sqlite(system::getFullPath(PICHI_CONFIG_DIR) + pichi->getConfigOption("db_file"));
+		pichi->sql->exec("UPDATE settings SET description = '" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_answer_mode"]) + "' WHERE name = 'answer_mode';");
+		pichi->sql->exec("UPDATE settings SET description = '" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_answer_random"]) + "' WHERE name = 'answer_random';");
+		pichi->sql->exec("UPDATE settings SET description = '" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_answer_remember"]) + "' WHERE name = 'answer_remember';");
+		pichi->sql->exec("UPDATE settings SET description = '" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_answer_word_limit"]) + "' WHERE name = 'answer_word_limit';");
+		pichi->sql->exec("UPDATE settings SET description = '" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_log_enabled"]) + "' WHERE name = 'log_enabled';");
+		pichi->sql->exec("UPDATE settings SET description = '" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_treatment_coincidence"]) + "' WHERE name = 'treatment_coincidence';");
+		pichi->sql->exec("UPDATE settings SET description = '" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_rand_message"]) + "' WHERE name = 'rand_message';");
+		pichi->sql->exec("UPDATE settings SET description = '" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_msg_limit"]) + "' WHERE name = 'msg_limit';");
+		pichi->sql->exec("UPDATE settings SET description = '" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_msg_max_limit"]) + "' WHERE name = 'msg_max_limit';");
 	}
 }
 

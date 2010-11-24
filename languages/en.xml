@@ -18,7 +18,17 @@
                 <option name="message_to_private_chat" type="string">The message is too long, the answer will be send to private chat.</option>
 		<option name="bad_argument" type="string">Bad argument.</option>
 		<option name="updated" type="string">Updated</option>
-		
+
+		<option name="db_configdesc_answer_mode" type="string"><![CDATA[Режим ответа на сообщения. [0 - выключить; 1 - включить][По умолчанию: 1]]]></option>
+		<option name="db_configdesc_answer_random" type="string"><![CDATA[Не всегда ответь при получении сообщения. [0 - всегда отвечать; >100 фактически всегда молчать][По умолчанию: 0]]]></option>
+		<option name="db_configdesc_answer_remember" type="string"><![CDATA[Разбивать на связки слов. [0 - выключить; 1 - включить][По умолчанию: 1]]]></option>
+		<option name="db_configdesc_answer_word_limit" type="string"><![CDATA[Максимальное количество связок слов в расмотрении. Влияет на алгоритм построения фраз, так же как и на нагрузку. [Рекомендуется >3 и <50][По умолчанию: 10]]]></option>
+		<option name="db_configdesc_log_enabled" type="string"><![CDATA[Вести лог? [0 - выключить; 1 - включить][По умолчанию: 1]]]></option>
+		<option name="db_configdesc_treatment_coincidence" type="string"><![CDATA[Вероятность вставки обращений. [1 - всегда; >100 фактически никогда][По умолчанию: 3]]]></option>
+		<option name="db_configdesc_rand_message" type="string"><![CDATA[Переодически отправлять случайные фразы в главный чат. [0 - выключить; 1 - включить][По умолчанию: 0]]]></option>
+		<option name="db_configdesc_msg_limit" type="string"><![CDATA[Максимальное количество символов, допустимое в главном чате (в противном случае пишет в личку) [По умолчанию: 500]]]></option>
+		<option name="db_configdesc_msg_max_limit" type="string"><![CDATA[Верхний предел для сообщения, после которого сообщение разобьет на несколько [По умолчанию: 0]]]></option>
+
                 <option name="help_syntaxis_info" type="string">Basics of guidance:
 All commands begins with !
 After the command must be specified parameters:
