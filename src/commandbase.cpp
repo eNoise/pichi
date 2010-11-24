@@ -154,7 +154,7 @@ void commandbase::command_help(std::string arg)
 	help["greet"] = "!greet " + TR("help_command_usage_jid") + " " + TR("help_command_usage_room") + " " + TR("help_command_usage_message") + " - " + TR("help_command_description_greet") + "\n";
 	help["farewell"] = "!farewell " + TR("help_command_usage_jid") + " " + TR("help_command_usage_room") + " " + TR("help_command_usage_message") + " - " + TR("help_command_description_farewell") + "\n";
 	help["idle"] = "!idle " + TR("help_command_usage_nick") + " - " + TR("help_command_description_idle") + "\n";
-	help["uptime"] = "!uptime - Сколько времени работает бот\n";
+	help["uptime"] = "!uptime - " + TR("help_command_description_uptime") + "\n";
 	help["on"] = "!on - " + TR("help_command_description_on") + "\n";
 	help["off"] = "!off - " + TR("help_command_description_off") + "\n";
 	help["quit"] = "!quit - " + TR("help_command_description_quit") + "\n";

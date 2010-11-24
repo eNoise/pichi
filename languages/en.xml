@@ -47,6 +47,7 @@ parameter1|parameter2 - parameter1 OR parameter2 (one of)
 		<option name="help_command_description_greet" type="string">Set a greeting of the user. Example: !greet "nagg@jabber.ru" "room@conference.jabber.ru" "Welcome, nagg!"</option>
 		<option name="help_command_description_farewell" type="string">Set s farewell message (The message, which shows, when user leave a conference). Example: !farewell "nagg@jabber.ru" "room@conference.jabber.ru" "nagg is gone"</option>
 		<option name="help_command_description_idle" type="string">Show time of inactivity (time elapsed since the last active user actions) in a room (conference). Example: !idle deg</option>
+		<option name="help_command_description_uptime" type="string">How much time bot works</option>
 		<option name="help_command_description_quit" type="string">Quit the server (bot leaves the server on and off).</option>
 		<option name="help_command_description_version" type="string">Show bot's version.</option>
 		<option name="help_command_description_topic" type="string">Set topic in the room. Example: !topic Welcome!</option>
@@ -55,7 +56,7 @@ parameter1|parameter2 - parameter1 OR parameter2 (one of)
 		<option name="help_command_description_banlist" type="string">Show banlist.</option>
 		<option name="help_command_description_kicklist" type="string">Show kicklist.</option>
 		<option name="help_command_description_kick" type="string">Kick user from the room. If time is specified the user (if user trying to enter) will be automatically kicked during the specified time. First parameter is jid Or nick. The second is time (see above !ban). The third is reason (optional). Example: !kick vovan 5m just_so</option>
-		<option name="help_command_description_unckick" type="string">Cancel operation of the '!kick' command. This command need only if '!kick' command was entered with a parameter 'time'. Example: !unkick vovan</option>
+		<option name="help_command_description_unkick" type="string">Cancel operation of the '!kick' command. This command need only if '!kick' command was entered with a parameter 'time'. Example: !unkick vovan</option>
 		<option name="help_command_description_plugins" type="string">Show list of all plugins.</option>
 		<option name="help_command_description_enable" type="string">Enable the specified plug-in. Example: !enable lastfm</option>
 		<option name="help_command_description_disable" type="string">Disable the specified plug-in. Example: !disable lastfm</option>

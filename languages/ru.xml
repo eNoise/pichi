@@ -47,6 +47,7 @@
 		<option name="help_command_description_greet" type="string">Установить приветствие пользователя. Пример: !greet "nagg@jabber.ru" "room@conference.jabber.ru" "С возращением, nagg!"</option>
 		<option name="help_command_description_farewell" type="string">Установить прощание (Сообщение при уходе пользователя). Пример: !farewell "nagg@jabber.ru" "room@conference.jabber.ru" "nagg ушел"</option>
 		<option name="help_command_description_idle" type="string">Показать время бездействия (время, прошедшее с момента последнего активного действия пользователя) в комнате. Пример: !idle deg</option>
+		<option name="help_command_description_uptime" type="string">Сколько времени работает бот</option>
 		<option name="help_command_description_quit" type="string">Покинуть сервер (бот покидает сервер и отключается).</option>
 		<option name="help_command_description_version" type="string">Показать версию бот.</option>
 		<option name="help_command_description_topic" type="string">Установить тему в комнате. Пример: !topic тема</option>
@@ -55,7 +56,7 @@
 		<option name="help_command_description_banlist" type="string">Показать список заблокированных пользователей.</option>
 		<option name="help_command_description_kicklist" type="string">Показать список закиканых пользователей.</option>
 		<option name="help_command_description_kick" type="string">Выгнать пользователя из комнаты. Если указано время, пользователя (при попытках зайти) будет автоматически сразу выгонять из комнаты на протяжении указанного времени. Первый параметр - jid или ник. Второй - время (см !ban). Третий - причина (опционально). Пример: !kick vovan 5m просто_так</option>
-		<option name="help_command_description_unckick" type="string">Прервать действие команды !kick. Необходима только, если команда !kick была использована с параметром "время". Пример: !unkick vovan</option>
+		<option name="help_command_description_unkick" type="string">Прервать действие команды !kick. Необходима только, если команда !kick была использована с параметром "время". Пример: !unkick vovan</option>
 		<option name="help_command_description_plugins" type="string">Показать список всех плагинов.</option>
 		<option name="help_command_description_enable" type="string">Включить указанный плагин. Пример: !enable lastfm</option>
 		<option name="help_command_description_disable" type="string">Отключить указанный плагин. Пример: !disable lastfm</option>
