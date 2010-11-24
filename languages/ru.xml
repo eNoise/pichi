@@ -22,7 +22,7 @@
 		<option name="db_configdesc_answer_mode" type="string"><![CDATA[Режим ответа на сообщения. [0 - выключить; 1 - включить][По умолчанию: 1]]]></option>
 		<option name="db_configdesc_answer_random" type="string"><![CDATA[Не всегда ответь при получении сообщения. [0 - всегда отвечать; >100 фактически всегда молчать][По умолчанию: 0]]]></option>
 		<option name="db_configdesc_answer_remember" type="string"><![CDATA[Разбивать на связки слов. [0 - выключить; 1 - включить][По умолчанию: 1]]]></option>
-		<option name="db_configdesc_answer_word_limit" type="string"><![CDATA[Максимальное количество связок слов в расмотрении. Влияет на алгоритм построения фраз, так же как и на нагрузку. [Рекомендуется >3 и <50][По умолчанию: 10]]]></option>
+		<option name="db_configdesc_answer_word_limit" type="string"><![CDATA[Максимальное количество связок слов в рассмотрении. Влияет на алгоритм построения фраз, так же как и на нагрузку. [Рекомендуется >3 и <50][По умолчанию: 10]]]></option>
 		<option name="db_configdesc_log_enabled" type="string"><![CDATA[Вести лог? [0 - выключить; 1 - включить][По умолчанию: 1]]]></option>
 		<option name="db_configdesc_treatment_coincidence" type="string"><![CDATA[Вероятность вставки обращений. [1 - всегда; >100 фактически никогда][По умолчанию: 3]]]></option>
 		<option name="db_configdesc_rand_message" type="string"><![CDATA[Переодически отправлять случайные фразы в главный чат. [0 - выключить; 1 - включить][По умолчанию: 0]]]></option>
@@ -74,6 +74,13 @@
 		<option name="help_command_description_on" type="string">Включает бота</option>
 		<option name="help_command_description_off" type="string">Отключает бота</option>
 		<option name="help_command_description_q" type="string">Попросить бота сказать фразу с заданным словом</option>
+		<option name="help_command_description_urlshort" type="string">Показать укороченную ссылку через сервис ul.ly</option>
+		<option name="help_command_description_lastfm_user" type="string">Связывает вас с Last.fm аккаунтом</option>
+		<option name="help_command_description_lastfm" type="string">Отображает последние прослушанные композиции для вашего аккаунта</option>
+		<option name="help_command_description_translate" type="string">Перевести указанный текст при помощи сервиса Google Translate. (Необходимо чтобы был выставлен язык перевода, см !translate_language)</option>
+		<option name="help_command_description_tr" type="string">Быстрый перевод текста. Вторым параметром является укороченный вариант с_какого_языка2в_какой_язык. Например: "!tr en2ru this" переведет слово this с английского на русский.</option>
+		<option name="help_command_description_translate_language" type="string">Устанавливает язык перевода для вашего аккаунта. Первый параметр - с какого. Второй - в какой. Например "!translate_language en ru" установит язык перевода с английского на русский. После уставновки этого параметра можно использовать комманду !translate</option>
+		<option name="help_command_description_google" type="string">Поиск указанного текста в поисковой системе Google.</option>
 		
 		<option name="help_command_usage_param" type="string">параметр</option>
 		<option name="help_command_usage_value" type="string">значение</option>
@@ -86,13 +93,21 @@
 		<option name="help_command_usage_time" type="string">время</option>
 		<option name="help_command_usage_variable" type="string">переменная</option>
 		<option name="help_command_usage_number" type="string">число</option>
-		
+
+		<option name="time_n_seconds" type="string">секунд(ы)</option>
+		<option name="time_n_minutes" type="string">минут(ы)</option>
+		<option name="time_n_hours" type="string">часа(ов)</option>
+		<option name="time_n_days" type="string">дня(ей)</option>
+		<option name="time_n_months" type="string">месяца(ов)</option>
+		<option name="time_n_years" type="string">лет</option>
+
 		<option name="help_plugins" type="string">Система плагинов</option>
 		<option name="help_admin_commands" type="string">Команды администратора</option>
 		<option name="help_wiki_inline" type="string">Встроенная вики</option>
 		<option name="help_other_commands" type="string">Другие команды</option>
 		<option name="help_lexems" type="string">Разговорник</option>
 		
+		<option name="command_help_nosuchcommand" type="string">Нету такой комнады</option>
 		<option name="command_version_plugins" type="string">Список плагинов</option>
 		<option name="command_version_environment" type="string">Программное обеспечение</option>
 		<option name="command_plugins_no_sorry" type="string">Извините, система плагинов временно отключена.</option>
@@ -123,5 +138,10 @@
 		<option name="command_status_offline" type="string">отсутствует</option>
 		<option name="command_ping_nouser" type="string">Нет такого пользователя</option>
 		<option name="command_nicks" type="string">Ники пользователя:</option>
+		<option name="command_lastfm_listen" type="string">{1} слушает: {2}</option>
+		<option name="command_lastfm_setuser" type="string">Вы привязаны к аккаунту {1}.</option>
+		<option name="command_urlshort_incorrect_service" type="string">Сервис недоступен, либо некорректный url.</option>
+		<option name="command_uptime_start" type="string">Время старта бота: {1}</option>
+		<option name="command_uptime_uptime" type="string">Бот работает на протяжении: {1}</option>
         </language>
 </PichiLanguage>

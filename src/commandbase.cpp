@@ -134,7 +134,13 @@ void commandbase::command_help(std::string arg)
 	helpmap["commands_lexems"].push_back("talkers");
 	helpmap["commands_lexems"].push_back("nick");
 	helpmap["commands_lexems"].push_back("q");
-	helpmap["commands_other"].push_back("q");
+	helpmap["commands_other"].push_back("urlshort");
+	helpmap["commands_other"].push_back("lastfm");
+	helpmap["commands_other"].push_back("lastfm_user");
+	helpmap["commands_other"].push_back("translate");
+	helpmap["commands_other"].push_back("translate_language");
+	helpmap["commands_other"].push_back("tr");
+	helpmap["commands_other"].push_back("google");
 	
 	help["commands_main"] = "=====  " +  TR("help_main_commands")  + "  =====\n";
 	help["set"] = "!set " + TR("help_command_usage_variable") + "=" + TR("help_command_usage_value") + " - " + TR("help_command_description_set") + "\n";
@@ -186,8 +192,20 @@ void commandbase::command_help(std::string arg)
 	help["q"] = "!q " + TR("help_command_usage_param") + " - " + TR("help_command_description_q") + "\n";
 
 	help["commands_other"] = "=====  " +  TR("help_other_commands")  + "  =====\n";
-	help["urlshort"] = "!urlshort " + TR("help_command_usage_param") + " - " + "Показывает укороченный url через сервис ur.ly" + "\n";
+	help["urlshort"] = "!urlshort " + TR("help_command_usage_param") + " - " + TR("help_command_description_urlshort") + "\n";
 	//($hook = PichiPlugin::fetch_hook("commands_show_help")) ? eval($hook) : false;
+	
+	help["subgroup_lastfm"] = "--- Last.fm ---";
+	help["lastfm"] = "!lastfm - " + TR("help_command_description_lastfm") + "\n";
+	help["lastfm_user"] = "!lastfm_user " + TR("help_command_usage_param") + " - " + TR("help_command_description_lastfm_user") + "\n";
+	
+	help["subgroup_google_translate"] = "--- Google Translate ---";
+	help["translate"] = "!translate " + TR("help_command_usage_param") + " - " + TR("help_command_description_translate") + "\n";
+	help["tr"] = "!tr lg2lg " + TR("help_command_usage_param") + " - " + TR("help_command_description_tr") + "\n";
+	help["translate_language"] = "!translate_language " + TR("help_command_usage_param") + " - " + TR("help_command_description_translate_language") + "\n";
+	
+	help["subgroup_google"] = "--- Google Search ---";
+	help["google"] = "!google " + TR("help_command_usage_param") + " - " + TR("help_command_description_google") + "\n";
 	
 	if(arg != "")
 	{
@@ -199,7 +217,7 @@ void commandbase::command_help(std::string arg)
 		}
 		else
 		{
-			pichi->sendAnswer("Нету такой команды");
+			pichi->sendAnswer(TR("command_help_nosuchcommand"));
 		}
 		
 		return;
@@ -765,7 +783,7 @@ void commandbase::command_lastfm(std::string arg)
 		pichicurl* curl = new pichicurl();
 		std::string data = curl->readurl("http://ws.audioscrobbler.com/1.0/user/" + user["lastfm_user"] + "/recenttracks.txt");
 		if(data != "")
-			pichi->sendAnswer(pichi->getName(pichi->getJIDlast()) + " слушает: " + (system::explode("," , (system::explode("\n", data).at(0)))).at(1) );
+			pichi->sendAnswer(TR3("command_lastfm_listen", pichi->getName(pichi->getJIDlast()).c_str(), (system::explode("," , (system::explode("\n", data).at(0)))).at(1).c_str()));
 		else
 			LOG("Music read from last.fm failed. Check internet connection.", LOG::WARNING);
 		delete curl;
@@ -775,6 +793,7 @@ void commandbase::command_lastfm(std::string arg)
 void commandbase::command_lastfm_user(std::string arg)
 {
 	pichi->setJIDinfo(pichi->getJIDlast(), "lastfm_user", arg);
+	pichi->sendAnswer(TR2("command_lastfm_setuser", arg.c_str()));
 }
 
 
@@ -874,7 +893,7 @@ void commandbase::command_urlshort(std::string arg)
 	if(ret == "" || ret.substr(0,1) != "{")
 	{
 		LOG("UL.ly failed.", LOG::DEBUG);
-		pichi->sendAnswer("Сервис недоступен, либо некорректный url.");
+		pichi->sendAnswer(TR("command_urlshort_incorrect_service"));
 		return;
 	}
 	
@@ -891,12 +910,12 @@ void commandbase::command_uptime(std::string arg)
 	std::vector<time_t> undiff;
 	int ar[6] = {60,60,24,30,12,5000};
 	std::vector<std::string> whatis;
-	whatis.push_back("секунд(ы)");
-	whatis.push_back("минут(ы)");
-	whatis.push_back("часа(ов)");
-	whatis.push_back("дня(ей)");
-	whatis.push_back("месяца(ов)");
-	whatis.push_back("лет");
+	whatis.push_back(TR("time_n_seconds"));
+	whatis.push_back(TR("time_n_minutes"));
+	whatis.push_back(TR("time_n_hours"));
+	whatis.push_back(TR("time_n_days"));
+	whatis.push_back(TR("time_n_months"));
+	whatis.push_back(TR("time_n_years"));
 	int i = 0;
 	while(diff > ar[i])
 	{
@@ -907,8 +926,8 @@ void commandbase::command_uptime(std::string arg)
 	std::string ans = system::ttoa(diff) + " " + whatis[i];
 	for(; i>0; i--)
 		ans += " " + system::ttoa(undiff[i-1]) + " " + whatis[i-1];
-	pichi->sendAnswer("\nВремя старта бота: " + system::timeToString(pichi->jabber->times["start"],"%d.%m.%Y в %H:%M:%S") 
-			 + "\nБот работает: " + ans);
+	pichi->sendAnswer("\n" + TR2("command_uptime_start", system::timeToString(pichi->jabber->times["start"],"%d.%m.%Y в %H:%M:%S").c_str()) 
+			+ "\n" + TR2("command_uptime_uptime", ans.c_str()));
 }
 
 }
