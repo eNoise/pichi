@@ -289,6 +289,11 @@ void commandbase::command_kick(std::string arg)
 		return;
 	
 	std::vector< std::string > w = seperate(arg, 3);
+	if(w[0] == "" || w[1] == "" || w[2] == "")
+	{
+		pichi->sendAnswer(TR("bad_argument"));
+		return;
+	}
 	pichi->kick(w[0], w[1], w[2]);
 }
 
@@ -306,6 +311,11 @@ void commandbase::command_ban(std::string arg)
 		return;
 	
 	std::vector< std::string > w = seperate(arg, 3);
+	if(w[0] == "" || w[1] == "" || w[2] == "")
+	{
+		pichi->sendAnswer(TR("bad_argument"));
+		return;
+	}
 	pichi->ban(w[0], w[1], w[2]);
 }
 
@@ -315,6 +325,11 @@ void commandbase::command_unban(std::string arg)
 		return;
 	
 	std::vector< std::string > w = seperate(arg, 2);
+	if(w[0] == "" || w[1] == "")
+	{
+		pichi->sendAnswer(TR("bad_argument"));
+		return;
+	}
 	pichi->unban(w[0], w[1]);
 }
 
@@ -344,25 +359,35 @@ void commandbase::command_kicklist(std::string arg)
 
 void commandbase::command_log(std::string arg)
 {
-	 	pichi->sql->query("SELECT * FROM log ORDER BY time;");
-		int qu_i = pichi->sql->numRows();
-		if(arg.length() > 5)
-			return;
-		int n = (arg != "") ? (system::atoi(arg)) : 20;
-		int i = 0;
-		std::string log = "\n-----------------------------------------------------------------------\n";
-		std::map<std::string, std::string> data;
-		while(!(data = pichi->sql->fetchArray()).empty())
+		std::vector< std::string > w = seperate(arg, 2);
+		if(w[0] == "")
 		{
-			if(i < n && i < 50 && qu_i <= n)
-			{
-				log += "[" + system::timeToString(system::atot(data["time"]), "%H:%M:%S") + "]<" + pichi->getName(data["from"]) + "> " + data["message"] + "\n";
-				i++;
-			}
-			qu_i--;
+			pichi->sendAnswer(TR("bad_argument"));
+			return;
+		}
+		int limit = 20, skip = 0;
+		try
+		{
+			limit = system::atoi(w[0]);
+			skip = system::atoi(w[0]);
+		}
+		catch(boost::bad_lexical_cast e)
+		{
+			pichi->sendAnswer(TR("bad_argument"));
+		}
+		pichi->sql->query("SELECT * FROM log ORDER BY time DESC LIMIT " + system::itoa(skip) + "," + system::itoa(limit) + ";");
+		std::map< std::string, std::string > data;
+		typedef std::vector< std::map< std::string, std::string > > tp;
+		tp msgs;
+		while(!(data = pichi->sql->fetchArray()).empty())
+			msgs.push_back(data);
+		
+		std::string log = "-----------------------------------------------------------------------";
+		BOOST_REVERSE_FOREACH(tp::value_type &ms, msgs)
+		{
+			    log += "[" + system::timeToString(system::atot(ms["time"]), "%H:%M:%S") + "]<" + pichi->getName(ms["from"]) + "> " + ms["message"] + "\n";
 		}
 		log += "-----------------------------------------------------------------------";
-		//$this->log->log("Request log:\n$log", PichiLog::LEVEL_VERBOSE);
 		pichi->sendAnswer(log); 
 }
 
@@ -371,7 +396,10 @@ void commandbase::command_wtf(std::string arg)
 {
 	pichi->sql->query("SELECT `value` FROM wiki WHERE name='" + pichi->sql->escapeString(arg) + "' ORDER BY revision DESC LIMIT 0,1;");
 	std::string answer = pichi->sql->fetchColumn(0);
-	pichi->sendAnswer(answer);
+	if(answer != "")
+		pichi->sendAnswer(answer);
+	else
+		pichi->sendAnswer(TR("command_wiki_nodef"));
 	//$this->log->log("User request wiki page \"$w[1]\" = $answer", PichiLog::LEVEL_DEBUG);
 }
 
@@ -435,13 +463,13 @@ void commandbase::command_wtfull(std::string arg)
 
 void commandbase::command_wtfset(std::string arg)
 {
-	std::vector< std::string > w = seperate(arg, 3);
+	std::vector< std::string > w = seperate(arg, 2);
 	pichi->sql->query("SELECT name,revision,value FROM wiki WHERE name = '" + pichi->sql->escapeString(w[0]) + "' AND revision='" + pichi->sql->escapeString(w[1]) + "' LIMIT 0,1;");
 	if(pichi->sql->numRows() > 0)
 	{
 		std::string name = pichi->sql->fetchColumn(0);
-		std::string rev = pichi->sql->fetchColumn(1,true);
-		std::string val = pichi->sql->fetchColumn(2,true);
+		std::string rev = pichi->sql->fetchColumn(1, true);
+		std::string val = pichi->sql->fetchColumn(2, true);
 		pichi->sql->query("SELECT revision FROM wiki WHERE name = '" + pichi->sql->escapeString(name) + "' ORDER BY revision DESC LIMIT 0,1;");
 		int newrev = (system::atoi(pichi->sql->fetchColumn(0))) + 1;
 		pichi->sql->query("INSERT INTO wiki (`name`,`revision`,`value`) VALUES ('" + pichi->sql->escapeString(name) + "','" + pichi->sql->escapeString(system::itoa(newrev)) + "','" + pichi->sql->escapeString(val) + "');");
@@ -533,8 +561,12 @@ void commandbase::command_count(std::string arg)
 
 void commandbase::command_dfn(std::string arg)
 {
-	std::vector< std::string > w = seperate(arg, 3);
-
+	std::vector< std::string > w = seperate(arg, 2);
+	if(w[0] == "" || w[1] == "")
+	{
+		pichi->sendAnswer(TR("bad_argument"));
+		return;
+	}
 	pichi->sql->query("SELECT revision FROM wiki WHERE name = '" + pichi->sql->escapeString(w[0]) + "' ORDER BY revision DESC LIMIT 0,1;");
 	size_t rev;
 	if(pichi->sql->numRows() > 0)
@@ -556,7 +588,12 @@ void commandbase::command_set(std::string arg)
 	if(!pichi->isAccess())
 		return;
      
-	std::vector< std::string > w = seperate(arg, 3);
+	std::vector< std::string > w = seperate(arg, 2);
+	if(w[0] == "")
+	{
+		pichi->sendAnswer(TR("bad_argument"));
+		return;
+	}
 	if(pichi->setOption(w[0], w[1]))
 		pichi->sendAnswer(TR("command_set"));
 	else	
@@ -570,6 +607,12 @@ void commandbase::command_msg(std::string arg)
      
 	std::vector< std::string > w = seperate(arg, 2);
 
+	if(w[0] == "" || w[1] == "")
+	{
+		pichi->sendAnswer(TR("bad_argument"));
+		return;
+	}
+	
 	pichi->jabber->sendMessage(JID(pichi->getJID(w[0])), w[1]);
 	//$this->log->log("Send message to $user: $message", PichiLog::LEVEL_DEBUG);
 }
@@ -696,7 +739,7 @@ void commandbase::command_ping(std::string arg)
 void commandbase::command_topic(std::string arg)
 {
 	for(std::list< std::pair<JID, MUCRoom*> >::iterator it = pichi->jabber->rooms.begin(); it != pichi->jabber->rooms.end(); it++)
-		if(it->first = JID(pichi->getLastRoom()))
+		if(it->first == JID(pichi->getLastRoom()))
 			it->second->setSubject(arg);
 }
 
@@ -715,9 +758,20 @@ void commandbase::command_nicks(std::string arg)
 void commandbase::command_idle(std::string arg)
 {
 	pichi->sql->query("SELECT `time` FROM log WHERE `from` = '" + pichi->sql->escapeString(arg) + "' OR `from` LIKE '%/" + pichi->sql->escapeString(pichi->getName(arg)) + "' ORDER BY time DESC;");
-	time_t date = boost::lexical_cast<time_t>(pichi->sql->fetchColumn(0));
+	time_t date;
+	try
+	{
+		date = boost::lexical_cast<time_t>(pichi->sql->fetchColumn(0));
+	}
+	catch(boost::bad_lexical_cast e)
+	{
+		pichi->sendAnswer(TR("bad_argument"));
+		return;
+	}
 	if(date > 0)
 		pichi->sendAnswer(system::timeToString(date, "%d.%m.%Y в %H:%M:%S"));
+	else
+		pichi->sendAnswer(TR("bad_argument"));
 }
 
 void commandbase::command_q(std::string arg)
@@ -730,12 +784,17 @@ void commandbase::command_greet(std::string arg)
 	std::vector< std::string > w = seperate(arg, 3);
 	if(!pichi->isAccess())
 		return;
+	if(w[0] == "" || w[1] == "" || w[2] == "")
+	{
+		pichi->sendAnswer(TR("bad_argument"));
+		return;
+	}
 	pichi->sql->query("SELECT COUNT(*) FROM actions WHERE action = 'user_join_room' AND coincidence='room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "';");
 	if(system::atoi(pichi->sql->fetchColumn(0)) > 0)
 		pichi->sql->exec("UPDATE actions SET value = '" + pichi->sql->escapeString(w[2]) + "'  WHERE action = 'user_join_room' AND coincidence='room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "';");
 	else
 		pichi->sql->exec("INSERT INTO actions (`action`,`coincidence`,`do`,`option`,`value`) VALUES ('user_join_room', 'room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "', 'send_message', '', '" + pichi->sql->escapeString(w[2]) + "');");
-	pichi->sendAnswer("Updated!");
+	pichi->sendAnswer(TR("updated"));
 }
 
 void commandbase::command_farewell(std::string arg)
@@ -743,6 +802,11 @@ void commandbase::command_farewell(std::string arg)
 	std::vector< std::string > w = seperate(arg, 3);
 	if(!pichi->isAccess())
 		return;
+	if(w[0] == "" || w[1] == "" || w[2] == "")
+	{
+		pichi->sendAnswer(TR("bad_argument"));
+		return;
+	}
 	pichi->sql->query("SELECT COUNT(*) FROM actions WHERE action = 'user_left_room' AND coincidence='room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "';");
 	if(system::atoi(pichi->sql->fetchColumn(0)) > 0)
 		pichi->sql->exec("UPDATE actions SET value = '" + pichi->sql->escapeString(w[2]) + "'  WHERE action = 'user_left_room' AND coincidence='room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "';");
