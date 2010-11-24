@@ -107,7 +107,7 @@ parameter1|parameter2 - parameter1 OR parameter2 (one of)
 		<option name="help_other_commands" type="string">Other commands</option>
 		<option name="help_lexems" type="string">Talking</option>
 
-		<option name="command_help_nosuchcommand" type="string">Нету такой комнады</option>
+		<option name="command_help_nosuchcommand" type="string">No such command</option>
 		<option name="command_version_plugins" type="string">List of plug-ins</option>
 		<option name="command_version_environment" type="string">System environment</option>
 		<option name="command_plugins_no_sorry" type="string">Sorry, the plugin system temporarily disabled.</option>
