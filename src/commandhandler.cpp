@@ -42,6 +42,12 @@ void commandhandler::fetchCommand(std::string command)
 
 std::vector< std::string > commandhandler::seperate(std::string str, int level)
 {
+	if(str == "")
+	{
+		std::vector< std::string > nl;
+		nl.push_back("");
+		return nl;
+	}
 	if(str.find("=") != std::string::npos)
 	{
 		return system::explode("=", str);
