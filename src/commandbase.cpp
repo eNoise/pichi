@@ -32,6 +32,8 @@ commandbase::commandbase(pichicore* p): commandhandler(p)
 	commands["version"] = &commandbase::command_version;
 	commands["enable"] = &commandbase::command_enable;
 	commands["disable"] = &commandbase::command_disable;
+	commands["reload"] = &commandbase::command_reload;
+	commands["plugins"] = &commandbase::command_plugins;
 	commands["ban"] = &commandbase::command_ban;
 	commands["unban"] = &commandbase::command_unban;
 	commands["kick"] = &commandbase::command_kick;
@@ -268,20 +270,20 @@ void commandbase::command_disable(std::string arg)
 	//PichiPlugin::disable(system::atoi(arg));
 }
 
-/*
-	protected function command_reload()
-	{
-		if(!$this->isAccess())
-			return;
-		
-		PichiPlugin::reload();
-	}
+void commandbase::command_reload(std::string arg)
+{
+	if(!pichi->isAccess())
+		return;
 	
-	protected function command_plugins()
-	{
-		pichi->sendAnswer(""+TR("command_version_plugins")+":\n" + PichiPlugin::show_plugin_list());
-	}
-*/
+	pichi->sendAnswer(TR("command_plugins_no_sorry"));
+	//PichiPlugin::reload();
+}
+	
+void commandbase::command_plugins(std::string arg)
+{
+	pichi->sendAnswer(TR("command_plugins_no_sorry"));
+}
+
 
 void commandbase::command_kick(std::string arg)
 {

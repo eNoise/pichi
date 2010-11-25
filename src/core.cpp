@@ -204,24 +204,41 @@ void core::handleMUCMessage (MUCRoom *thisroom, const Message &msg, bool priv )
 
 void core::handleMUCParticipantPresence (MUCRoom *thisroom, const MUCRoomParticipant  participant, const Presence &presence)
 {
+	
+	std::string jid;
+	std::string nick;
+	std::string state;
+	std::string room;
 	std::string role;
-	if(participant.role == 3)
+	std::string status;
+	
+	if(participant.jid != NULL)
+		jid = participant.jid->bare();
+	else if(presence.presence() == Presence::Unavailable)
+		jid = pichi->getJID(participant.nick->resource());
+	else
+		return; // what pichi must do ?
+	
+	nick = participant.nick->resource();
+	
+	if(presence.presence() != Presence::Unavailable)
+		state = "available";
+	else
+		state = "unavailable";
+	
+	room = participant.nick->bare();
+	
+	// get role
+	if(participant.role == RoleModerator)
 		role = "moderator";
 	else
 		role = "participant";
 	
-	pichi->cronDo("muc_presence");
+	status = participant.status;
 	
-	if(presence.presence() != Presence::Unavailable)
-	{
-		LOG("Пользователь в комнате онлайн: " + participant.jid->full(), LOG::INFO);
-		pichi->setUserInfo(participant.jid->bare(), participant.nick->resource(), "available", participant.nick->bare(), role, participant.status);
-	}
-	else
-	{
-		LOG("Пользователь вышел из комнаты: " + participant.jid->full(), LOG::INFO);
-		pichi->setUserInfo(participant.jid->bare(), participant.nick->resource(), "unavailable", participant.nick->bare(), role, participant.status);
-	}
+	pichi->cronDo("muc_presence");
+	pichi->setUserInfo(jid, nick, state, room, role, status);
+
 }
 
 void core::handlePresence(const Presence& presence)

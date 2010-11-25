@@ -55,6 +55,8 @@ class commandbase : public commandhandler
 	  void command_help(std::string arg);
 	  void command_enable(std::string arg);
 	  void command_disable(std::string arg);
+	  void command_reload(std::string arg);
+	  void command_plugins(std::string arg);
 	  void command_ban(std::string arg);
 	  void command_unban(std::string arg);
 	  void command_kick(std::string arg);
