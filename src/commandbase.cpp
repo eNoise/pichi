@@ -362,16 +362,11 @@ void commandbase::command_kicklist(std::string arg)
 void commandbase::command_log(std::string arg)
 {
 		std::vector< std::string > w = seperate(arg, 2);
-		if(w[0] == "")
-		{
-			pichi->sendAnswer(TR("bad_argument"));
-			return;
-		}
 		int limit = 20, skip = 0;
 		try
 		{
 			limit = system::atoi(w[0]);
-			skip = system::atoi(w[0]);
+			skip = system::atoi(w[1]);
 		}
 		catch(boost::bad_lexical_cast e)
 		{
@@ -661,17 +656,18 @@ void commandbase::command_users(std::string arg)
 		}
 	}
   
-	pichi->sql->query("SELECT COUNT(*) FROM users WHERE status = 'available' AND room != '';");
-	int avl = system::atoi(pichi->sql->fetchColumn(0));
-	pichi->sql->query("SELECT COUNT(*) FROM users WHERE status = 'unavailable' AND room != '';");
-	int navl = system::atoi(pichi->sql->fetchColumn(0));
-	
-	pichi->sql->query("SELECT * FROM users LIMIT 0," + system::itoa(ct) + ";");
-	std::string userlist, online, offline;
 	std::map<std::string, std::string> data;
-	bool isfind = false;
+  
 	if(!individual)
 	{
+		pichi->sql->query("SELECT COUNT(*) FROM users WHERE status = 'available' AND room != '';");
+		int avl = system::atoi(pichi->sql->fetchColumn(0));
+		pichi->sql->query("SELECT COUNT(*) FROM users WHERE status = 'unavailable' AND room != '';");
+		int navl = system::atoi(pichi->sql->fetchColumn(0));
+	
+		pichi->sql->query("SELECT * FROM users LIMIT 0," + system::itoa(ct) + ";");
+		std::string userlist, online, offline;
+
 		//$this->log->log("Begin creting user list", PichiLog::LEVEL_DEBUG);
 		userlist = "" + TR("command_users_list_seen") + ":\n";
 		int n=0, f=0;
@@ -701,16 +697,13 @@ void commandbase::command_users(std::string arg)
 	}
 	else
 	{
-		while(!(data = pichi->sql->fetchArray()).empty())
+		pichi->sql->query("SELECT * FROM users WHERE (nick = '" + pichi->sql->escapeString(arg) + "' OR jid = '" + pichi->sql->escapeString(arg) + "') AND room != '';");
+		if(pichi->sql->numRows() > 0)
 		{
-			if(data["nick"] == arg || data["jid"] == arg)
-			{
-				isfind = true;
-				//$this->log->log("User {$data['nick']} founded!", PichiLog::LEVEL_VERBOSE);
-				pichi->sendAnswer(TR3("command_status", data["nick"].c_str(), ((data["status"] == "available") ? TR("command_status_online").c_str() : TR("command_status_offline").c_str())));
-			}
+			data = pichi->sql->fetchArray();
+			pichi->sendAnswer(TR3("command_status", data["nick"].c_str(), ((data["status"] == "available") ? TR("command_status_online").c_str() : TR("command_status_offline").c_str())));
 		}
-		if(!isfind)
+		else
 			pichi->sendAnswer(TR2("command_users_nouser", arg.c_str()));
 	}
 }
