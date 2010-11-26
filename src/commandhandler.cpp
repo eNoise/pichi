@@ -67,7 +67,7 @@ std::vector< std::string > commandhandler::seperate(std::string str, int level)
 		std::vector< std::string > ret, temp;
 		std::vector< std::string >::iterator it = w.begin();
 		int i;
-		for(i = 0; i < level; i++)
+		for(i = 0; i < level && it != w.end(); i++)
 			ret.push_back((*(it++)));
 		temp.resize(w.size()-i);
 		copy(it, w.end(), temp.begin());
