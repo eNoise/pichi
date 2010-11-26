@@ -31,6 +31,9 @@
 #include <gloox/connectionlistener.h>
 #include <gloox/presence.h>
 #include <gloox/eventhandler.h>
+#include <gloox/subscriptionhandler.h>
+#include <gloox/subscription.h>
+#include <gloox/rostermanager.h>
 #include <iostream>
 #include <list>
 #include <time.h>
@@ -49,7 +52,9 @@ namespace pichi
 
 using namespace gloox;
 
-class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListener, PresenceHandler, public EventHandler
+class core : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
+		public ConnectionListener, public PresenceHandler, public EventHandler,
+		public SubscriptionHandler
 {
 	private:
 		std::string name;
@@ -60,6 +65,8 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
                 std::string roomservice;
 		JID jid;
 		bool was_connected;
+		
+		RosterManager* roster;
 	protected:
 		pichicore* pichi;
 	  
@@ -106,6 +113,8 @@ class core : public MessageHandler, MUCRoomHandler, LogHandler, ConnectionListen
                 void handleLog (LogLevel level, LogArea area, const std::string &message);
 		
 		void handlePresence(const Presence& presence );
+		
+		void handleSubscription( const Subscription& subscription );
 		
 		void handleEvent (const Event &event);
 

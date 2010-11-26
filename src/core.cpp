@@ -64,6 +64,8 @@ void core::botstart(void)
 	client->registerConnectionListener( this );
 	client->registerMessageHandler( this );
 	client->registerPresenceHandler( this );
+	client->registerSubscriptionHandler( this );
+	roster = new RosterManager( client );
 	BOOST_FOREACH( std::string room, system::explode(",", pichi->getConfigOption("room")) )
 		enterRoom(JID(room + "/" + nick));
 	times["white_ping"] = times["start"] = time(NULL);
@@ -107,6 +109,7 @@ core::~core() throw()
 {
 	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
 		delete (it->second);
+	delete roster;
 	delete client;
 	delete pichi;
 }
@@ -254,6 +257,42 @@ void core::handlePresence(const Presence& presence)
 	{
 		LOG("Пользователь вышел: " + presence.from().bare(), LOG::INFO);
 		pichi->setUserInfo(presence.from().bare(), "", "unavailable", "", "participant", presence.status());
+	}
+}
+
+
+void core::handleSubscription(const Subscription& subscription)
+{
+	switch(subscription.subtype())
+	{
+		case Subscription::Subscribe: 
+		{
+			Subscription p1(Subscription::Subscribed, subscription.from().bareJID());
+			client->send(p1);
+			Subscription p2(Subscription::Subscribe, subscription.from().bareJID());
+			client->send(p2);
+			break;
+		}
+		case Subscription::Unsubscribe:
+		{
+		  	Subscription p1(Subscription::Unsubscribed, subscription.from().bareJID());
+			client->send(p1);
+			Subscription p2(Subscription::Unsubscribe, subscription.from().bareJID());
+			client->send(p2);
+			break;
+		}
+		case Subscription::Subscribed:
+		{
+			roster->handleSubscription(subscription);
+			break;
+		}
+		case Subscription::Unsubscribed:
+		{
+			roster->handleSubscription(subscription);
+			break;
+		}
+		default:
+			break;
 	}
 }
 
