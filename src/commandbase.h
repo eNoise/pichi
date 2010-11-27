@@ -93,15 +93,18 @@ class commandbase : public commandhandler
 	  void command_uptime(std::string arg);
 	  
 	  void command_lastfm(std::string arg);
+	  static void *thread_lastfm(void *context);
 	  void command_lastfm_user(std::string arg);
 	  
-	  std::string func_command_googletranslate(std::string text, std::string from, std::string to, std::string server = "http://google.com");
+	  static void *thread_googletranslate(void *context);
 	  void command_translate(std::string arg);
 	  void command_tr(std::string arg);
 	  void command_translate_language(std::string arg);
 	  void command_google(std::string arg);
+	  static void *thread_google(void *context);
 	  
 	  void command_urlshort(std::string arg);
+	  static void *thread_urlshort(void *context);
 };
 
 }

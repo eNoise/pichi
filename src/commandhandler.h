@@ -40,6 +40,7 @@ class commandhandler
     void operator () (std::string command);
   protected:
     pichicore* pichi;
+    pthread_t remotethread;
     std::string last_command;
     std::string last_args;
     std::vector< std::string > seperate(std::string str, int level = 2);
