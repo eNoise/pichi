@@ -29,9 +29,17 @@ namespace pichi
   
 class lastmessage
 {
+	friend class commandhandler;
+	friend class pichicore;
 	public:
-		virtual bool reciveMessage(std::string message, std::string type, std::string from, std::string jid = "", std::string room = "", int level = 2) = 0;
+		bool reciveMessage(std::string message, std::string type, std::string from, std::string jid = "", std::string room = "", int level = 2);
 		std::string getLastRoom(void);
+		lastmessage(const lastmessage& lst);
+		lastmessage();
+		lastmessage& operator =(const lastmessage& lst);
+		std::string getJIDlast(void);
+		std::string getFromlast(void);
+		std::string getArg(void);
 	protected:
 		std::string last_message;
 		std::string last_from;
@@ -40,6 +48,9 @@ class lastmessage
 		std::string last_jid;
 		time_t last_time;
 		int last_level;
+		
+		std::string last_command;
+		std::string last_args;
 };
 
 }

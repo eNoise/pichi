@@ -844,23 +844,26 @@ void commandbase::command_off(std::string arg)
 
 void commandbase::command_lastfm(std::string arg)
 {
+	updateThreadVars();
 	if(pthread_create(&remotethread, NULL, &commandbase::thread_lastfm, (void*)this) > 0)
 		throw PichiException("Error in last.fm thread");
 }
 
 void* commandbase::thread_lastfm(void* context)
 {
-	std::map<std::string, std::string> user = ((commandbase*)context)->pichi->getJIDinfo( ((commandbase*)context)->pichi->getJIDlast(), "lastfm_user" );
+	lastmessage last = ((commandbase*)context)->thread_args["lastfm"];
+	std::map<std::string, std::string> user = ((commandbase*)context)->pichi->getJIDinfo( last.getJIDlast() , "lastfm_user" );
 	if(user["lastfm_user"] != "")
 	{
 		pichicurl* curl = new pichicurl();
 		std::string data = curl->readurl("http://ws.audioscrobbler.com/1.0/user/" + user["lastfm_user"] + "/recenttracks.txt");
 		if(data != "")
-			((commandbase*)context)->pichi->sendAnswer( (*((commandbase*)context)->pichi->lang)("command_lastfm_listen", ((commandbase*)context)->pichi->getName( ((commandbase*)context)->pichi->getJIDlast()).c_str(), (system::explode("," , (system::explode("\n", data).at(0)))).at(1).c_str()) );
+			((commandbase*)context)->pichi->sendAnswer( (*((commandbase*)context)->pichi->lang)("command_lastfm_listen", ((commandbase*)context)->pichi->getName( last.getJIDlast() ).c_str(), (system::explode("," , (system::explode("\n", data).at(0)))).at(1).c_str()), last );
 		else
 			LOG("Music read from last.fm failed. Check internet connection.", LOG::WARNING);
 		delete curl;
 	}
+	pthread_exit(context);
 }
 
 
@@ -873,6 +876,8 @@ void commandbase::command_lastfm_user(std::string arg)
 
 void* commandbase::thread_googletranslate(void* context)
 {
+	lastmessage last = ((commandbase*)context)->thread_args["googletranslate"];
+  
 	std::string text;
 	std::string from;
 	std::string to;
@@ -880,27 +885,26 @@ void* commandbase::thread_googletranslate(void* context)
   
 	if( ((commandbase*)context)->last_command == "translate" )
 	{
-		std::string jid = ((commandbase*)context)->pichi->getJIDlast();
-		std::map<std::string, std::string> t_from = ((commandbase*)context)->pichi->getJIDinfo(jid, "translate_from");
-		std::map<std::string, std::string> t_to = ((commandbase*)context)->pichi->getJIDinfo(jid, "translate_to");
+		std::map<std::string, std::string> t_from = ((commandbase*)context)->pichi->getJIDinfo(last.getJIDlast(), "translate_from");
+		std::map<std::string, std::string> t_to = ((commandbase*)context)->pichi->getJIDinfo(last.getJIDlast(), "translate_to");
 		
-		text = ((commandbase*)context)->last_args;
+		text = last.getArg();
 		from = t_from["translate_from"];
 		to = t_to["translate_to"];
 	}
 	else if(((commandbase*)context)->last_command == "tr")
 	{
-		std::vector< std::string > w = ((commandbase*)context)->seperate(((commandbase*)context)->last_args, 2);
+		std::vector< std::string > w = ((commandbase*)context)->seperate(last.getArg(), 2);
 		if(!((commandbase*)context)->testArgs(w, 2))
 		{
-			((commandbase*)context)->pichi->sendAnswer( (*((commandbase*)context)->pichi->lang)("bad_argument") );
-			return context;
+			((commandbase*)context)->pichi->sendAnswer( (*((commandbase*)context)->pichi->lang)("bad_argument"), last );
+			pthread_exit(context);
 		}
 		std::vector< std::string > langs = system::explode("2", w[0]);
 		if(!((commandbase*)context)->testArgs(langs, 2))
 		{
-			((commandbase*)context)->pichi->sendAnswer( (*((commandbase*)context)->pichi->lang)("bad_argument") );
-			return context;
+			((commandbase*)context)->pichi->sendAnswer( (*((commandbase*)context)->pichi->lang)("bad_argument"), last );
+			pthread_exit(context);
 		}
 		text = w[1];
 		from = langs[0];
@@ -909,11 +913,11 @@ void* commandbase::thread_googletranslate(void* context)
 	else
 	{
 		LOG("Слишком медленный асинхронный вызов, невозможно определить тип функции. Выход.", LOG::WARNING);
-		return context;
+		pthread_exit(context);
 	}
   
 	if(text == "" || from == "" || to == "" || server == "")
-		return context;
+		pthread_exit(context);
   
 	pichicurl* curl = new pichicurl();
 	curl->setUrl("http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=" + curl->urlencode(text) + "&langpair=" + curl->urlencode(from + "|" + to));
@@ -924,7 +928,7 @@ void* commandbase::thread_googletranslate(void* context)
 	if(ret == "" || ret.substr(0,1) != "{")
 	{
 		LOG("Google translate can failed.", LOG::DEBUG);
-		return context;
+		pthread_exit(context);
 	}
 	
 	boost::property_tree::ptree ptree;
@@ -932,18 +936,22 @@ void* commandbase::thread_googletranslate(void* context)
 	boost::property_tree::json_parser::read_json(stream, ptree);
 
 	if(ptree.get("responseStatus", "") == "200")
-		((commandbase*)context)->pichi->sendAnswer( ptree.get_child("responseData").get("translatedText", "") );
+		((commandbase*)context)->pichi->sendAnswer( ptree.get_child("responseData").get("translatedText", ""), last );
+	
+	pthread_exit(context);
 }
 
 
 void commandbase::command_translate(std::string arg)
 {
+  	updateThreadVars("googletranslate");
 	if(pthread_create(&remotethread, NULL, &commandbase::thread_googletranslate, (void*)this) > 0)
 		throw PichiException("Error in !translate thread");
 }
 
 void commandbase::command_tr(std::string arg)
 {
+  	updateThreadVars("googletranslate");
 	if(pthread_create(&remotethread, NULL, &commandbase::thread_googletranslate, (void*)this) > 0)
 		throw PichiException("Error in !tr thread");
 }
@@ -963,14 +971,17 @@ void commandbase::command_translate_language(std::string arg)
 
 void commandbase::command_google(std::string arg)
 {
+    	updateThreadVars();
 	if(pthread_create(&remotethread, NULL, &commandbase::thread_google, (void*)this) > 0)
 		throw PichiException("Error in !google thread");
 }
 
 void* commandbase::thread_google(void* context)
 {
+	lastmessage last = ((commandbase*)context)->thread_args["google"];
+  
 	pichicurl* curl = new pichicurl();
-	curl->setUrl( "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=" + curl->urlencode( ((commandbase*)context)->last_args ) );
+	curl->setUrl( "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=" + curl->urlencode( last.getArg() ) );
 	curl->setReferer("http://google.com");
 	std::string ret = curl->read();
 	delete curl;
@@ -978,7 +989,7 @@ void* commandbase::thread_google(void* context)
 	if(ret == "" || ret.substr(0,1) != "{")
 	{
 		LOG("Google search can failed.", LOG::DEBUG);
-		return context;
+		pthread_exit(context);
 	}
 	
 	boost::property_tree::ptree ptree, result;
@@ -996,36 +1007,41 @@ void* commandbase::thread_google(void* context)
 			+ ptree.second.get("titleNoFormatting","") + "\n" 
 			+ "(" + ptree.second.get("content","") + ")\n";
 		}
-		((commandbase*)context)->pichi->sendAnswer(ans);
+		((commandbase*)context)->pichi->sendAnswer( ans, last );
 	}
+	pthread_exit(context);
 }
 
 
 void commandbase::command_urlshort(std::string arg)
 {
+  	updateThreadVars();
 	if(pthread_create(&remotethread, NULL, &commandbase::thread_urlshort, (void*)this) > 0)
 		throw PichiException("Error in !urlshort thread");
 }
 
 void* commandbase::thread_urlshort(void* context)
 {
+	lastmessage last = ((commandbase*)context)->thread_args["urlshort"];
+  
 	pichicurl* curl = new pichicurl();
-	curl->setUrl("http://ur.ly/new.json?href=" + curl->urlencode(((commandbase*)context)->last_args));
+	curl->setUrl("http://ur.ly/new.json?href=" + curl->urlencode( last.getArg() ) );
 	std::string ret = curl->read();
 	delete curl;
 	
 	if(ret == "" || ret.substr(0,1) != "{")
 	{
 		LOG("UL.ly failed.", LOG::DEBUG);
-		((commandbase*)context)->pichi->sendAnswer((*((commandbase*)context)->pichi->lang)("command_urlshort_incorrect_service"));
-		return context;
+		((commandbase*)context)->pichi->sendAnswer((*((commandbase*)context)->pichi->lang)("command_urlshort_incorrect_service"), last);
+		pthread_exit(context);
 	}
 	
 	boost::property_tree::ptree ptree;
 	std::stringstream stream(ret);
 	boost::property_tree::json_parser::read_json(stream, ptree);
 	
-	((commandbase*)context)->pichi->sendAnswer("http://ur.ly/" + ptree.get("code",""));
+	((commandbase*)context)->pichi->sendAnswer("http://ur.ly/" + ptree.get("code",""), last);
+	pthread_exit(context);
 }
 
 

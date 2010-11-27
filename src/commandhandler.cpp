@@ -19,6 +19,7 @@
 */
 
 #include "commandhandler.h"
+#include "pichicore.h"
 
 namespace pichi
 {
@@ -42,6 +43,14 @@ bool commandhandler::testArgs(const std::vector< std::string >& args, int num)
 	return true;
 }
 
+void commandhandler::updateThreadVars(std::string part)
+{
+	if(part == "")
+		thread_args[last_command] = (*pichi);
+	else
+		thread_args[part] = (*pichi);
+}
+
 
 void commandhandler::fetchCommand(std::string command)
 {
@@ -52,6 +61,8 @@ void commandhandler::fetchCommand(std::string command)
 	last_command = str[0];
 	str.erase(str.begin());
 	last_args = system::implode(" ", str);
+	pichi->last_args = last_args;
+	pichi->last_command = last_command;
 }
 
 std::vector< std::string > commandhandler::seperate(std::string str, int level)

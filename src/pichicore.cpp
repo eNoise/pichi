@@ -153,8 +153,9 @@ std::string pichicore::getJID(const std::string& nick, std::string room, bool fu
 	if(room == std::string())
 		room = getDefaultRoom(); // main room
 	
-	sql->query("SELECT `jid` FROM users WHERE nick = '" + sql->escapeString(nick) + "' AND room = '" + sql->escapeString(room) + "';");
-	std::string jid = sql->fetchColumn(0);
+	sqlite::q* qu = sql->squery("SELECT `jid` FROM users WHERE nick = '" + sql->escapeString(nick) + "' AND room = '" + sql->escapeString(room) + "';");
+	std::string jid = sql->fetchColumn(qu, 0);
+	delete qu;
 	
 	if(jid != std::string())
 	{
@@ -164,8 +165,9 @@ std::string pichicore::getJID(const std::string& nick, std::string room, bool fu
 	{
 		if(full_search)
 		{
-			sql->query("SELECT `jid` FROM users_nick WHERE nick = '" + sql->escapeString(nick) + "' AND room = '" + sql->escapeString(room) + "' ORDER BY `time` ASC;");
-			jid = sql->fetchColumn(0);
+			sqlite::q* qu = sql->squery("SELECT `jid` FROM users_nick WHERE nick = '" + sql->escapeString(nick) + "' AND room = '" + sql->escapeString(room) + "' ORDER BY `time` ASC;");
+			jid = sql->fetchColumn(qu, 0);
+			delete qu;
 			if(jid != std::string())
 				return jid;
 		}
@@ -191,8 +193,10 @@ std::string pichicore::getName(const std::string& jid, std::string room)
 	{
 		if(room == std::string())
 			room = getDefaultRoom(); // main room
-		sql->query("SELECT `nick` FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
-		return (sql->fetchColumn(0));
+		sqlite::q* qu = sql->squery("SELECT `nick` FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
+		std::string rtn = sql->fetchColumn(qu, 0);
+		delete qu;
+		return rtn;
 	}
 	else
 	{
@@ -212,8 +216,9 @@ bool pichicore::isAccess(int level, std::string jid, std::string room, bool room
 		room = getDefaultRoom(); // main room
 	
 	jid = getJID(getName(jid, room), room); // current access
-	sql->query("SELECT `level` FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
-	std::string tempresult = sql->fetchColumn(0);
+	sqlite::q* qu = sql->squery("SELECT `level` FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
+	std::string tempresult = sql->fetchColumn(qu, 0);
+	delete qu;
 	if(tempresult == "")
 		return false;
 	int dblevel = system::atoi(tempresult);
@@ -331,18 +336,31 @@ void pichicore::sendAnswer(const std::string& message)
 		jabber->sendMessage(JID(last_room), (*lang)("message_to_private_chat"));
 		to = last_jid;
 	}
-	//($hook = PichiPlugin::fetch_hook('pichicore_answer_send')) ? eval($hook) : false;
-	
+
 	if(to == "")
 		return;
+
+	jabber->sendMessage(JID(to), message);
+}
+
+void pichicore::sendAnswer(const std::string& message, const pichi::lastmessage& msg)
+{
+	std::string to;
+	if(msg.last_type == "groupchat")
+		to = msg.last_room;
+	else
+		to = msg.last_from;
 	
-	//if(system::atot(options["msg_max_limit"]) > 0)
-	//	foreach(self::str_split_unicode($message, (int)$this->options['msg_max_limit']) as $msg)
-	//		$this->jabber->message($to, $msg, $type);
-	//else
-		jabber->sendMessage(JID(to), message);
-	
-	//$this->log->log("Send answer to $to:\n$message", PichiLog::LEVEL_VERBOSE);
+	if(message.size() > system::atoi(options["msg_limit"]) && system::atoi(options["msg_limit"]) > 1 && msg.last_type == "groupchat")
+	{
+		jabber->sendMessage(JID(msg.last_room), (*lang)("message_to_private_chat"));
+		to = msg.last_jid;
+	}
+
+	if(to == "")
+		return;
+
+	jabber->sendMessage(JID(to), message);
 }
 
 bool pichicore::isCommand(std::string& str)
@@ -423,11 +441,6 @@ std::map<std::string, std::string> pichicore::getJIDinfo(std::string jid, std::s
 void pichicore::delJIDinfo(std::string jid, std::string name, std::string groupid)
 {
 	sql->exec("DELETE FROM users_data WHERE jid = '" + sql->escapeString(jid) + "'" + ((name != "") ? " AND name = '" + sql->escapeString(name) + "'" : "") + ((groupid != "") ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
-}
-
-std::string pichicore::getJIDlast(void )
-{
-	return last_jid;
 }
 
 void pichicore::ban(std::string jid, std::string time, std::string reason, std::string room)
@@ -546,5 +559,11 @@ bool pichicore::canCron(std::string crn)
 {
 	return (time(NULL) - crons[crn]["last"] > crons[crn]["interval"]);
 }
+
+lastmessage& pichicore::operator=(const pichi::pichicore& lst)
+{
+	lastmessage::operator=(lst);
+}
+
 
 }

@@ -23,9 +23,54 @@
 namespace pichi
 {
 
+lastmessage::lastmessage()
+{
+
+}
+
+  
+bool lastmessage::reciveMessage(std::string message, std::string type, std::string from, std::string jid, std::string room, int level)
+{
+	return false;
+}
+  
 std::string lastmessage::getLastRoom(void )
 {
 	return last_room;
+}
+
+lastmessage::lastmessage(const pichi::lastmessage& lst)
+{
+	(*this) = lst;
+}
+
+lastmessage& lastmessage::operator=(const pichi::lastmessage& lst)
+{
+	last_message = lst.last_message;
+	last_from = lst.last_from;
+	last_jid = lst.last_jid;
+	last_room = lst.last_room;
+	last_type = lst.last_type;
+	last_level = lst.last_level;
+	last_time = lst.last_time;
+	
+	last_args = lst.last_args;
+	last_command = lst.last_command;
+}
+
+std::string lastmessage::getJIDlast(void )
+{
+	return last_jid;
+}
+
+std::string lastmessage::getFromlast(void )
+{
+	return last_from;
+}
+
+std::string lastmessage::getArg(void )
+{
+	return last_args;
 }
 
 }

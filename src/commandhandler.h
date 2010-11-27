@@ -25,6 +25,7 @@
 #include <iostream>
 #include "system.h"
 #include <algorithm>
+#include "lastmessage.h"
 
 namespace pichi
 {
@@ -41,6 +42,8 @@ class commandhandler
   protected:
     pichicore* pichi;
     pthread_t remotethread;
+    std::map< std::string, lastmessage > thread_args;
+    void updateThreadVars(std::string part = "");
     std::string last_command;
     std::string last_args;
     std::vector< std::string > seperate(std::string str, int level = 2);

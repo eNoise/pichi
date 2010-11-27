@@ -41,7 +41,9 @@ namespace pichi
 
 class core;
 
-class pichicore : public pichiconfig, public lastmessage, public pichioptions
+class pichicore : public pichiconfig, 
+		  public lastmessage, 
+		  public pichioptions
 {
 	public:
 		sqlite *sql;
@@ -67,6 +69,7 @@ class pichicore : public pichiconfig, public lastmessage, public pichioptions
 		void cleanUserInfo(void);
 		bool reciveMessage(std::string message, std::string type, std::string from, std::string jid = "", std::string room = "", int level = 2);
 		void sendAnswer(const std::string& message);
+		void sendAnswer(const std::string& message, const lastmessage& msg);
 		
 		bool isJID(const std::string&);
 		std::string getJID(const std::string& nick, std::string room = "", bool full_search = false);
@@ -78,7 +81,6 @@ class pichicore : public pichiconfig, public lastmessage, public pichioptions
 		bool isOnline(std::string user, std::string room = "");
 		void ping(std::string jid);
 		void pingRecive(std::string id);
-		std::string getJIDlast(void);
 		
 		void setJIDinfo(std::string jid, std::string name, std::string value, std::string groupid = "");
 		std::map<std::string, std::string> getJIDinfo(std::string jid, std::string name = "", std::string groupid = "");
@@ -90,6 +92,8 @@ class pichicore : public pichiconfig, public lastmessage, public pichioptions
 		void unkick(std::string jid, std::string room = "");
 		
 		time_t convertTime(std::string time);
+		
+		lastmessage& operator=(const pichicore& lst);
 		
 		pichicore();
 		~pichicore();
