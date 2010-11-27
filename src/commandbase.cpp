@@ -291,7 +291,7 @@ void commandbase::command_kick(std::string arg)
 		return;
 	
 	std::vector< std::string > w = seperate(arg, 3);
-	if(w[0] == "" || w[1] == "" || w[2] == "")
+	if(!testArgs(w, 3))
 	{
 		pichi->sendAnswer(TR("bad_argument"));
 		return;
@@ -313,7 +313,7 @@ void commandbase::command_ban(std::string arg)
 		return;
 	
 	std::vector< std::string > w = seperate(arg, 3);
-	if(w[0] == "" || w[1] == "" || w[2] == "")
+	if(!testArgs(w, 3))
 	{
 		pichi->sendAnswer(TR("bad_argument"));
 		return;
@@ -327,7 +327,7 @@ void commandbase::command_unban(std::string arg)
 		return;
 	
 	std::vector< std::string > w = seperate(arg, 2);
-	if(w[0] == "" || w[1] == "")
+	if(!testArgs(w, 2))
 	{
 		pichi->sendAnswer(TR("bad_argument"));
 		return;
@@ -366,12 +366,15 @@ void commandbase::command_log(std::string arg)
 		try
 		{
 			limit = system::atoi(w[0]);
-			skip = system::atoi(w[1]);
 		}
 		catch(boost::bad_lexical_cast e)
 		{
 			pichi->sendAnswer(TR("bad_argument"));
 		}
+		try
+		{
+			skip = system::atoi(w[1]);
+		} catch(boost::bad_lexical_cast e) { }
 		pichi->sql->query("SELECT * FROM log ORDER BY time DESC LIMIT " + system::itoa(skip) + "," + system::itoa(limit) + ";");
 		std::map< std::string, std::string > data;
 		typedef std::vector< std::map< std::string, std::string > > tp;
@@ -379,7 +382,7 @@ void commandbase::command_log(std::string arg)
 		while(!(data = pichi->sql->fetchArray()).empty())
 			msgs.push_back(data);
 		
-		std::string log = "-----------------------------------------------------------------------";
+		std::string log = "\n-----------------------------------------------------------------------\n";
 		BOOST_REVERSE_FOREACH(tp::value_type &ms, msgs)
 		{
 			    log += "[" + system::timeToString(system::atot(ms["time"]), "%H:%M:%S") + "]<" + pichi->getName(ms["from"]) + "> " + ms["message"] + "\n";
@@ -461,6 +464,11 @@ void commandbase::command_wtfull(std::string arg)
 void commandbase::command_wtfset(std::string arg)
 {
 	std::vector< std::string > w = seperate(arg, 2);
+	if(!testArgs(w, 2))
+	{
+		pichi->sendAnswer(TR("bad_argument"));
+		return;
+	}
 	pichi->sql->query("SELECT name,revision,value FROM wiki WHERE name = '" + pichi->sql->escapeString(w[0]) + "' AND revision='" + pichi->sql->escapeString(w[1]) + "' LIMIT 0,1;");
 	if(pichi->sql->numRows() > 0)
 	{
@@ -559,7 +567,7 @@ void commandbase::command_count(std::string arg)
 void commandbase::command_dfn(std::string arg)
 {
 	std::vector< std::string > w = seperate(arg, 2);
-	if(w[0] == "" || w[1] == "")
+	if(!testArgs(w, 2))
 	{
 		pichi->sendAnswer(TR("bad_argument"));
 		return;
@@ -586,7 +594,7 @@ void commandbase::command_set(std::string arg)
 		return;
      
 	std::vector< std::string > w = seperate(arg, 2);
-	if(w[0] == "")
+	if(!testArgs(w, 2))
 	{
 		pichi->sendAnswer(TR("bad_argument"));
 		return;
@@ -604,7 +612,7 @@ void commandbase::command_msg(std::string arg)
      
 	std::vector< std::string > w = seperate(arg, 2);
 
-	if(w[0] == "" || w[1] == "")
+	if(!testArgs(w, 2))
 	{
 		pichi->sendAnswer(TR("bad_argument"));
 		return;
@@ -779,7 +787,7 @@ void commandbase::command_greet(std::string arg)
 	std::vector< std::string > w = seperate(arg, 3);
 	if(!pichi->isAccess())
 		return;
-	if(w[0] == "" || w[1] == "" || w[2] == "")
+	if(!testArgs(w, 3))
 	{
 		pichi->sendAnswer(TR("bad_argument"));
 		return;
@@ -797,7 +805,7 @@ void commandbase::command_farewell(std::string arg)
 	std::vector< std::string > w = seperate(arg, 3);
 	if(!pichi->isAccess())
 		return;
-	if(w[0] == "" || w[1] == "" || w[2] == "")
+	if(!testArgs(w, 3))
 	{
 		pichi->sendAnswer(TR("bad_argument"));
 		return;
@@ -896,14 +904,28 @@ void commandbase::command_translate(std::string arg)
 void commandbase::command_tr(std::string arg)
 {
 	std::vector< std::string > w = seperate(arg, 2);
+	if(!testArgs(w, 2))
+	{
+		pichi->sendAnswer(TR("bad_argument"));
+		return;
+	}
 	std::vector< std::string > langs = system::explode("2", w[0]);
-	
+	if(!testArgs(langs, 2))
+	{
+		pichi->sendAnswer(TR("bad_argument"));
+		return;
+	}
 	pichi->sendAnswer(func_command_googletranslate(w[1], langs[0], langs[1], "http://google.com"));
 }
 
 void commandbase::command_translate_language(std::string arg)
 {
 	std::vector< std::string > w = seperate(arg, 2);
+	if(!testArgs(w, 2))
+	{
+		pichi->sendAnswer(TR("bad_argument"));
+		return;
+	}
 	std::string jid = pichi->getJIDlast();
 	pichi->setJIDinfo(jid, "translate_from", w[0]);
 	pichi->setJIDinfo(jid, "translate_to", w[1]);

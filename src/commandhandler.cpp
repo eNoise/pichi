@@ -28,6 +28,20 @@ commandhandler::commandhandler(pichicore* p)
 	pichi = p;
 }
 
+bool commandhandler::testArgs(const std::vector< std::string >& args, int num)
+{
+	int i = 0;
+	BOOST_FOREACH(std::string arg, args)
+	{
+		if(arg == "")
+			return false;
+		i++;
+	}
+	if(i != num)
+		return false;
+	return true;
+}
+
 
 void commandhandler::fetchCommand(std::string command)
 {

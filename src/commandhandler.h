@@ -43,6 +43,7 @@ class commandhandler
     std::string last_command;
     std::string last_args;
     std::vector< std::string > seperate(std::string str, int level = 2);
+    bool testArgs(const std::vector< std::string >& args, int num);
 };
 
 }
