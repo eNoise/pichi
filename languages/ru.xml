@@ -36,9 +36,10 @@
 параметр1|параметр2 - параметр1 или параметр2 (один из)
 [параметр] - необязательный параметр</option>
 		<option name="help_main_commands" type="string">Основные команды</option>
+		<option name="help_command_description_help" type="string">Отображает справку. Пример: !help - отобразит всю справку. !help !gc - отобразит справку команды !gc.</option>
 		<option name="help_command_description_set" type="string">Устанавливает значение опции. Пример: !set answer_mode=1</option>
 		<option name="help_command_description_gc" type="string">Получить значение опции. Можно вызывать без параметра, тогда покажет значения всех опций. С параметром - только для определённой. Пример: !gc answer_mode.</option>
-		<option name="help_command_description_log" type="string">Показать последние n сообщений конференции. Пример: !log 10</option>
+		<option name="help_command_description_log" type="string">Показать последние n сообщений конференции. Пример: !log 10 - отобразит 10 последних сообщений. !log 20 10 - отобразит 20 сообщений, которые были перед 10 последними.</option>
 		<option name="help_command_description_users" type="string">Показать список пользователей. Показывает пользователей которые онлайн или когда-либо были онлайн. Узнать статус определенного пользователя можно указав JID или ник как параметр. Пример: !users - покажет информацию о всех пользователя. !users deg - покажет информацию о пользователе с ником deg. !users 10 - покажет информацию о 10 пользователях. !users !10 - покажет информацию о человеке с ником "10".</option>
 		<option name="help_command_description_msg" type="string">Отправить сообщение пользователю. Первым параметром является адрес (пользователь или комната). Второй - тип: chat или groupchat (для комнаты). Третий - текст сообщения. Пример: !msg "room@conference.jabber.ru" "groupchat" "Пример сообщения".</option>
 		<option name="help_command_description_ping" type="string">Показать время отклика от пользователя (пинг пользователя). Пример: !ping deg</option>

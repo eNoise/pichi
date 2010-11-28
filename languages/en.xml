@@ -36,9 +36,10 @@ parameter - required parameter
 parameter1|parameter2 - parameter1 OR parameter2 (one of)
 [parameter] - optional parameter</option>
 		<option name="help_main_commands" type="string">Basic commands</option>
+		<option name="help_command_description_help" type="string">Displays help page. Example: !help - displays full help page. !help !gc - shows help usage for !gc command.</option>
 		<option name="help_command_description_set" type="string">Set value of option. Example: !set answer_mode=1</option>
 		<option name="help_command_description_gc" type="string">Get value of option. Can be enter without parameter, then show the value of all options. With a parameter it will show only for specified. Example: !gc answer_mode.</option>
-		<option name="help_command_description_log" type="string">Show last n conference messages. Example: !log 10</option>
+		<option name="help_command_description_log" type="string">Show last n conference messages. Example: !log 10 - displays 10 last messages. !log 20 10 - displays 20 last message, which were before last ten.</option>
 		<option name="help_command_description_users" type="string">Show list of users. Shows users that are online or have ever been online. To get status of defined user enter JID or nick as a parameter. Example: !users - displays info about all users. !users deg - shows info about user with nick deg. !users 10 - shows info about 10 users. !users !10 - displays info about user with nick "10".</option>
 		<option name="help_command_description_msg" type="string">Send message to user. First parameter is address (user OR room (conference)). Second parameter is type: chat OR groupchat (for room (conference)). The third is text of message. Example: !msg "room@conference.jabber.ru" "groupchat" "Example message".</option>
 		<option name="help_command_description_ping" type="string">Show response time from the user (ping of user). Example: !ping deg</option>

@@ -98,6 +98,7 @@ void commandbase::command_help(std::string arg)
 	help["header"] += "--------------------------------------------\n";
 	
 	std::map < std::string, std::vector< std::string > > helpmap;
+	helpmap["commands_main"].push_back("help");
 	helpmap["commands_main"].push_back("set");
 	helpmap["commands_main"].push_back("gc");
 	helpmap["commands_main"].push_back("log");
@@ -145,12 +146,13 @@ void commandbase::command_help(std::string arg)
 	helpmap["commands_other"].push_back("google");
 	
 	help["commands_main"] = "=====  " +  TR("help_main_commands")  + "  =====\n";
+	help["help"] = "!help [" + TR("help_command_usage_param") + "] - " + TR("help_command_description_help") + "\n";
 	help["set"] = "!set " + TR("help_command_usage_variable") + "=" + TR("help_command_usage_value") + " - " + TR("help_command_description_set") + "\n";
 	help["gc"] = "!gc [" + TR("help_command_usage_variable") + "] - " + TR("help_command_description_gc") + "\n";
-	help["log"] = "!log " + TR("help_command_usage_param") + " - " + TR("help_command_description_log") + "\n";
+	help["log"] = "!log [" + TR("help_command_usage_param") + "] [" + TR("help_command_usage_param") + "] - " + TR("help_command_description_log") + "\n";
 	help["users"] = "!users [" + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + "|" + TR("help_command_usage_number") + "] - " + TR("help_command_description_users") + "\n";		
-	help["msg"] = "!msg [" + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + "|" + TR("help_command_usage_room") + "] " + TR("help_command_usage_message") + " - " + TR("help_command_description_msg") + "\n";
-	help["ping"] = "!ping [" + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + "] - " + TR("help_command_description_ping") + "\n";
+	help["msg"] = "!msg " + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + "|" + TR("help_command_usage_room") + " " + TR("help_command_usage_message") + " - " + TR("help_command_description_msg") + "\n";
+	help["ping"] = "!ping " + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + " - " + TR("help_command_description_ping") + "\n";
 	help["join"] = "!join " + TR("help_command_usage_room") + " " + TR("help_command_usage_nick") + " [" + TR("help_command_usage_status") + "] - " + TR("help_command_description_join") + "\n";
 	help["left"] = "!left " + TR("help_command_usage_room") + " " + TR("help_command_usage_nick") + " [" + TR("help_command_usage_status") + "] - " + TR("help_command_description_left") + "\n";
 	help["greet"] = "!greet " + TR("help_command_usage_jid") + " " + TR("help_command_usage_room") + " " + TR("help_command_usage_message") + " - " + TR("help_command_description_greet") + "\n";
@@ -164,11 +166,11 @@ void commandbase::command_help(std::string arg)
 		
 	help["commands_admin"] = "=====  " +  TR("help_admin_commands")  + "  =====\n";
 	help["topic"] = "!topic " + TR("help_command_usage_param") + " - " + TR("help_command_description_topic") + "\n";
-	help["ban"] = "!ban " + TR("help_command_usage_jid") + "|" + TR("help_command_usage_nick") + " [" + TR("help_command_usage_time") + "] [" + TR("help_command_usage_reason") + "] - " + TR("help_command_description_ban") + "\n";
+	help["ban"] = "!ban " + TR("help_command_usage_jid") + "|" + TR("help_command_usage_nick") + " " + TR("help_command_usage_time") + " " + TR("help_command_usage_reason") + " - " + TR("help_command_description_ban") + "\n";
 	help["unban"] = "!unban " + TR("help_command_usage_jid") + " - " + TR("help_command_description_unban") + "\n";
 	help["banlist"] = "!banlist - " + TR("help_command_description_banlist") + "\n";
 	help["kicklist"] = "!kicklist - " + TR("help_command_description_kicklist") + "\n";
-	help["kick"] = "!kick " + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + " [" + TR("help_command_usage_time") + "] [" + TR("help_command_usage_reason") + "] - " + TR("help_command_description_kick") + "\n";
+	help["kick"] = "!kick " + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + " " + TR("help_command_usage_time") + " " + TR("help_command_usage_reason") + " - " + TR("help_command_description_kick") + "\n";
 	help["unkick"] = "!unkick " + TR("help_command_usage_jid") + " - " + TR("help_command_description_unkick") + "\n";
 	
 	help["commands_plugins"] = "=====  " +  TR("help_plugins")  + "  =====\n";
