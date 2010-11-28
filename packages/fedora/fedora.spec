@@ -1,4 +1,4 @@
-%define beta beta3
+%define beta beta7
 
 Name:           pichi
 Version:        0.6.0
@@ -19,6 +19,7 @@ BuildRequires:  gloox-devel
 BuildRequires:  tinyxml-devel
 
 Requires:       boost-regex
+Requires:       boost-program-options
 Requires:       libcurl
 Requires:       sqlite
 Requires:       gloox

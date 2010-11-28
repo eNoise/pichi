@@ -27,9 +27,9 @@ CHECK_INCLUDE_FILE (sys/stat.h HAVE_SYS_STAT_H)
 
 find_package (Sqlite3 REQUIRED)
 if(WIN32)
-    find_package (Boost REQUIRED COMPONENTS regex-gcc45)
+    find_package (Boost REQUIRED COMPONENTS regex-gcc45 program_options-gcc45)
 else(WIN32)
-    find_package (Boost REQUIRED COMPONENTS regex)
+    find_package (Boost REQUIRED COMPONENTS regex program_options)
 endif(WIN32)
 find_package (CURL REQUIRED)
 

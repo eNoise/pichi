@@ -34,6 +34,7 @@
 #include <gloox/subscriptionhandler.h>
 #include <gloox/subscription.h>
 #include <gloox/rostermanager.h>
+
 #include <iostream>
 #include <list>
 #include <time.h>
@@ -41,6 +42,7 @@
 #include <map>
 #include <sys/stat.h>
 #include <fstream>
+#include <boost/program_options.hpp>
 
 #include "pichicore.h"
 #include "system.h"
@@ -76,8 +78,11 @@ class core : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		static void *cron(void *context);
 		void firstStart(void);
 	public:
-		core();
+		core(int argc, char** argv);
                 ~core() throw();
+		bool parseArgs(int argc, char** argv);
+		
+		boost::program_options::variables_map coptions;
 		
 		Client* client;
 		std::list< std::pair<JID, MUCRoom*> > rooms;

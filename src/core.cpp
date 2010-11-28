@@ -80,13 +80,23 @@ void core::botstart(void)
 #endif
 }
 
-core::core()
+core::core(int argc, char** argv)
 {
 	// First start checks (create dir on linux)
 #ifndef WIN32
 	if(!system::fileExists(PICHI_CONFIG_DIR))
 		firstStart();
 #endif
+	// Parse args
+	if(!parseArgs(argc, argv))
+	{
+		// Null object for safe delete
+		roster = NULL;
+		client = NULL;
+		pichi = NULL;
+		return;
+	}
+		
 	// Init pichi
 	was_connected = false; // true if connect was successful
 	pichi = new pichicore();
@@ -114,6 +124,35 @@ core::~core() throw()
 	delete pichi;
 }
 
+
+bool core::parseArgs(int argc, char** argv)
+{
+	namespace arg = boost::program_options;
+	
+	arg::options_description description("Allowed options");
+	description.add_options()
+		("help,h", "Help message")
+		("daemonize,d", "Run Pichi as a daemon");
+	try 
+	{
+		/* разбор аргументов */
+		arg::store(arg::parse_command_line(argc, argv, description), coptions);
+	} 
+	catch (const std::exception& e)
+	{
+		/* Неправильные аргументы */
+		std::cout << "Command line error: " << e.what() << std::endl;
+		return false;
+	}
+	
+	if ( coptions.count("help") )
+	{
+		std::cout << description << std::endl;
+		return false;
+	}
+	
+	return true;
+}
 
 void core::sendMessage(JID jid, const std::string& message)
 {

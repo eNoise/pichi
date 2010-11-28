@@ -21,8 +21,8 @@
 #include "core.h"
 using namespace pichi;
 
-int main(void)
+int main(int argc, char** argv)
 {
-    core bot;      
+    core bot(argc, argv);      
     return 0;
 }
