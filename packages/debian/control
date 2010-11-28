@@ -1,0 +1,21 @@
+Source: pichi
+Section: net
+Priority: optional
+Maintainer: Alexey Kasyanchuk <deg@uruchie.org>
+Build-Depends: debhelper (>= 7), cmake (>= 2.6.0), autotools-dev, fakeroot, pkg-config,
+ libgloox-dev (>=1.0),
+ libboost-dev | libboost1.42-dev | libboost1.40-dev | libboost1.39-dev | libboost1.38-dev | libboost1.37-dev | libboost1.35-dev,
+ libboost-regex-dev | libboost-regex1.42-dev | libboost-regex1.40-dev | libboost-regex1.39-dev | libboost-regex1.38-dev | libboost-regex1.37-dev | libboost-regex1.35-dev,
+ libboost-program-options-dev | libboost-program-options1.42-dev | libboost-program-options1.40-dev | libboost-program-options1.39-dev | libboost-program-options1.38-dev | libboost-program-options1.37-dev | libboost-program-options1.35-dev,
+ libcurl3-dev,
+ libsqlite3-dev,
+ libtinyxml-dev,
+ zlib1g-dev,
+ libssl-dev
+Homepage: http://code.google.com/p/pichi/
+Standards-Version: 3.8.4
+
+Package: pichi
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Pichi is a jabber(xmpp) bot writen in C++. It is based on the sulci abilities.
