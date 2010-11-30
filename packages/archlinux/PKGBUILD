@@ -1,0 +1,27 @@
+# Maintainer: Amparo Dios <amparo.dios@gmail.com>
+pkgname=pichi
+pkgver=0.6.0.beta6
+pkgrel=1
+pkgdesc="Pichi is a jabber(xmpp) bot writen on C++. It's based on sulci facilities."
+arch=(i686 x86_64)
+url="http://code.google.com/p/pichi/"
+license=('GPLv2')
+depends=('curl' 'boost' 'sqlite3' 'gloox')
+makedepends=('cmake' 'make')
+source=(http://pichi.googlecode.com/files/$pkgname-$pkgver.tar.gz)
+md5sums=('cb773508c7df840d9f1755f6fe914576')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  cmake . -DCMAKE_INSTALL_PREFIX='/usr' -DCMAKE_BUILD_TYPE=Release \
+    -DLOCAL_TINYXML=ON 
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
+}
+
+# vim:set ts=2 sw=2 et:
+
