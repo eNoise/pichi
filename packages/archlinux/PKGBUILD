@@ -2,7 +2,7 @@
 pkgname=pichi
 pkgver=0.6.0.beta6
 pkgrel=1
-pkgdesc="Pichi is a jabber(xmpp) bot writen on C++. It's based on sulci facilities."
+pkgdesc="Pichi is a jabber(xmpp) bot written in C++. It is based on the sulci abilities."
 arch=(i686 x86_64)
 url="http://code.google.com/p/pichi/"
 license=('GPLv2')

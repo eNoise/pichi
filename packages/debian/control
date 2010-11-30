@@ -18,4 +18,4 @@ Standards-Version: 3.8.4
 Package: pichi
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Pichi is a jabber(xmpp) bot writen in C++. It is based on the sulci abilities.
+Description: Pichi is a jabber(xmpp) bot written in C++. It is based on the sulci abilities.
