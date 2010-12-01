@@ -114,4 +114,13 @@ bool system::fileExists(const std::string& file)
 	return (stat(getFullPath(file).c_str(), &st ) == 0);
 }
 
+double system::microtime(void )
+{
+	struct timeval tp;
+	gettimeofday(&tp, NULL);
+	double msec = (double) (tp.tv_usec / 1000000.0);
+	double sec = tp.tv_sec;
+	return (sec + msec);
+}
+
 }

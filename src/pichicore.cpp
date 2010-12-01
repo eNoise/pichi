@@ -402,17 +402,15 @@ bool pichicore::isOnline(std::string user, std::string room)
 void pichicore::ping(std::string jid)
 {
 	//timer = boost::timer();
-	//reciver["ping_" + jid] = boost::lexical_cast<std::string>(clock());
+	reciver["ping_" + jid] = boost::lexical_cast<std::string>(system::microtime());
 	jabber->client->xmppPing(JID(jid), jabber);  	
 }
 
 void pichicore::pingRecive(std::string jid)
 {
-	//sendAnswer(boost::lexical_cast<std::string>(timer.elapsed()));
-	//sendAnswer( boost::lexical_cast<std::string>( ( clock() - (boost::lexical_cast<clock_t>(reciver["ping_" + jid])) ) / CLOCKS_PER_SEC ) );
-	//sendAnswer( boost::lexical_cast<std::string>( std::difftime(clock(), boost::lexical_cast<clock_t>(reciver["ping_" + jid])) ) );
-	//reciver.erase("ping_" + jid);
-	sendAnswer("Понг. А время считай сам.");
+	double diff =  system::microtime() - boost::lexical_cast<double>(reciver["ping_" + jid]);
+	reciver.erase("ping_" + jid);
+	sendAnswer("Понг в " + boost::lexical_cast<std::string>(diff) + "мс");
 }
 
 // устанавливает информацию о jid

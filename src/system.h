@@ -24,6 +24,7 @@
 #include <string>
 #include <sys/stat.h>
 #include <time.h>
+#include <sys/time.h>
 #include <vector>
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/lexical_cast.hpp>
@@ -53,6 +54,7 @@ class system
 	static const std::string getFullPath(const std::string& dir);
 	static bool fileExists(const std::string& file);
 	template<typename compT> static bool in_array(compT&, std::vector<compT>&);
+	static double microtime(void);
 };
 
 }
