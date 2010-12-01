@@ -23,6 +23,7 @@
 
 #include <string>
 #include <iostream>
+#include <pthread.h>
 #include "system.h"
 #include <algorithm>
 #include "lastmessage.h"
