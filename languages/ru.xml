@@ -145,5 +145,6 @@
 		<option name="command_urlshort_incorrect_service" type="string">Сервис недоступен, либо некорректный url.</option>
 		<option name="command_uptime_start" type="string">Время старта бота: {1}</option>
 		<option name="command_uptime_uptime" type="string">Бот работает на протяжении: {1}</option>
+		<option name="command_ping_pong" type="string">Понг в {1}мс</option>
         </language>
 </PichiLanguage>

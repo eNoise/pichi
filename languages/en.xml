@@ -145,5 +145,6 @@ parameter1|parameter2 - parameter1 OR parameter2 (one of)
 		<option name="command_urlshort_incorrect_service" type="string">Service unavailable or invalid url.</option>
 		<option name="command_uptime_start" type="string">Start time of the bot: {1}</option>
 		<option name="command_uptime_uptime" type="string">Bot is runing over: {1}</option>
+		<option name="command_ping_pong" type="string">Pong {1}ms</option>
         </language>
 </PichiLanguage>

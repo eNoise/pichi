@@ -410,7 +410,7 @@ void pichicore::pingRecive(std::string jid)
 {
 	double diff =  system::microtime() - boost::lexical_cast<double>(reciver["ping_" + jid]);
 	reciver.erase("ping_" + jid);
-	sendAnswer("Понг в " + boost::lexical_cast<std::string>(diff) + "мс");
+	sendAnswer( (*lang)("command_ping_pong", boost::lexical_cast<std::string>(diff * 1000.0).c_str()) );
 }
 
 // устанавливает информацию о jid
