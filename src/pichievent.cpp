@@ -32,18 +32,18 @@ PichiEvent::PichiEvent(pichicore* p)
 
 void PichiEvent::callEvent(std::string action, std::string coincidence)
 {
-	pichi->sql->query("SELECT `do`, `option`,`value`,`coincidence` FROM actions WHERE action = '" + action + "' AND coincidence='" + ((coincidence != "") ? pichi->sql->escapeString(coincidence) : "" ) + "';");
+	pichi->sql->query("SELECT * FROM actions WHERE action = '" + action + "' AND coincidence='" + ((coincidence != "") ? pichi->sql->escapeString(coincidence) : "" ) + "';");
 	std::map<std::string, std::string> actions;
 	while(!(actions = pichi->sql->fetchArray()).empty())
 	{
-		doAction(actions["do"], actions["value"], actions["option"], actions["coincidence"]);
+		doAction(actions["action"], actions["do"], actions["value"], actions["option"], actions["coincidence"]);
 	}
 }
 
-void PichiEvent::doAction(std::string action, std::string value, std::string option, std::string coincidence)
+void PichiEvent::doAction(std::string action, std::string doaction, std::string value, std::string option, std::string coincidence)
 {
 	std::vector<std::string> exploder;
-	if(action == "send_message")
+	if(doaction == "send_message")
 	{
 		std::string room;
 		if(coincidence != "")
@@ -67,10 +67,15 @@ void PichiEvent::doAction(std::string action, std::string value, std::string opt
 		if(option == "")
 			if(value != "")
 				pichi->jabber->sendMessage(JID(room), value);
-		//$this->log->log("EVENT: {$action} (Send message {$value})", PichiLog::LEVEL_VERBOSE);
+		//$this->log->log("EVENT: {$doaction} (Send message {$value})", PichiLog::LEVEL_VERBOSE);
 		return;
 	}
 	//($hook = PichiPlugin::fetch_hook('event_action')) ? eval($hook) : false;
+}
+
+void PichiEvent::deleteEvent(std::string action, std::string coincidence)
+{
+	pichi->sql->exec("DELETE FROM actions WHERE action = '" + action + "' AND coincidence='" + ((coincidence != "") ? pichi->sql->escapeString(coincidence) : "" ) + "';");
 }
 
 }

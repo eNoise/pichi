@@ -36,6 +36,8 @@ class pichicurl
     std::string read(void);
     void setUrl(const std::string& u);
     void setReferer(const std::string& u);
+    void setAuth(const std::string& user, const std::string& pass);
+    void setPostArgs(const std::string& args);
     const std::string urlencode(const std::string& u) const;
     const std::string urldecode(const std::string& u) const;
   private:

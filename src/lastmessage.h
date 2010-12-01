@@ -39,6 +39,7 @@ class lastmessage
 		lastmessage& operator =(const lastmessage& lst);
 		std::string getJIDlast(void);
 		std::string getFromlast(void);
+		std::string getMsgLast(void);
 		std::string getArg(void);
 	protected:
 		std::string last_message;

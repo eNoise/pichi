@@ -286,7 +286,7 @@ bool pichicore::reciveMessage(std::string message, std::string type, std::string
 	if(enabled && !isCommand(last_message) && options["answer_remember"] == "1")
 		lex->parseText(last_message);
 		
-	//($hook = PichiPlugin::fetch_hook('pichicore_message_recive_complete')) ? eval($hook) : false;
+	event->callEvent("message_recive_completed", "jid=" + last_jid);
 		
 	if(isCommand(last_message))
 		commander->fetchCommand(last_message);

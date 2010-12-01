@@ -73,4 +73,9 @@ std::string lastmessage::getArg(void )
 	return last_args;
 }
 
+std::string lastmessage::getMsgLast(void )
+{
+	return last_message;
+}
+
 }

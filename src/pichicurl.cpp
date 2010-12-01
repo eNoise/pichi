@@ -74,6 +74,17 @@ void pichicurl::setReferer(const std::string& u)
 	curl_easy_setopt(curl, CURLOPT_REFERER, u.c_str());
 }
 
+void pichicurl::setAuth(const std::string& user, const std::string& pass)
+{
+	curl_easy_setopt(curl, CURLOPT_USERPWD, (user + ":" + pass).c_str());
+}
+
+void pichicurl::setPostArgs(const std::string& args)
+{
+	curl_easy_setopt(curl, CURLOPT_POST, 1);  
+	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, args.c_str()); 
+}
+
 const std::string pichicurl::urlencode(const std::string& u) const
 {
 	return curl_easy_escape(curl, u.c_str(), u.length());
