@@ -39,6 +39,7 @@ if (LOCAL_GLOOX)
   set (GLOOX_LIBRARIES "gloox")
 else (LOCAL_GLOOX)
   find_package (Gloox REQUIRED)
+  include_directories(${GLOOX_INCLUDE_DIR})
 endif (LOCAL_GLOOX)
 
 if (LOCAL_TINYXML)
@@ -47,6 +48,7 @@ if (LOCAL_TINYXML)
   set (TINYXML_LIBRARIES "tinyxml")
 else (LOCAL_TINYXML)
   find_package (TinyXml REQUIRED)
+  include_directories(${TINYXML_INCLUDE_DIR})
 endif (LOCAL_TINYXML)
 
 set(PICHI_CPP 	src/pichiexception.cpp	
@@ -96,6 +98,11 @@ if(MINGW AND WIN32)
   set(PICHI_CPP ${PICHI_CPP} "${CMAKE_CURRENT_BINARY_DIR}/pichi_rc.o")
 endif(MINGW AND WIN32)
 
+include_directories( 
+			${SQLITE3_INCLUDE_DIR}
+			${Boost_INCLUDE_DIRS}
+			${CURL_INCLUDE_DIRS}
+		   )
 ADD_EXECUTABLE(pichi ${PICHI_CPP})
 target_link_libraries (pichi ${LINK_LIBS})
 
