@@ -536,7 +536,7 @@ void pichicore::cronDo(std::string eventer)
 {
     if(canCron("bans"))
     {
-	LOG("[CRON] Bans", LOG::INFO);
+	LOG("[CRON] Bans", LOG::VERBOSE);
 	//Check bans and kicks
 	sqlite::q* qu = sql->squery("SELECT `jid`,`value`,`name`,`groupid` FROM users_data WHERE name = 'ban' OR name = 'kick';");
 	std::map<std::string, std::string> bans;

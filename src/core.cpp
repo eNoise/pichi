@@ -418,7 +418,7 @@ void *core::cron(void *context)
 			if(time(NULL) - ((core *)context)->times["white_ping"] > 5 * 60)
 			{
 				((core *)context)->times["white_ping"] = time(NULL);
-				LOG("[CRON] Ping of live", LOG::INFO);
+				LOG("[CRON] Ping of live", LOG::VERBOSE);
 		
 				((core *)context)->client->whitespacePing();
 			}
