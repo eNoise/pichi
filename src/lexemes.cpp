@@ -37,7 +37,7 @@ void lexemes::parseText(std::string text)
 	std::vector<std::string> base = system::explode(" ", text);
 	std::string str, beg("#beg#"), end("#end#");
 	
-	if(base.size() <= lexeme_limit)
+	if(base.size() <= static_cast<size_t>(lexeme_limit))
 	{
 		for(size_t i = 0; i < base.size(); i++)
 		{

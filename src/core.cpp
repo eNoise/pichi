@@ -430,6 +430,8 @@ void *core::cron(void *context)
 		Sleep(1);
 #endif
 	}
+	pthread_exit(context);
+	return context;
 }
 
 }
