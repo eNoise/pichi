@@ -302,16 +302,19 @@ void core::handlePresence(const Presence& presence)
 {
 	pichi->cronDo("presence");
   
+	if(presence.from().bare() == "")
+	{
+		LOG("This is not user presence", LOG::DEBUG);
+		return;
+	}
+
+	std::string state;
 	if(presence.presence() != Presence::Unavailable)
-	{
-		LOG("Пользователь онлайн: " + presence.from().bare(), LOG::INFO);
-		pichi->setUserInfo(presence.from().bare(), "", "available", "", "participant", presence.status());
-	}
+		state = "available";
 	else
-	{
-		LOG("Пользователь вышел: " + presence.from().bare(), LOG::INFO);
-		pichi->setUserInfo(presence.from().bare(), "", "unavailable", "", "participant", presence.status());
-	}
+		state = "unavailable";
+
+	pichi->setUserInfo(presence.from().bare(), "", state, "", "participant", presence.status());
 }
 
 

@@ -105,8 +105,18 @@ void pichicore::setUserInfo(std::string jid, std::string nick, std::string state
 	}
 	
 	//($hook = PichiPlugin::fetch_hook('pichicore_status_set')) ? eval($hook) : false;
-	LOG("Updating user " + nick + "(" + jid + ")[" + status + "] in " + room, LOG::DEBUG);
+	if(room != "")
+		if(state == "unavailable")
+			LOG("[PRESENCE_ROOM][OFF] " + jid + "{" + system::itoa(level) + "} (" + nick + ")[" + status + "] in " + room, LOG::DEBUG);
+		else
+			LOG("[PRESENCE_ROOM][ON] " + jid + "{" + system::itoa(level) + "} (" + nick + ")[" + status + "] in " + room, LOG::DEBUG);
+	else
+		if(state == "unavailable")
+			LOG("[PRESENCE][OFF] " + jid + "{" + system::itoa(level) + "} [" + status + "]", LOG::DEBUG);
+		else
+			LOG("[PRESENCE][ON] " + jid + "{" + system::itoa(level) + "} [" + status + "]", LOG::DEBUG);
 	
+		
 	sql->query("SELECT COUNT(*) FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
 	if(system::atoi(sql->fetchColumn(0)) > 0)
 	{
