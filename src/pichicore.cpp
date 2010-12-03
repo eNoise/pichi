@@ -331,7 +331,7 @@ void pichicore::sendAnswer(const std::string& message)
 	else
 		to = last_from;
 	
-	if(message.size() > system::atoi(options["msg_limit"]) && system::atoi(options["msg_limit"]) > 1 && last_type == "groupchat")
+	if(message.size() > system::atot(options["msg_limit"]) && system::atot(options["msg_limit"]) > 1 && last_type == "groupchat")
 	{
 		jabber->sendMessage(JID(last_room), (*lang)("message_to_private_chat"));
 		to = last_jid;
@@ -351,7 +351,7 @@ void pichicore::sendAnswer(const std::string& message, const pichi::lastmessage&
 	else
 		to = msg.last_from;
 	
-	if(message.size() > system::atoi(options["msg_limit"]) && system::atoi(options["msg_limit"]) > 1 && msg.last_type == "groupchat")
+	if(message.size() > system::atot(options["msg_limit"]) && system::atot(options["msg_limit"]) > 1 && msg.last_type == "groupchat")
 	{
 		jabber->sendMessage(JID(msg.last_room), (*lang)("message_to_private_chat"));
 		to = msg.last_jid;
@@ -542,7 +542,7 @@ void pichicore::cronDo(std::string eventer)
 	std::map<std::string, std::string> bans;
 	while(!(bans = sql->fetchArray(qu)).empty())
 	{
-		if(system::atot(bans["value"]) <= time(NULL))
+		if(boost::lexical_cast<time_t>(bans["value"]) <= time(NULL))
 		{
 			if(bans["name"] == "ban")
 				unban(bans["jid"], "Auto-unban", bans["groupid"]);
@@ -562,7 +562,7 @@ bool pichicore::canCron(std::string crn)
 
 lastmessage& pichicore::operator=(const pichi::pichicore& lst)
 {
-	lastmessage::operator=(lst);
+	return lastmessage::operator=(lst);
 }
 
 

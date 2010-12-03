@@ -56,6 +56,8 @@ lastmessage& lastmessage::operator=(const pichi::lastmessage& lst)
 	
 	last_args = lst.last_args;
 	last_command = lst.last_command;
+	
+	return (*this);
 }
 
 std::string lastmessage::getJIDlast(void )

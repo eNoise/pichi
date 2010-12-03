@@ -866,6 +866,7 @@ void* commandbase::thread_lastfm(void* context)
 		delete curl;
 	}
 	pthread_exit(context);
+	return context;
 }
 
 
@@ -941,6 +942,7 @@ void* commandbase::thread_googletranslate(void* context)
 		((commandbase*)context)->pichi->sendAnswer( ptree.get_child("responseData").get("translatedText", ""), last );
 	
 	pthread_exit(context);
+	return context;
 }
 
 
@@ -1012,6 +1014,7 @@ void* commandbase::thread_google(void* context)
 		((commandbase*)context)->pichi->sendAnswer( ans, last );
 	}
 	pthread_exit(context);
+	return context;
 }
 
 
@@ -1044,6 +1047,7 @@ void* commandbase::thread_urlshort(void* context)
 	
 	((commandbase*)context)->pichi->sendAnswer("http://ur.ly/" + ptree.get("code",""), last);
 	pthread_exit(context);
+	return context;
 }
 
 

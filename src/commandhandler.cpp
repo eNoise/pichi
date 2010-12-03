@@ -81,7 +81,7 @@ std::vector< std::string > commandhandler::seperate(std::string str, int level)
 	{
 		std::vector< std::string > w = system::explode("\"", str);
 		std::vector< std::string > ret;
-		for(int i = 1; i < w.size(); i = i+2)
+		for(size_t i = 1; i < w.size(); i = i+2)
 			ret.push_back(w[i]);
 		return ret;
 	}

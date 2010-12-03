@@ -39,7 +39,7 @@ void lexemes::parseText(std::string text)
 	
 	if(base.size() <= lexeme_limit)
 	{
-		for(int i = 0; i < base.size(); i++)
+		for(size_t i = 0; i < base.size(); i++)
 		{
 			str = ((i-1 >= 0) ? base[i-1] : beg ) + " " + base[i]  + " " + ((i+1 <= base.size()-1) ? base[i+1] : end);
 			addLexema(str);
