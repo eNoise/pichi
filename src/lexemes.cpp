@@ -25,7 +25,8 @@ namespace pichi
 
 lexemes::lexemes(sqlite** s) : sql(s)
 {
-	lexeme_limit = 1000;
+	message_size_limit = 0;
+	word_size_limit = 500;
 	query_limit = 10;
 	is_answer_limit = false;
 }
@@ -34,12 +35,15 @@ void lexemes::parseText(std::string text)
 {
 	//$this->testText($string); //режим все лишнее со строки
 	//$this->log->log("$string to lexems", PichiLog::LEVEL_DEBUG);
+	if(message_size_limit > 0 && text.size() > message_size_limit)
+		return;
+	
 	std::vector<std::string> base = system::explode(" ", text);
 	std::string str, beg("#beg#"), end("#end#");
 	
-	if(base.size() <= static_cast<size_t>(lexeme_limit))
+	if(base.size() <= word_size_limit)
 	{
-		for(int i = 0; i < base.size(); i++)
+		for(int i = 0; i < INT_MAX && i < base.size(); i++)
 		{
 			str = ((i-1 >= 0) ? base[i-1] : beg ) + " " + base[i]  + " " + ((i+1 <= base.size()-1) ? base[i+1] : end);
 			addLexema(str);
@@ -114,7 +118,7 @@ std::string lexemes::genFullRandom()
 
 	for(int i=0; ((is_answer_limit) ? i < limit : true); i++)
 	{
-		(*sql)->query("SELECT * FROM lexems WHERE lexeme LIKE '" + (*sql)->escapeString(last) + " %' ORDER BY `count` DESC LIMIT 0," + system::itoa(query_limit) + ";");
+		(*sql)->query("SELECT * FROM lexems WHERE lexeme LIKE '" + (*sql)->escapeString(last) + " %' ORDER BY `count` DESC LIMIT 0," + system::ttoa(query_limit) + ";");
 		if((*sql)->numRows() == 0)
 			break; //больше нет совпадений
 		//if($i != $limit-1)
@@ -146,7 +150,7 @@ std::string lexemes::genFromWord(std::string word)
 	//left
 	for(int i = 0; ((is_answer_limit) ? i < limit : true); i++)
 	{
-		(*sql)->query("SELECT * FROM lexems WHERE lexeme LIKE '% " + (*sql)->escapeString((i == 0) ? word : first + " " + second) + "' ORDER BY `count` DESC LIMIT 0," + system::itoa(query_limit) + ";");
+		(*sql)->query("SELECT * FROM lexems WHERE lexeme LIKE '% " + (*sql)->escapeString((i == 0) ? word : first + " " + second) + "' ORDER BY `count` DESC LIMIT 0," + system::ttoa(query_limit) + ";");
 		if((*sql)->numRows() == 0)
 			break; //больше нет совпадений
 		//if(i != $limit-1)
@@ -166,7 +170,7 @@ std::string lexemes::genFromWord(std::string word)
 	//right
 	for(int i = 0; ((is_answer_limit) ? i < limit : true); i++)
 	{
-		(*sql)->query("SELECT * FROM lexems WHERE lexeme LIKE '" + (*sql)->escapeString((i == 0) ? word : second + " " + third) + " %' ORDER BY `count` DESC LIMIT 0," + system::itoa(query_limit) + ";");
+		(*sql)->query("SELECT * FROM lexems WHERE lexeme LIKE '" + (*sql)->escapeString((i == 0) ? word : second + " " + third) + " %' ORDER BY `count` DESC LIMIT 0," + system::ttoa(query_limit) + ";");
 		if((*sql)->numRows() == 0)
 			break; //больше нет совпадений
 		//if($i != $limit-1)

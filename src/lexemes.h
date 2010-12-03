@@ -27,6 +27,7 @@
 #include "system.h"
 #include <time.h>
 #include <stdio.h>
+#include <limits.h>
 
 namespace pichi
 {
@@ -36,8 +37,9 @@ class lexemes
   public:
 	lexemes(sqlite** s);
 	bool is_answer_limit;
-	int lexeme_limit;
-	int query_limit;
+	size_t word_size_limit;
+	size_t message_size_limit;
+	size_t query_limit;
 	void parseText(std::string text);
 	void addLexema(std::string lex);
 	
