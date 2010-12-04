@@ -111,7 +111,20 @@ core::core(int argc, char** argv)
 	server = pichi->getConfigOption("server");
 	jid = name + "@" + server;
 	roomservice = pichi->getConfigOption("room_service");
-
+#ifndef WIN32
+	if(coptions.count("daemonize"))
+	{
+		if (daemon(true, false))
+			std::cerr << "Pichi daemon failed" << std::endl;
+		if(!coptions.count("no-pid"))
+		{
+			if(coptions["pid"].as<std::string>() != "")
+				std::ofstream(coptions["pid"].as<std::string>().c_str()) << getpid() << std::endl;
+			else
+				std::ofstream(PID_FILE) << getpid() << std::endl;
+		}
+	}
+#endif
 	botstart();
 }
 
@@ -132,6 +145,8 @@ bool core::parseArgs(int argc, char** argv)
 	arg::options_description description("Allowed options");
 	description.add_options()
 		("help,h", "Help message")
+		("pid,p", "PID file path")
+		("no-pid,n", "Start pichi without pid file")
 		("daemonize,d", "Run Pichi as a daemon");
 	try 
 	{
