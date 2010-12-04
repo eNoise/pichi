@@ -161,7 +161,7 @@ std::string pichicore::getJID(const std::string& nick, std::string room, bool fu
 	}
 		
 	if(room == std::string())
-		room = getDefaultRoom(); // main room
+		room = getLastRoom(); // main room
 	
 	sqlite::q* qu = sql->squery("SELECT `jid` FROM users WHERE nick = '" + sql->escapeString(nick) + "' AND room = '" + sql->escapeString(room) + "';");
 	std::string jid = sql->fetchColumn(qu, 0);
@@ -202,7 +202,7 @@ std::string pichicore::getName(const std::string& jid, std::string room)
 	if(exp.size() != 2)
 	{
 		if(room == std::string())
-			room = getDefaultRoom(); // main room
+			room = getLastRoom(); // main room
 		sqlite::q* qu = sql->squery("SELECT `nick` FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
 		std::string rtn = sql->fetchColumn(qu, 0);
 		delete qu;
@@ -222,8 +222,8 @@ bool pichicore::isAccess(int level, std::string jid, std::string room, bool room
 	if(jid == "")
 		return false;
 	
-	if(room == std::string() && !room_hook)
-		room = getDefaultRoom(); // main room
+	if(room == "" && !room_hook)
+		room = getLastRoom(); // main room
 	
 	jid = getJID(getName(jid, room), room); // current access
 	sqlite::q* qu = sql->squery("SELECT `level` FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
@@ -456,7 +456,7 @@ void pichicore::delJIDinfo(std::string jid, std::string name, std::string groupi
 void pichicore::ban(std::string jid, std::string time, std::string reason, std::string room)
 {
 	if(room == "")
-		room = getDefaultRoom(); // main room
+		room = getLastRoom(); // main room
 	jabber->ban((jid = getJID(jid, room)), JID(room), reason);
 	if(time != "")
 	{
@@ -470,7 +470,7 @@ void pichicore::ban(std::string jid, std::string time, std::string reason, std::
 void pichicore::unban(std::string jid, std::string reason, std::string room)
 {
 	if(room == "")
-		room = getDefaultRoom(); // main room
+		room = getLastRoom(); // main room
 	jid = getJID(jid, room);
 	jabber->unban(jid, JID(room), reason);
 	delJIDinfo(jid, "ban", room);
@@ -481,7 +481,7 @@ void pichicore::unban(std::string jid, std::string reason, std::string room)
 void pichicore::kick(std::string jid, std::string time, std::string reason, std::string room)
 {
 	if(room == "")
-		room = getDefaultRoom(); // main room
+		room = getLastRoom(); // main room
 	jabber->kick(getName(jid = getJID(jid, room), room), JID(room), reason);
 	if(time != "")
 	{
@@ -495,7 +495,7 @@ void pichicore::kick(std::string jid, std::string time, std::string reason, std:
 void pichicore::unkick(std::string jid, std::string room)
 {
 	if(room == "")
-		room = getDefaultRoom(); // main room
+		room = getLastRoom(); // main room
 	jid = getJID(jid, room);
 	delJIDinfo(jid, "kick", room);
 	delJIDinfo(jid, "kick_reason", room);
