@@ -24,6 +24,8 @@
 #include <iostream>
 #include <string>
 #include "system.h"
+#include "config.h"
+#include <fstream>
 
 namespace pichi
 {
@@ -36,6 +38,8 @@ class LOG
 {
   public:
 	static int LEVEL;
+	static std::string log_file;
+	static bool file_log;
 	enum LogType
 	{
 		ERROR,

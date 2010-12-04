@@ -78,6 +78,7 @@ void core::botstart(void)
 	SetConsoleOutputCP(oldcodepage);
 	::system("pause");
 #endif
+	LOG("Stop Pichi", LOG::INFO);
 }
 
 core::core(int argc, char** argv)
@@ -116,13 +117,10 @@ core::core(int argc, char** argv)
 	{
 		if (daemon(true, false))
 			std::cerr << "Pichi daemon failed" << std::endl;
-		if(!coptions.count("no-pid"))
-		{
-			if(coptions["pid"].as<std::string>() != "")
-				std::ofstream(coptions["pid"].as<std::string>().c_str()) << getpid() << std::endl;
-			else
-				std::ofstream(PID_FILE) << getpid() << std::endl;
-		}
+		LOG::file_log = true;
+		LOG::log_file = coptions["log"].as<std::string>();
+		if(!coptions.count("no-pid") && coptions["pid"].as<std::string>() != "")
+			std::ofstream(coptions["pid"].as<std::string>().c_str()) << getpid() << std::endl;
 	}
 #endif
 	botstart();
@@ -145,7 +143,8 @@ bool core::parseArgs(int argc, char** argv)
 	arg::options_description description("Allowed options");
 	description.add_options()
 		("help,h", "Help message")
-		("pid,p", "PID file path")
+		("log,l", arg::value< std::string >()->default_value(system::getFullPath(PICHI_LOG_FILE)), "Log file path")
+		("pid,p", arg::value< std::string >()->default_value(system::getFullPath(PICHI_PID_FILE)), "PID file path")
 		("no-pid,n", "Start pichi without pid file")
 		("daemonize,d", "Run Pichi as a daemon");
 	try 

@@ -29,7 +29,8 @@
 #define PICHI_CONFIG_DIR ""
 #endif
 
-#define PID_FILE "/var/run/pichi.pid"
+#define PICHI_PID_FILE "/var/run/pichi.pid"
+#define PICHI_LOG_FILE "~/.pichi/pichi.log"
 
 #define PICHI_TWITTER_KEY "cVAYap0FSuCYsi2H5z4lA"
 #define PICHI_TWITTER_SECRET "nR4o0ffJ3Wa30x8RLb9KF1QumbEISQ1xQ2h4cel5oNQ"
