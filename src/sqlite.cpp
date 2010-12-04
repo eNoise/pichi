@@ -49,6 +49,7 @@ bool sqlite::query(const std::string& sql)
 		mainquery.query_string = sql;
 		mainquery.query_status = sqlite3_prepare_v2(db, sql.c_str(), -1, &(mainquery.statement), 0);
 		mainquery.is_statement = true;
+		LOG("[SQLITE] " + sql, LOG::VERBOSE);
 		// begin count rows
 		if(mainquery.query_status != SQLITE_OK)
 			return false;
@@ -71,6 +72,7 @@ sqlite::q* sqlite::squery(const std::string& sql)
 	ret->query_string = sql;
 	ret->query_status = sqlite3_prepare_v2(db, sql.c_str(), -1, &(ret->statement), 0);
 	ret->is_statement = true;
+	LOG("[SQLITE] " + sql, LOG::VERBOSE);
 	if(ret->query_status != SQLITE_OK)
 	{
 		delete ret;

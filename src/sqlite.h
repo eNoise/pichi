@@ -25,6 +25,7 @@
 #include <iostream>
 #include <map>
 #include "pichiexception.h"
+#include "log.h"
 
 namespace pichi
 {

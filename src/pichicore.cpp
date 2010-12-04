@@ -151,7 +151,7 @@ bool pichicore::isJID(const std::string& jid)
 }
 
 
-std::string pichicore::getJID(const std::string& nick, std::string room, bool full_search)
+std::string pichicore::getJID(const std::string& nick, std::string room, bool full_search, bool all_rooms)
 {
 	LOG("Get JID from " + nick, LOG::VERBOSE);
 	if(isJID(nick))
@@ -163,7 +163,7 @@ std::string pichicore::getJID(const std::string& nick, std::string room, bool fu
 	if(room == std::string())
 		room = getLastRoom(); // main room
 	
-	sqlite::q* qu = sql->squery("SELECT `jid` FROM users WHERE nick = '" + sql->escapeString(nick) + "' AND room = '" + sql->escapeString(room) + "';");
+	sqlite::q* qu = sql->squery("SELECT `jid` FROM users WHERE nick = '" + sql->escapeString(nick) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + ";");
 	std::string jid = sql->fetchColumn(qu, 0);
 	delete qu;
 	
@@ -175,7 +175,7 @@ std::string pichicore::getJID(const std::string& nick, std::string room, bool fu
 	{
 		if(full_search)
 		{
-			sqlite::q* qu = sql->squery("SELECT `jid` FROM users_nick WHERE nick = '" + sql->escapeString(nick) + "' AND room = '" + sql->escapeString(room) + "' ORDER BY `time` ASC;");
+			sqlite::q* qu = sql->squery("SELECT `jid` FROM users_nick WHERE nick = '" + sql->escapeString(nick) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + " ORDER BY `time` ASC;");
 			jid = sql->fetchColumn(qu, 0);
 			delete qu;
 			if(jid != std::string())
@@ -185,6 +185,11 @@ std::string pichicore::getJID(const std::string& nick, std::string room, bool fu
 	}
 }
 
+std::string pichicore::getAllJID(const std::string& nick, bool full_search)
+{
+	return getJID(nick, "", full_search, true);
+}
+
 std::string pichicore::getDefaultRoom(void)
 {
 	std::list< std::pair<JID, MUCRoom*> >::iterator first_room;
@@ -192,7 +197,7 @@ std::string pichicore::getDefaultRoom(void)
 	return (*first_room).first.bare();
 }
 
-std::string pichicore::getName(const std::string& jid, std::string room)
+std::string pichicore::getName(const std::string& jid, std::string room, bool all_rooms)
 {
 	LOG("Get Nick from JID " + jid, LOG::VERBOSE);
 	if(!isJID(jid))
@@ -203,7 +208,7 @@ std::string pichicore::getName(const std::string& jid, std::string room)
 	{
 		if(room == std::string())
 			room = getLastRoom(); // main room
-		sqlite::q* qu = sql->squery("SELECT `nick` FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
+		sqlite::q* qu = sql->squery("SELECT `nick` FROM users WHERE jid = '" + sql->escapeString(jid) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + ";");
 		std::string rtn = sql->fetchColumn(qu, 0);
 		delete qu;
 		return rtn;
@@ -212,6 +217,11 @@ std::string pichicore::getName(const std::string& jid, std::string room)
 	{
 		return exp[1];
 	}
+}
+
+std::string pichicore::getAllName(const std::string& jid)
+{
+	return getName(jid, "", true);
 }
 
 bool pichicore::isAccess(int level, std::string jid, std::string room, bool room_hook)
