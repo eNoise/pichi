@@ -71,14 +71,19 @@ class pichicore : public pichiconfig,
 		void sendAnswer(const std::string& message);
 		void sendAnswer(const std::string& message, const lastmessage& msg);
 		
-		bool isJID(const std::string&);
-		std::string getJID(const std::string& nick, std::string room = "", bool full_search = false, bool all_rooms = false, bool no_default_room = false);
-		std::string getName(const std::string& jid, std::string room = "", bool all_rooms = false, bool no_default_room = false);
+		bool isJID(const std::string& jid);
+		bool isBareJID(const std::string& jid);
+		std::string getJIDfromNick(const std::string& nick, std::string room, bool all_rooms = false);
+		std::string getJIDfromNicks(const std::string& nick, std::string room, bool all_rooms = false);
+		std::string getNickFromJID(const std::string& jid, std::string room, bool all_rooms = false);
+		std::string getJIDpart(const std::string& jid, unsigned int part);
 		std::string getArgJID(const std::string& arg);
+		std::string getArgNick(const std::string& arg);
 		
 		std::string getDefaultRoom(void);
 		bool isCommand(std::string& str);
-		bool isAccess(int level = 2, std::string jid = "", std::string room = "", bool room_hook = false);
+		bool isAccess(std::string jid, std::string room, int level = 2);
+		bool isAccess(int level = 2);
 		bool setOption(std::string option, std::string value);
 		bool isOnline(std::string user, std::string room = "");
 		void ping(std::string jid);

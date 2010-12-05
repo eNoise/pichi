@@ -298,7 +298,7 @@ void commandbase::command_kick(std::string arg)
 		pichi->sendAnswer(TR("bad_argument"));
 		return;
 	}
-	pichi->kick(w[0], w[1], w[2]);
+	pichi->kick(pichi->getArgJID(w[0]), w[1], w[2]);
 }
 
 void commandbase::command_unkick(std::string arg)
@@ -306,7 +306,7 @@ void commandbase::command_unkick(std::string arg)
 	if(!pichi->isAccess())
 		return;
 	
-	pichi->unkick(arg);
+	pichi->unkick(pichi->getArgJID(arg));
 }
 
 void commandbase::command_ban(std::string arg)
@@ -320,7 +320,7 @@ void commandbase::command_ban(std::string arg)
 		pichi->sendAnswer(TR("bad_argument"));
 		return;
 	}
-	pichi->ban(w[0], w[1], w[2]);
+	pichi->ban(pichi->getArgJID(w[0]), w[1], w[2]);
 }
 
 void commandbase::command_unban(std::string arg)
@@ -334,7 +334,7 @@ void commandbase::command_unban(std::string arg)
 		pichi->sendAnswer(TR("bad_argument"));
 		return;
 	}
-	pichi->unban(w[0], w[1]);
+	pichi->unban(pichi->getArgJID(w[0]), w[1]);
 }
 
 void commandbase::command_banlist(std::string arg)
@@ -387,7 +387,7 @@ void commandbase::command_log(std::string arg)
 		std::string log = "\n-----------------------------------------------------------------------\n";
 		BOOST_REVERSE_FOREACH(tp::value_type &ms, msgs)
 		{
-			    log += "[" + system::timeToString(system::atot(ms["time"]), "%H:%M:%S") + "]<" + pichi->getName(ms["from"]) + "> " + ms["message"] + "\n";
+			    log += "[" + system::timeToString(system::atot(ms["time"]), "%H:%M:%S") + "]<" + pichi->getNickFromJID( pichi->getJIDpart(ms["from"], 2), pichi->getJIDpart(ms["from"], 1)) + "> " + ms["message"] + "\n";
 		}
 		log += "-----------------------------------------------------------------------";
 		pichi->sendAnswer(log); 
@@ -533,7 +533,7 @@ void commandbase::command_talkers(std::string arg)
 	int i = 0;
 	while(!(fr = pichi->sql->fetchArray(qqr)).empty() && i < 10)
 	{
-		std::string from = pichi->getJID(pichi->getName(fr["from"]), "", true, true, true);
+		std::string from = pichi->getJIDfromNicks(pichi->getJIDpart(fr["from"], 2), pichi->getJIDpart(fr["from"], 1));
 		if(from == "")
 			continue;
 		if(tmp[from] == std::pair<std::string, size_t>())
@@ -554,7 +554,7 @@ void commandbase::command_talkers(std::string arg)
 	
 	 BOOST_REVERSE_FOREACH(p_t2::value_type &p, tmp2)
 	 {
-		ans += TR4("command_talkers_list", system::itoa(++i).c_str(), pichi->getName(p.second.first).c_str(), system::ttoa(p.second.second).c_str()) + "\n";
+		ans += TR4("command_talkers_list", system::itoa(++i).c_str(), pichi->getNickFromJID(p.second.first, "", true).c_str(), system::ttoa(p.second.second).c_str()) + "\n";
 	 }
 	pichi->sendAnswer(ans);
 }
@@ -762,7 +762,7 @@ void commandbase::command_nicks(std::string arg)
 
 void commandbase::command_idle(std::string arg)
 {
-	pichi->sql->query("SELECT `time` FROM log WHERE `from` = '" + pichi->sql->escapeString(arg) + "' OR `from` LIKE '%/" + pichi->sql->escapeString(pichi->getName(arg)) + "' ORDER BY time DESC;");
+	pichi->sql->query("SELECT `time` FROM log WHERE `from` = '" + pichi->sql->escapeString(arg) + "' OR `from` LIKE '%/" + pichi->sql->escapeString(pichi->getArgNick(arg)) + "' ORDER BY time DESC;");
 	time_t date;
 	try
 	{
@@ -860,7 +860,7 @@ void* commandbase::thread_lastfm(void* context)
 		pichicurl* curl = new pichicurl();
 		std::string data = curl->readurl("http://ws.audioscrobbler.com/1.0/user/" + user["lastfm_user"] + "/recenttracks.txt");
 		if(data != "")
-			((commandbase*)context)->pichi->sendAnswer( (*((commandbase*)context)->pichi->lang)("command_lastfm_listen", ((commandbase*)context)->pichi->getName( last.getJIDlast() ).c_str(), (system::explode("," , (system::explode("\n", data).at(0)))).at(1).c_str()), last );
+			((commandbase*)context)->pichi->sendAnswer( (*((commandbase*)context)->pichi->lang)("command_lastfm_listen", ((commandbase*)context)->pichi->getNickFromJID( last.getJIDlast(), last.getLastRoom() ).c_str(), (system::explode("," , (system::explode("\n", data).at(0)))).at(1).c_str()), last );
 		else
 			LOG("Music read from last.fm failed. Check internet connection.", LOG::WARNING);
 		delete curl;

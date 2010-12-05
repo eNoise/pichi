@@ -96,7 +96,7 @@ void pichicore::setUserInfo(std::string jid, std::string nick, std::string state
 			// autokick
 				sql->query("SELECT COUNT(*) FROM users_data WHERE jid = '" + sql->escapeString(jid) + "' AND name = 'kick' AND groupid = '" + sql->escapeString(room) + "';");
 				if(system::atoi(sql->fetchColumn(0)) > 0)
-					jabber->kick(getName(getJID(jid, room), room), JID(room), "Auto-kick");
+					jabber->kick(getNickFromJID(jid, room), JID(room), "Auto-kick");
 			}
 		else if(state == "unavailable" && old_state == "available")
 		{
@@ -150,55 +150,60 @@ bool pichicore::isJID(const std::string& jid)
 	return (std::find(jid.begin(), jid.end(), '@') != jid.end());
 }
 
-
-std::string pichicore::getJID(const std::string& nick, std::string room, bool full_search, bool all_rooms, bool no_default_room)
+bool pichicore::isBareJID(const std::string& jid)
 {
-	LOG("Get JID from " + nick, LOG::VERBOSE);
-	if(isJID(nick))
-	{
-		std::vector< std::string > exp = system::explode("/", nick);
-		return exp[0];
-	}
-	
-	// Default room
-	if(!no_default_room && room == "")
-		room = getLastRoom();
-	
+	return ( isJID(jid) && (std::find(jid.begin(), jid.end(), '/') == jid.end()) );
+}
+
+
+std::string pichicore::getJIDpart(const std::string& jid, unsigned int part)
+{
+	std::vector< std::string > exp = system::explode("/", jid);
+	part--;
+	if(part < exp.size())
+		return exp[part];
+	return "";
+}
+
+std::string pichicore::getJIDfromNick(const std::string& nick, std::string room, bool all_rooms)
+{
+	LOG("[JID] From nick " + nick, LOG::VERBOSE);
 	sqlite::q* qu = sql->squery("SELECT `jid` FROM users WHERE nick = '" + sql->escapeString(nick) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + ";");
 	std::string jid = sql->fetchColumn(qu, 0);
 	delete qu;
-	
-	if(jid != "")
-	{
-		return jid;
-	}
-	else
-	{
-		if(full_search)
-		{
-			sqlite::q* qu = sql->squery("SELECT `jid` FROM users_nick WHERE nick = '" + sql->escapeString(nick) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + " ORDER BY `time` ASC;");
-			jid = sql->fetchColumn(qu, 0);
-			delete qu;
-			if(jid != "")
-				return jid;
-		}
-		return "";
-	}
+	return jid;
 }
+
+std::string pichicore::getJIDfromNicks(const std::string& nick, std::string room, bool all_rooms)
+{
+	LOG("[JID] From nick's " + nick, LOG::VERBOSE);
+	sqlite::q* qu = sql->squery("SELECT `jid` FROM users_nick WHERE nick = '" + sql->escapeString(nick) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + " ORDER BY `time` ASC;");
+	std::string jid = sql->fetchColumn(qu, 0);
+	delete qu;
+	return jid;
+}
+
 
 std::string pichicore::getArgJID(const std::string& arg)
 {
 	std::string jid;
-	jid = getJID(jid); // Ищет среди последней комнаты (или лички, если сообщение не в комнате)
+	if(isBareJID(arg))
+		return arg; // Обычный jid, все впорядке
+	if(!isBareJID(arg) && isJID(arg))
+		return getJIDpart(arg, 1); // длинный JID, получаем 1 часть
+	// Скорей всего ник
+	jid = getJIDfromNick(arg, last_room); // Ищет среди последней комнаты (или лички, если сообщение не в комнате)
 	if(jid != "")
 		return jid;
-	jid = getJID(jid, "", false, true); // Ищет среди всех комнат и личек
+	// Скорей всего из другой комнаты
+	jid = getJIDfromNick(arg, "", true); // Ищет среди всех комнат и личек
 	if(jid != "")
 		return jid;
-	jid = getJID(jid, "", true, true); // Ищет среди всех встречающихся ников, по всем комнатам или личкам
+	// значит среди старых ников
+	jid = getJIDfromNicks(arg, "", true); // Ищет среди всех встречающихся ников, по всем комнатам или личкам
 	if(jid != "")
 		return jid;
-	// Ну это уже вообще ппц тогда
+	// Ну это уже вообще ппц тогда... нету такого
 	return "";
 }
 
@@ -210,31 +215,27 @@ std::string pichicore::getDefaultRoom(void)
 	return (*first_room).first.bare();
 }
 
-std::string pichicore::getName(const std::string& jid, std::string room, bool all_rooms, bool no_default_room)
+std::string pichicore::getNickFromJID(const std::string& jid, std::string room, bool all_rooms)
 {
-	LOG("Get Nick from JID " + jid, LOG::VERBOSE);
-	if(!isJID(jid))
-		return jid;
-	
-	std::vector< std::string > exp = system::explode("/", jid);
-	if(exp.size() != 2)
-	{
-		if(!no_default_room && room == "")
-			room = getLastRoom(); // main room
-		sqlite::q* qu = sql->squery("SELECT `nick` FROM users WHERE jid = '" + sql->escapeString(jid) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + ";");
-		std::string rtn = sql->fetchColumn(qu, 0);
-		delete qu;
-		return rtn;
-	}
-	else
-	{
-		return exp[1];
-	}
+	LOG("[NICK] From JID " + jid, LOG::VERBOSE);
+	sqlite::q* qu = sql->squery("SELECT `nick` FROM users WHERE jid = '" + sql->escapeString(jid) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + ";");
+	std::string rtn = sql->fetchColumn(qu, 0);
+	delete qu;
+	return rtn;
+}
+
+std::string pichicore::getArgNick(const std::string& arg)
+{
+	if(!isJID(arg))
+		return arg;
+	if(isBareJID(arg))
+		return getNickFromJID(arg, last_room);
+	std::string barenick = getJIDpart(arg, 2);
+	return barenick;
 }
 
 
-
-bool pichicore::isAccess(int level, std::string jid, std::string room, bool room_hook)
+bool pichicore::isAccess(std::string jid, std::string room, int level)
 {
 	if(jid == "")
 		jid = last_jid;
@@ -242,21 +243,33 @@ bool pichicore::isAccess(int level, std::string jid, std::string room, bool room
 	if(jid == "")
 		return false;
 	
-	if(room == "" && !room_hook)
-		room = getLastRoom(); // main room
-	
-	jid = getJID(getName(jid, room), room); // current access
 	sqlite::q* qu = sql->squery("SELECT `level` FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
 	std::string tempresult = sql->fetchColumn(qu, 0);
 	delete qu;
+	
 	if(tempresult == "")
 		return false;
-	int dblevel = system::atoi(tempresult);
+	
+	int dblevel;
+	try
+	{
+		dblevel = system::atoi(tempresult);
+	}
+	catch(boost::bad_lexical_cast e)
+	{
+		return false;
+	}
 	
 	LOG("Test access to " + jid + ": " + tempresult + " >= " + system::itoa(level), LOG::VERBOSE);
 	
 	return (dblevel >= level);
 }
+
+bool pichicore::isAccess(int level)
+{
+	return isAccess(last_jid, last_room, level);
+}
+
 
 bool pichicore::reciveMessage(const std::string& message, const std::string& type, const std::string& from)
 {
@@ -277,22 +290,22 @@ bool pichicore::reciveMessage(const std::string& message, const std::string& typ
 	last_type = type;
 	
 	if(last_type == "groupchat")
-		last_room = getJID(last_from);
+		last_room = getJIDpart(last_from, 1);
 	else if(last_type == "chatgroup")
-		last_room = getJID(last_from);
+		last_room = getJIDpart(last_from, 1);
 	else
 		last_room = "";
 
 	
 	if(last_type == "groupchat")
-		last_jid = getJID(getName(last_from), last_room);
+		last_jid = getJIDfromNick(getJIDpart(last_from, 2), last_room);
 	else if(last_type == "chatgroup")
-		last_jid = getJID(getName(last_from), last_room);
+		last_jid = getJIDfromNick(getJIDpart(last_from, 2), last_room);
 	else
-		last_jid = getJID(last_from);
+		last_jid = getJIDfromNick(last_from, "");
 	
 		
-	if(!isAccess(1, last_jid, last_room, true))
+	if(!isAccess(last_jid, last_room, 1))
 	{
 		LOG("Acess denied at message reciver", LOG::DEBUG);
 		return false;
@@ -471,9 +484,11 @@ void pichicore::delJIDinfo(std::string jid, std::string name, std::string groupi
 
 void pichicore::ban(std::string jid, std::string time, std::string reason, std::string room)
 {
+	if(jid == "")
+		return;
 	if(room == "")
 		room = getLastRoom(); // main room
-	jabber->ban((jid = getJID(jid, room)), JID(room), reason);
+	jabber->ban(jid, JID(room), reason);
 	if(time != "")
 	{
 		time_t tm = convertTime(time);
@@ -485,9 +500,10 @@ void pichicore::ban(std::string jid, std::string time, std::string reason, std::
         
 void pichicore::unban(std::string jid, std::string reason, std::string room)
 {
+  	if(jid == "")
+		return;
 	if(room == "")
 		room = getLastRoom(); // main room
-	jid = getJID(jid, room);
 	jabber->unban(jid, JID(room), reason);
 	delJIDinfo(jid, "ban", room);
 	delJIDinfo(jid, "ban_reason", room);
@@ -496,9 +512,11 @@ void pichicore::unban(std::string jid, std::string reason, std::string room)
         
 void pichicore::kick(std::string jid, std::string time, std::string reason, std::string room)
 {
+  	if(jid == "")
+		return;
 	if(room == "")
 		room = getLastRoom(); // main room
-	jabber->kick(getName(jid = getJID(jid, room), room), JID(room), reason);
+	jabber->kick(getNickFromJID(jid, room), JID(room), reason);
 	if(time != "")
 	{
 		time_t tm = convertTime(time);
@@ -510,9 +528,10 @@ void pichicore::kick(std::string jid, std::string time, std::string reason, std:
         
 void pichicore::unkick(std::string jid, std::string room)
 {
+  	if(jid == "")
+		return;
 	if(room == "")
 		room = getLastRoom(); // main room
-	jid = getJID(jid, room);
 	delJIDinfo(jid, "kick", room);
 	delJIDinfo(jid, "kick_reason", room);
 	delJIDinfo(jid, "kick_room", room);

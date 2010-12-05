@@ -261,7 +261,7 @@ void core::handleMUCMessage (MUCRoom *thisroom, const Message &msg, bool priv )
 void core::handleMUCParticipantPresence (MUCRoom *thisroom, const MUCRoomParticipant  participant, const Presence &presence)
 {
 	
-	std::string jid;
+	std::string jid = "";
 	std::string nick;
 	std::string state;
 	std::string room;
@@ -270,21 +270,15 @@ void core::handleMUCParticipantPresence (MUCRoom *thisroom, const MUCRoomPartici
 	
 	if(participant.jid != NULL)
 	{
-		if(participant.jid->bare() != "")
-		{
-			jid = participant.jid->bare();
-		}
-		else
-		{
-			LOG("Can not recive JID from user (Check room settings, or pichi privilegy)", LOG::WARNING);
-			return;
-		}
+		jid = participant.jid->bare();
 	}
 	else if(presence.presence() == Presence::Unavailable)
 	{
-		jid = pichi->getJID(participant.nick->resource());
+		if(participant.nick->resource() != "" && participant.nick->bare() != "")
+			jid = pichi->getJIDfromNick(participant.nick->resource(), participant.nick->bare());
 	}
-	else
+
+	if(jid == "")
 	{
 		LOG("Can not recive JID from user (Check room settings, or pichi privilegy)", LOG::WARNING);
 		return; // what pichi must do ?

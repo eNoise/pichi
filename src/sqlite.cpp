@@ -97,7 +97,7 @@ bool sqlite::exec(const std::string& sql)
 		sqlite3_free(errtext);
 		return false;
 	}
-	
+	LOG("[SQLITE] " + sql, LOG::VERBOSE);
 	return true;
 }
 
