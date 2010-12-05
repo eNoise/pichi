@@ -185,10 +185,18 @@ std::string pichicore::getJID(const std::string& nick, std::string room, bool fu
 	}
 }
 
-std::string pichicore::getAllJID(const std::string& nick, bool full_search)
+std::string pichicore::getJIDAll(const std::string& nick, bool full_search)
 {
 	return getJID(nick, "", full_search, true);
 }
+
+std::string pichicore::getJIDRoomOnly(const std::string& nick, std::string room, bool full_search)
+{
+	if(room == "")
+		return getJIDAll(nick, full_search);
+	return getJID(nick, room, full_search);
+}
+
 
 std::string pichicore::getDefaultRoom(void)
 {
@@ -219,10 +227,18 @@ std::string pichicore::getName(const std::string& jid, std::string room, bool al
 	}
 }
 
-std::string pichicore::getAllName(const std::string& jid)
+std::string pichicore::getNameAll(const std::string& jid)
 {
 	return getName(jid, "", true);
 }
+
+std::string pichicore::getNameRoomOnly(const std::string& jid, std::string room)
+{
+	if(room == "")
+		return getNameAll(jid);
+	return getName(jid, room);
+}
+
 
 bool pichicore::isAccess(int level, std::string jid, std::string room, bool room_hook)
 {

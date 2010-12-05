@@ -74,8 +74,11 @@ class pichicore : public pichiconfig,
 		bool isJID(const std::string&);
 		std::string getJID(const std::string& nick, std::string room = "", bool full_search = false, bool all_rooms = false);
 		std::string getName(const std::string& jid, std::string room = "", bool all_rooms = false);
-		std::string getAllJID(const std::string& nick, bool full_search = false);
-		std::string getAllName(const std::string& jid);
+		std::string getJIDAll(const std::string& nick, bool full_search = false);
+		std::string getNameAll(const std::string& jid);
+		std::string getJIDRoomOnly(const std::string& nick, std::string room = "", bool full_search = false);
+		std::string getNameRoomOnly(const std::string& jid, std::string room = "");
+		
 		std::string getDefaultRoom(void);
 		bool isCommand(std::string& str);
 		bool isAccess(int level = 2, std::string jid = "", std::string room = "", bool room_hook = false);
