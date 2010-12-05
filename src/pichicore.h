@@ -85,7 +85,8 @@ class pichicore : public pichiconfig,
 		bool isAccess(std::string jid, std::string room, int level = 2);
 		bool isAccess(int level = 2);
 		bool setOption(std::string option, std::string value);
-		bool isOnline(std::string user, std::string room = "");
+		bool isOnline(std::string user, std::string room);
+		bool isOnline(std::string jid);
 		void ping(std::string jid);
 		void pingRecive(std::string id);
 		

@@ -428,7 +428,7 @@ bool pichicore::setOption(std::string option, std::string value)
 
 bool pichicore::isOnline(std::string user, std::string room)
 {
-	sql->query("SELECT `jid`,`nick` FROM users WHERE status = 'available'" + ((room != "") ? " AND room = '" + sql->escapeString(room) + "'" : "") + ";");
+	sql->query("SELECT `jid`,`nick` FROM users WHERE status = 'available' AND room = '" + sql->escapeString(room) + "';");
 	std::map<std::string, std::string> users;
 	while(!(users = sql->fetchArray()).empty())
 	{
@@ -436,6 +436,21 @@ bool pichicore::isOnline(std::string user, std::string room)
 			return true;
 	}
 	return false;
+}
+
+bool pichicore::isOnline(std::string jid)
+{
+	sql->query("SELECT COUNT(*) FROM users WHERE status = 'available' AND jid = '" + sql->escapeString(jid) + "';");
+	int count;
+	try
+	{
+		count = system::atoi(sql->fetchColumn(0));
+	}
+	catch(boost::bad_lexical_cast e)
+	{
+		return false;
+	}
+	return (count > 0);
 }
 
 void pichicore::ping(std::string jid)

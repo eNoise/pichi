@@ -26,6 +26,7 @@
 #include "system.h"
 #include "config.h"
 #include <fstream>
+#include <boost/algorithm/string/erase.hpp>
 
 namespace pichi
 {

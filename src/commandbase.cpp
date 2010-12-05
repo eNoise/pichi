@@ -387,7 +387,7 @@ void commandbase::command_log(std::string arg)
 		std::string log = "\n-----------------------------------------------------------------------\n";
 		BOOST_REVERSE_FOREACH(tp::value_type &ms, msgs)
 		{
-			    log += "[" + system::timeToString(system::atot(ms["time"]), "%H:%M:%S") + "]<" + pichi->getNickFromJID( pichi->getJIDpart(ms["from"], 2), pichi->getJIDpart(ms["from"], 1)) + "> " + ms["message"] + "\n";
+			    log += "[" + system::timeToString(system::atot(ms["time"]), "%H:%M:%S") + "]<" + pichi->getArgNick(ms["from"]) + "> " + ms["message"] + "\n";
 		}
 		log += "-----------------------------------------------------------------------";
 		pichi->sendAnswer(log); 
@@ -735,8 +735,9 @@ void commandbase::command_left(std::string arg)
 
 void commandbase::command_ping(std::string arg)
 {
-	if(pichi->isOnline(arg))
-		pichi->ping(pichi->getArgJID(arg));
+	std::string jid = pichi->getArgJID(arg);
+	if(pichi->isOnline(jid))
+		pichi->ping(jid);
 	else
 		pichi->sendAnswer(TR("command_ping_nouser"));
 }
