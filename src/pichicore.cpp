@@ -255,10 +255,7 @@ bool pichicore::isAccess(int level, std::string jid, std::string room, bool room
 	
 	LOG("Test access to " + jid + ": " + tempresult + " >= " + system::itoa(level), LOG::VERBOSE);
 	
-	if(dblevel >= level)
-		return true;
-	else
-		return false;
+	return (dblevel >= level);
 }
 
 bool pichicore::reciveMessage(const std::string& message, const std::string& type, const std::string& from)

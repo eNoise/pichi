@@ -533,8 +533,7 @@ void commandbase::command_talkers(std::string arg)
 	int i = 0;
 	while(!(fr = pichi->sql->fetchArray(qqr)).empty() && i < 10)
 	{
-		//TOFIX:
-		std::string from = pichi->getJID(pichi->getName(fr["from"]), "", true, true);
+		std::string from = pichi->getJID(pichi->getName(fr["from"]), "", true, true, true);
 		if(from == "")
 			continue;
 		if(tmp[from] == std::pair<std::string, size_t>())
