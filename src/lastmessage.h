@@ -32,7 +32,7 @@ class lastmessage
 	friend class commandhandler;
 	friend class pichicore;
 	public:
-		bool reciveMessage(std::string message, std::string type, std::string from, std::string jid = "", std::string room = "", int level = 2);
+		bool reciveMessage(const std::string& message, const std::string& type, const std::string& from);
 		std::string getLastRoom(void);
 		lastmessage(const lastmessage& lst);
 		lastmessage();

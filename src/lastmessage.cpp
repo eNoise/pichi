@@ -29,7 +29,7 @@ lastmessage::lastmessage()
 }
 
   
-bool lastmessage::reciveMessage(std::string message, std::string type, std::string from, std::string jid, std::string room, int level)
+bool lastmessage::reciveMessage(const std::string& message, const std::string& type, const std::string& from)
 {
 	return false;
 }

@@ -67,17 +67,14 @@ class pichicore : public pichiconfig,
 		bool isEnabled(void);
 		void setUserInfo(std::string, std::string, std::string, std::string, std::string, std::string);
 		void cleanUserInfo(void);
-		bool reciveMessage(std::string message, std::string type, std::string from, std::string jid = "", std::string room = "", int level = 2);
+		bool reciveMessage(const std::string& message, const std::string& type, const std::string& from);
 		void sendAnswer(const std::string& message);
 		void sendAnswer(const std::string& message, const lastmessage& msg);
 		
 		bool isJID(const std::string&);
-		std::string getJID(const std::string& nick, std::string room = "", bool full_search = false, bool all_rooms = false);
-		std::string getName(const std::string& jid, std::string room = "", bool all_rooms = false);
-		std::string getJIDAll(const std::string& nick, bool full_search = false);
-		std::string getNameAll(const std::string& jid);
-		std::string getJIDRoomOnly(const std::string& nick, std::string room = "", bool full_search = false);
-		std::string getNameRoomOnly(const std::string& jid, std::string room = "");
+		std::string getJID(const std::string& nick, std::string room = "", bool full_search = false, bool all_rooms = false, bool no_default_room = false);
+		std::string getName(const std::string& jid, std::string room = "", bool all_rooms = false, bool no_default_room = false);
+		std::string getArgJID(const std::string& arg);
 		
 		std::string getDefaultRoom(void);
 		bool isCommand(std::string& str);

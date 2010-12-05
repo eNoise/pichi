@@ -132,20 +132,28 @@ std::string sqlite::fetchColumn(const int num, bool stay)
 {
 	if(!stay)
 		mainquery.result_status = sqlite3_step(mainquery.statement);
+	char* column_data;
 	if(mainquery.result_status == SQLITE_ROW)
-		return static_cast<std::string>((char*)sqlite3_column_text(mainquery.statement, num));
+	{
+		column_data = (char*)sqlite3_column_text(mainquery.statement, num);
+		return ( (column_data != NULL) ? column_data : "" );
+	}
 	else
-		return std::string();
+		return "";
 }
 
 std::string sqlite::fetchColumn(sqlite::q* state, const int num, bool stay)
 {
 	if(!stay)
 		state->result_status = sqlite3_step(state->statement);
+	char* column_data;
 	if(state->result_status == SQLITE_ROW)
-		return static_cast<std::string>((char*)sqlite3_column_text(state->statement, num));
+	{
+		column_data = (char*)sqlite3_column_text(state->statement, num);
+		return ( (column_data != NULL) ? column_data : "" );
+	}
 	else
-		return std::string();
+		return "";
 }
 
   

@@ -533,7 +533,8 @@ void commandbase::command_talkers(std::string arg)
 	int i = 0;
 	while(!(fr = pichi->sql->fetchArray(qqr)).empty() && i < 10)
 	{
-		std::string from = pichi->getJID(pichi->getName(fr["from"]), "", true);
+		//TOFIX:
+		std::string from = pichi->getJID(pichi->getName(fr["from"]), "", true, true);
 		if(from == "")
 			continue;
 		if(tmp[from] == std::pair<std::string, size_t>())
@@ -620,7 +621,7 @@ void commandbase::command_msg(std::string arg)
 		return;
 	}
 	
-	pichi->jabber->sendMessage(JID(pichi->getJID(w[0])), w[1]);
+	pichi->jabber->sendMessage(JID(pichi->getArgJID(w[0])), w[1]);
 	//$this->log->log("Send message to $user: $message", PichiLog::LEVEL_DEBUG);
 }
 
@@ -736,7 +737,7 @@ void commandbase::command_left(std::string arg)
 void commandbase::command_ping(std::string arg)
 {
 	if(pichi->isOnline(arg))
-		pichi->ping(pichi->getJID(pichi->getName(arg)));
+		pichi->ping(pichi->getArgJID(arg));
 	else
 		pichi->sendAnswer(TR("command_ping_nouser"));
 }
@@ -751,7 +752,7 @@ void commandbase::command_topic(std::string arg)
 void commandbase::command_nicks(std::string arg)
 {
 	std::string ans;
-	pichi->sql->query("SELECT `nick` FROM users_nick WHERE `jid` = '" + pichi->sql->escapeString(pichi->getJID(pichi->getName(arg))) + "' GROUP BY `nick`;");
+	pichi->sql->query("SELECT `nick` FROM users_nick WHERE `jid` = '" + pichi->sql->escapeString(pichi->getArgJID(arg)) + "' GROUP BY `nick`;");
 	std::map<std::string, std::string> data;
 	while(!(data = pichi->sql->fetchArray()).empty())
 		ans += data["nick"] + "\n";

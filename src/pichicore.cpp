@@ -151,7 +151,7 @@ bool pichicore::isJID(const std::string& jid)
 }
 
 
-std::string pichicore::getJID(const std::string& nick, std::string room, bool full_search, bool all_rooms)
+std::string pichicore::getJID(const std::string& nick, std::string room, bool full_search, bool all_rooms, bool no_default_room)
 {
 	LOG("Get JID from " + nick, LOG::VERBOSE);
 	if(isJID(nick))
@@ -159,15 +159,16 @@ std::string pichicore::getJID(const std::string& nick, std::string room, bool fu
 		std::vector< std::string > exp = system::explode("/", nick);
 		return exp[0];
 	}
-		
-	if(room == std::string())
-		room = getLastRoom(); // main room
+	
+	// Default room
+	if(!no_default_room && room == "")
+		room = getLastRoom();
 	
 	sqlite::q* qu = sql->squery("SELECT `jid` FROM users WHERE nick = '" + sql->escapeString(nick) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + ";");
 	std::string jid = sql->fetchColumn(qu, 0);
 	delete qu;
 	
-	if(jid != std::string())
+	if(jid != "")
 	{
 		return jid;
 	}
@@ -178,23 +179,27 @@ std::string pichicore::getJID(const std::string& nick, std::string room, bool fu
 			sqlite::q* qu = sql->squery("SELECT `jid` FROM users_nick WHERE nick = '" + sql->escapeString(nick) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + " ORDER BY `time` ASC;");
 			jid = sql->fetchColumn(qu, 0);
 			delete qu;
-			if(jid != std::string())
+			if(jid != "")
 				return jid;
 		}
-		return std::string();
+		return "";
 	}
 }
 
-std::string pichicore::getJIDAll(const std::string& nick, bool full_search)
+std::string pichicore::getArgJID(const std::string& arg)
 {
-	return getJID(nick, "", full_search, true);
-}
-
-std::string pichicore::getJIDRoomOnly(const std::string& nick, std::string room, bool full_search)
-{
-	if(room == "")
-		return getJIDAll(nick, full_search);
-	return getJID(nick, room, full_search);
+	std::string jid;
+	jid = getJID(jid); // Ищет среди последней комнаты (или лички, если сообщение не в комнате)
+	if(jid != "")
+		return jid;
+	jid = getJID(jid, "", false, true); // Ищет среди всех комнат и личек
+	if(jid != "")
+		return jid;
+	jid = getJID(jid, "", true, true); // Ищет среди всех встречающихся ников, по всем комнатам или личкам
+	if(jid != "")
+		return jid;
+	// Ну это уже вообще ппц тогда
+	return "";
 }
 
 
@@ -205,7 +210,7 @@ std::string pichicore::getDefaultRoom(void)
 	return (*first_room).first.bare();
 }
 
-std::string pichicore::getName(const std::string& jid, std::string room, bool all_rooms)
+std::string pichicore::getName(const std::string& jid, std::string room, bool all_rooms, bool no_default_room)
 {
 	LOG("Get Nick from JID " + jid, LOG::VERBOSE);
 	if(!isJID(jid))
@@ -214,7 +219,7 @@ std::string pichicore::getName(const std::string& jid, std::string room, bool al
 	std::vector< std::string > exp = system::explode("/", jid);
 	if(exp.size() != 2)
 	{
-		if(room == std::string())
+		if(!no_default_room && room == "")
 			room = getLastRoom(); // main room
 		sqlite::q* qu = sql->squery("SELECT `nick` FROM users WHERE jid = '" + sql->escapeString(jid) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + ";");
 		std::string rtn = sql->fetchColumn(qu, 0);
@@ -227,17 +232,6 @@ std::string pichicore::getName(const std::string& jid, std::string room, bool al
 	}
 }
 
-std::string pichicore::getNameAll(const std::string& jid)
-{
-	return getName(jid, "", true);
-}
-
-std::string pichicore::getNameRoomOnly(const std::string& jid, std::string room)
-{
-	if(room == "")
-		return getNameAll(jid);
-	return getName(jid, room);
-}
 
 
 bool pichicore::isAccess(int level, std::string jid, std::string room, bool room_hook)
@@ -267,7 +261,7 @@ bool pichicore::isAccess(int level, std::string jid, std::string room, bool room
 		return false;
 }
 
-bool pichicore::reciveMessage(std::string message, std::string type, std::string from, std::string jid, std::string room, int level)
+bool pichicore::reciveMessage(const std::string& message, const std::string& type, const std::string& from)
 {
 	if(time(NULL) - jabber->times["wait"] < wait_time)
 	{
@@ -276,35 +270,34 @@ bool pichicore::reciveMessage(std::string message, std::string type, std::string
 	}
   
 	if(message == "" || from == "" || type == "")
+	{
+		LOG("Some off room values null ... ignore...", LOG::WARNING);
 		return false;
+	}
 	
 	last_message = message;
 	last_from = from;
 	last_type = type;
 	
-	if(room == "")
-		if(last_type == "groupchat")
-			last_room = getJID(last_from);
-		else if(last_type == "chatgroup")
-			last_room = getJID(last_from);
-		else
-			last_room = "";
+	if(last_type == "groupchat")
+		last_room = getJID(last_from);
+	else if(last_type == "chatgroup")
+		last_room = getJID(last_from);
 	else
-		last_room = room;
+		last_room = "";
+
 	
-	if(jid == "")
-		if(last_type == "groupchat")
-			last_jid = getJID(getName(last_from), last_room);
-		else if(last_type == "chatgroup")
-			last_jid = getJID(getName(last_from), last_room);
-		else
-			last_jid = getJID(last_from);
+	if(last_type == "groupchat")
+		last_jid = getJID(getName(last_from), last_room);
+	else if(last_type == "chatgroup")
+		last_jid = getJID(getName(last_from), last_room);
 	else
-		last_jid = jid;
+		last_jid = getJID(last_from);
+	
 		
 	if(!isAccess(1, last_jid, last_room, true))
 	{
-		LOG("Acess denied", LOG::DEBUG);
+		LOG("Acess denied at message reciver", LOG::DEBUG);
 		return false;
 	}
 	
