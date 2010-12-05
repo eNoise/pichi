@@ -96,7 +96,7 @@ void pichicore::setUserInfo(std::string jid, std::string nick, std::string state
 			// autokick
 				sql->query("SELECT COUNT(*) FROM users_data WHERE jid = '" + sql->escapeString(jid) + "' AND name = 'kick' AND groupid = '" + sql->escapeString(room) + "';");
 				if(system::atoi(sql->fetchColumn(0)) > 0)
-					jabber->kick(getNickFromJID(jid, room), JID(room), "Auto-kick");
+					jabber->kick(jid, JID(room), "Auto-kick");
 			}
 		else if(state == "unavailable" && old_state == "available")
 		{
@@ -302,7 +302,7 @@ bool pichicore::reciveMessage(const std::string& message, const std::string& typ
 	else if(last_type == "chatgroup")
 		last_jid = getJIDfromNick(getJIDpart(last_from, 2), last_room);
 	else
-		last_jid = getJIDfromNick(last_from, "");
+		last_jid = getJIDpart(last_from, 1);
 	
 		
 	if(!isAccess(last_jid, last_room, 1))
