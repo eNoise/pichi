@@ -369,43 +369,18 @@ void core::handleLog (LogLevel level, LogArea area, const std::string &message)
 
 void core::initDBStruct(void)
 {
+	
 	if(!system::fileExists(PICHI_CONFIG_DIR + pichi->getConfigOption("db_file")))
 	{
 		pichi->sql = new sqlite(system::getFullPath(PICHI_CONFIG_DIR) + pichi->getConfigOption("db_file"));
-		pichi->sql->exec("CREATE TABLE log (`from` TEXT, `time` TEXT, `type` TEXT, `message` TEXT);");
-		pichi->sql->exec("CREATE TABLE lexems (`lexeme` TEXT, `count` INT);");
-		pichi->sql->exec("CREATE TABLE wiki (`name` TEXT, `revision` INT, `value` TEXT);");
-		pichi->sql->exec("CREATE TABLE settings (`name` TEXT, `value` TEXT, `description` TEXT);");
-		pichi->sql->exec("CREATE TABLE users (`jid` TEXT, `nick` TEXT, `role` TEXT, `room` TEXT, `time` TEXT, `status` TEXT, `level` INT);");
-		pichi->sql->exec("CREATE TABLE users_data (`jid` TEXT, `name` TEXT, `value` TEXT, `groupid` TEXT);");
-		pichi->sql->exec("CREATE TABLE users_nick (`jid` TEXT, `nick` TEXT, `room` TEXT, `time` TEXT);");
-		pichi->sql->exec("CREATE TABLE stats (`name` TEXT, `value` TEXT);");
-		pichi->sql->exec("CREATE TABLE actions (`action` TEXT, `coincidence` TEXT, `do` TEXT, `option` TEXT, `value` TEXT);");
-		pichi->sql->exec("CREATE TABLE db_version (`version` TEXT, `value` TEXT);");
-  
-		pichi->sql->exec("INSERT INTO db_version (`version`) VALUES ('19');");
-		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_mode','1','" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_answer_mode"]) + "');"); // Отвечать после сообщений пользователей
-		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_random','0','" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_answer_random"]) + "');"); // отвечать не всегда (0 - всегда)
-		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_remember','1','" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_answer_remember"]) + "');"); // запоминать и разбивать на лексемы
-		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_word_limit','10','" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_answer_word_limit"]) + "');"); // limit для запросов в лексемах
-		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('log_enabled','1','" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_log_enabled"]) + "');"); // вести лог ?
-		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('treatment_coincidence','3','" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_treatment_coincidence"]) + "');"); // вставлять обращение, совпадения (3 из 1)
-		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('rand_message','0','" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_rand_message"]) + "');"); // случайны ответ когда скучно
-		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('msg_limit','500','" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_msg_limit"]) + "');"); // лимит символов, после чего отправляет ответ в личку
-		pichi->sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('msg_max_limit','0','" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_msg_max_limit"]) + "');"); // вверхний предел
+		PichiDbPather patch(pichi->sql, pichi->lang);
+		patch.initDbStruct();
 	}
 	else
 	{
 		pichi->sql = new sqlite(system::getFullPath(PICHI_CONFIG_DIR) + pichi->getConfigOption("db_file"));
-		pichi->sql->exec("UPDATE settings SET description = '" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_answer_mode"]) + "' WHERE name = 'answer_mode';");
-		pichi->sql->exec("UPDATE settings SET description = '" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_answer_random"]) + "' WHERE name = 'answer_random';");
-		pichi->sql->exec("UPDATE settings SET description = '" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_answer_remember"]) + "' WHERE name = 'answer_remember';");
-		pichi->sql->exec("UPDATE settings SET description = '" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_answer_word_limit"]) + "' WHERE name = 'answer_word_limit';");
-		pichi->sql->exec("UPDATE settings SET description = '" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_log_enabled"]) + "' WHERE name = 'log_enabled';");
-		pichi->sql->exec("UPDATE settings SET description = '" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_treatment_coincidence"]) + "' WHERE name = 'treatment_coincidence';");
-		pichi->sql->exec("UPDATE settings SET description = '" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_rand_message"]) + "' WHERE name = 'rand_message';");
-		pichi->sql->exec("UPDATE settings SET description = '" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_msg_limit"]) + "' WHERE name = 'msg_limit';");
-		pichi->sql->exec("UPDATE settings SET description = '" + pichi->sql->escapeString((*pichi->lang)["db_configdesc_msg_max_limit"]) + "' WHERE name = 'msg_max_limit';");
+		PichiDbPather patch(pichi->sql, pichi->lang);
+		patch.checkDbStruct();
 	}
 }
 

@@ -66,6 +66,7 @@ set(PICHI_CPP 	src/pichiexception.cpp
 		src/system.cpp
 		src/core.cpp
 		src/sqlite.cpp
+		src/pichidbpatcher.cpp
 		src/pichicore.cpp
 		src/pichi.cpp
 )

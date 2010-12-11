@@ -48,6 +48,7 @@
 #include "system.h"
 #include "log.h"
 #include "config.h"
+#include "pichidbpatcher.h"
 
 namespace pichi
 {
