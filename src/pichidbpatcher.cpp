@@ -84,6 +84,9 @@ void PichiDbPather::patch(void )
 			upVersion(20);
 		}
 	}
+	
+	if(getDbVersion() != PICHI_DB_VERSION_ACTUAL)
+		throw PichiException("Pichi Database version discrepancy. Try to patch it manually");
 }
 
 void PichiDbPather::upVersion(int v)

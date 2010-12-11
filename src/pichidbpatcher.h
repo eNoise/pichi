@@ -24,6 +24,7 @@
 #include "sqlite.h"
 #include "languages.h"
 #include "log.h"
+#include "pichiexception.h"
 
 #define PICHI_DB_VERSION_ACTUAL 19
 
