@@ -34,23 +34,23 @@ LOG::LOG(std::string lst, LOG::LogType type)
 	{
 	  case ERROR:
 		if(LEVEL > 0)
-			logthis += "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][ERROR] " + lst + "\n";
+			logthis += ((file_log) ? "[" + system::timeToString(time(NULL), "%d.%m.%y") + "]" : "") + "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][ERROR] " + lst + "\n";
 		break;
 	  case WARNING:
 		if(LEVEL > 1)
-			logthis += "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][WARNING] " + lst + "\n";
+			logthis += ((file_log) ? "[" + system::timeToString(time(NULL), "%d.%m.%y") + "]" : "") + "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][WARNING] " + lst + "\n";
 		break;
 	  case INFO:
 		if(LEVEL > 2)
-			logthis += "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][INFO] " + lst + "\n";
+			logthis += ((file_log) ? "[" + system::timeToString(time(NULL), "%d.%m.%y") + "]" : "") + "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][INFO] " + lst + "\n";
 		break;
 	  case DEBUG:
 		if(LEVEL > 3)
-			logthis += "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][DEBUG] " + lst + "\n";
+			logthis += ((file_log) ? "[" + system::timeToString(time(NULL), "%d.%m.%y") + "]" : "") + "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][DEBUG] " + lst + "\n";
 		break;
 	  case VERBOSE:
 		if(LEVEL > 4)
-			logthis += "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][VERBOSE] " + lst + "\n";
+			logthis += ((file_log) ? "[" + system::timeToString(time(NULL), "%d.%m.%y") + "]" : "") + "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][VERBOSE] " + lst + "\n";
 		break;
 	}
 	if(file_log)
