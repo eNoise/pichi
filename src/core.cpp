@@ -395,6 +395,11 @@ gloox::JID& core::getMyJID(void )
 	return jid;
 }
 
+std::string core::getMyNick(void )
+{
+	return nick;
+}
+
 void *core::cron(void *context)
 {
 	while(true)

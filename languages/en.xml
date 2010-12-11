@@ -20,6 +20,7 @@
 		<option name="updated" type="string">Updated</option>
 
 		<option name="db_configdesc_answer_mode" type="string"><![CDATA[Mode of replying to messages. [0 - disabled; 1 - enabled][Default: 1]]]></option>
+		<option name="db_configdesc_answer_only_nick" type="string"><![CDATA[Respond only when a user mentions nickname. [0 - disabled; 1 - enabled][Default: 0]]]></option>
 		<option name="db_configdesc_answer_random" type="string"><![CDATA[Do not always answer when receiving a message. [0 - always respond; >100 virtually always silent][Default: 0]]]></option>
 		<option name="db_configdesc_answer_remember" type="string"><![CDATA[To break down connective words. [0 - disabled; 1 - enabled][Default: 1]]]></option>
 		<option name="db_configdesc_answer_word_limit" type="string"><![CDATA[The maximum number of tangles of words in the review. Affects to the algorithm for constructing sentences, as well as the load. [Recomended values >3 and <50][Default: 10]]]></option>

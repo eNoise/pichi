@@ -76,6 +76,7 @@ void PichiDbPather::patch(void )
 	// Begin patch
 	switch(getDbVersion())
 	{
+		// Ниже 19 версии не патчит
 		case 19:
 		{
 			LOG("Update Db 19->20 version",LOG::WARNING);

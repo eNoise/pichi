@@ -93,6 +93,7 @@ class core : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		void enterRoom(JID room);
 		void leftRoom(JID room);
 		JID& getMyJID(void);
+		std::string getMyNick(void);
 		void kick(const std::string &nick, JID room, std::string message = "");
 		void ban(const std::string &nick, JID room, std::string message = "");
 		void unban(const std::string &nick, JID room, std::string message = "");

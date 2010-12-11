@@ -353,7 +353,11 @@ bool pichicore::reciveMessage(const std::string& message, const std::string& typ
 				$this->sendAnswer($this->syntax->returnText());
 			}
 		    */
-		    sendAnswer(lex->genFullRandom());
+		  if( options["answer_only_nick"] == "0" || 
+		    (options["answer_only_nick"] == "1" && last_message.find(jabber->getMyNick()) != std::string::npos) )
+		  {
+			 sendAnswer(lex->genFullRandom());
+		  }
 		}
 	}
 		

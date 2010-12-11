@@ -20,6 +20,7 @@
 		<option name="updated" type="string">Обновлено</option>
 		
 		<option name="db_configdesc_answer_mode" type="string"><![CDATA[Режим ответа на сообщения. [0 - выключить; 1 - включить][По умолчанию: 1]]]></option>
+		<option name="db_configdesc_answer_only_nick" type="string"><![CDATA[Отвечать только когда пользователь упоминает ник. [0 - выключить; 1 - включить][По умолчанию: 0]]]></option>
 		<option name="db_configdesc_answer_random" type="string"><![CDATA[Не всегда ответь при получении сообщения. [0 - всегда отвечать; >100 фактически всегда молчать][По умолчанию: 0]]]></option>
 		<option name="db_configdesc_answer_remember" type="string"><![CDATA[Разбивать на связки слов. [0 - выключить; 1 - включить][По умолчанию: 1]]]></option>
 		<option name="db_configdesc_answer_word_limit" type="string"><![CDATA[Максимальное количество связок слов в рассмотрении. Влияет на алгоритм построения фраз, так же как и на нагрузку. [Рекомендуется >3 и <50][По умолчанию: 10]]]></option>
