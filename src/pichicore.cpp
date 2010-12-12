@@ -332,6 +332,7 @@ bool pichicore::reciveMessage(const std::string& message, const std::string& typ
 	
 	if(enabled && !isCommand(last_message) && options["answer_mode"] == "1")
 	{
+		std::string answer;
 		if(options["answer_random"] == "0" || (1 + rand() % system::atoi(options["answer_random"])) == 1)
 		{
 		  /*
@@ -353,11 +354,14 @@ bool pichicore::reciveMessage(const std::string& message, const std::string& typ
 				$this->sendAnswer($this->syntax->returnText());
 			}
 		    */
-		  if( options["answer_only_nick"] == "0" || 
-		    (options["answer_only_nick"] == "1" && last_message.find(jabber->getMyNick()) != std::string::npos) )
-		  {
-			 sendAnswer(lex->genFullRandom());
-		  }
+			if( options["answer_only_nick"] == "0" ||
+			  last_type != "groupchat" || // в личках отвечает всегда
+			  (options["answer_only_nick"] == "1" && last_message.substr(0,jabber->getMyNick().size()) == jabber->getMyNick()) )
+			{
+				answer = (last_type == "groupchat" && options["answer_only_nick"] == "1") ? getArgNick(last_from) + ": " : "";
+				answer += lex->genFullRandom();
+				sendAnswer(answer);
+			}
 		}
 	}
 		
