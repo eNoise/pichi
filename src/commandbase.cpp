@@ -248,7 +248,8 @@ void commandbase::command_version(std::string null)
 		+ "\n" + TR("command_version_environment") + "\n" +
 		+ "SQLite version: " + SQLITE_VERSION + "\n" +
 		+ "CURL version: " + curl_version() + "\n" +
-		+ "Boost version: " + BOOST_LIB_VERSION
+		+ "Boost version: " + BOOST_LIB_VERSION + "\n" +
+		+ "Pichi DB version: " + system::itoa(PICHI_DB_VERSION_ACTUAL)
 	);
 	//($hook = PichiPlugin::fetch_hook("commands_show_version")) ? eval($hook) : false;
 	//pichi->sendAnswer(""+TR("command_version_plugins")+":\n" + PichiPlugin::show_plugin_list());

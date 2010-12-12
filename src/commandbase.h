@@ -27,6 +27,7 @@
 #include <algorithm>
 #include "pichicurl.h"
 #include "config.h"
+#include "pichidbpatcher.h"
 
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/algorithm/string/erase.hpp>
