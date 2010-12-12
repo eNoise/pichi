@@ -53,17 +53,16 @@ void lexemes::parseText(std::string text)
 	user_text = text;
 }
 
-void lexemes::addLexema(std::string lex)
+void lexemes::addLexema(const std::string& lex)
 {
 	if(lex == "")
 		return;
-      
-	(*sql)->query("SELECT COUNT(*) FROM lexems WHERE lexeme = '" + (*sql)->escapeString(lex) + "';");
-	if(system::atoi((*sql)->fetchColumn(0)) > 0)
-		(*sql)->exec("UPDATE lexems SET count = count+1  WHERE lexeme = '" + (*sql)->escapeString(lex) + "';");
-	else
-		(*sql)->exec("INSERT INTO lexems (`lexeme`,`count`) VALUES ('" + (*sql)->escapeString(lex) + "','1');");
-	//$this->log->log("$str writed to lexems", PichiLog::LEVEL_VERBOSE);
+
+	std::string sql_query;
+	sql_query = "INSERT OR IGNORE INTO lexems (`lexeme`) VALUES('" + (*sql)->escapeString(lex) + "');\n";
+	sql_query += "UPDATE lexems SET count = count+1 WHERE lexeme = '" + (*sql)->escapeString(lex) + "';";
+	(*sql)->exec(sql_query);
+	
 }
 
 void lexemes::buildArray(void )

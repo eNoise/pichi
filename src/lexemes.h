@@ -41,7 +41,7 @@ class lexemes
 	size_t message_size_limit;
 	size_t query_limit;
 	void parseText(std::string text);
-	void addLexema(std::string lex);
+	void addLexema(const std::string& lex);
 	
 	std::string genFullRandom();
 	std::string genFromWord(std::string word);
