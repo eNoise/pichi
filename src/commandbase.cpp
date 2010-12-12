@@ -523,39 +523,15 @@ void commandbase::command_top(std::string arg)
 
 void commandbase::command_talkers(std::string arg)
 {  
-	sqlite::q* qqr = pichi->sql->squery("SELECT `from`, COUNT(*) AS `counter` FROM log GROUP BY `from` ORDER BY `counter` DESC;");
+	sqlite::q* qqr = pichi->sql->squery("SELECT `jid`, COUNT(*) AS `counter` FROM log WHERE room != '' GROUP BY `jid` ORDER BY `counter` DESC LIMIT 0,10;");
 	pichi->sendAnswer(TR("command_talkers"));
 	std::string ans;
 	std::map<std::string, std::string> fr;
-	typedef std::map< std::string, std::pair<std::string, size_t> > p_t;
-	typedef std::map< size_t, std::pair<std::string, size_t> > p_t2;
-	p_t tmp;
-	int i = 0;
-	while(!(fr = pichi->sql->fetchArray(qqr)).empty() && i < 10)
-	{
-		std::string from = pichi->getJIDfromNicks(pichi->getJIDpart(fr["from"], 2), pichi->getJIDpart(fr["from"], 1));
-		if(from == "")
-			continue;
-		if(tmp[from] == std::pair<std::string, size_t>())
-		{
-			tmp[from].second = 0;
-			i++;
-		}
-		tmp[from].first = from;
-		tmp[from].second += system::atot(fr["counter"]);
-	}
-	i = 0;
-	
-	qqr->finalize();
+	int i=0;
+	while(!(fr = pichi->sql->fetchArray(qqr)).empty())
+		ans += TR4("command_talkers_list", system::itoa(++i).c_str(), pichi->getArgNick(fr["jid"]).c_str(), fr["counter"].c_str()) + "\n";
 	delete qqr;
-	p_t2 tmp2;
-	for(p_t::iterator it = tmp.begin(); it != tmp.end(); it++)
-		tmp2[it->second.second] = it->second;
-	
-	 BOOST_REVERSE_FOREACH(p_t2::value_type &p, tmp2)
-	 {
-		ans += TR4("command_talkers_list", system::itoa(++i).c_str(), pichi->getNickFromJID(p.second.first, "", true).c_str(), system::ttoa(p.second.second).c_str()) + "\n";
-	 }
+
 	pichi->sendAnswer(ans);
 }
 
