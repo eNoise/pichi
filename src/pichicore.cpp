@@ -315,7 +315,7 @@ bool pichicore::reciveMessage(const std::string& message, const std::string& typ
 	//$this->log->log("Call message method", PichiLog::LEVEL_DEBUG);
 	
 	if(enabled && !isCommand(last_message) && options["log_enabled"] == "1")
-		sql->exec("INSERT INTO log (`from`,`time`,`type`,`message`) VALUES ('" + sql->escapeString(last_from) + "','" + sql->escapeString(system::stringTime(time(NULL))) + "','" + sql->escapeString(last_type) + "','" + sql->escapeString(last_message) + "');");
+		sql->exec("INSERT INTO log (`jid`,`room`,`from`,`time`,`type`,`message`) VALUES ('" + sql->escapeString(last_jid) + "','" + sql->escapeString(last_room) + "','" + sql->escapeString(last_from) + "','" + sql->escapeString(system::stringTime(time(NULL))) + "','" + sql->escapeString(last_type) + "','" + sql->escapeString(last_message) + "');");
 	
 	//ME breaker
 	if(last_jid == jabber->getMyJID().bare())

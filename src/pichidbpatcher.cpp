@@ -47,14 +47,14 @@ void PichiDbPather::checkDbStruct(void )
 
 void PichiDbPather::initDbStruct(void )
 {
-	sql->exec("CREATE TABLE log (`from` TEXT, `time` TEXT, `type` TEXT, `message` TEXT);");
-	sql->exec("CREATE TABLE lexems (`lexeme` TEXT, `count` INT);");
-	sql->exec("CREATE TABLE wiki (`name` TEXT, `revision` INT, `value` TEXT);");
-	sql->exec("CREATE TABLE settings (`name` TEXT, `value` TEXT, `description` TEXT);");
-	sql->exec("CREATE TABLE users (`jid` TEXT, `nick` TEXT, `role` TEXT, `room` TEXT, `time` TEXT, `status` TEXT, `level` INT);");
+	sql->exec("CREATE TABLE log (`jid` TEXT, `room` TEXT, `from` TEXT, `time` TEXT, `type` TEXT, `message` TEXT);");
+	sql->exec("CREATE TABLE lexems (`lexeme` TEXT UNIQUE, `count` INT NOT NULL DEFAULT '0');");
+	sql->exec("CREATE TABLE wiki (`name` TEXT UNIQUE, `revision` INT NOT NULL DEFAULT '0', `value` TEXT);");
+	sql->exec("CREATE TABLE settings (`name` TEXT UNIQUE, `value` TEXT, `description` TEXT);");
+	sql->exec("CREATE TABLE users (`jid` TEXT, `nick` TEXT, `role` TEXT, `room` TEXT, `time` TEXT, `status` TEXT, `level` INT NOT NULL DEFAULT '1');");
 	sql->exec("CREATE TABLE users_data (`jid` TEXT, `name` TEXT, `value` TEXT, `groupid` TEXT);");
 	sql->exec("CREATE TABLE users_nick (`jid` TEXT, `nick` TEXT, `room` TEXT, `time` TEXT);");
-	sql->exec("CREATE TABLE stats (`name` TEXT, `value` TEXT);");
+	sql->exec("CREATE TABLE stats (`name` TEXT UNIQUE, `value` TEXT);");
 	sql->exec("CREATE TABLE actions (`action` TEXT, `coincidence` TEXT, `do` TEXT, `option` TEXT, `value` TEXT);");
 	sql->exec("CREATE TABLE db_version (`version` TEXT, `value` TEXT);");
   
@@ -76,13 +76,7 @@ void PichiDbPather::patch(void )
 	// Begin patch
 	switch(getDbVersion())
 	{
-		// Ниже 19 версии не патчит
-		case 19:
-		{
-			LOG("Update Db 19->20 version",LOG::WARNING);
-			sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('answer_only_nick','0','" + sql->escapeString((*lang)["db_configdesc_answer_only_nick"]) + "');"); // отвечать только при нике в чате
-			upVersion(20);
-		}
+		// Ниже 21 версии не патчит
 	}
 	
 	if(getDbVersion() != PICHI_DB_VERSION_ACTUAL)
