@@ -153,8 +153,8 @@ void commandbase::command_help(std::string arg)
 	help["users"] = "!users [" + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + "|" + TR("help_command_usage_number") + "] - " + TR("help_command_description_users") + "\n";		
 	help["msg"] = "!msg " + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + "|" + TR("help_command_usage_room") + " " + TR("help_command_usage_message") + " - " + TR("help_command_description_msg") + "\n";
 	help["ping"] = "!ping " + TR("help_command_usage_nick") + "|" + TR("help_command_usage_jid") + " - " + TR("help_command_description_ping") + "\n";
-	help["join"] = "!join " + TR("help_command_usage_room") + " " + TR("help_command_usage_nick") + " [" + TR("help_command_usage_status") + "] - " + TR("help_command_description_join") + "\n";
-	help["left"] = "!left " + TR("help_command_usage_room") + " " + TR("help_command_usage_nick") + " [" + TR("help_command_usage_status") + "] - " + TR("help_command_description_left") + "\n";
+	help["join"] = "!join " + TR("help_command_usage_room") + " " + TR("help_command_usage_nick") + " - " + TR("help_command_description_join") + "\n";
+	help["left"] = "!left " + TR("help_command_usage_room") + " - " + TR("help_command_description_left") + "\n";
 	help["greet"] = "!greet " + TR("help_command_usage_jid") + " " + TR("help_command_usage_room") + " " + TR("help_command_usage_message") + " - " + TR("help_command_description_greet") + "\n";
 	help["farewell"] = "!farewell " + TR("help_command_usage_jid") + " " + TR("help_command_usage_room") + " " + TR("help_command_usage_message") + " - " + TR("help_command_description_farewell") + "\n";
 	help["idle"] = "!idle " + TR("help_command_usage_nick") + " - " + TR("help_command_description_idle") + "\n";
