@@ -700,7 +700,13 @@ void commandbase::command_join(std::string arg)
 {
 	if(!pichi->isAccess())
 		return;
-	pichi->jabber->enterRoom(JID(arg));
+	std::vector< std::string > w = seperate(arg, 2);
+	if(w[0] == "" || !pichi->isJID(w[0]))
+	{
+		pichi->sendAnswer(TR("bad_argument"));
+		return;
+	}
+	pichi->jabber->enterRoom(JID( w[0] + "/" + ((w[1] != "") ? w[1] : pichi->jabber->getMyNick()) ))->join();
 }
 
 void commandbase::command_left(std::string arg)

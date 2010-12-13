@@ -216,21 +216,24 @@ void core::kick(const std::string& nick, JID room, std::string message)
 	}
 }
 
-
-void core::enterRoom(JID room)
+// С ником
+MUCRoom* core::enterRoom(JID room)
 {
 	MUCRoom* newroom = new MUCRoom(client, room, this, NULL);
-	rooms.push_back(std::pair<JID, MUCRoom*>(room,newroom));
+	rooms.push_back(std::pair<JID, MUCRoom*>(room.bare(), newroom));
+	return newroom;
 }
 
 void core::leftRoom(JID room)
 {
 	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
 	{
-		if(it->first.bareJID() == room || it->first == room)
+		if(it->first == room || it->first == room.bare())
 		{
 			it->second->leave();
 			delete (it->second);
+			rooms.erase(it);
+			break;
 		}
 	}
 }

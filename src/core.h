@@ -90,7 +90,7 @@ class core : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		std::map< std::string, time_t > times;
 		
 		void sendMessage(JID jid, const std::string& message);
-		void enterRoom(JID room);
+		MUCRoom* enterRoom(JID room);
 		void leftRoom(JID room);
 		JID& getMyJID(void);
 		std::string getMyNick(void);
