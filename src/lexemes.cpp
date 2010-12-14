@@ -31,9 +31,14 @@ lexemes::lexemes(sqlite** s) : sql(s)
 	is_answer_limit = false;
 }
 
+void lexemes::setNick(const std::string& nick)
+{
+	my_nick = nick;
+}
+
 void lexemes::parseText(std::string text)
 {
-	//$this->testText($string); //режим все лишнее со строки
+	cleanString(text);
 	//$this->log->log("$string to lexems", PichiLog::LEVEL_DEBUG);
 	if(message_size_limit > 0 && text.size() > message_size_limit)
 		return;
@@ -190,6 +195,16 @@ std::string lexemes::genFromWord(std::string word)
 		return answer;
 	//else
 	//	return $this->randFromLog(); //возращать тоже самое нехорошо, вернем что-нибудь из лога
+}
+
+void lexemes::cleanString(std::string& string)
+{
+	// Очищаем от лишних пробелов
+	while(string.find("  ") != std::string::npos)
+		boost::replace_all(string, "  ", " ");
+	// убираем обращения
+	if(boost::regex_match(my_nick, boost::regex("^[\\w]+$")))
+		string = boost::regex_replace(string, boost::regex("^" + my_nick + "(,|:)\\s"), "");
 }
 
 }

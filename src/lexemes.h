@@ -28,6 +28,8 @@
 #include <time.h>
 #include <stdio.h>
 #include <limits.h>
+#include <boost/algorithm/string/replace.hpp>
+#include <boost/regex.hpp>
 
 namespace pichi
 {
@@ -45,6 +47,7 @@ class lexemes
 	
 	std::string genFullRandom();
 	std::string genFromWord(std::string word);
+	void setNick(const std::string& nick);
   protected:
 	sqlite **sql;
 	std::string user_text;
@@ -53,11 +56,12 @@ class lexemes
 	void buildArray(void);
 	std::string choiseWord(void);
 	void clean(void);
-	
+	void cleanString(std::string& string);
 
   private:
 	std::vector< std::pair< int, std::string > > answers;
 	std::string sqlquery;
+	std::string my_nick;
 };
 
 }

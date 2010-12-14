@@ -108,6 +108,7 @@ core::core(int argc, char** argv)
   
 	name = pichi->getConfigOption("user");
 	nick = pichi->getConfigOption("room_user");
+	pichi->lex->setNick(nick);
 	password = pichi->getConfigOption("password");
 	server = pichi->getConfigOption("server");
 	jid = name + "@" + server;
