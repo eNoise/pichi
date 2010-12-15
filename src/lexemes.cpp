@@ -31,9 +31,10 @@ lexemes::lexemes(sqlite** s) : sql(s)
 	is_answer_limit = false;
 }
 
-void lexemes::setNick(const std::string& nick)
+void lexemes::addNick(const std::string& nick)
 {
-	my_nick = nick;
+	nicks.push_back(nick);
+	nicks.unique();
 }
 
 void lexemes::parseText(std::string text)
@@ -203,8 +204,13 @@ void lexemes::cleanString(std::string& string)
 	while(string.find("  ") != std::string::npos)
 		boost::replace_all(string, "  ", " ");
 	// убираем обращения
-	if(boost::regex_match(my_nick, boost::regex("^[\\w]+$")))
-		string = boost::regex_replace(string, boost::regex("^" + my_nick + "(,|:)\\s"), "");
+	//if(boost::regex_match(my_nick, boost::regex("^[\\w]+$")))
+	//	string = boost::regex_replace(string, boost::regex("^" + my_nick + "(,|:)\\s"), "");
+	BOOST_FOREACH(std::string &n, nicks)
+	{
+		if( string.substr(0, n.size()) == n && (string.substr(n.size(), 2) == ", " || string.substr(n.size(), 2) == ": ") )
+			string = string.substr(n.size()+2);
+	}
 }
 
 }

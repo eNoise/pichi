@@ -137,6 +137,9 @@ void pichicore::setUserInfo(std::string jid, std::string nick, std::string state
 		sql->query("SELECT COUNT(*) FROM users_nick WHERE jid = '" + sql->escapeString(jid) + "' AND nick = '" + sql->escapeString(nick) + "' AND room = '" + sql->escapeString(room) + "';");
 		if(system::atoi(sql->fetchColumn(0)) == 0)
 			sql->exec("INSERT INTO users_nick (`jid`,`nick`,`room`,`time`) VALUES ('" + sql->escapeString(jid) + "','" + sql->escapeString(nick) + "','" + sql->escapeString(room) + "','" + system::stringTime(time(NULL)) + "');");
+		
+		// push to lexems nicks
+		lex->addNick(nick);
 	}
 }
 

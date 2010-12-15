@@ -24,6 +24,7 @@
 #include "sqlite.h"
 #include <string>
 #include <vector>
+#include <list>
 #include "system.h"
 #include <time.h>
 #include <stdio.h>
@@ -47,7 +48,7 @@ class lexemes
 	
 	std::string genFullRandom();
 	std::string genFromWord(std::string word);
-	void setNick(const std::string& nick);
+	void addNick(const std::string& nick);
   protected:
 	sqlite **sql;
 	std::string user_text;
@@ -61,7 +62,7 @@ class lexemes
   private:
 	std::vector< std::pair< int, std::string > > answers;
 	std::string sqlquery;
-	std::string my_nick;
+	std::list<std::string> nicks;
 };
 
 }

@@ -108,7 +108,6 @@ core::core(int argc, char** argv)
   
 	name = pichi->getConfigOption("user");
 	nick = pichi->getConfigOption("room_user");
-	pichi->lex->setNick(nick);
 	password = pichi->getConfigOption("password");
 	server = pichi->getConfigOption("server");
 	jid = name + "@" + server;
@@ -250,14 +249,12 @@ void core::onConnect()
 
 void core::handleMessage( const Message& msg, MessageSession* session = 0 )
 {
-	std::cout << "[" << system::timeToString(time(NULL), "%H:%M:%S") << "]" << " <" << msg.from().full() << "> " << msg.body() << std::endl;
 	pichi->cronDo("message");
 	pichi->reciveMessage(msg.body(), "chat", msg.from().full());
 }
 
 void core::handleMUCMessage (MUCRoom *thisroom, const Message &msg, bool priv )
 {
-	std::cout << "[" << system::timeToString(time(NULL), "%H:%M:%S") << "]" << " <" << msg.from().resource() << "> " << msg.body() << std::endl;
 	pichi->cronDo("muc_message");
 	pichi->reciveMessage(msg.body(), ((priv) ? "chatgroup" : "groupchat"), msg.from().full());
 }
