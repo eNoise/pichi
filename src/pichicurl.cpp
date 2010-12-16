@@ -32,11 +32,14 @@ pichicurl::pichicurl()
 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);  
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, pichicurl::writer);  
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
+	
+	postargs = new std::string();
 }
 
 pichicurl::~pichicurl()
 {
 	curl_easy_cleanup(curl);
+	delete postargs;
 }
 
 int pichicurl::writer(char* data, size_t size, size_t nmemb, std::string* buf)
@@ -81,8 +84,9 @@ void pichicurl::setAuth(const std::string& user, const std::string& pass)
 
 void pichicurl::setPostArgs(const std::string& args)
 {
+	*postargs = args;
 	curl_easy_setopt(curl, CURLOPT_POST, 1);  
-	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, args.c_str()); 
+	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postargs->data()); 
 }
 
 const std::string pichicurl::urlencode(const std::string& u) const

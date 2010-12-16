@@ -41,6 +41,7 @@ class pichicurl
     const std::string urlencode(const std::string& u) const;
     const std::string urldecode(const std::string& u) const;
   private:
+	std::string* postargs;
 	char errorBuffer[CURL_ERROR_SIZE];
 	std::string buffer;
 	CURL *curl;  
