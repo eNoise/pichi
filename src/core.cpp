@@ -59,6 +59,8 @@ void core::botstart(void)
 		client = new Client( jid, password, system::atoi(pichi->getConfigOption("port")) );
 	else
 		client = new Client( jid, password );
+	// set my info
+	client->disco()->setVersion("Pichi Bot", PICHI_VERSION);
 	client->setResource(pichi->getConfigOption("resource"));
 	client->logInstance().registerLogHandler(LogLevelDebug, LogAreaAll, this);
 	client->registerConnectionListener( this );
