@@ -114,6 +114,9 @@
 		<option name="command_version_plugins" type="string">Список плагинов</option>
 		<option name="command_version_environment" type="string">Программное обеспечение</option>
 		<option name="command_plugins_no_sorry" type="string">Извините, система плагинов временно отключена.</option>
+		<option name="command_kick_add" type="string">{1} добавлен в список выгнаных пользователей.</option>
+		<option name="command_ban_add" type="string">{1} добавлен в список заблокированных пользователей.</option>
+		<option name="command_kick_or_ban_del" type="string">Пользователь {1} разблокирован.</option>
 		<option name="command_banlist_lock" type="string">Список "забаненных"</option>
 		<option name="command_kicklist_lock" type="string">Список "закиканых"</option>
 		<option name="command_wiki_count" type="string">Количество определений в базе вики</option>
@@ -129,6 +132,7 @@
 		<option name="command_dfn" type="string">Определение обновлено.</option>
 		<option name="command_set" type="string">Значение опции установлено.</option>
 		<option name="command_set_nosuch" type="string">Нет такой опции.</option>
+		<option name="command_msg_sended" type="string">Сообщение отправлено</option>
 		<option name="command_users_list_seen" type="string">Пользователи, которых я видел:</option>
 		<option name="command_users_online_seen" type="string">{1}. {2} в комнате {3}</option>
 		<option name="command_users_offline_seen" type="string">{1}. {2} (Последний раз был в {3} в комнате {4})</option>
@@ -136,16 +140,22 @@
 		<option name="command_users_offline" type="string">Отсутствующие пользователи</option>
 		<option name="command_users_limitshow" type="string">Показано {1} пользователей из {2}</option>
 		<option name="command_users_nouser" type="string">Пользователь {1} не найден</option>
+		<option name="command_join" type="string">Пичи зашел в комнату {1} под ником {2}</option>
+		<option name="command_left" type="string">Пичи вышел из комнаты {1}</option>
 		<option name="command_status" type="string">Пользователь {1} сейчас {2}</option>
 		<option name="command_status_online" type="string">на связи</option>
 		<option name="command_status_offline" type="string">отсутствует</option>
 		<option name="command_ping_nouser" type="string">Нет такого пользователя</option>
+		<option name="command_topic_changed" type="string">Тема изменена</option>
 		<option name="command_nicks" type="string">Ники пользователя:</option>
 		<option name="command_lastfm_listen" type="string">{1} слушает: {2}</option>
 		<option name="command_lastfm_setuser" type="string">Вы привязаны к аккаунту {1}.</option>
+		<option name="command_translate_language" type="string">Языки перевода установленны для вашего аккаунта</option>
 		<option name="command_urlshort_incorrect_service" type="string">Сервис недоступен, либо некорректный url.</option>
 		<option name="command_uptime_start" type="string">Время старта бота: {1}</option>
 		<option name="command_uptime_uptime" type="string">Бот работает на протяжении: {1}</option>
 		<option name="command_ping_pong" type="string">Понг в {1}мс</option>
+		<option name="command_off" type="string">Пичи отключен.</option>
+		<option name="command_on" type="string">Пичи включен.</option>
         </language>
 </PichiLanguage>

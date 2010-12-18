@@ -299,7 +299,9 @@ void commandbase::command_kick(std::string arg)
 		pichi->sendAnswer(TR("bad_argument"));
 		return;
 	}
-	pichi->kick(pichi->getArgJID(w[0]), w[1], w[2]);
+	std::string jid;
+	pichi->kick((jid = pichi->getArgJID(w[0]) ), w[1], w[2]);
+	pichi->sendAnswer(TR2("command_kick_add", jid.c_str()));
 }
 
 void commandbase::command_unkick(std::string arg)
@@ -307,7 +309,9 @@ void commandbase::command_unkick(std::string arg)
 	if(!pichi->isAccess())
 		return;
 	
-	pichi->unkick(pichi->getArgJID(arg));
+	std::string jid;
+	pichi->unkick((jid = pichi->getArgJID(arg)));
+	pichi->sendAnswer(TR2("command_kick_or_ban_del", jid.c_str()));
 }
 
 void commandbase::command_ban(std::string arg)
@@ -321,7 +325,9 @@ void commandbase::command_ban(std::string arg)
 		pichi->sendAnswer(TR("bad_argument"));
 		return;
 	}
-	pichi->ban(pichi->getArgJID(w[0]), w[1], w[2]);
+	std::string jid;
+	pichi->ban((jid = pichi->getArgJID(w[0]) ), w[1], w[2]);
+	pichi->sendAnswer(TR2("command_ban_add", jid.c_str()));
 }
 
 void commandbase::command_unban(std::string arg)
@@ -335,7 +341,9 @@ void commandbase::command_unban(std::string arg)
 		pichi->sendAnswer(TR("bad_argument"));
 		return;
 	}
-	pichi->unban(pichi->getArgJID(w[0]), w[1]);
+	std::string jid;
+	pichi->unban((jid = pichi->getArgJID(w[0])), w[1]);
+	pichi->sendAnswer(TR2("command_kick_or_ban_del", jid.c_str()));
 }
 
 void commandbase::command_banlist(std::string arg)
@@ -599,6 +607,7 @@ void commandbase::command_msg(std::string arg)
 	
 	pichi->jabber->sendMessage(JID(pichi->getArgJID(w[0])), w[1]);
 	//$this->log->log("Send message to $user: $message", PichiLog::LEVEL_DEBUG);
+	pichi->sendAnswer(TR("command_msg_sended"));
 }
 
 
@@ -707,6 +716,7 @@ void commandbase::command_join(std::string arg)
 		return;
 	}
 	pichi->jabber->enterRoom(JID( w[0] + "/" + ((w[1] != "") ? w[1] : pichi->jabber->getMyNick()) ))->join();
+	pichi->sendAnswer(TR3("command_join", w[0].c_str(), ((w[1] != "") ? w[1] : pichi->jabber->getMyNick()).c_str()));
 }
 
 void commandbase::command_left(std::string arg)
@@ -714,6 +724,7 @@ void commandbase::command_left(std::string arg)
 	if(!pichi->isAccess())
 		return;
 	pichi->jabber->leftRoom(JID(arg));
+	pichi->sendAnswer(TR2("command_left", arg.c_str()));
 }
 
 void commandbase::command_ping(std::string arg)
@@ -730,6 +741,7 @@ void commandbase::command_topic(std::string arg)
 	for(std::list< std::pair<JID, MUCRoom*> >::iterator it = pichi->jabber->rooms.begin(); it != pichi->jabber->rooms.end(); it++)
 		if(it->first == JID(pichi->getLastRoom()))
 			it->second->setSubject(arg);
+	pichi->sendAnswer(TR("command_topic_changed"));
 }
 
 void commandbase::command_nicks(std::string arg)
@@ -816,6 +828,7 @@ void commandbase::command_on(std::string arg)
 	if(!pichi->isAccess(3))
 		return;
 	pichi->on();
+	pichi->sendAnswer(TR("command_on"));
 }
 	
 void commandbase::command_off(std::string arg)
@@ -823,6 +836,7 @@ void commandbase::command_off(std::string arg)
 	if(!pichi->isAccess(3))
 		return;
 	pichi->off();
+	pichi->sendAnswer(TR("command_off"));
 }
 
 // ---------------------------------------------------------------
@@ -955,6 +969,7 @@ void commandbase::command_translate_language(std::string arg)
 	std::string jid = pichi->getJIDlast();
 	pichi->setJIDinfo(jid, "translate_from", w[0]);
 	pichi->setJIDinfo(jid, "translate_to", w[1]);
+	pichi->sendAnswer(TR("command_translate_language"));
 }
 
 void commandbase::command_google(std::string arg)

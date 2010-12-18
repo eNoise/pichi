@@ -114,6 +114,9 @@ parameter1|parameter2 - parameter1 OR parameter2 (one of)
 		<option name="command_version_plugins" type="string">List of plug-ins</option>
 		<option name="command_version_environment" type="string">System environment</option>
 		<option name="command_plugins_no_sorry" type="string">Sorry, the plugin system temporarily disabled.</option>
+		<option name="command_kick_add" type="string">{1} added to kicklist.</option>
+		<option name="command_ban_add" type="string">{1} added to banlist.</option>
+		<option name="command_kick_or_ban_del" type="string">User {1} unblocked.</option>
 		<option name="command_banlist_lock" type="string">Banlist</option>
 		<option name="command_kicklist_lock" type="string">Kicklist</option>
 		<option name="command_wiki_count" type="string">Ddefinitions' count in the database.</option>
@@ -129,6 +132,7 @@ parameter1|parameter2 - parameter1 OR parameter2 (one of)
 		<option name="command_dfn" type="string">Definition updated.</option>
 		<option name="command_set" type="string">Option value is set.</option>
 		<option name="command_set_nosuch" type="string">No such option.</option>
+		<option name="command_msg_sended" type="string">Message sended</option>
 		<option name="command_users_list_seen" type="string">Users, which I have seen:</option>
 		<option name="command_users_online_seen" type="string">{1}. {2} in the room {3}</option>
 		<option name="command_users_offline_seen" type="string">{1}. {2} (The last time was at {3} in room {4})</option>
@@ -136,16 +140,22 @@ parameter1|parameter2 - parameter1 OR parameter2 (one of)
 		<option name="command_users_offline" type="string">Users offline</option>
 		<option name="command_users_limitshow" type="string">Display {1} user(s) from {2}</option>
 		<option name="command_users_nouser" type="string">User {1} doesn't exist</option>
+		<option name="command_join" type="string">Pichi joined to {1} with nick {2}</option>
+		<option name="command_left" type="string">Pichi left {1} room</option>
 		<option name="command_status" type="string">User {1} now {2}</option>
 		<option name="command_status_online" type="string">online</option>
 		<option name="command_status_offline" type="string">offline</option>
 		<option name="command_ping_nouser" type="string">No such user.</option>
+		<option name="command_topic_changed" type="string">Topic changed.</option>
 		<option name="command_nicks" type="string">User nicks:</option>
 		<option name="command_lastfm_listen" type="string">{1} is listening: {2}</option>
 		<option name="command_lastfm_setuser" type="string">You are tied to {1} account.</option>
+		<option name="command_translate_language" type="string">Translations assigned to your account</option>
 		<option name="command_urlshort_incorrect_service" type="string">Service unavailable or invalid url.</option>
 		<option name="command_uptime_start" type="string">Start time of the bot: {1}</option>
 		<option name="command_uptime_uptime" type="string">Bot is runing over: {1}</option>
 		<option name="command_ping_pong" type="string">Pong {1}ms</option>
+		<option name="command_off" type="string">Pichi disabled.</option>
+		<option name="command_on" type="string">Pichi enabled.</option>
         </language>
 </PichiLanguage>
