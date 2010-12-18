@@ -288,6 +288,8 @@ bool pichicore::reciveMessage(const std::string& message, const std::string& typ
 		return false;
 	}
 	
+	bool ignore_this = false;
+	
 	last_message = message;
 	last_from = from;
 	last_type = type;
@@ -307,7 +309,17 @@ bool pichicore::reciveMessage(const std::string& message, const std::string& typ
 	else
 		last_jid = getJIDpart(last_from, 1);
 	
-		
+	// Защита от спама
+	double micronow = system::microtime();
+	if(usermsg_times[last_jid] <= 0 || usermsg_times[last_jid] > micronow) // 2 бред ))
+		usermsg_times[last_jid] = 0; // если пустой контейнер
+	if(micronow - usermsg_times[last_jid] < 0.25) // константа выяснена методом тяжелых проб и ошибок))
+	{
+		LOG("It's may be spam. Ignoring this...", LOG::VERBOSE);
+		ignore_this = true;
+	}
+	usermsg_times[last_jid] = micronow;
+	
 	if(!isAccess(last_jid, last_room, 1))
 	{
 		LOG("Acess denied at message reciver", LOG::DEBUG);
@@ -319,6 +331,10 @@ bool pichicore::reciveMessage(const std::string& message, const std::string& typ
 	
 	if(enabled && !isCommand(last_message) && options["log_enabled"] == "1")
 		sql->exec("INSERT INTO log (`jid`,`room`,`from`,`time`,`type`,`message`) VALUES ('" + sql->escapeString(last_jid) + "','" + sql->escapeString(last_room) + "','" + sql->escapeString(last_from) + "','" + sql->escapeString(system::stringTime(time(NULL))) + "','" + sql->escapeString(last_type) + "','" + sql->escapeString(last_message) + "');");
+	
+	// В лог записали, остальное считает как спам
+	if(ignore_this)
+		return false;
 	
 	//ME breaker
 	if(last_jid == jabber->getMyJID().bare())
@@ -369,6 +385,9 @@ bool pichicore::reciveMessage(const std::string& message, const std::string& typ
 	}
 		
 	//($hook = PichiPlugin::fetch_hook('commands_message_recive_complete')) ? eval($hook) : false;
+	
+	// Дошло до конца, записываем более актуальное время
+	usermsg_times[last_jid] = micronow;
 	
 	return true;
 }

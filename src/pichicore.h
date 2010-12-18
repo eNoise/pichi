@@ -54,6 +54,7 @@ class pichicore : public pichiconfig,
 		PichiEvent *event;
 		
 		time_t wait_time;
+		std::map< std::string, double > usermsg_times;
 		std::map<std::string, std::string> reciver;
 		//boost::timer timer;
 		
