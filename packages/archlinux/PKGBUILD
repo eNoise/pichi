@@ -1,6 +1,6 @@
 # Maintainer: Amparo Dios <amparo.dios@gmail.com>
 pkgname=pichi
-pkgver=0.6.0
+pkgver=0.6.1
 pkgrel=1
 pkgdesc="Pichi is a jabber(xmpp) bot written in C++. It is based on the sulci abilities."
 arch=(i686 x86_64)

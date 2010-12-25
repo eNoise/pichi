@@ -1,3 +1,7 @@
+===== 0.6.1 =====
+* Win32 compilation fixes
+* Fedora pakage fixes
+
 ===== 0.6.0 =====
 * Initial changelog
 * 0.6.x branch first release

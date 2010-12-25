@@ -93,12 +93,13 @@ void core::botstart(void)
 
 core::core(int argc, char** argv)
 {
+#ifndef WIN32
 	char pathbuf[1024];
 	if(getcwd(pathbuf, 1024) == NULL)
 		throw PichiException("Start dir not founded");
 	RUN_DIR = pathbuf;
+	
 	// First start checks (create dir on linux)
-#ifndef WIN32
 	if(!system::fileExists(PICHI_CONFIG_DIR))
 		firstStart();
 #endif
