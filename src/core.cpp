@@ -34,7 +34,15 @@ void core::firstStart(void )
 	
 	mkdir(dir.c_str(), 0775);
 	
-	std::ifstream ifs("/usr/share/pichi/config/pichi.xml", std::ios::binary);
+	std::string conf_file;
+	if(system::fileExists("/usr/share/pichi/config/pichi.xml"))
+		conf_file = "/usr/share/pichi/config/pichi.xml";
+	else if(RUN_DIR.substr(RUN_DIR.size()-4) == "/bin" && system::fileExists(RUN_DIR.substr(0, RUN_DIR.size()-3) + "share/pichi/config/pichi.xml"))
+		conf_file = RUN_DIR.substr(0, RUN_DIR.size()-3) + "share/pichi/config/pichi.xml";
+	else
+		throw PichiException("Error: no config file founded... delete ~/.pichi and start bot again");
+	
+	std::ifstream ifs(conf_file.c_str(), std::ios::binary);
 	std::ofstream ofs((dir + "pichi.xml").c_str(), std::ios::binary);
 	ofs << ifs.rdbuf();
 	
@@ -85,6 +93,10 @@ void core::botstart(void)
 
 core::core(int argc, char** argv)
 {
+	char pathbuf[1024];
+	if(getcwd(pathbuf, 1024) == NULL)
+		throw PichiException("Start dir not founded");
+	RUN_DIR = pathbuf;
 	// First start checks (create dir on linux)
 #ifndef WIN32
 	if(!system::fileExists(PICHI_CONFIG_DIR))
