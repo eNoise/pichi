@@ -6,14 +6,14 @@ Pichi is a jabber(xmpp) bot written in C++. It is based on the sulci abilities.
 Build requirements
 ------------------
 
-* cmake(http://www.cmake.org/)
+* cmake (http://www.cmake.org/)
 * gcc-c++ / gcc-g++ / mingw-gcc-g++
 * boost, boost-regex, boost-program_options(http://www.boost.org/)
-* libsqlite3(http://www.sqlite.org/)
+* libsqlite3 (http://www.sqlite.org/)
 * pthread
-* tinyxml(http://www.grinninglizard.com/tinyxml/) (optional)
-* gloox(http://camaya.net/gloox/) (optional)
-* libcurl(http://curl.haxx.se/)
+* tinyxml (http://www.grinninglizard.com/tinyxml/) (optional)
+* gloox (http://camaya.net/gloox/) (optional)
+* libcurl (http://curl.haxx.se/)
 
 Building (Linux)
 ----------------
