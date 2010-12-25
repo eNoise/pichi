@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <PichiLanguage>
         <language>
-                <option name="error_cant_load_extension" type="string">Не могу загрузить расширение {1}</option>
+                <option name="error_cant_load_extension" type="string">Невозможно загрузить расширение {1}</option>
                 <option name="error_config_old" type="string">Не могу загрузить расширение {1}</option>
                 <option name="error_config_old_version" type="string">Ваша версия конфига {1}. Необходима {2}.</option>
                 <option name="info_start_connecting" type="string">Попытка соединиться с сервером</option>
-                <option name="error_connect_failed" type="string">Соединение не удалось. Выход с ошибкой: {1}</option>
+                <option name="error_connect_failed" type="string">Установить соединение не удалось. Выход с ошибкой: {1}</option>
                 <option name="info_connect_success" type="string">Соединено успешно.</option>
                 <option name="info_no_database" type="string">База данных не существует.</option>
                 <option name="info_database_exists" type="string">База данных существует.</option>
@@ -14,20 +14,20 @@
                 <option name="info_timer_sync" type="string">Синхронизация таймера</option>
                 <option name="info_session_begin" type="string">Начало сессии</option>
                 <option name="info_send_random_message" type="string">Отправка случайного сообщения</option>
-                <option name="warn_cant_recive_jid" type="string">Не удается узнать JID участника. Это может происходить из-за неправильных настроек комнаты. Работа бота в таком режиме не гарантируется.</option>
-                <option name="message_to_private_chat" type="string">Сообщение слишком длинное, ответ будет отправлен в личку.</option>
+                <option name="warn_cant_recive_jid" type="string">Не удается получить JID участника. Это может происходить из-за неправильных настроек комнаты. Работа бота в таком режиме не гарантируется.</option>
+                <option name="message_to_private_chat" type="string">Сообщение слишком длинное, ответ будет отправлен в приват.</option>
 		<option name="bad_argument" type="string">Плохой аргумент</option>
 		<option name="updated" type="string">Обновлено</option>
 		
 		<option name="db_configdesc_answer_mode" type="string"><![CDATA[Режим ответа на сообщения. [0 - выключить; 1 - включить][По умолчанию: 1]]]></option>
 		<option name="db_configdesc_answer_only_nick" type="string"><![CDATA[Отвечать только когда пользователь упоминает ник. [0 - выключить; 1 - включить][По умолчанию: 0]]]></option>
-		<option name="db_configdesc_answer_random" type="string"><![CDATA[Не всегда ответь при получении сообщения. [0 - всегда отвечать; >100 фактически всегда молчать][По умолчанию: 0]]]></option>
+		<option name="db_configdesc_answer_random" type="string"><![CDATA[Не всегда отвечать при получении сообщения. [0 - всегда отвечать; >100 почти всегда молчать][По умолчанию: 0]]]></option>
 		<option name="db_configdesc_answer_remember" type="string"><![CDATA[Разбивать на связки слов. [0 - выключить; 1 - включить][По умолчанию: 1]]]></option>
 		<option name="db_configdesc_answer_word_limit" type="string"><![CDATA[Максимальное количество связок слов в рассмотрении. Влияет на алгоритм построения фраз, так же как и на нагрузку. [Рекомендуется >3 и <50][По умолчанию: 10]]]></option>
 		<option name="db_configdesc_log_enabled" type="string"><![CDATA[Вести лог? [0 - выключить; 1 - включить][По умолчанию: 1]]]></option>
-		<option name="db_configdesc_treatment_coincidence" type="string"><![CDATA[Вероятность вставки обращений. [1 - всегда; >100 фактически никогда][По умолчанию: 3]]]></option>
+		<option name="db_configdesc_treatment_coincidence" type="string"><![CDATA[Вероятность вставки обращений. [1 - всегда; >100 почти никогда][По умолчанию: 3]]]></option>
 		<option name="db_configdesc_rand_message" type="string"><![CDATA[Переодически отправлять случайные фразы в главный чат. [0 - выключить; 1 - включить][По умолчанию: 0]]]></option>
-		<option name="db_configdesc_msg_limit" type="string"><![CDATA[Максимальное количество символов, допустимое в главном чате (в противном случае пишет в личку) [По умолчанию: 500]]]></option>
+		<option name="db_configdesc_msg_limit" type="string"><![CDATA[Максимальное количество символов, допустимое в конференции (в противном случае пишет в личку) [По умолчанию: 500]]]></option>
 		<option name="db_configdesc_msg_max_limit" type="string"><![CDATA[Верхний предел для сообщения, после которого сообщение разобьет на несколько [По умолчанию: 0]]]></option>
 		
                 <option name="help_syntaxis_info" type="string">Основы управления:
@@ -77,12 +77,12 @@
 		<option name="help_command_description_on" type="string">Включает бота</option>
 		<option name="help_command_description_off" type="string">Отключает бота</option>
 		<option name="help_command_description_q" type="string">Попросить бота сказать фразу с заданным словом</option>
-		<option name="help_command_description_urlshort" type="string">Показать укороченную ссылку через сервис ul.ly</option>
+		<option name="help_command_description_urlshort" type="string">Показать укороченную ссылку через сервис url.ly</option>
 		<option name="help_command_description_lastfm_user" type="string">Связывает вас с Last.fm аккаунтом</option>
-		<option name="help_command_description_lastfm" type="string">Отображает последние прослушанные композиции для вашего аккаунта</option>
-		<option name="help_command_description_translate" type="string">Перевести указанный текст при помощи сервиса Google Translate. (Необходимо чтобы был выставлен язык перевода, см !translate_language)</option>
+		<option name="help_command_description_lastfm" type="string">Отображает последнюю прослушаннкю композицию для вашего аккаунта</option>
+		<option name="help_command_description_translate" type="string">Перевести указанный текст при помощи сервиса Google Translate. (Необходимо чтобы был установлен язык перевода, см !translate_language)</option>
 		<option name="help_command_description_tr" type="string">Быстрый перевод текста. Вторым параметром является укороченный вариант с_какого_языка2в_какой_язык. Например: "!tr en2ru this" переведет слово this с английского на русский.</option>
-		<option name="help_command_description_translate_language" type="string">Устанавливает язык перевода для вашего аккаунта. Первый параметр - с какого. Второй - в какой. Например "!translate_language en ru" установит язык перевода с английского на русский. После уставновки этого параметра можно использовать комманду !translate</option>
+		<option name="help_command_description_translate_language" type="string">Устанавливает язык перевода для вашего аккаунта. Первый параметр - с какого. Второй - на какой. Например "!translate_language en ru" установит язык перевода с английского на русский. После установки этого параметра можно использовать комманду !translate</option>
 		<option name="help_command_description_google" type="string">Поиск указанного текста в поисковой системе Google.</option>
 		
 		<option name="help_command_usage_param" type="string">параметр</option>
@@ -110,7 +110,7 @@
 		<option name="help_other_commands" type="string">Другие команды</option>
 		<option name="help_lexems" type="string">Разговорник</option>
 		
-		<option name="command_help_nosuchcommand" type="string">Нету такой комнады</option>
+		<option name="command_help_nosuchcommand" type="string">Нет такой комнады</option>
 		<option name="command_version_plugins" type="string">Список плагинов</option>
 		<option name="command_version_environment" type="string">Программное обеспечение</option>
 		<option name="command_plugins_no_sorry" type="string">Извините, система плагинов временно отключена.</option>
@@ -118,9 +118,9 @@
 		<option name="command_ban_add" type="string">{1} добавлен в список заблокированных пользователей.</option>
 		<option name="command_kick_or_ban_del" type="string">Пользователь {1} разблокирован.</option>
 		<option name="command_banlist_lock" type="string">Список "забаненных"</option>
-		<option name="command_kicklist_lock" type="string">Список "закиканых"</option>
+		<option name="command_kicklist_lock" type="string">Кик-список</option>
 		<option name="command_wiki_count" type="string">Количество определений в базе вики</option>
-		<option name="command_wiki_nodef" type="string">В базе вики нету этого определения</option>
+		<option name="command_wiki_nodef" type="string">В базе вики нет такого определения</option>
 		<option name="command_wiki_revision" type="string">Ревизия</option>
 		<option name="command_wiki_revision_set" type="string">Установлена ревизия {1}.</option>
 		<option name="command_top10" type="string">Топ 10 самых популярных связок слов</option>
@@ -149,7 +149,7 @@
 		<option name="command_topic_changed" type="string">Тема изменена</option>
 		<option name="command_nicks" type="string">Ники пользователя:</option>
 		<option name="command_lastfm_listen" type="string">{1} слушает: {2}</option>
-		<option name="command_lastfm_setuser" type="string">Вы привязаны к аккаунту {1}.</option>
+		<option name="command_lastfm_setuser" type="string">Lasft.fm аккаунт установлен ({1}).</option>
 		<option name="command_translate_language" type="string">Языки перевода установленны для вашего аккаунта</option>
 		<option name="command_urlshort_incorrect_service" type="string">Сервис недоступен, либо некорректный url.</option>
 		<option name="command_uptime_start" type="string">Время старта бота: {1}</option>
