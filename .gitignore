@@ -1,1 +1,4 @@
 *~
+build/
+win32build/
+*.exe

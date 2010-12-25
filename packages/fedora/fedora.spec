@@ -51,7 +51,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc README.md TODO ChangeLog.txt ChangeLog_ru.txt
+%doc README.md COPYING TODO ChangeLog.txt ChangeLog_ru.txt
 %{_bindir}/pichi
 %{_datadir}/pichi/languages/*.xml
 %{_datadir}/pichi/config/pichi.xml
