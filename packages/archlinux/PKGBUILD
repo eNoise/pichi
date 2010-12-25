@@ -1,6 +1,6 @@
 # Maintainer: Amparo Dios <amparo.dios@gmail.com>
 pkgname=pichi
-pkgver=0.6.0.beta7
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="Pichi is a jabber(xmpp) bot written in C++. It is based on the sulci abilities."
 arch=(i686 x86_64)
@@ -22,6 +22,3 @@ package() {
   cd "$srcdir/$pkgname-$pkgver"
   make DESTDIR="$pkgdir/" install
 }
-
-# vim:set ts=2 sw=2 et:
-
