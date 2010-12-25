@@ -30,6 +30,8 @@ const std::string languages::findLangDir(void )
 		return (system::getFullPath(PICHI_CONFIG_DIR) + "languages/");
 	else if(system::fileExists("/usr/share/pichi/languages/"))
 		return "/usr/share/pichi/languages/";
+	else if(RUN_DIR.substr(RUN_DIR.size() - 4) == "/bin" && system::fileExists(RUN_DIR.substr(0, RUN_DIR.size() - 3) + "share/pichi/languages/"))
+		return (RUN_DIR.substr(0, RUN_DIR.size() - 3) + "share/pichi/languages/");
 	else
 		throw PichiException("No language directory's founded...");
 #else
