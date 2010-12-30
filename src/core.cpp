@@ -50,7 +50,14 @@ void core::firstStart(void )
 	throw PichiException("Check ~/.pichi/pichi.xml config. Then start pichi again.");
 #endif
 }
-  
+
+void* core::startbot(void* context)
+{
+	((core *)context)->client->connect();
+	pthread_exit(context);
+	return context;
+}
+
 void core::botstart(void)
 {
 #ifdef WIN32
@@ -81,17 +88,21 @@ void core::botstart(void)
 	times["white_ping"] = times["start"] = time(NULL);
 	if(pthread_create(&thread, NULL, &core::cron, (void*)this) > 0)
 		throw PichiException("Error in cron thread");
-	client->connect();
+	if(pthread_create(&bot_thread, NULL, &core::startbot, (void*)this) > 0)
+		throw PichiException("Error startbot thread");
+#ifndef WIN32
+	pthread_join(bot_thread, NULL);
 	if(!was_connected)
 		LOG("Pichi didn't connect to the xmpp server. Check connection settings.", LOG::WARNING);
-#ifdef WIN32
-	SetConsoleOutputCP(oldcodepage);
-	::system("pause");
-#endif
 	LOG("Stop Pichi", LOG::INFO);
+#endif
 }
 
+#ifdef WIN32
+core::core()
+#else
 core::core(int argc, char** argv)
+#endif
 {
 #ifndef WIN32
 	char pathbuf[1024];
@@ -102,7 +113,7 @@ core::core(int argc, char** argv)
 	// First start checks (create dir on linux)
 	if(!system::fileExists(PICHI_CONFIG_DIR))
 		firstStart();
-#endif
+
 	// Parse args
 	if(!parseArgs(argc, argv))
 	{
@@ -112,7 +123,7 @@ core::core(int argc, char** argv)
 		pichi = NULL;
 		return;
 	}
-		
+#endif
 	// Init pichi
 	was_connected = false; // true if connect was successful
 	pichi = new pichicore();
@@ -169,14 +180,18 @@ bool core::parseArgs(int argc, char** argv)
 	} 
 	catch (const std::exception& e)
 	{
+#ifndef WIN32
 		/* Неправильные аргументы */
 		std::cout << "Command line error: " << e.what() << std::endl;
+#endif
 		return false;
 	}
 	
 	if ( coptions.count("help") )
 	{
+#ifndef WIN32
 		std::cout << description << std::endl;
+#endif
 		return false;
 	}
 	

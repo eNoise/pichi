@@ -68,8 +68,13 @@ set(PICHI_CPP 	src/pichiexception.cpp
 		src/sqlite.cpp
 		src/pichidbpatcher.cpp
 		src/pichicore.cpp
-		src/pichi.cpp
 )
+
+if(WIN32)
+  set(PICHI_CPP ${PICHI_CPP} src/winmain.cpp)
+else(WIN32)
+  set(PICHI_CPP ${PICHI_CPP} src/pichi.cpp)
+endif(WIN32)
 
 set(LINK_LIBS	pthread
 		${GLOOX_LIBRARIES}

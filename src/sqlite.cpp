@@ -93,7 +93,9 @@ bool sqlite::exec(const std::string& sql)
   
 	if (sqlite3_exec(db, sql.c_str(), NULL, NULL, &errtext) != SQLITE_OK)
 	{
+#ifndef WIN32
 		std::cout << static_cast<std::string>("SQL exec error: ") + errtext << std::endl;
+#endif
 		sqlite3_free(errtext);
 		return false;
 	}

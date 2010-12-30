@@ -61,8 +61,10 @@ LOG::LOG(std::string lst, LOG::LogType type)
 	}
 	else
 	{
+#ifndef WIN32
 		boost::erase_all(logthis, "\n");
 		std::cout << logthis << std::endl;
+#endif
 	}
 }
 

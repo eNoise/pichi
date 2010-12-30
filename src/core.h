@@ -35,7 +35,6 @@
 #include <gloox/subscription.h>
 #include <gloox/rostermanager.h>
 
-#include <iostream>
 #include <list>
 #include <time.h>
 #include <pthread.h>
@@ -74,13 +73,19 @@ class core : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		pichicore* pichi;
 	  
 		pthread_t thread;
+		pthread_t bot_thread;
 		void botstart(void);
 		void initDBStruct(void);
 		static void *cron(void *context);
+		static void *startbot(void *context);
 		void firstStart(void);
 	public:
+#ifdef WIN32
+		core();
+#else
 		core(int argc, char** argv);
-                ~core() throw();
+#endif
+		~core() throw();
 		bool parseArgs(int argc, char** argv);
 		
 		boost::program_options::variables_map coptions;

@@ -22,7 +22,9 @@
 #define SQLITE_H
 
 #include <sqlite3.h>
+#ifndef WIN32
 #include <iostream>
+#endif
 #include <map>
 #include "pichiexception.h"
 #include "log.h"
