@@ -1,3 +1,6 @@
+===== 0.6.2 =====
+* Deleted xmltest file
+
 ===== 0.6.1 =====
 * Win32 compilation fixes
 * Fedora pakage fixes
