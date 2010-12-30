@@ -99,11 +99,15 @@ void core::botstart(void)
 }
 
 #ifdef WIN32
-core::core()
+core::core(HWND hWnd)
 #else
 core::core(int argc, char** argv)
 #endif
 {
+#ifdef WIN32
+this->hWnd = hWnd;
+#endif
+
 #ifndef WIN32
 	char pathbuf[1024];
 	if(getcwd(pathbuf, 1024) == NULL)

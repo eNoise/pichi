@@ -61,16 +61,13 @@ LONG WINAPI WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		pichiListBox = CreateWindowEx(NULL, "LISTBOX", "pichiList", WS_VISIBLE | WS_CHILD | WS_BORDER | WS_VSCROLL | LBS_EXTENDEDSEL,
 			rect.right - (rect.right/5), rect.top + 20, (rect.right/5) - 20, rect.bottom - 50,hWnd, (HMENU)1101, hIns, NULL);
 
-		editWindow = CreateWindowEx(NULL, "EDIT", "Тест", WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER | WS_VSCROLL,
+		editWindow = CreateWindowEx(NULL, "EDIT", "", WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER | WS_VSCROLL,
 			10, rect.top + 20, rect.right - (rect.right/5) - 20, rect.bottom - 90,hWnd, (HMENU)1102, hIns, NULL);
 
-		sendEdit = CreateWindowEx(NULL, "EDIT", "сообщние", WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER | WS_VSCROLL,
+		sendEdit = CreateWindowEx(NULL, "EDIT", "", WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_BORDER | WS_VSCROLL,
 			10, rect.bottom - 60, rect.right - (rect.right/5) - 100, 30, hWnd, (HMENU)1102, hIns, NULL);
 
-		for(int i = 0; i < 10; i++)
-			SendDlgItemMessage(hWnd, 1101, LB_ADDSTRING,0, (LPARAM)"Троль");
-
-		static core bot;
+		static core bot(hWnd);
 		break;
 	case WM_COMMAND:
 		wmId    = LOWORD(wParam);

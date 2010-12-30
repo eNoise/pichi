@@ -20,6 +20,7 @@
 
 #include "pichicore.h"
 #include "core.h"
+#include <iconv.h>
 
 namespace pichi
 {
@@ -116,6 +117,22 @@ void pichicore::setUserInfo(std::string jid, std::string nick, std::string state
 		else
 			LOG("[PRESENCE][ON] " + jid + "{" + system::itoa(level) + "} [" + status + "]", LOG::DEBUG);
 	
+// Добавляем / удаляем из списка участников
+#ifdef WIN32
+	if(room == getDefaultRoom() && nick != "")
+	{
+		if(state == "unavailable")
+		{
+			int findleft = SendDlgItemMessage(jabber->hWnd, 1101, LB_FINDSTRINGEXACT, 0, (LPARAM)nick.c_str());
+			if(findleft != -1)
+				SendDlgItemMessage(jabber->hWnd, 1101, LB_DELETESTRING, findleft, 0);
+		}
+		else
+		{
+			SendDlgItemMessage(jabber->hWnd, 1101, LB_ADDSTRING,0, (LPARAM)nick.c_str());
+		}
+	}
+#endif
 		
 	sql->query("SELECT COUNT(*) FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
 	if(system::atoi(sql->fetchColumn(0)) > 0)
@@ -308,6 +325,15 @@ bool pichicore::reciveMessage(const std::string& message, const std::string& typ
 		last_jid = getJIDfromNick(getJIDpart(last_from, 2), last_room);
 	else
 		last_jid = getJIDpart(last_from, 1);
+	
+#ifdef WIN32
+	std::string addstring = "[" + system::timeToString(time(NULL), "%d.%m.%y") + "] <" + last_jid + "> " + last_message + "\n";
+	size_t length = SendDlgItemMessage(jabber->hWnd, 1102, WM_GETTEXTLENGTH, 0, 0);
+	char* buf = new char[length + addstring.size()];
+	SendDlgItemMessage(jabber->hWnd, 1102, WM_GETTEXT, length + addstring.size(), (LPARAM)buf);
+	SendDlgItemMessage(jabber->hWnd, 1102, WM_SETTEXT, 0, (LPARAM)std::string(buf).append(addstring).c_str());
+	free(buf);
+#endif
 	
 	// Защита от спама
 	double micronow = system::microtime();

@@ -42,6 +42,10 @@
 #include <sys/stat.h>
 #include <fstream>
 #include <boost/program_options.hpp>
+#ifdef WIN32
+#include <windows.h>
+#include <tchar.h>
+#endif
 
 #include "pichicore.h"
 #include "system.h"
@@ -81,7 +85,8 @@ class core : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		void firstStart(void);
 	public:
 #ifdef WIN32
-		core();
+		core(HWND hWnd);
+		HWND hWnd;
 #else
 		core(int argc, char** argv);
 #endif
