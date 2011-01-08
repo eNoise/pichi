@@ -21,7 +21,9 @@
 #ifndef LOG_H
 #define LOG_H
 
+#ifndef WITH_QTGUI
 #include <iostream>
+#endif
 #include <string>
 #include "system.h"
 #include "config.h"

@@ -35,7 +35,9 @@
 #include <gloox/subscription.h>
 #include <gloox/rostermanager.h>
 
+#ifndef WITH_QTGUI
 #include <iostream>
+#endif
 #include <list>
 #include <time.h>
 #include <pthread.h>
@@ -49,6 +51,9 @@
 #include "log.h"
 #include "config.h"
 #include "pichidbpatcher.h"
+#ifdef WITH_QTGUI
+#include "mainwindow.h"
+#endif
 
 namespace pichi
 {
@@ -74,14 +79,24 @@ class core : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		pichicore* pichi;
 	  
 		pthread_t thread;
+		pthread_t bot_thread;
 		void botstart(void);
 		void initDBStruct(void);
 		static void *cron(void *context);
+		static void *startbot(void *context);
 		void firstStart(void);
 	public:
+#ifdef WITH_QTGUI
+		core(int argc, char** argv, MainWindow* mw);
+#else
 		core(int argc, char** argv);
+#endif
                 ~core() throw();
 		bool parseArgs(int argc, char** argv);
+
+#ifdef WITH_QTGUI
+		MainWindow* mW;
+#endif
 		
 		boost::program_options::variables_map coptions;
 		

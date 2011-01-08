@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 2.6)
 PROJECT(pichi)
 set (PROJECT_NAME_GLOBAL pichi)
-set (VERSION "0.6.1")
+set (VERSION "0.7.0")
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include (CheckIncludeFile)
 
@@ -20,6 +20,7 @@ endif (NOT MSVC)
 
 option (LOCAL_GLOOX "Use local gloox lib" OFF)
 option (LOCAL_TINYXML "Use local tinyxml lib" OFF)
+option (WITH_QTGUI "Qt Simple configuration gui" OFF)
 
 CHECK_INCLUDE_FILE (time.h HAVE_TIME_H)
 CHECK_INCLUDE_FILE (stdlib.h HAVE_STDLIB_H)
@@ -71,7 +72,11 @@ set(PICHI_CPP 	src/pichiexception.cpp
 		src/pichi.cpp
 )
 
-set(LINK_LIBS	pthread
+set (PICHI_MOC_HDRS
+                src/mainwindow.h
+)
+
+set(PICHI_LIBS	pthread
 		${GLOOX_LIBRARIES}
 		${TINYXML_LIBRARIES}
 		${SQLITE3_LIBRARIES}
@@ -81,12 +86,33 @@ set(LINK_LIBS	pthread
 
 #gloox fix
 if(WIN32)
-	set(LINK_LIBS ${LINK_LIBS} 
+	set(PICHI_LIBS ${PICHI_LIBS} 
 		      dnsapi
 		      secur32
 		      ws2_32
 	)
 endif(WIN32)
+
+set(PICHI_INCLUDES 
+		${SQLITE3_INCLUDE_DIR}
+		${Boost_INCLUDE_DIRS}
+		${CURL_INCLUDE_DIRS}
+)
+
+
+#Pichi gui
+if(WITH_QTGUI)
+  find_package(Qt4 REQUIRED)
+  add_definitions( -DWITH_QTGUI)
+  #Create moc files
+  QT4_WRAP_CPP (M_SRCS ${PICHI_MOC_HDRS})
+  #Create .h files from ui files
+  #QT4_WRAP_UI (U_SRCS ${uFtil_UI_FORMS})
+  set(PICHI_LIBS ${PICHI_LIBS} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+  set(PICHI_INCLUDES ${PICHI_INCLUDES} ${QT_INCLUDES})
+  set(PICHI_CPP ${PICHI_CPP} ${M_SRCS} src/mainwindow.cpp)
+endif(WITH_QTGUI)
+
 
 if(MINGW AND WIN32)
   ADD_CUSTOM_COMMAND (OUTPUT
@@ -99,13 +125,10 @@ if(MINGW AND WIN32)
   set(PICHI_CPP ${PICHI_CPP} "${CMAKE_CURRENT_BINARY_DIR}/pichi_rc.o")
 endif(MINGW AND WIN32)
 
-include_directories( 
-			${SQLITE3_INCLUDE_DIR}
-			${Boost_INCLUDE_DIRS}
-			${CURL_INCLUDE_DIRS}
-		   )
+include_directories(${PICHI_INCLUDES})
 ADD_EXECUTABLE(pichi ${PICHI_CPP})
-target_link_libraries (pichi ${LINK_LIBS})
+target_link_libraries (pichi ${PICHI_LIBS})
+
 
 if(WIN32)
   set (BIN_DIR .)

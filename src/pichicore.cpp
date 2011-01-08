@@ -20,6 +20,9 @@
 
 #include "pichicore.h"
 #include "core.h"
+#ifdef WITH_QTGUI
+#include "mainwindow.h"
+#endif
 
 namespace pichi
 {
@@ -115,7 +118,20 @@ void pichicore::setUserInfo(std::string jid, std::string nick, std::string state
 			LOG("[PRESENCE][OFF] " + jid + "{" + system::itoa(level) + "} [" + status + "]", LOG::DEBUG);
 		else
 			LOG("[PRESENCE][ON] " + jid + "{" + system::itoa(level) + "} [" + status + "]", LOG::DEBUG);
-	
+
+#ifdef WITH_QTGUI
+	if(room == getDefaultRoom() && nick != "")
+	{
+		if(state == "unavailable")
+		{
+			jabber->mW->getList()->removeItemWidget(jabber->mW->getList()->findItems(QString().fromUtf8(nick.c_str()), 0).first());
+		}
+		else
+		{
+			jabber->mW->getList()->addItem(QString().fromUtf8(nick.c_str()));
+		}
+	}
+#endif
 		
 	sql->query("SELECT COUNT(*) FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
 	if(system::atoi(sql->fetchColumn(0)) > 0)
@@ -309,6 +325,10 @@ bool pichicore::reciveMessage(const std::string& message, const std::string& typ
 	else
 		last_jid = getJIDpart(last_from, 1);
 	
+#ifdef WITH_QTGUI
+	std::string form_msg = "[" + system::timeToString(time(NULL), "%d.%m.%y") + "] <" + last_jid + "> " + last_message;
+	jabber->mW->getChatBox()->append(QString().fromUtf8(form_msg.c_str()));
+#endif
 	// Защита от спама
 	double micronow = system::microtime();
 	if(usermsg_times[last_jid] <= 0 || usermsg_times[last_jid] > micronow) // 2 бред ))

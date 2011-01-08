@@ -15,28 +15,42 @@
     You should have received a copy of the GNU General Public License along
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-
 */
-#ifdef WITH_QTGUI
-#include <QApplication>
-#include "mainwindow.h"
-#endif
-#include "core.h"
-using namespace pichi;
 
-int main(int argc, char** argv)
+
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+
+#include <QDialog>
+#include <QListWidget>
+#include <QLineEdit>
+#include <QTextBrowser>
+#include <QString>
+
+namespace pichi
 {
-#ifdef WITH_QTGUI
-     QApplication app(argc, argv);
-     app.setOrganizationName("eNoise");
-     app.setApplicationName("Pichi");
-     MainWindow* mainWin = new MainWindow();
-     core* bot = new core(argc, argv, mainWin);
-     mainWin->setCore(bot);
-     mainWin->show();
-     return app.exec();
-#else
-     core bot(argc, argv);
-     return 0;
-#endif
+
+class core;
+  
+class MainWindow : public QDialog
+{
+Q_OBJECT
+public:
+  MainWindow();
+  void setCore(core* p);
+  QListWidget* getList() const;
+  QLineEdit* getInputLine() const;
+  QTextBrowser* getChatBox() const;
+private:
+  QListWidget* inChatList;
+  QLineEdit* inputLine;
+  QTextBrowser* chatBox;
+  
+  core* pichi;
+public slots:
+  void sendMessage();
+};
+
 }
+
+#endif // PICHIEXCEPTION_H
