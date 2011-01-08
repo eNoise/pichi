@@ -294,6 +294,9 @@ bool pichicore::reciveMessage(const std::string& message, const std::string& typ
 {
 	if(time(NULL) - jabber->times["wait"] < wait_time)
 	{
+#ifdef WITH_QTGUI
+		jabber->mW->getChatBox()->append(QString("* Ignoring message"));
+#endif
 		LOG("Ignore Message", LOG::DEBUG);
 		return false;
 	}

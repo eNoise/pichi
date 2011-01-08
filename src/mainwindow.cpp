@@ -22,6 +22,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QWidget>
+#include <QSizePolicy>
 #include "core.h"
 
 namespace pichi
@@ -40,6 +41,11 @@ MainWindow::MainWindow()
 	main->addLayout(chat);
 	main->addWidget(inChatList);
 	setLayout(main);
+	
+	//растяжения
+	//inChatList->setSizePolicy(QSizePolicy(1));
+	//chatBox->setSizePolicy(3);
+	//inputLine->setSizePolicy(3);
 	
 	connect(inputLine, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
 }
@@ -66,7 +72,7 @@ void MainWindow::setCore(core* p)
 
 void MainWindow::sendMessage()
 {
-	pichi->sendMessage(JID("main@conference.jabber.uruchie.org"), inputLine->text().toUtf8().data());
+	pichi->sendMessage(pichi->getDefaultRoom(), inputLine->text().toUtf8().data());
 	inputLine->clear();
 }
 

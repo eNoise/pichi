@@ -112,7 +112,7 @@ class core : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		void kick(const std::string &nick, JID room, std::string message = "");
 		void ban(const std::string &nick, JID room, std::string message = "");
 		void unban(const std::string &nick, JID room, std::string message = "");
-		
+		JID getDefaultRoom(void);
 		// stubs
                 void onConnect();
                 void onDisconnect  (ConnectionError e){}

@@ -438,6 +438,11 @@ std::string core::getMyNick(void )
 	return nick;
 }
 
+gloox::JID core::getDefaultRoom(void )
+{
+	return JID(pichi->getDefaultRoom());
+}
+
 void *core::cron(void *context)
 {
 	while(true)
