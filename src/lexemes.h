@@ -44,10 +44,10 @@ class lexemes
 	size_t message_size_limit;
 	size_t query_limit;
 	void parseText(std::string text);
-	void addLexema(const std::string& lex);
+	void addLexema(const std::vector<std::string>& lex);
 	
 	std::string genFullRandom();
-	std::string genFromWord(std::string word);
+	//std::string genFromWord(std::string word);
 	void addNick(const std::string& nick);
   protected:
 	sqlite **sql;
@@ -55,12 +55,13 @@ class lexemes
 	std::string send_text;
 	
 	void buildArray(void);
-	std::string choiseWord(void);
+	std::vector<std::string> choiseWords(void);
+	std::string wToString(const std::vector<std::string>& msg, bool f = true, bool s = true, bool t = true);
 	void clean(void);
 	void cleanString(std::string& string);
 
   private:
-	std::vector< std::pair< int, std::string > > answers;
+	std::vector< std::pair< int, std::vector<std::string> > > answers;
 	std::string sqlquery;
 	std::list<std::string> nicks;
 };

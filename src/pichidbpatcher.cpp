@@ -48,7 +48,7 @@ void PichiDbPather::checkDbStruct(void )
 void PichiDbPather::initDbStruct(void )
 {
 	sql->exec("CREATE TABLE log (`jid` TEXT, `room` TEXT, `from` TEXT, `time` TEXT, `type` TEXT, `message` TEXT);");
-	sql->exec("CREATE TABLE lexems (`lexeme` TEXT UNIQUE, `count` INT NOT NULL DEFAULT '0');");
+	sql->exec("CREATE TABLE lexems (`lexeme1` TEXT, `lexeme2` TEXT, `lexeme3` TEXT, `count` INT NOT NULL DEFAULT '0', UNIQUE (`lexeme1`, `lexeme2`, `lexeme3`));");
 	sql->exec("CREATE TABLE wiki (`name` TEXT UNIQUE, `revision` INT NOT NULL DEFAULT '0', `value` TEXT);");
 	sql->exec("CREATE TABLE settings (`name` TEXT UNIQUE, `value` TEXT, `description` TEXT);");
 	sql->exec("CREATE TABLE users (`jid` TEXT, `nick` TEXT, `role` TEXT, `room` TEXT, `time` TEXT, `status` TEXT, `level` INT NOT NULL DEFAULT '1');");
@@ -77,6 +77,27 @@ void PichiDbPather::patch(void )
 	switch(getDbVersion())
 	{
 		// Ниже 21 версии не патчит
+		case 21:
+		{
+			LOG("Db pathing 21->22 ... wait some time...", LOG::WARNING);
+			std::vector< std::pair<std::string, std::string> > dump;
+			sql->query("SELECT `lexeme`,`count` FROM lexems;");
+			std::map<std::string, std::string> gt;
+			while(!(gt = sql->fetchArray()).empty())
+				dump.push_back(std::pair<std::string, std::string>(gt["lexeme"], gt["count"]));
+			sql->exec("DROP TABLE lexems;");
+			sql->exec("CREATE TABLE lexems (`lexeme1` TEXT, `lexeme2` TEXT, `lexeme3` TEXT, `count` INT NOT NULL DEFAULT '0', UNIQUE (`lexeme1`, `lexeme2`, `lexeme3`));");
+			std::vector<std::string> expl;
+			for(std::vector< std::pair<std::string, std::string> >::iterator it = dump.begin(); it != dump.end(); it++)
+			{
+				expl = system::explode(" ", it->first);
+				sql->exec("INSERT INTO lexems (`lexeme1`,`lexeme2`,`lexeme3`,`count`) VALUES('" + sql->escapeString(expl[0]) + "', '" + sql->escapeString(expl[1]) + "', '" + sql->escapeString(expl[2]) + "', '" + it->second + "');");
+			}
+			dump.clear();
+			sql->finalize();
+			sql->exec("UPDATE db_version SET version = " + boost::lexical_cast<std::string>(PICHI_DB_VERSION_ACTUAL) + ";");
+			LOG("Db pathing 21->22 ... done!", LOG::WARNING);
+		}
 	}
 	
 	if(getDbVersion() != PICHI_DB_VERSION_ACTUAL)
