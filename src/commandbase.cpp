@@ -511,7 +511,7 @@ void commandbase::command_top(std::string arg)
 			pichi->sendAnswer(TR("bad_argument"));
 		}
 	}
-	pichi->sql->query("SELECT `lexeme`,`count` FROM lexems ORDER BY count DESC LIMIT 0," + system::itoa(ct) + ";");
+	pichi->sql->query("SELECT `lexeme1`, `lexeme2`, `lexeme3`, `count` FROM lexems ORDER BY count DESC LIMIT 0," + system::itoa(ct) + ";");
 	pichi->sendAnswer(TR("command_top10"));
 	std::string ans;
 	int ix = 0;
@@ -520,12 +520,13 @@ void commandbase::command_top(std::string arg)
 	while(!(lex = pichi->sql->fetchArray()).empty())
 	{
 		ix++;
-		tmp = system::explode(" ", lex["lexeme"]);
-		if(tmp[0] == "#beg#")
-			tmp[0] = "("+TR("command_top10_begin")+")";
-		if(tmp[2] == "#end#")
-			tmp[2] = "("+TR("command_top10_end")+")";
-		ans += system::itoa(ix) + ". " + system::implode(" ", tmp) + " [" + lex["count"] + "]" + "\n";
+		if(lex["lexeme1"] == "#beg#")
+			lex["lexeme1"] = "("+TR("command_top10_begin")+")";
+		if(lex["lexeme3"] == "#end#")
+			lex["lexeme3"] = "("+TR("command_top10_end")+")";
+		ans += system::itoa(ix) + ". " 
+			+ lex["lexeme1"] + " " + lex["lexeme2"] + " " + lex["lexeme3"] 
+			+ " [" + lex["count"] + "]" + "\n";
 	}
 	pichi->sendAnswer(ans);
 }
