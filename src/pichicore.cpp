@@ -331,9 +331,17 @@ bool pichicore::reciveMessage(const std::string& message, const std::string& typ
 
 	
 	if(last_type == "groupchat")
-		last_jid = getJIDfromNick(getJIDpart(last_from, 2), last_room);
+	{
+		last_jid = getJIDfromNick(getJIDpart(last_from, 2), last_room, false, -1);
+		if(last_jid == "")
+			last_jid = getJIDfromNick(getJIDpart(last_from, 2), last_room, false, 1);
+	}
 	else if(last_type == "chatgroup")
-		last_jid = getJIDfromNick(getJIDpart(last_from, 2), last_room);
+	{
+		last_jid = getJIDfromNick(getJIDpart(last_from, 2), last_room, false, -1);
+		if(last_jid == "")
+			last_jid = getJIDfromNick(getJIDpart(last_from, 2), last_room, false, 1);	
+	}
 	else
 		last_jid = getJIDpart(last_from, 1);
 	
