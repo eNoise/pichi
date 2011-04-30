@@ -730,6 +730,8 @@ void commandbase::command_left(std::string arg)
 
 void commandbase::command_ping(std::string arg)
 {
+	if(arg == "")
+		return;
 	std::string jid = pichi->getArgJID(arg);
 	if(pichi->isOnline(jid))
 		pichi->ping(jid);

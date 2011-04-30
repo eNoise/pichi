@@ -74,8 +74,8 @@ class pichicore : public pichiconfig,
 		
 		bool isJID(const std::string& jid);
 		bool isBareJID(const std::string& jid);
-		std::string getJIDfromNick(const std::string& nick, std::string room, bool all_rooms = false);
-		std::string getJIDfromNicks(const std::string& nick, std::string room, bool all_rooms = false);
+		std::string getJIDfromNick(const std::string& nick, std::string room, bool all_rooms = false, int like_room = 0);
+		std::string getJIDfromNicks(const std::string& nick, std::string room, bool all_rooms = false, int like_room = 0);
 		std::string getNickFromJID(const std::string& jid, std::string room, bool all_rooms = false);
 		std::string getJIDpart(const std::string& jid, unsigned int part);
 		std::string getArgJID(const std::string& arg);

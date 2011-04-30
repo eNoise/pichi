@@ -168,19 +168,35 @@ std::string pichicore::getJIDpart(const std::string& jid, unsigned int part)
 	return "";
 }
 
-std::string pichicore::getJIDfromNick(const std::string& nick, std::string room, bool all_rooms)
+std::string pichicore::getJIDfromNick(const std::string& nick, std::string room, bool all_rooms, int like_room)
 {
 	LOG("[JID] From nick " + nick, LOG::VERBOSE);
-	sqlite::q* qu = sql->squery("SELECT `jid` FROM users WHERE nick = '" + sql->escapeString(nick) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + ";");
+	
+	std::string likeQuery = "";
+	if(like_room != 0)
+	{
+		for(std::list< std::pair<JID, MUCRoom*> >::iterator it=jabber->rooms.begin(); it!=jabber->rooms.end(); it++)
+			likeQuery += std::string(" AND jid") + ((like_room > 0) ? "" : " NOT") + " LIKE '" + it->first.bare() + "%'";
+	}
+	
+	sqlite::q* qu = sql->squery("SELECT `jid` FROM users WHERE nick = '" + sql->escapeString(nick) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + likeQuery + ";");
 	std::string jid = sql->fetchColumn(qu, 0);
 	delete qu;
 	return jid;
 }
 
-std::string pichicore::getJIDfromNicks(const std::string& nick, std::string room, bool all_rooms)
+std::string pichicore::getJIDfromNicks(const std::string& nick, std::string room, bool all_rooms, int like_room)
 {
 	LOG("[JID] From nick's " + nick, LOG::VERBOSE);
-	sqlite::q* qu = sql->squery("SELECT `jid` FROM users_nick WHERE nick = '" + sql->escapeString(nick) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + " ORDER BY `time` ASC;");
+	
+	std::string likeQuery = "";
+	if(like_room != 0)
+	{
+		for(std::list< std::pair<JID, MUCRoom*> >::iterator it=jabber->rooms.begin(); it!=jabber->rooms.end(); it++)
+			likeQuery += std::string(" AND jid") + ((like_room > 0) ? "" : " NOT") + " LIKE '" + it->first.bare() + "%'";
+	}
+	
+	sqlite::q* qu = sql->squery("SELECT `jid` FROM users_nick WHERE nick = '" + sql->escapeString(nick) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + likeQuery + " ORDER BY `time` ASC;");
 	std::string jid = sql->fetchColumn(qu, 0);
 	delete qu;
 	return jid;
@@ -194,16 +210,28 @@ std::string pichicore::getArgJID(const std::string& arg)
 		return arg; // Обычный jid, все впорядке
 	if(!isBareJID(arg) && isJID(arg))
 		return getJIDpart(arg, 1); // длинный JID, получаем 1 часть
-	// Скорей всего ник
-	jid = getJIDfromNick(arg, last_room); // Ищет среди последней комнаты (или лички, если сообщение не в комнате)
+	// Скорей всего ник (преобразум в настоящий jid)
+	jid = getJIDfromNick(arg, last_room, false, -1); // Ищет среди последней комнаты (или лички, если сообщение не в комнате)
 	if(jid != "")
 		return jid;
-	// Скорей всего из другой комнаты
-	jid = getJIDfromNick(arg, "", true); // Ищет среди всех комнат и личек
+	// Скорей всего ник (пробуем в комнатный jid)
+	jid = getJIDfromNick(arg, last_room, false, 1); // Ищет среди последней комнаты (или лички, если сообщение не в комнате)
 	if(jid != "")
 		return jid;
-	// значит среди старых ников
-	jid = getJIDfromNicks(arg, "", true); // Ищет среди всех встречающихся ников, по всем комнатам или личкам
+	// Скорей всего из другой комнаты (преобразум в настоящий jid)
+	jid = getJIDfromNick(arg, "", true, -1); // Ищет среди всех комнат и личек
+	if(jid != "")
+		return jid;
+	// Скорей всего из другой комнаты (преобразум в комнатный jid)
+	jid = getJIDfromNick(arg, "", true, 1); // Ищет среди всех комнат и личек
+	if(jid != "")
+		return jid;
+	// значит среди старых ников (преобразум в настоящий jid)
+	jid = getJIDfromNicks(arg, "", true, -1); // Ищет среди всех встречающихся ников, по всем комнатам или личкам
+	if(jid != "")
+		return jid;
+	// значит среди старых ников (преобразум в комнатный jid)
+	jid = getJIDfromNicks(arg, "", true, 1); // Ищет среди всех встречающихся ников, по всем комнатам или личкам
 	if(jid != "")
 		return jid;
 	// Ну это уже вообще ппц тогда... нету такого

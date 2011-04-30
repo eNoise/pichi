@@ -288,17 +288,15 @@ void core::handleMUCParticipantPresence (MUCRoom *thisroom, const MUCRoomPartici
 	{
 		jid = participant.jid->bare();
 	}
-	else if(presence.presence() == Presence::Unavailable)
-	{
-		if(participant.nick->resource() != "" && participant.nick->bare() != "")
-			jid = pichi->getJIDfromNick(participant.nick->resource(), participant.nick->bare());
-	}
+	//else if(presence.presence() == Presence::Unavailable)
+	//{
+	//	if(participant.nick->resource() != "" && participant.nick->bare() != "")
+	//		jid = pichi->getJIDfromNick(participant.nick->resource(), participant.nick->bare());
+	//}
 
+	// Uses room jid
 	if(jid == "")
-	{
-		LOG("Can not recive JID from user (Check room settings, or pichi privilegy)", LOG::WARNING);
-		return; // what pichi must do ?
-	}
+		jid = participant.nick->full();
 	
 	nick = participant.nick->resource();
 	
