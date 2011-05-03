@@ -175,8 +175,25 @@ std::string pichicore::getJIDfromNick(const std::string& nick, std::string room,
 	std::string likeQuery = "";
 	if(like_room != 0)
 	{
+		std::list< std::pair<JID, MUCRoom*> >::iterator last_it = jabber->rooms.end();
+		last_it--;
 		for(std::list< std::pair<JID, MUCRoom*> >::iterator it=jabber->rooms.begin(); it!=jabber->rooms.end(); it++)
-			likeQuery += std::string(" AND jid") + ((like_room > 0) ? "" : " NOT") + " LIKE '" + it->first.bare() + "%'";
+		{
+			if(like_room > 0)
+			{
+				if(it == jabber->rooms.begin())
+					likeQuery += " AND (";
+				if(it != jabber->rooms.begin())
+					likeQuery += " OR";
+				likeQuery += " jid LIKE '" + it->first.bare() + "%'";
+				if(it == last_it)
+					likeQuery += ")";
+			}
+			else
+			{
+				likeQuery += " AND jid NOT LIKE '" + it->first.bare() + "%'";
+			}
+		}
 	}
 	
 	sqlite::q* qu = sql->squery("SELECT `jid` FROM users WHERE nick = '" + sql->escapeString(nick) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + likeQuery + ";");
@@ -192,8 +209,25 @@ std::string pichicore::getJIDfromNicks(const std::string& nick, std::string room
 	std::string likeQuery = "";
 	if(like_room != 0)
 	{
+		std::list< std::pair<JID, MUCRoom*> >::iterator last_it = jabber->rooms.end();
+		last_it--;
 		for(std::list< std::pair<JID, MUCRoom*> >::iterator it=jabber->rooms.begin(); it!=jabber->rooms.end(); it++)
-			likeQuery += std::string(" AND jid") + ((like_room > 0) ? "" : " NOT") + " LIKE '" + it->first.bare() + "%'";
+		{
+			if(like_room > 0)
+			{
+				if(it == jabber->rooms.begin())
+					likeQuery += " AND (";
+				if(it != jabber->rooms.begin())
+					likeQuery += " OR";
+				likeQuery += " jid LIKE '" + it->first.bare() + "%'";
+				if(it == last_it)
+					likeQuery += ")";
+			}
+			else
+			{
+				likeQuery += " AND jid NOT LIKE '" + it->first.bare() + "%'";
+			}
+		}
 	}
 	
 	sqlite::q* qu = sql->squery("SELECT `jid` FROM users_nick WHERE nick = '" + sql->escapeString(nick) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + likeQuery + " ORDER BY `time` ASC;");
