@@ -780,7 +780,9 @@ void commandbase::command_idle(std::string arg)
 
 void commandbase::command_q(std::string arg)
 {
-	//pichi->sendAnswer(pichi->lex->genFromWord(arg));
+	std::string ans = pichi->lex->genFromWord(arg);
+	if(ans != "")
+		pichi->sendAnswer(ans);
 }
 
 void commandbase::command_greet(std::string arg)

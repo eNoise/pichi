@@ -156,61 +156,66 @@ std::string lexemes::genFullRandom()
 	//else
 	//	return $this->randFromLog(); //возращать тоже самое нехорошо, вернем что-нибудь из лога
 }
-/*
-std::string lexemes::genFromWord(std::string word)
+
+std::string lexemes::genFromWord(const std::string& word)
 {
 	int limit = 10;
 	if(is_answer_limit)
 		limit = 7 + rand() % 12;
-	std::string answer = word, first, last, third, second;
-	std::vector<std::string> words;
+	
+	std::string answer;
 	//$this->try_count++; //очередная попытка
 	//left
-	for(int i = 0; ((is_answer_limit) ? i < limit : true); i++)
+	(*sql)->query("SELECT * FROM lexems WHERE lexeme1 = '" + (*sql)->escapeString(word) + "' OR lexeme2 = '" + (*sql)->escapeString(word) + "' OR lexeme3 = '" + (*sql)->escapeString(word) + "' ORDER BY RANDOM() LIMIT 0,1;");
+	buildArray();
+	std::vector<std::string> lastx, blastx;
+	blastx = lastx = choiseWords();
+	
+	bool f = true, t = true;
+	if(lastx[0] == "#beg#")
+		f = false;
+	if(lastx[2] == "#end#")
+		t = false;
+	answer = wToString(lastx, f, true, t);
+	
+	// left
+	for(int i = 0; ((is_answer_limit) ? i < limit : true) && lastx[0] != "#beg#"; i++)
 	{
-		(*sql)->query("SELECT * FROM lexems WHERE lexeme LIKE '% " + (*sql)->escapeString((i == 0) ? word : first + " " + second) + "' ORDER BY `count` DESC LIMIT 0," + system::ttoa(query_limit) + ";");
-		if((*sql)->numRows() == 0)
-			break; //больше нет совпадений
-		//if(i != $limit-1)
-		buildArray();
-		last = choiseWord();
-		//else
-		//	$last = $this->doubleLemem($this->buildArray(), "#beg#", true);
-		words = system::explode(" ", last);
-		first = words[0];
-		second = words[1];
-		third = words[2];
-			
-		if(first == "#beg#" || first == "")
-			break;
-		answer = ((i==0) ? first + " " + second : first) + " " + answer;
-	}
-	//right
-	for(int i = 0; ((is_answer_limit) ? i < limit : true); i++)
-	{
-		(*sql)->query("SELECT * FROM lexems WHERE lexeme LIKE '" + (*sql)->escapeString((i == 0) ? word : second + " " + third) + " %' ORDER BY `count` DESC LIMIT 0," + system::ttoa(query_limit) + ";");
+		(*sql)->query("SELECT * FROM lexems WHERE lexeme2 = '" + (*sql)->escapeString(lastx[0]) + "' AND lexeme3 = '" + (*sql)->escapeString(lastx[1]) + "' ORDER BY `count` DESC LIMIT 0," + system::ttoa(query_limit) + ";");
 		if((*sql)->numRows() == 0)
 			break; //больше нет совпадений
 		//if($i != $limit-1)
 		buildArray();
-		last = choiseWord();
+		lastx = choiseWords();
 		//else
 		//	$last = $this->doubleLemem($this->buildArray(), "#end#");
-		words = system::explode(" ", last);
-		first = words[0];
-		second = words[1];
-		third = words[2];
-			
-		if(third == "#end#" || third == "")
+		if(lastx[0] == "#beg#" || lastx[0] == "")
 			break;
-		answer = answer + " " + ((i==0) ? second + " " + third : third);
+		answer = lastx[0] + " " + answer;
+	}
+	//right
+	lastx = blastx; // возращаем исходную фразу
+	for(int i = 0; ((is_answer_limit) ? i < limit : true) && lastx[2] != "#end#"; i++)
+	{
+		(*sql)->query("SELECT * FROM lexems WHERE lexeme1 = '" + (*sql)->escapeString(lastx[1]) + "' AND lexeme2 = '" + (*sql)->escapeString(lastx[2]) + "' ORDER BY `count` DESC LIMIT 0," + system::ttoa(query_limit) + ";");
+		if((*sql)->numRows() == 0)
+			break; //больше нет совпадений
+		//if($i != $limit-1)
+		buildArray();
+		lastx = choiseWords();
+		//else
+		//	$last = $this->doubleLemem($this->buildArray(), "#end#");
+		if(lastx[2] == "#end#" || lastx[2] == "")
+			break;
+		answer += " " + lastx[2];
 	}
 	//if($answer != $this->user_text)
-		return answer;
+	return answer;
 	//else
 	//	return $this->randFromLog(); //возращать тоже самое нехорошо, вернем что-нибудь из лога
 }
-*/
+
+
 void lexemes::cleanString(std::string& string)
 {
 	// Очищаем от лишних пробелов

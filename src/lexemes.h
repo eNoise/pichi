@@ -47,7 +47,7 @@ class lexemes
 	void addLexema(const std::vector<std::string>& lex);
 	
 	std::string genFullRandom();
-	//std::string genFromWord(std::string word);
+	std::string genFromWord(const std::string& word);
 	void addNick(const std::string& nick);
   protected:
 	sqlite **sql;
