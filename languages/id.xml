@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<PichiLanguage>
+        <language>
+                <option name="error_cant_load_extension" type="string">Tidak dapat memuat ekstensi {1}</option>
+                <option name="error_config_old" type="string">Tidak dapat memuat ekstensi {1}</option>
+                <option name="error_config_old_version" type="string">Versi config file adlah {1}. Tapi membutuhkan {2}.</option>
+                <option name="info_start_connecting" type="string">Mencoba terhubung dengan server</option>
+                <option name="error_connect_failed" type="string">Koneksi gagal. Keluar. Kode kesalahan: {1}</option>
+                <option name="info_connect_success" type="string">Koneksi berhasil dibuat.</option>
+                <option name="info_no_database" type="string">Database tidak tersedia.</option>
+                <option name="info_database_exists" type="string">Database tersedia.</option>
+                <option name="error_database_old" type="string">Database ketinggalan jaman.</option>
+                <option name="error_database_old_need" type="string">Versi database Anda {1}. Memerlukan {2}.</option>
+                <option name="info_timer_sync" type="string">Sinkronisasi timer</option>
+                <option name="info_session_begin" type="string">Memulai sesi</option>
+                <option name="info_send_random_message" type="string">Mengirim pesan acak</option>
+                <option name="warn_cant_recive_jid" type="string">Tidak dapat menemukan JID penghuninya. Hal ini mungkin terjadi karena setting yang salah pada ruangan. Kerja bot di mode ini tidak dijamin.</option>
+                <option name="message_to_private_chat" type="string">Pesan terlalu panjang, jawabannya akan dikirimkan ke PM.</option>
+		<option name="bad_argument" type="string">Argumen buruk.</option>
+		<option name="updated" type="string">Diupdate</option>
+
+		<option name="db_configdesc_answer_mode" type="string"><![CDATA[Modus membalas pesan. [0 - dinonaktifkan; 1 - diaktifkan] [Bawaan: 1]]]></option>
+		<option name="db_configdesc_answer_only_nick" type="string"><![CDATA[Hanya menjawab bila pengguna menyebutkan nama panggilan. [0 - dinonaktifkan; 1 - diaktifkan] [Bawaan: 0]]]></option>
+		<option name="db_configdesc_answer_random" type="string"><![CDATA[Jangan selalu menjawab ketika menerima pesan. [0 - selalu menanggapi;> 100 hampir selalu diam] [Bawaan: 0]]]></option>
+		<option name="db_configdesc_answer_remember" type="string"><![CDATA[Untuk memecah kata penghubung. [0 - dinonaktifkan; 1 - diaktifkan] [Bawaan: 1]]]></option>
+		<option name="db_configdesc_answer_word_limit" type="string"><![CDATA[Jumlah maksimum dari kata-kata kacau dalam review. Berpengaruh pada algoritma untuk menyusun kalimat, serta beban. [Disarankan nilai> 3 dan <50] [Bawaan: 10]]]></option>
+		<option name="db_configdesc_log_enabled" type="string"><![CDATA[Gunakan log. [0 - dinonaktifkan; 1 - diaktifkan] [Bawaan: 1]]]></option>
+		<option name="db_configdesc_treatment_coincidence" type="string"><![CDATA[Peluang penyisipan pesan. [1 - selalu;> 100 tidak pernah ] [Bawaan: 3]]]></option>
+		<option name="db_configdesc_rand_message" type="string"><![CDATA[Secara berkala mengirim pesan acak dalam obrolan utama. [0 - dinonaktifkan; 1 - diaktifkan] [Bawaan: 0]]]></option>
+		<option name="db_configdesc_msg_limit" type="string"><![CDATA[Jumlah maksimum karakter yang diperbolehkan dalam obrolan utama (sebaliknya menulis pesan di PM) [Bawaan: 500]]]></option>
+		<option name="db_configdesc_msg_max_limit" type="string"><![CDATA[Batas atas untuk pesan, setelah itu pesan akan dibagi menjadi beberapa bagian. [Bawaan: 0]]]></option>
+
+                <option name="help_syntaxis_info" type="string">Dasar-dasar panduan:
+Semua perintah diawali dengan!
+Setelah perintah harus parameter yg ditentukan:
+Parameter - parameter yang dibutuhkan
+paramater1 | parameter2 - paramater1 ATAU parameter2 (salah satu)
+[parameter] - parameter opsional</option>
+		<option name="help_main_commands" type="string">Perintah dasar</option>
+		<option name="help_command_description_help" type="string">Menampilkan halaman bantuan. Contoh: !help - menampilkan halaman bantuan sepenuhnya.!help !gc - menunjukkan bantuan penggunaan untuk perintah !gc.</option>
+		<option name="help_command_description_set" type="string">Tetapkan nilai pilihan. Contoh: !set answer_mode=1</option>
+		<option name="help_command_description_gc" type="string">Mengambil nilai dari pilihan. Bisa dimasukkan tanpa parameter, kemudian menampilkan nilai dari seluruh pilihan. Bila menggunakan parameter  itu akan ditampilkan hanya untuk yang ditentukan. Contoh: !gc answer_mode.</option>
+		<option name="help_command_description_log" type="string">Menampilkan pesan terakhir di ruangan. Contoh: !log 10 - menampilkan 10 pesan terakhir. !log 20 10 - menampilkan 20 pesan terakhir, yang mana sebelum sepuluh terakhir.</option>
+		<option name="help_command_description_users" type="string">Menampilkan daftar pengguna. Menunjukkan pengguna yang sedang online atau sudah pernah online. Untuk mendapatkan status pengguna yg telah ditetapkan masukkan JID atau nick sebagai parameter.  Contoh: !users - menampilkan info tentang semua pengguna. !users deg - menampilkan info tentang user dengan nick deg. !users 10  - menunjukkan info tentang 10 pengguna. !users !10  - menampilkan info tentang pengguna dengan nick "10".</option>
+		<option name="help_command_description_msg" type="string">Mengirim pesan ke pengguna. Parameter pertama adalah alamat (pengguna ATAU ruangan (conference)). Parameter kedua adalah tipe: chat ATAU groupchat  (untuk ruangan (conference)). Yang ketiga adalah pesan teks . Contoh: !msg "xmpp@group.jabin.org" "groupchat" "Contoh pesan".</option>
+		<option name="help_command_description_ping" type="string">Menampilkan waktu respon dari pengguna (ping dari pengguna). Contoh: !ping deg</option>
+		<option name="help_command_description_join" type="string">Masuk ke dalam ruangan. Contoh: !join xmpp@group.jabin.org</option>
+		<option name="help_command_description_left" type="string">Meninggalkan ruangan. Contoh: !left xmpp@group.jabin.org</option>
+		<option name="help_command_description_greet" type="string">Mengatur salam pengguna. Contoh: !greet "nagg@jabber.ru" "xmpp@group.jabin.org" "Selamat datang, nagg!"</option>
+		<option name="help_command_description_farewell" type="string">Mengatur pesan  selamat tinggal (Pesan tersebut, yang menunjukkan, ketika pengguna meninggalkan ruangan). Contoh: !farewell "nagg@jabber.ru" "xmpp@group.jabin.org" "nagg sudah pergi"</option>
+		<option name="help_command_description_idle" type="string">Menunjukkan waktu tanpa aktivitas (waktu berlalu sejak tindakan aktif terakhir pengguna ) dalam ruang (conference). Contoh: !idle deg</option>
+		<option name="help_command_description_uptime" type="string">Berapa lama waktu bot bekerja</option>
+		<option name="help_command_description_quit" type="string">Keluar dari server (bot meninggalkan server dan mati).</option>
+		<option name="help_command_description_version" type="string">Menampilkan versi bot.</option>
+		<option name="help_command_description_topic" type="string">Menetapkan topik di dalam ruangan. Contoh: !topic Welcome!</option>
+		<option name="help_command_description_ban" type="string">Larang pengguna. Parameter pertama adalah nick atau jid dari pengguna. Yg kedua adalah waktu (anda dapat menggunakan singkatan seperti 5m - 5 menit, 5h - 5 jam, 3M - 3 bulan). Jika waktu telah ditentukan, larangan akan dihapus secara otomatis setelah periode waktu tertentu. Parameter ketiga adalah alasan (pilihan). Contoh: !ban "vovan" "5h" "There is a reason"</option>
+		<option name="help_command_description_unban" type="string">Menghilangkan larangan pengguna yg telah ditentukan. Contoh: !unban vovan@jabber.uruchie.org</option>
+		<option name="help_command_description_banlist" type="string">Tampilkan daftar ban.</option>
+		<option name="help_command_description_kicklist" type="string">Tampilkan daftar kick.</option>
+		<option name="help_command_description_kick" type="string">Tendang user dari ruangan. jika waktu telah ditentukan maka user (jika user mencoba untuk masuk) akan otomatis dikeluarkan selama waktu yg ditentukan. parameter pertama adalah jid atau nick. Yg kedua adalah waktu (lihat diatas !ban). Yg ketiga adalah alasan (pilihan). Contoh: !kick vovan 5m just_so</option>
+		<option name="help_command_description_unkick" type="string">Membatalkan pengoperasian dari perintah '!kick'. perintah ini hanya digunakan jika perintah '!kick' dimasukkan dengan parameter 'time'. Contoh: !unkick vovan</option>
+		<option name="help_command_description_plugins" type="string">Menunjukan daftar semua plugins.</option>
+		<option name="help_command_description_enable" type="string">Mengaktifkan plugins yg telah ditentukan. Contoh:!enable lastfm</option>
+		<option name="help_command_description_disable" type="string">Nonaktifkan plugin yang telah ditentukan . Contoh: !disable lastfm</option>
+		<option name="help_command_description_reload" type="string">Reload semua plug-in. Dapat berguna jika beberapa plug-in telah berubah.</option>
+		<option name="help_command_description_dfn" type="string">Mengatur definisi untuk disimpan. Contoh: !dfn wow=game</option>
+		<option name="help_command_description_wtf" type="string">Tampilkan definisi yg tersimpan. Contoh: !wtf wow</option>
+		<option name="help_command_description_wtfcount" type="string">Tampilkan hitungan definisi dari yg telah tersimpan.</option>
+		<option name="help_command_description_wtfrand" type="string">Tampilkan definisi acak dari yg telah tersimpan.</option>
+		<option name="help_command_description_wtfrev" type="string">Tampilkan definisi yg direvisi saat ini. Contoh:!wtfrev wow</option>
+		<option name="help_command_description_wtffull" type="string">Tampilkan teks dari semua revisi dari definisi. Contoh: "!wtffull wow"</option>
+		<option name="help_command_description_wtfset" type="string">Lepaskan definisi ke revisi yg telah didefinisikan sebelumnya. Contoh: "!wtfset wow 1"</option>
+		<option name="help_command_description_top" type="string">Tampilkan TOP10 kata-kata-lexem.</option>
+		<option name="help_command_description_count" type="string">Tampilkan perhitungan kata-kata-lexem.</option>
+		<option name="help_command_description_talkers" type="string">TOP10 pengguna yang paling 'latah'</option>
+		<option name="help_command_description_nicks" type="string">Menampilkan semua nick pengguna.</option>
+		<option name="help_command_description_on" type="string">Mengktifkan semua fungsi bot.</option>
+		<option name="help_command_description_off" type="string">Menonaktifkan semua fungsi bot.</option>
+		<option name="help_command_description_q" type="string">Meminta bot untuk mengatakan kalimat dengan kata tertentu</option>
+		<option name="help_command_description_urlshort" type="string">Menampilkan link yg diperpendek melalui layanan ul.ly</option>
+		<option name="help_command_description_lastfm_user" type="string">Menghubungkan anda ke akun Last.fm</option>
+		<option name="help_command_description_lastfm" type="string">Menampilkan lagu terakhir yg didengar untuk akun Anda</option>
+		<option name="help_command_description_translate" type="string">Menterjemahkan teks menggunakan Google Terjemahan. (Anda harus memasang target bahasa, lihat !translate_language)</option>
+		<option name="help_command_description_tr" type="string">Terjemahan teks cepat. Parameter kedua adalah versi singkat dari dari_bahasa2ke_bahasa. Sebagai contoh: "!tr id2ru ini" menerjemahkan kata "ini" dari bahasa Indonesia ke Rusia.</option>
+		<option name="help_command_description_translate_language" type="string">Mengatur target bahasa untuk akun Anda. Opsi pertama adalah "dari bahasa". Kedua - "ke bahasa". Untuk penggunaan contoh "!translate_language en ru" untuk mengatur bahasa terjemahan dari bahasa Inggris ke Rusia. Setelah setup opsi ini, Anda bisa menggunakan perintah !translate</option>
+		<option name="help_command_description_google" type="string">Mencari teks yg ditentukan dalam mesin pencari Google.</option>
+		
+		<option name="help_command_usage_param" type="string">parameter</option>
+		<option name="help_command_usage_value" type="string">jumlah</option>
+		<option name="help_command_usage_jid" type="string">jid</option>
+		<option name="help_command_usage_nick" type="string">nick</option>
+		<option name="help_command_usage_room" type="string">ruang (conference)</option>
+		<option name="help_command_usage_message" type="string">pesan</option>
+		<option name="help_command_usage_status" type="string">status</option>
+		<option name="help_command_usage_reason" type="string">alasan</option>
+		<option name="help_command_usage_time" type="string">waktu</option>
+		<option name="help_command_usage_variable" type="string">variabel</option>
+		<option name="help_command_usage_number" type="string">angka</option>
+		
+		<option name="time_n_seconds" type="string">detik</option>
+		<option name="time_n_minutes" type="string">menit</option>
+		<option name="time_n_hours" type="string">jam</option>
+		<option name="time_n_days" type="string">hari</option>
+		<option name="time_n_months" type="string">bulan</option>
+		<option name="time_n_years" type="string">tahun</option>
+		
+		<option name="help_plugins" type="string">Sistem plugins/tambahan</option>
+		<option name="help_admin_commands" type="string">Perintah administrasi</option>
+		<option name="help_wiki_inline" type="string">Wiki yg disematkan</option>
+		<option name="help_other_commands" type="string">Perintah lainnya</option>
+		<option name="help_lexems" type="string">Pembicaraan</option>
+
+		<option name="command_help_nosuchcommand" type="string">perintah tidak tersedia</option>
+		<option name="command_version_plugins" type="string">Daftar plug-ins</option>
+		<option name="command_version_environment" type="string">Lingkungan sistem</option>
+		<option name="command_plugins_no_sorry" type="string">Maaf, sistem plugin untuk sementara dinonaktifkan.</option>
+		<option name="command_kick_add" type="string">{1} ditambahkan ke daftar kick/usir.</option>
+		<option name="command_ban_add" type="string">{1} ditambahkan ke daftar larangan.</option>
+		<option name="command_kick_or_ban_del" type="string">Pengguna {1} dibebaskan.</option>
+		<option name="command_banlist_lock" type="string">Daftar ban/larangan</option>
+		<option name="command_kicklist_lock" type="string">Daftar kick/usir</option>
+		<option name="command_wiki_count" type="string">Jumlah definisi dalam database.</option>
+		<option name="command_wiki_nodef" type="string">Tidak ada definisi dalam database.</option>
+		<option name="command_wiki_revision" type="string">Revisi</option>
+		<option name="command_wiki_revision_set" type="string">Revisi diatur ke {1}.</option>
+		<option name="command_top10" type="string">TOP10 kata-kata-lexem yang paling populer</option>
+		<option name="command_top10_begin" type="string">awal</option>
+		<option name="command_top10_end" type="string">akhir</option>
+		<option name="command_talkers" type="string">TOP10 Pengguna paling aktif</option>
+		<option name="command_talkers_list" type="string">{1}. {2} dengan {3} kalimat</option>
+		<option name="command_count" type="string">Penghitungan kata-kata-lexem: {1}</option>
+		<option name="command_dfn" type="string">Definisi sudah diupdate.</option>
+		<option name="command_set" type="string">Nilai opsi telah diatur.</option>
+		<option name="command_set_nosuch" type="string">Tidak ada pilihan.</option>
+		<option name="command_msg_sended" type="string">Pesan dikirim</option>
+		<option name="command_users_list_seen" type="string">Pengguna, yg terlihat:</option>
+		<option name="command_users_online_seen" type="string">{1}. {2} berada di ruang {3}</option>
+		<option name="command_users_offline_seen" type="string">{1}. {2} (Terakhir kali terlihat pada {3} di ruang {4})</option>
+		<option name="command_users_online" type="string">Pengguna online</option>
+		<option name="command_users_offline" type="string">Pengguna offline</option>
+		<option name="command_users_limitshow" type="string">Menunjukkan {1} pengguna dari {2}</option>
+		<option name="command_users_nouser" type="string">Pengguna {1} tidak ada</option>
+		<option name="command_join" type="string">Pichi bergabung ke {1} dengan nick {2}</option>
+		<option name="command_left" type="string">Pichi meninggalkan ruang {1}</option>
+		<option name="command_status" type="string">Pengguna {1} sekarang {2}</option>
+		<option name="command_status_online" type="string">online</option>
+		<option name="command_status_offline" type="string">offline</option>
+		<option name="command_ping_nouser" type="string">Pengguna tidak ada.</option>
+		<option name="command_topic_changed" type="string">Topik telah diubah.</option>
+		<option name="command_nicks" type="string">Nick pengguna:</option>
+		<option name="command_lastfm_listen" type="string">{1} sedang mendengarkan: {2}</option>
+		<option name="command_lastfm_setuser" type="string">Anda terikat pada {1} akun.</option>
+		<option name="command_translate_language" type="string">Terjemahan diberikan pada akun Anda</option>
+		<option name="command_urlshort_incorrect_service" type="string">Layanan tidak tersedia atau url tidak valid.</option>
+		<option name="command_uptime_start" type="string">Waktu mulai dari bot: {1}</option>
+		<option name="command_uptime_uptime" type="string">Bot berjalan selama: {1}</option>
+		<option name="command_ping_pong" type="string">Pong {1}ms</option>
+		<option name="command_off" type="string">Pichi dinonaktifkan.</option>
+		<option name="command_on" type="string">Pichi diaktifkan.</option>
+        </language>
+</PichiLanguage>
