@@ -27,16 +27,16 @@
 namespace pichi
 {
   
-class lastmessage
+class PichiMessage
 {
 	friend class commandhandler;
 	friend class pichicore;
 	public:
 		bool reciveMessage(const std::string& message, const std::string& type, const std::string& from);
 		std::string getLastRoom(void);
-		lastmessage(const lastmessage& lst);
-		lastmessage();
-		lastmessage& operator =(const lastmessage& lst);
+		PichiMessage(const PichiMessage& lst);
+		PichiMessage();
+		PichiMessage& operator =(const PichiMessage& lst);
 		std::string getJIDlast(void);
 		std::string getFromlast(void);
 		std::string getMsgLast(void);

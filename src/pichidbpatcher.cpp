@@ -79,7 +79,7 @@ void PichiDbPather::patch(void )
 		// Ниже 21 версии не патчит
 		case 21:
 		{
-			LOG("Db pathing 21->22 ... wait some time...", LOG::WARNING);
+			Log("Db pathing 21->22 ... wait some time...", Log::WARNING);
 			std::vector< std::pair<std::string, std::string> > dump;
 			sql->query("SELECT `lexeme`,`count` FROM lexems;");
 			std::map<std::string, std::string> gt;
@@ -96,7 +96,7 @@ void PichiDbPather::patch(void )
 			dump.clear();
 			sql->finalize();
 			sql->exec("UPDATE db_version SET version = " + boost::lexical_cast<std::string>(PICHI_DB_VERSION_ACTUAL) + ";");
-			LOG("Db pathing 21->22 ... done!", LOG::WARNING);
+			Log("Db pathing 21->22 ... done!", Log::WARNING);
 		}
 	}
 	

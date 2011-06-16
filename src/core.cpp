@@ -29,7 +29,7 @@ namespace pichi
 void core::firstStart(void )
 {
 #ifndef WIN32
-	LOG("First StartUp. Creating Structure...", LOG::WARNING);
+	Log("First StartUp. Creating Structure...", Log::WARNING);
 	std::string dir = system::getFullPath(PICHI_CONFIG_DIR);
 	
 	mkdir(dir.c_str(), 0775);
@@ -46,7 +46,7 @@ void core::firstStart(void )
 	std::ofstream ofs((dir + "pichi.xml").c_str(), std::ios::binary);
 	ofs << ifs.rdbuf();
 	
-	LOG("Check ~/.pichi/pichi.xml config. Then start pichi again.", LOG::WARNING);
+	Log("Check ~/.pichi/pichi.xml config. Then start pichi again.", Log::WARNING);
 	throw PichiException("Check ~/.pichi/pichi.xml config. Then start pichi again.");
 #endif
 }
@@ -57,11 +57,11 @@ void core::botstart(void)
 	UINT oldcodepage = GetConsoleOutputCP();
 	SetConsoleOutputCP(65001);
 #endif
-	LOG("Start Pichi", LOG::INFO);
+	Log("Start Pichi", Log::INFO);
 	if(pichi->getConfigOption("debug") == "1")
 	{
-		LOG::LEVEL = system::atoi(pichi->getConfigOption("debug_level"));
-		LOG("Debug enabled at level: " + pichi->getConfigOption("debug_level"), LOG::INFO);
+		Log::LEVEL = system::atoi(pichi->getConfigOption("debug_level"));
+		Log("Debug enabled at level: " + pichi->getConfigOption("debug_level"), Log::INFO);
 	}
 	if(pichi->getConfigOption("port") != "5222")
 		client = new Client( jid, password, system::atoi(pichi->getConfigOption("port")) );
@@ -83,12 +83,12 @@ void core::botstart(void)
 		throw PichiException("Error in cron thread");
 	client->connect();
 	if(!was_connected)
-		LOG("Pichi didn't connect to the xmpp server. Check connection settings.", LOG::WARNING);
+		Log("Pichi didn't connect to the xmpp server. Check connection settings.", Log::WARNING);
 #ifdef WIN32
 	SetConsoleOutputCP(oldcodepage);
 	::system("pause");
 #endif
-	LOG("Stop Pichi", LOG::INFO);
+	Log("Stop Pichi", Log::INFO);
 }
 
 core::core(int argc, char** argv)
@@ -132,8 +132,8 @@ core::core(int argc, char** argv)
 	{
 		if (daemon(true, false))
 			std::cerr << "Pichi daemon failed" << std::endl;
-		LOG::file_log = true;
-		LOG::log_file = coptions["log"].as<std::string>();
+		Log::file_log = true;
+		Log::log_file = coptions["log"].as<std::string>();
 		if(!coptions.count("no-pid") && coptions["pid"].as<std::string>() != "")
 			std::ofstream(coptions["pid"].as<std::string>().c_str()) << getpid() << std::endl;
 	}
@@ -326,7 +326,7 @@ void core::handlePresence(const Presence& presence)
   
 	if(presence.from().bare() == "")
 	{
-		LOG("This is not user presence", LOG::DEBUG);
+		Log("This is not user presence", Log::DEBUG);
 		return;
 	}
 
@@ -378,7 +378,7 @@ void core::handleSubscription(const Subscription& subscription)
 
 void core::handleLog (LogLevel level, LogArea area, const std::string &message)
 {
-	LOG("[GLOOX]" + message, LOG::DEBUG);
+	Log("[GLOOX]" + message, Log::DEBUG);
 }
 
 void core::initDBStruct(void)
@@ -423,7 +423,7 @@ void *core::cron(void *context)
 			if(time(NULL) - ((core *)context)->times["white_ping"] > 5 * 60)
 			{
 				((core *)context)->times["white_ping"] = time(NULL);
-				LOG("[CRON] Ping of live", LOG::VERBOSE);
+				Log("[CRON] Ping of live", Log::VERBOSE);
 		
 				((core *)context)->client->whitespacePing();
 			}

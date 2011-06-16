@@ -856,7 +856,7 @@ void commandbase::command_lastfm(std::string arg)
 
 void* commandbase::thread_lastfm(void* context)
 {
-	lastmessage last = ((commandbase*)context)->thread_args["lastfm"];
+	PichiMessage last = ((commandbase*)context)->thread_args["lastfm"];
 	std::map<std::string, std::string> user = ((commandbase*)context)->pichi->getJIDinfo( last.getJIDlast() , "lastfm_user" );
 	if(user["lastfm_user"] != "")
 	{
@@ -865,7 +865,7 @@ void* commandbase::thread_lastfm(void* context)
 		if(data != "")
 			((commandbase*)context)->pichi->sendAnswer( (*((commandbase*)context)->pichi->lang)("command_lastfm_listen", ((commandbase*)context)->pichi->getNickFromJID( last.getJIDlast(), last.getLastRoom() ).c_str(), (system::explode("," , (system::explode("\n", data).at(0)))).at(1).c_str()), last );
 		else
-			LOG("Music read from last.fm failed. Check internet connection.", LOG::WARNING);
+			Log("Music read from last.fm failed. Check internet connection.", Log::WARNING);
 		delete curl;
 	}
 	pthread_exit(context);
@@ -882,7 +882,7 @@ void commandbase::command_lastfm_user(std::string arg)
 
 void* commandbase::thread_googletranslate(void* context)
 {
-	lastmessage last = ((commandbase*)context)->thread_args["googletranslate"];
+	PichiMessage last = ((commandbase*)context)->thread_args["googletranslate"];
   
 	std::string text;
 	std::string from;
@@ -918,7 +918,7 @@ void* commandbase::thread_googletranslate(void* context)
 	}
 	else
 	{
-		LOG("Слишком медленный асинхронный вызов, невозможно определить тип функции. Выход.", LOG::WARNING);
+		Log("Слишком медленный асинхронный вызов, невозможно определить тип функции. Выход.", Log::WARNING);
 		pthread_exit(context);
 	}
   
@@ -933,7 +933,7 @@ void* commandbase::thread_googletranslate(void* context)
 	
 	if(ret == "" || ret.substr(0,1) != "{")
 	{
-		LOG("Google translate can failed.", LOG::DEBUG);
+		Log("Google translate can failed.", Log::DEBUG);
 		pthread_exit(context);
 	}
 	
@@ -986,7 +986,7 @@ void commandbase::command_google(std::string arg)
 
 void* commandbase::thread_google(void* context)
 {
-	lastmessage last = ((commandbase*)context)->thread_args["google"];
+	PichiMessage last = ((commandbase*)context)->thread_args["google"];
   
 	pichicurl* curl = new pichicurl();
 	curl->setUrl( "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=" + curl->urlencode( last.getArg() ) );
@@ -996,7 +996,7 @@ void* commandbase::thread_google(void* context)
 	
 	if(ret == "" || ret.substr(0,1) != "{")
 	{
-		LOG("Google search can failed.", LOG::DEBUG);
+		Log("Google search can failed.", Log::DEBUG);
 		pthread_exit(context);
 	}
 	
@@ -1031,7 +1031,7 @@ void commandbase::command_urlshort(std::string arg)
 
 void* commandbase::thread_urlshort(void* context)
 {
-	lastmessage last = ((commandbase*)context)->thread_args["urlshort"];
+	PichiMessage last = ((commandbase*)context)->thread_args["urlshort"];
   
 	pichicurl* curl = new pichicurl();
 	curl->setUrl("http://ur.ly/new.json?href=" + curl->urlencode( last.getArg() ) );
@@ -1040,7 +1040,7 @@ void* commandbase::thread_urlshort(void* context)
 	
 	if(ret == "" || ret.substr(0,1) != "{")
 	{
-		LOG("UL.ly failed.", LOG::DEBUG);
+		Log("UL.ly failed.", Log::DEBUG);
 		((commandbase*)context)->pichi->sendAnswer((*((commandbase*)context)->pichi->lang)("command_urlshort_incorrect_service"), last);
 		pthread_exit(context);
 	}

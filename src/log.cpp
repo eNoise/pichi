@@ -23,11 +23,11 @@
 namespace pichi
 {
 
-int LOG::LEVEL = 3; //default
-bool LOG::file_log = false;
-std::string LOG::log_file = system::getFullPath(PICHI_LOG_FILE);
+int Log::LEVEL = 3; //default
+bool Log::file_log = false;
+std::string Log::log_file = system::getFullPath(PICHI_LOG_FILE);
 
-LOG::LOG(std::string lst, LOG::LogType type)
+Log::Log(std::string lst, Log::LogType type)
 {  
 	std::string logthis;
 	switch(type)

@@ -60,7 +60,7 @@ set(PICHI_CPP 	src/pichiexception.cpp
 		src/xmlsimple.cpp 
 		src/commandbase.cpp
 		src/pichioptions.cpp
-		src/lastmessage.cpp
+		src/pichimessage.cpp
 		src/commandhandler.cpp
 		src/pichiconfig.cpp
 		src/system.cpp

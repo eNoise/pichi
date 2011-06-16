@@ -35,7 +35,7 @@ namespace pichi
 #define TEMPERROR ERROR
 #undef ERROR
   
-class LOG
+class Log
 {
   public:
 	static int LEVEL;
@@ -49,7 +49,7 @@ class LOG
 		DEBUG,
 		VERBOSE
 	};
-	LOG(std::string, LogType);
+	Log(std::string, LogType);
 };
 
 #define ERROR TEMPERROR

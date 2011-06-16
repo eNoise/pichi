@@ -24,7 +24,7 @@
 #include "sqlite.h"
 #include "pichiconfig.h"
 #include "pichioptions.h"
-#include "lastmessage.h"
+#include "pichimessage.h"
 #include "system.h"
 #include <string>
 #include <vector>
@@ -42,7 +42,7 @@ namespace pichi
 class core;
 
 class pichicore : public pichiconfig, 
-		  public lastmessage, 
+		  public PichiMessage, 
 		  public pichioptions
 {
 	public:
@@ -70,7 +70,7 @@ class pichicore : public pichiconfig,
 		void cleanUserInfo(void);
 		bool reciveMessage(const std::string& message, const std::string& type, const std::string& from);
 		void sendAnswer(const std::string& message);
-		void sendAnswer(const std::string& message, const lastmessage& msg);
+		void sendAnswer(const std::string& message, const PichiMessage& msg);
 		
 		bool isJID(const std::string& jid);
 		bool isBareJID(const std::string& jid);
@@ -102,7 +102,7 @@ class pichicore : public pichiconfig,
 		
 		time_t convertTime(std::string time);
 		
-		lastmessage& operator=(const pichicore& lst);
+		PichiMessage& operator=(const pichicore& lst);
 		
 		pichicore();
 		~pichicore();
