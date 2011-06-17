@@ -30,7 +30,7 @@
 namespace pichi
 {
 
-class sqlite
+class SQLite
 {
 	public:
 		struct q // query struct
@@ -45,9 +45,9 @@ class sqlite
 			~q();
 			void finalize(void);
 		};
-		sqlite* clone() const;
-		sqlite(const std::string& f);
-		sqlite(const sqlite& sqlcp);
+		SQLite* clone() const;
+		SQLite(const std::string& f);
+		SQLite(const SQLite& sqlcp);
 		bool query(const std::string&);
 		q* squery(const std::string&);
 		bool exec(const std::string&);
@@ -61,7 +61,7 @@ class sqlite
 		const std::string escapeString(const std::string&);
 		bool reset();
 		void finalize();
-		~sqlite();
+		~SQLite();
 	private:
 		std::string dbfile;
 		sqlite3 *db;

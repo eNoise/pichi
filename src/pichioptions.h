@@ -35,7 +35,7 @@ class pichioptions
 	void setSqlOption(std::string name, std::string value);
 	std::string getSqlOption(std::string name);
   protected:
-	sqlite **sql_options;
+	SQLite **sql_options;
 	std::map<std::string, std::string> options;
 };
 

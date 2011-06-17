@@ -32,7 +32,7 @@
 #include <gloox/jid.h>
 #include "commandbase.h"
 #include "languages.h"
-#include "lexemes.h"
+#include "lexemebuilder.h"
 #include "pichievent.h"
 //#include <boost/timer.hpp>
 
@@ -46,11 +46,11 @@ class pichicore : public pichiconfig,
 		  public pichioptions
 {
 	public:
-		sqlite *sql;
+		SQLite *sql;
 		core *jabber;
 		commandbase *commander;
 		languages *lang;
-		lexemes *lex;
+		LexemeBuilder *lex;
 		PichiEvent *event;
 		
 		time_t wait_time;

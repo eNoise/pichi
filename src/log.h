@@ -21,12 +21,7 @@
 #ifndef LOG_H
 #define LOG_H
 
-#include <iostream>
 #include <string>
-#include "system.h"
-#include "config.h"
-#include <fstream>
-#include <boost/algorithm/string/erase.hpp>
 
 namespace pichi
 {
@@ -50,6 +45,8 @@ class Log
 		VERBOSE
 	};
 	Log(std::string, LogType);
+	Log(std::string);
+	void showLog(std::string, LogType);
 };
 
 #define ERROR TEMPERROR

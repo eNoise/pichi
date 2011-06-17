@@ -23,7 +23,7 @@
 namespace pichi
 {
   
-sqlite::sqlite(const std::string& f):dbfile(f)
+SQLite::SQLite(const std::string& f):dbfile(f)
 {
 	int rc;
 	rc = sqlite3_open(dbfile.c_str(), &db);
@@ -35,13 +35,13 @@ sqlite::sqlite(const std::string& f):dbfile(f)
 	}
 }
 
-sqlite::~sqlite()
+SQLite::~SQLite()
 {
 	finalize();
 	sqlite3_close(db);
 }
 
-bool sqlite::query(const std::string& sql)
+bool SQLite::query(const std::string& sql)
 {  
 	if(sql != mainquery.query_string)
 	{
@@ -66,7 +66,7 @@ bool sqlite::query(const std::string& sql)
 }
 
 
-sqlite::q* sqlite::squery(const std::string& sql)
+SQLite::q* SQLite::squery(const std::string& sql)
 {
 	q* ret = new q();
 	ret->query_string = sql;
@@ -87,13 +87,13 @@ sqlite::q* sqlite::squery(const std::string& sql)
 }
 
 
-bool sqlite::exec(const std::string& sql)
+bool SQLite::exec(const std::string& sql)
 {
 	char *errtext = NULL;
   
 	if (sqlite3_exec(db, sql.c_str(), NULL, NULL, &errtext) != SQLITE_OK)
 	{
-		std::cout << static_cast<std::string>("SQL exec error: ") + errtext << std::endl;
+		Log(static_cast<std::string>("SQL exec error: ") + errtext, Log::WARNING);
 		sqlite3_free(errtext);
 		return false;
 	}
@@ -101,7 +101,7 @@ bool sqlite::exec(const std::string& sql)
 	return true;
 }
 
-std::map<std::string, std::string> sqlite::fetchArray(q* state)
+std::map<std::string, std::string> SQLite::fetchArray(q* state)
 {
 	if(state == NULL)
 		state = &mainquery;
@@ -128,7 +128,7 @@ std::map<std::string, std::string> sqlite::fetchArray(q* state)
 	return row;
 }
 
-std::string sqlite::fetchColumn(const int num, bool stay)
+std::string SQLite::fetchColumn(const int num, bool stay)
 {
 	if(!stay)
 		mainquery.result_status = sqlite3_step(mainquery.statement);
@@ -142,7 +142,7 @@ std::string sqlite::fetchColumn(const int num, bool stay)
 		return "";
 }
 
-std::string sqlite::fetchColumn(sqlite::q* state, const int num, bool stay)
+std::string SQLite::fetchColumn(SQLite::q* state, const int num, bool stay)
 {
 	if(!stay)
 		state->result_status = sqlite3_step(state->statement);
@@ -157,27 +157,27 @@ std::string sqlite::fetchColumn(sqlite::q* state, const int num, bool stay)
 }
 
   
-const int sqlite::numColumns() const
+const int SQLite::numColumns() const
 {
 	return sqlite3_column_count(mainquery.statement);
 }
 
-const int sqlite::numColumns(sqlite::q* state) const
+const int SQLite::numColumns(SQLite::q* state) const
 {
 	return sqlite3_column_count(state->statement);
 }
 
-const int sqlite::numRows() const
+const int SQLite::numRows() const
 {
 	return mainquery.rows_count;
 }
 
-const int sqlite::numRows(sqlite::q* state) const
+const int SQLite::numRows(SQLite::q* state) const
 {
 	return state->rows_count;
 }
 
-bool sqlite::reset()
+bool SQLite::reset()
 {
 	if (sqlite3_reset(mainquery.statement) == SQLITE_OK)
 		return true;
@@ -185,7 +185,7 @@ bool sqlite::reset()
 		return false;
 }
 
-void sqlite::finalize()
+void SQLite::finalize()
 {
         if(mainquery.is_statement)
         {
@@ -196,22 +196,22 @@ void sqlite::finalize()
 	mainquery.rows_count = 0;
 }
 
-const std::string sqlite::escapeString(const std::string& sql)
+const std::string SQLite::escapeString(const std::string& sql)
 {
 	return static_cast<std::string>(sqlite3_mprintf("%q", sql.c_str())); 
 }
 
-sqlite::q::q()
+SQLite::q::q()
 {
        is_statement = false;
 }
 
-sqlite::q::~q()
+SQLite::q::~q()
 {
 	finalize();
 }
 
-void sqlite::q::finalize(void )
+void SQLite::q::finalize(void )
 {
 	if(is_statement)
 	{
@@ -220,14 +220,14 @@ void sqlite::q::finalize(void )
 	}
 }
 
-sqlite* sqlite::clone() const
+SQLite* SQLite::clone() const
 {
-	return new sqlite( *this );
+	return new SQLite( *this );
 }
 
-sqlite::sqlite(const sqlite& sqlcp)
+SQLite::SQLite(const SQLite& sqlcp)
 {
-	sqlite(sqlcp.dbfile);
+	SQLite(sqlcp.dbfile);
 }
 
 }

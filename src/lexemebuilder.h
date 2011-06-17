@@ -35,10 +35,10 @@
 namespace pichi
 {
   
-class lexemes
+class LexemeBuilder
 {
   public:
-	lexemes(sqlite** s);
+	LexemeBuilder(SQLite** s);
 	bool is_answer_limit;
 	size_t word_size_limit;
 	size_t message_size_limit;
@@ -50,7 +50,7 @@ class lexemes
 	std::string genFromWord(const std::string& word);
 	void addNick(const std::string& nick);
   protected:
-	sqlite **sql;
+	SQLite **sql;
 	std::string user_text;
 	std::string send_text;
 	

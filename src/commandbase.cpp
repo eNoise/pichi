@@ -533,7 +533,7 @@ void commandbase::command_top(std::string arg)
 
 void commandbase::command_talkers(std::string arg)
 {  
-	sqlite::q* qqr = pichi->sql->squery("SELECT `jid`, COUNT(*) AS `counter` FROM log WHERE room != '' GROUP BY `jid` ORDER BY `counter` DESC LIMIT 0,10;");
+	SQLite::q* qqr = pichi->sql->squery("SELECT `jid`, COUNT(*) AS `counter` FROM log WHERE room != '' GROUP BY `jid` ORDER BY `counter` DESC LIMIT 0,10;");
 	pichi->sendAnswer(TR("command_talkers"));
 	std::string ans;
 	std::map<std::string, std::string> fr;

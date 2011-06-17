@@ -34,12 +34,12 @@ namespace pichi
 class PichiDbPather
 {
 public:
-  PichiDbPather(sqlite* sql, languages* lang);
+  PichiDbPather(SQLite* sql, languages* lang);
   void checkDbStruct(void);
   void initDbStruct(void);
   int getDbVersion(void);
 private:
-  sqlite* sql;
+  SQLite* sql;
   languages* lang;
   int db_version;
   void patch(void);

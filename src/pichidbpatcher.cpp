@@ -23,7 +23,7 @@
 namespace pichi
 {
   
-PichiDbPather::PichiDbPather(pichi::sqlite* sql, languages* lang)
+PichiDbPather::PichiDbPather(pichi::SQLite* sql, languages* lang)
 {
 	this->sql = sql;
 	this->lang = lang;

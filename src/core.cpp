@@ -386,13 +386,13 @@ void core::initDBStruct(void)
 	
 	if(!system::fileExists(PICHI_CONFIG_DIR + pichi->getConfigOption("db_file")))
 	{
-		pichi->sql = new sqlite(system::getFullPath(PICHI_CONFIG_DIR) + pichi->getConfigOption("db_file"));
+		pichi->sql = new SQLite(system::getFullPath(PICHI_CONFIG_DIR) + pichi->getConfigOption("db_file"));
 		PichiDbPather patch(pichi->sql, pichi->lang);
 		patch.initDbStruct();
 	}
 	else
 	{
-		pichi->sql = new sqlite(system::getFullPath(PICHI_CONFIG_DIR) + pichi->getConfigOption("db_file"));
+		pichi->sql = new SQLite(system::getFullPath(PICHI_CONFIG_DIR) + pichi->getConfigOption("db_file"));
 		PichiDbPather patch(pichi->sql, pichi->lang);
 		patch.checkDbStruct();
 	}

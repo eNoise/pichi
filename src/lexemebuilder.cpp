@@ -18,12 +18,12 @@
 
 */
 
-#include "lexemes.h"
+#include "lexemebuilder.h"
 
 namespace pichi
 {
 
-lexemes::lexemes(sqlite** s) : sql(s)
+LexemeBuilder::LexemeBuilder(SQLite** s) : sql(s)
 {
 	message_size_limit = 0;
 	word_size_limit = 500;
@@ -31,13 +31,13 @@ lexemes::lexemes(sqlite** s) : sql(s)
 	is_answer_limit = false;
 }
 
-void lexemes::addNick(const std::string& nick)
+void LexemeBuilder::addNick(const std::string& nick)
 {
 	nicks.push_back(nick);
 	nicks.unique();
 }
 
-void lexemes::parseText(std::string text)
+void LexemeBuilder::parseText(std::string text)
 {
 	cleanString(text);
 	//$this->log->log("$string to lexems", PichiLog::LEVEL_DEBUG);
@@ -63,7 +63,7 @@ void lexemes::parseText(std::string text)
 	user_text = text;
 }
 
-void lexemes::addLexema(const std::vector<std::string>& lex)
+void LexemeBuilder::addLexema(const std::vector<std::string>& lex)
 {
 	if(lex.size() != 3)
 		return;
@@ -74,7 +74,7 @@ void lexemes::addLexema(const std::vector<std::string>& lex)
 	(*sql)->exec(sql_query);	
 }
 
-void lexemes::buildArray(void )
+void LexemeBuilder::buildArray(void )
 {
 	if(!answers.empty())
 		answers.clear();
@@ -88,12 +88,12 @@ void lexemes::buildArray(void )
 	}
 }
 
-std::string lexemes::wToString(const std::vector< std::string >& msg, bool f, bool s, bool t)
+std::string LexemeBuilder::wToString(const std::vector< std::string >& msg, bool f, bool s, bool t)
 {
 	return ((f) ? msg[0] : "") + ((f && s) ? " " : "") + ((s) ? msg[1] : "") + (((f || s) && t) ? " " : "") + ((t) ? msg[2] : "");
 }
 
-std::vector<std::string> lexemes::choiseWords(void)
+std::vector<std::string> LexemeBuilder::choiseWords(void)
 {
 	std::vector<std::string> empt(3);
 	if(answers.empty())
@@ -114,12 +114,12 @@ std::vector<std::string> lexemes::choiseWords(void)
 
 
 
-void lexemes::clean(void )
+void LexemeBuilder::clean(void )
 {
       answers.clear();
 }
 
-std::string lexemes::genFullRandom()
+std::string LexemeBuilder::genFullRandom()
 {
 	int limit = 10;
 	if(is_answer_limit)
@@ -157,7 +157,7 @@ std::string lexemes::genFullRandom()
 	//	return $this->randFromLog(); //возращать тоже самое нехорошо, вернем что-нибудь из лога
 }
 
-std::string lexemes::genFromWord(const std::string& word)
+std::string LexemeBuilder::genFromWord(const std::string& word)
 {
 	int limit = 10;
 	if(is_answer_limit)
@@ -216,7 +216,7 @@ std::string lexemes::genFromWord(const std::string& word)
 }
 
 
-void lexemes::cleanString(std::string& string)
+void LexemeBuilder::cleanString(std::string& string)
 {
 	// Очищаем от лишних пробелов
 	while(string.find("  ") != std::string::npos)

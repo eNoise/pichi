@@ -1,9 +1,21 @@
 cmake_minimum_required (VERSION 2.6)
 PROJECT(pichi)
 set (PROJECT_NAME_GLOBAL pichi)
-set (VERSION "0.6.1")
+set (VERSION "0.7.0dev")
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include (CheckIncludeFile)
+
+execute_process(COMMAND ${PROJECT_SOURCE_DIR}/getrevision.sh
+		OUTPUT_VARIABLE GIT_REVISION 
+		OUTPUT_STRIP_TRAILING_WHITESPACE
+		)
+execute_process(COMMAND git describe
+		OUTPUT_VARIABLE GIT_DESCRIBE 
+		OUTPUT_STRIP_TRAILING_WHITESPACE
+		)
+add_definitions(-DGIT_REVISION="${GIT_REVISION}")
+add_definitions(-DGIT_DESCRIBE="${GIT_DESCRIBE}")
+add_definitions(-DGIT_VERSION="${VERSION}")
 
 if (NOT MSVC)
     if (CMAKE_CROSSCOMPILING)
@@ -25,6 +37,7 @@ CHECK_INCLUDE_FILE (time.h HAVE_TIME_H)
 CHECK_INCLUDE_FILE (stdlib.h HAVE_STDLIB_H)
 CHECK_INCLUDE_FILE (sys/stat.h HAVE_SYS_STAT_H)
 
+find_package (Threads REQUIRED)
 find_package (Sqlite3 REQUIRED)
 if(WIN32)
     find_package (Boost REQUIRED COMPONENTS regex-gcc45 program_options-gcc45)
@@ -55,7 +68,7 @@ set(PICHI_CPP 	src/pichiexception.cpp
 		src/pichievent.cpp
 		src/log.cpp
 		src/pichicurl.cpp
-		src/lexemes.cpp
+		src/lexemebuilder.cpp
 		src/languages.cpp    
 		src/xmlsimple.cpp 
 		src/commandbase.cpp
@@ -71,7 +84,7 @@ set(PICHI_CPP 	src/pichiexception.cpp
 		src/pichi.cpp
 )
 
-set(LINK_LIBS	pthread
+set(LINK_LIBS	${CMAKE_THREAD_LIBS_INIT}
 		${GLOOX_LIBRARIES}
 		${TINYXML_LIBRARIES}
 		${SQLITE3_LIBRARIES}

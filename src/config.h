@@ -21,7 +21,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define PICHI_VERSION "0.7.0 (dev)"
+#define PICHI_VERSION std::string(GIT_VERSION) + " (" + std::string(GIT_DESCRIBE) + ") [r" + std::string(GIT_REVISION) + "]"
 
 #ifndef WIN32
 #define PICHI_CONFIG_DIR "~/.pichi/"

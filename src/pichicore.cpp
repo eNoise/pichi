@@ -33,7 +33,7 @@ pichicore::pichicore()
 	commander = new commandbase(this);
 	//translater
 	lang = new languages(config["language"]);
-	lex = new lexemes(&sql);
+	lex = new LexemeBuilder(&sql);
 	event = new PichiEvent(this);
 	
 	//timers
@@ -196,7 +196,7 @@ std::string pichicore::getJIDfromNick(const std::string& nick, std::string room,
 		}
 	}
 	
-	sqlite::q* qu = sql->squery("SELECT `jid` FROM users WHERE nick = '" + sql->escapeString(nick) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + likeQuery + ";");
+	SQLite::q* qu = sql->squery("SELECT `jid` FROM users WHERE nick = '" + sql->escapeString(nick) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + likeQuery + ";");
 	std::string jid = sql->fetchColumn(qu, 0);
 	delete qu;
 	return jid;
@@ -230,7 +230,7 @@ std::string pichicore::getJIDfromNicks(const std::string& nick, std::string room
 		}
 	}
 	
-	sqlite::q* qu = sql->squery("SELECT `jid` FROM users_nick WHERE nick = '" + sql->escapeString(nick) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + likeQuery + " ORDER BY `time` ASC;");
+	SQLite::q* qu = sql->squery("SELECT `jid` FROM users_nick WHERE nick = '" + sql->escapeString(nick) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + likeQuery + " ORDER BY `time` ASC;");
 	std::string jid = sql->fetchColumn(qu, 0);
 	delete qu;
 	return jid;
@@ -283,7 +283,7 @@ std::string pichicore::getDefaultRoom(void)
 std::string pichicore::getNickFromJID(const std::string& jid, std::string room, bool all_rooms)
 {
 	Log("[NICK] From JID " + jid, Log::VERBOSE);
-	sqlite::q* qu = sql->squery("SELECT `nick` FROM users WHERE jid = '" + sql->escapeString(jid) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + ";");
+	SQLite::q* qu = sql->squery("SELECT `nick` FROM users WHERE jid = '" + sql->escapeString(jid) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + ";");
 	std::string rtn = sql->fetchColumn(qu, 0);
 	delete qu;
 	return rtn;
@@ -308,7 +308,7 @@ bool pichicore::isAccess(std::string jid, std::string room, int level)
 	if(jid == "")
 		return false;
 	
-	sqlite::q* qu = sql->squery("SELECT `level` FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
+	SQLite::q* qu = sql->squery("SELECT `level` FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
 	std::string tempresult = sql->fetchColumn(qu, 0);
 	delete qu;
 	
@@ -572,7 +572,7 @@ void pichicore::pingRecive(std::string jid)
 // устанавливает информацию о jid
 void pichicore::setJIDinfo(std::string jid, std::string name, std::string value, std::string groupid)
 {
-	sqlite::q* qu = sql->squery("SELECT COUNT(*) FROM users_data WHERE jid = '" + sql->escapeString(jid) + "' AND name = '" + sql->escapeString(name) + "'" + ((groupid != "") ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
+	SQLite::q* qu = sql->squery("SELECT COUNT(*) FROM users_data WHERE jid = '" + sql->escapeString(jid) + "' AND name = '" + sql->escapeString(name) + "'" + ((groupid != "") ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
 	if(system::atoi(sql->fetchColumn(qu, 0)) > 0)
 		sql->exec("UPDATE users_data SET value = '" + sql->escapeString(value) + "'  WHERE jid = '" + sql->escapeString(jid) + "' AND name = '" + sql->escapeString(name) + "'" + ((groupid != "") ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
 	else
@@ -584,7 +584,7 @@ void pichicore::setJIDinfo(std::string jid, std::string name, std::string value,
 std::map<std::string, std::string> pichicore::getJIDinfo(std::string jid, std::string name, std::string groupid)
 {
 	std::map<std::string, std::string> retmap, data;
-	sqlite::q* qu = sql->squery("SELECT * FROM users_data WHERE jid = '" + sql->escapeString(jid) + "'" + ((name != "") ? " AND name = '" + sql->escapeString(name) + "'" : "") + ((groupid != "") ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
+	SQLite::q* qu = sql->squery("SELECT * FROM users_data WHERE jid = '" + sql->escapeString(jid) + "'" + ((name != "") ? " AND name = '" + sql->escapeString(name) + "'" : "") + ((groupid != "") ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
 	while(!(data = sql->fetchArray(qu)).empty())
 		retmap[data["name"]] = data["value"];
 	delete qu;
@@ -698,7 +698,7 @@ void pichicore::cronDo(std::string eventer)
     {
 	Log("[CRON] Bans", Log::VERBOSE);
 	//Check bans and kicks
-	sqlite::q* qu = sql->squery("SELECT `jid`,`value`,`name`,`groupid` FROM users_data WHERE name = 'ban' OR name = 'kick';");
+	SQLite::q* qu = sql->squery("SELECT `jid`,`value`,`name`,`groupid` FROM users_data WHERE name = 'ban' OR name = 'kick';");
 	std::map<std::string, std::string> bans;
 	while(!(bans = sql->fetchArray(qu)).empty())
 	{

@@ -20,6 +20,12 @@
 
 #include "log.h"
 
+#include <iostream>
+#include "system.h"
+#include "config.h"
+#include <fstream>
+#include <boost/algorithm/string/erase.hpp>
+
 namespace pichi
 {
 
@@ -27,9 +33,9 @@ int Log::LEVEL = 3; //default
 bool Log::file_log = false;
 std::string Log::log_file = system::getFullPath(PICHI_LOG_FILE);
 
-Log::Log(std::string lst, Log::LogType type)
-{  
-	std::string logthis;
+void Log::showLog(std::string lst, LogType type)
+{
+std::string logthis;
 	switch(type)
 	{
 	  case ERROR:
@@ -64,6 +70,17 @@ Log::Log(std::string lst, Log::LogType type)
 		boost::erase_all(logthis, "\n");
 		std::cout << logthis << std::endl;
 	}
+}
+
+
+Log::Log(std::string lst)
+{
+	showLog(lst, INFO);
+}
+
+Log::Log(std::string lst, LogType type)
+{  
+	showLog(lst, type);
 }
 
 }
