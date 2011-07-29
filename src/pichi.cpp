@@ -115,7 +115,7 @@ Pichi::Pichi(int argc, char** argv)
 		
 	// Init pichi
 	was_connected = false; // true if connect was successful
-	pichi = new pichicore();
+	pichi = new PichiCore();
 	pichi->jabber = this;
 	// ----------
 	initDBStruct();

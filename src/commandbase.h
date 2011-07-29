@@ -41,12 +41,12 @@
 namespace pichi
 {
 
-class pichicore;
+class PichiCore;
 
 class commandbase : public commandhandler
 {
   public:
-    commandbase(pichicore* p);
+    commandbase(PichiCore* p);
     void fetchCommand(std::string command);
         
     protected:

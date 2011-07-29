@@ -71,7 +71,7 @@ class Pichi : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		
 		RosterManager* roster;
 	protected:
-		pichicore* pichi;
+		PichiCore* pichi;
 	  
 		pthread_t thread;
 		void botstart(void);

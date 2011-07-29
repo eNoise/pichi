@@ -25,7 +25,7 @@
 namespace pichi
 {
 
-commandbase::commandbase(pichicore* p): commandhandler(p)
+commandbase::commandbase(PichiCore* p): commandhandler(p)
 {
 	//base command array
 	commands["help"] = &commandbase::command_help;
@@ -860,7 +860,7 @@ void* commandbase::thread_lastfm(void* context)
 	std::map<std::string, std::string> user = ((commandbase*)context)->pichi->getJIDinfo( last.getJIDlast() , "lastfm_user" );
 	if(user["lastfm_user"] != "")
 	{
-		pichicurl* curl = new pichicurl();
+		PichiCurl* curl = new PichiCurl();
 		std::string data = curl->readurl("http://ws.audioscrobbler.com/1.0/user/" + user["lastfm_user"] + "/recenttracks.txt");
 		if(data != "")
 			((commandbase*)context)->pichi->sendAnswer( (*((commandbase*)context)->pichi->lang)("command_lastfm_listen", ((commandbase*)context)->pichi->getNickFromJID( last.getJIDlast(), last.getLastRoom() ).c_str(), (system::explode("," , (system::explode("\n", data).at(0)))).at(1).c_str()), last );
@@ -925,7 +925,7 @@ void* commandbase::thread_googletranslate(void* context)
 	if(text == "" || from == "" || to == "" || server == "")
 		pthread_exit(context);
   
-	pichicurl* curl = new pichicurl();
+	PichiCurl* curl = new PichiCurl();
 	curl->setUrl("http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=" + curl->urlencode(text) + "&langpair=" + curl->urlencode(from + "|" + to));
 	curl->setReferer(server);
 	std::string ret = curl->read();
@@ -988,7 +988,7 @@ void* commandbase::thread_google(void* context)
 {
 	PichiMessage last = ((commandbase*)context)->thread_args["google"];
   
-	pichicurl* curl = new pichicurl();
+	PichiCurl* curl = new PichiCurl();
 	curl->setUrl( "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=" + curl->urlencode( last.getArg() ) );
 	curl->setReferer("http://google.com");
 	std::string ret = curl->read();
@@ -1033,7 +1033,7 @@ void* commandbase::thread_urlshort(void* context)
 {
 	PichiMessage last = ((commandbase*)context)->thread_args["urlshort"];
   
-	pichicurl* curl = new pichicurl();
+	PichiCurl* curl = new PichiCurl();
 	curl->setUrl("http://ur.ly/new.json?href=" + curl->urlencode( last.getArg() ) );
 	std::string ret = curl->read();
 	delete curl;

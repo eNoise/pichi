@@ -41,7 +41,7 @@ namespace pichi
 
 class Pichi;
 
-class pichicore : public pichiconfig, 
+class PichiCore : public pichiconfig, 
 		  public PichiMessage, 
 		  public pichioptions
 {
@@ -102,10 +102,10 @@ class pichicore : public pichiconfig,
 		
 		time_t convertTime(std::string time);
 		
-		PichiMessage& operator=(const pichicore& lst);
+		PichiMessage& operator=(const PichiCore& lst);
 		
-		pichicore();
-		~pichicore();
+		PichiCore();
+		~PichiCore();
 	protected:
 		bool enabled;
 	private:

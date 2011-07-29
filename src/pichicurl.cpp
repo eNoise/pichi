@@ -23,26 +23,26 @@
 namespace pichi
 {
 
-pichicurl::pichicurl()
+PichiCurl::PichiCurl()
 {
 	curl = curl_easy_init();
 
 	curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errorBuffer);  
 	curl_easy_setopt(curl, CURLOPT_HEADER, 0);  
 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);  
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, pichicurl::writer);  
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, PichiCurl::writer);  
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
 	
 	postargs = new std::string();
 }
 
-pichicurl::~pichicurl()
+PichiCurl::~PichiCurl()
 {
 	curl_easy_cleanup(curl);
 	delete postargs;
 }
 
-int pichicurl::writer(char* data, size_t size, size_t nmemb, std::string* buf)
+int PichiCurl::writer(char* data, size_t size, size_t nmemb, std::string* buf)
 {
 	int rslt = 0;
 	buf->append(data, size * nmemb);
@@ -50,13 +50,13 @@ int pichicurl::writer(char* data, size_t size, size_t nmemb, std::string* buf)
 	return rslt;
 }
 
-std::string pichicurl::readurl(const std::string& u)
+std::string PichiCurl::readurl(const std::string& u)
 {
 	setUrl(u);
 	return read();
 }
 
-std::string pichicurl::read(void )
+std::string PichiCurl::read(void )
 {
 	buffer.clear();
 	result = curl_easy_perform(curl);
@@ -66,35 +66,35 @@ std::string pichicurl::read(void )
 		return std::string();
 }
 
-void pichicurl::setUrl(const std::string& u)
+void PichiCurl::setUrl(const std::string& u)
 {
 	url = u;
 	curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 }
 
-void pichicurl::setReferer(const std::string& u)
+void PichiCurl::setReferer(const std::string& u)
 {
 	curl_easy_setopt(curl, CURLOPT_REFERER, u.c_str());
 }
 
-void pichicurl::setAuth(const std::string& user, const std::string& pass)
+void PichiCurl::setAuth(const std::string& user, const std::string& pass)
 {
 	curl_easy_setopt(curl, CURLOPT_USERPWD, (user + ":" + pass).c_str());
 }
 
-void pichicurl::setPostArgs(const std::string& args)
+void PichiCurl::setPostArgs(const std::string& args)
 {
 	*postargs = args;
 	curl_easy_setopt(curl, CURLOPT_POST, 1);  
 	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postargs->data()); 
 }
 
-const std::string pichicurl::urlencode(const std::string& u) const
+const std::string PichiCurl::urlencode(const std::string& u) const
 {
 	return curl_easy_escape(curl, u.c_str(), u.length());
 }
 
-const std::string pichicurl::urldecode(const std::string& u) const
+const std::string PichiCurl::urldecode(const std::string& u) const
 {
 	int size;
 	return curl_easy_unescape(curl, u.c_str(), u.length(), &size);

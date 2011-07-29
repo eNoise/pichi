@@ -30,7 +30,7 @@ namespace pichi
 class PichiMessage
 {
 	friend class commandhandler;
-	friend class pichicore;
+	friend class PichiCore;
 	public:
 		bool reciveMessage(const std::string& message, const std::string& type, const std::string& from);
 		std::string getLastRoom(void);

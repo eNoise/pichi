@@ -25,7 +25,7 @@
 namespace pichi
 {
 
-PichiEvent::PichiEvent(pichicore* p)
+PichiEvent::PichiEvent(PichiCore* p)
 {
 	pichi = p;
 }

@@ -24,7 +24,7 @@
 namespace pichi
 {
 
-pichicore::pichicore()
+PichiCore::PichiCore()
 {
 	enabled = true;
 	wait_time = system::atoi(config["wait_time"]);
@@ -41,7 +41,7 @@ pichicore::pichicore()
 	crons["bans"]["interval"] = 5;
 }
 
-pichicore::~pichicore()
+PichiCore::~PichiCore()
 {
 	delete commander;
 	delete sql;
@@ -50,22 +50,22 @@ pichicore::~pichicore()
 	delete event;
 }
 
-bool pichicore::isEnabled(void)
+bool PichiCore::isEnabled(void)
 {
 	return enabled;
 }
 
-void pichicore::off(void )
+void PichiCore::off(void )
 {
 	enabled = false;
 }
 
-void pichicore::on(void )
+void PichiCore::on(void )
 {
 	enabled = true;
 }
 
-void pichicore::setUserInfo(std::string jid, std::string nick, std::string state, std::string room, std::string role, std::string status)
+void PichiCore::setUserInfo(std::string jid, std::string nick, std::string state, std::string room, std::string role, std::string status)
 {
 	int level = 1; // defaul access level
 	
@@ -143,23 +143,23 @@ void pichicore::setUserInfo(std::string jid, std::string nick, std::string state
 	}
 }
 
-void pichicore::cleanUserInfo(void)
+void PichiCore::cleanUserInfo(void)
 {
 	sql->exec("UPDATE users SET status = 'unavailable';");
 }
 
-bool pichicore::isJID(const std::string& jid)
+bool PichiCore::isJID(const std::string& jid)
 {
 	return (std::find(jid.begin(), jid.end(), '@') != jid.end());
 }
 
-bool pichicore::isBareJID(const std::string& jid)
+bool PichiCore::isBareJID(const std::string& jid)
 {
 	return ( isJID(jid) && (std::find(jid.begin(), jid.end(), '/') == jid.end()) );
 }
 
 
-std::string pichicore::getJIDpart(const std::string& jid, unsigned int part)
+std::string PichiCore::getJIDpart(const std::string& jid, unsigned int part)
 {
 	std::vector< std::string > exp = system::explode("/", jid);
 	part--;
@@ -168,7 +168,7 @@ std::string pichicore::getJIDpart(const std::string& jid, unsigned int part)
 	return "";
 }
 
-std::string pichicore::getJIDfromNick(const std::string& nick, std::string room, bool all_rooms, int like_room)
+std::string PichiCore::getJIDfromNick(const std::string& nick, std::string room, bool all_rooms, int like_room)
 {
 	Log("[JID] From nick " + nick, Log::VERBOSE);
 	
@@ -202,7 +202,7 @@ std::string pichicore::getJIDfromNick(const std::string& nick, std::string room,
 	return jid;
 }
 
-std::string pichicore::getJIDfromNicks(const std::string& nick, std::string room, bool all_rooms, int like_room)
+std::string PichiCore::getJIDfromNicks(const std::string& nick, std::string room, bool all_rooms, int like_room)
 {
 	Log("[JID] From nick's " + nick, Log::VERBOSE);
 	
@@ -237,7 +237,7 @@ std::string pichicore::getJIDfromNicks(const std::string& nick, std::string room
 }
 
 
-std::string pichicore::getArgJID(const std::string& arg)
+std::string PichiCore::getArgJID(const std::string& arg)
 {
 	std::string jid;
 	if(isBareJID(arg))
@@ -273,14 +273,14 @@ std::string pichicore::getArgJID(const std::string& arg)
 }
 
 
-std::string pichicore::getDefaultRoom(void)
+std::string PichiCore::getDefaultRoom(void)
 {
 	std::list< std::pair<JID, MUCRoom*> >::iterator first_room;
 	first_room = jabber->rooms.begin();
 	return (*first_room).first.bare();
 }
 
-std::string pichicore::getNickFromJID(const std::string& jid, std::string room, bool all_rooms)
+std::string PichiCore::getNickFromJID(const std::string& jid, std::string room, bool all_rooms)
 {
 	Log("[NICK] From JID " + jid, Log::VERBOSE);
 	SQLite::q* qu = sql->squery("SELECT `nick` FROM users WHERE jid = '" + sql->escapeString(jid) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + ";");
@@ -289,7 +289,7 @@ std::string pichicore::getNickFromJID(const std::string& jid, std::string room, 
 	return rtn;
 }
 
-std::string pichicore::getArgNick(const std::string& arg)
+std::string PichiCore::getArgNick(const std::string& arg)
 {
 	if(!isJID(arg))
 		return arg;
@@ -300,7 +300,7 @@ std::string pichicore::getArgNick(const std::string& arg)
 }
 
 
-bool pichicore::isAccess(std::string jid, std::string room, int level)
+bool PichiCore::isAccess(std::string jid, std::string room, int level)
 {
 	if(jid == "")
 		jid = last_jid;
@@ -330,13 +330,13 @@ bool pichicore::isAccess(std::string jid, std::string room, int level)
 	return (dblevel >= level);
 }
 
-bool pichicore::isAccess(int level)
+bool PichiCore::isAccess(int level)
 {
 	return isAccess(last_jid, last_room, level);
 }
 
 
-bool pichicore::reciveMessage(const std::string& message, const std::string& type, const std::string& from)
+bool PichiCore::reciveMessage(const std::string& message, const std::string& type, const std::string& from)
 {
 	if(time(NULL) - jabber->times["wait"] < wait_time)
 	{
@@ -462,7 +462,7 @@ bool pichicore::reciveMessage(const std::string& message, const std::string& typ
 	return true;
 }
 
-void pichicore::sendAnswer(const std::string& message)
+void PichiCore::sendAnswer(const std::string& message)
 {
 	std::string to;
 	if(last_type == "groupchat")
@@ -482,7 +482,7 @@ void pichicore::sendAnswer(const std::string& message)
 	jabber->sendMessage(JID(to), message);
 }
 
-void pichicore::sendAnswer(const std::string& message, const pichi::PichiMessage& msg)
+void PichiCore::sendAnswer(const std::string& message, const pichi::PichiMessage& msg)
 {
 	std::string to;
 	if(msg.last_type == "groupchat")
@@ -502,12 +502,12 @@ void pichicore::sendAnswer(const std::string& message, const pichi::PichiMessage
 	jabber->sendMessage(JID(to), message);
 }
 
-bool pichicore::isCommand(std::string& str)
+bool PichiCore::isCommand(std::string& str)
 {
 	return (str.substr(0,1) == "!");
 }
 
-bool pichicore::setOption(std::string option, std::string value)
+bool PichiCore::setOption(std::string option, std::string value)
 {
 
 	sql->query("SELECT COUNT(*) FROM settings WHERE name = '" + sql->escapeString(option) + "';");
@@ -526,7 +526,7 @@ bool pichicore::setOption(std::string option, std::string value)
     return true; //stub
 }
 
-bool pichicore::isOnline(std::string user, std::string room)
+bool PichiCore::isOnline(std::string user, std::string room)
 {
 	sql->query("SELECT `jid`,`nick` FROM users WHERE status = 'available' AND room = '" + sql->escapeString(room) + "';");
 	std::map<std::string, std::string> users;
@@ -538,7 +538,7 @@ bool pichicore::isOnline(std::string user, std::string room)
 	return false;
 }
 
-bool pichicore::isOnline(std::string jid)
+bool PichiCore::isOnline(std::string jid)
 {
 	sql->query("SELECT COUNT(*) FROM users WHERE status = 'available' AND jid = '" + sql->escapeString(jid) + "';");
 	int count;
@@ -553,14 +553,14 @@ bool pichicore::isOnline(std::string jid)
 	return (count > 0);
 }
 
-void pichicore::ping(std::string jid)
+void PichiCore::ping(std::string jid)
 {
 	//timer = boost::timer();
 	reciver["ping_" + jid] = boost::lexical_cast<std::string>(system::microtime());
 	jabber->client->xmppPing(JID(jid), jabber);  	
 }
 
-void pichicore::pingRecive(std::string jid)
+void PichiCore::pingRecive(std::string jid)
 {
 	double diff =  system::microtime() - boost::lexical_cast<double>(reciver["ping_" + jid]);
 	reciver.erase("ping_" + jid);
@@ -570,7 +570,7 @@ void pichicore::pingRecive(std::string jid)
 }
 
 // устанавливает информацию о jid
-void pichicore::setJIDinfo(std::string jid, std::string name, std::string value, std::string groupid)
+void PichiCore::setJIDinfo(std::string jid, std::string name, std::string value, std::string groupid)
 {
 	SQLite::q* qu = sql->squery("SELECT COUNT(*) FROM users_data WHERE jid = '" + sql->escapeString(jid) + "' AND name = '" + sql->escapeString(name) + "'" + ((groupid != "") ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
 	if(system::atoi(sql->fetchColumn(qu, 0)) > 0)
@@ -581,7 +581,7 @@ void pichicore::setJIDinfo(std::string jid, std::string name, std::string value,
 }
 
 // а теперь получить инфу
-std::map<std::string, std::string> pichicore::getJIDinfo(std::string jid, std::string name, std::string groupid)
+std::map<std::string, std::string> PichiCore::getJIDinfo(std::string jid, std::string name, std::string groupid)
 {
 	std::map<std::string, std::string> retmap, data;
 	SQLite::q* qu = sql->squery("SELECT * FROM users_data WHERE jid = '" + sql->escapeString(jid) + "'" + ((name != "") ? " AND name = '" + sql->escapeString(name) + "'" : "") + ((groupid != "") ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
@@ -592,12 +592,12 @@ std::map<std::string, std::string> pichicore::getJIDinfo(std::string jid, std::s
 }
 
 // ну и удалить
-void pichicore::delJIDinfo(std::string jid, std::string name, std::string groupid)
+void PichiCore::delJIDinfo(std::string jid, std::string name, std::string groupid)
 {
 	sql->exec("DELETE FROM users_data WHERE jid = '" + sql->escapeString(jid) + "'" + ((name != "") ? " AND name = '" + sql->escapeString(name) + "'" : "") + ((groupid != "") ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
 }
 
-void pichicore::ban(std::string jid, std::string time, std::string reason, std::string room)
+void PichiCore::ban(std::string jid, std::string time, std::string reason, std::string room)
 {
 	if(jid == "")
 		return;
@@ -613,7 +613,7 @@ void pichicore::ban(std::string jid, std::string time, std::string reason, std::
 	}
 }
         
-void pichicore::unban(std::string jid, std::string reason, std::string room)
+void PichiCore::unban(std::string jid, std::string reason, std::string room)
 {
   	if(jid == "")
 		return;
@@ -625,7 +625,7 @@ void pichicore::unban(std::string jid, std::string reason, std::string room)
 	delJIDinfo(jid, "ban_room", room);
 }
         
-void pichicore::kick(std::string jid, std::string time, std::string reason, std::string room)
+void PichiCore::kick(std::string jid, std::string time, std::string reason, std::string room)
 {
   	if(jid == "")
 		return;
@@ -641,7 +641,7 @@ void pichicore::kick(std::string jid, std::string time, std::string reason, std:
 	}
 }
         
-void pichicore::unkick(std::string jid, std::string room)
+void PichiCore::unkick(std::string jid, std::string room)
 {
   	if(jid == "")
 		return;
@@ -652,7 +652,7 @@ void pichicore::unkick(std::string jid, std::string room)
 	delJIDinfo(jid, "kick_room", room);
 }
 
-time_t pichicore::convertTime(std::string time)
+time_t PichiCore::convertTime(std::string time)
 {
 	if(time == "")
 		return 0;
@@ -692,7 +692,7 @@ time_t pichicore::convertTime(std::string time)
 }
 
 // Действие по крону
-void pichicore::cronDo(std::string eventer)
+void PichiCore::cronDo(std::string eventer)
 {
     if(canCron("bans"))
     {
@@ -715,12 +715,12 @@ void pichicore::cronDo(std::string eventer)
     }
 }
 
-bool pichicore::canCron(std::string crn)
+bool PichiCore::canCron(std::string crn)
 {
 	return (time(NULL) - crons[crn]["last"] > crons[crn]["interval"]);
 }
 
-PichiMessage& pichicore::operator=(const pichi::pichicore& lst)
+PichiMessage& PichiCore::operator=(const pichi::PichiCore& lst)
 {
 	return PichiMessage::operator=(lst);
 }

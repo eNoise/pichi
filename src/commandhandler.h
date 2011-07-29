@@ -31,17 +31,17 @@
 namespace pichi
 {
 
-class pichicore;
+class PichiCore;
 
 class commandhandler
 {
   public:
-    commandhandler(pichicore* p);
+    commandhandler(PichiCore* p);
     ~commandhandler();
     void fetchCommand(std::string command);
     void operator () (std::string command);
   protected:
-    pichicore* pichi;
+    PichiCore* pichi;
     pthread_t remotethread;
     std::map< std::string, PichiMessage > thread_args;
     void updateThreadVars(std::string part = "");

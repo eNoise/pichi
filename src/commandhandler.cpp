@@ -24,7 +24,7 @@
 namespace pichi
 {
 
-commandhandler::commandhandler(pichicore* p)
+commandhandler::commandhandler(PichiCore* p)
 {
 	pichi = p;
 }

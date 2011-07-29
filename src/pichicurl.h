@@ -27,11 +27,11 @@
 namespace pichi
 {
 
-class pichicurl
+class PichiCurl
 {
   public:
-    pichicurl();
-    ~pichicurl();
+    PichiCurl();
+    ~PichiCurl();
     std::string readurl(const std::string& u);
     std::string read(void);
     void setUrl(const std::string& u);

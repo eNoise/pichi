@@ -29,17 +29,17 @@
 namespace pichi
 {
 
-class pichicore;
+class PichiCore;
 
 class PichiEvent
 {
 
 public:
-    PichiEvent(pichicore*);
+    PichiEvent(PichiCore*);
     void callEvent(std::string action, std::string coincidence = "");
     void deleteEvent(std::string action, std::string coincidence = "");
 private:
-    pichicore* pichi;
+    PichiCore* pichi;
     void doAction(std::string action, std::string doaction, std::string value, std::string option, std::string coincidence = "");
 };
 
