@@ -77,11 +77,12 @@ set(PICHI_CPP 	src/pichiexception.cpp
 		src/commandhandler.cpp
 		src/pichiconfig.cpp
 		src/system.cpp
-		src/core.cpp
+		src/pichi.cpp
 		src/sqlite.cpp
 		src/pichidbpatcher.cpp
 		src/pichicore.cpp
-		src/pichi.cpp
+		
+		src/main.cpp
 )
 
 set(LINK_LIBS	${CMAKE_THREAD_LIBS_INIT}

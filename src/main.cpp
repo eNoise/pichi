@@ -18,42 +18,11 @@
 
 */
 
-#ifndef LASTMESSAGE_H
-#define LASTMESSAGE_H
+#include "pichi.h"
+using namespace pichi;
 
-#include <string>
-#include <time.h>
-
-namespace pichi
+int main(int argc, char** argv)
 {
-  
-class PichiMessage
-{
-	friend class commandhandler;
-	friend class pichicore;
-	public:
-		bool reciveMessage(const std::string& message, const std::string& type, const std::string& from);
-		std::string getLastRoom(void);
-		PichiMessage(const PichiMessage& lst);
-		PichiMessage();
-		PichiMessage& operator =(const PichiMessage& lst);
-		std::string getJIDlast(void);
-		std::string getFromlast(void);
-		std::string getMsgLast(void);
-		std::string getArg(void);
-	protected:
-		std::string last_message;
-		std::string last_from;
-		std::string last_type;
-		std::string last_room;
-		std::string last_jid;
-		time_t last_time;
-		int last_level;
-		
-		std::string last_command;
-		std::string last_args;
-};
-
+    Pichi bot(argc, argv);      
+    return 0;
 }
-
-#endif // LASTMESSAGE_H

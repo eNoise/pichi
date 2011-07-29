@@ -20,7 +20,7 @@
 
 #include "pichievent.h"
 #include "pichicore.h"
-#include "core.h"
+#include "pichi.h"
 
 namespace pichi
 {

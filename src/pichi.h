@@ -1,6 +1,6 @@
 /*
     Pichi XMPP (Jabber) Bot.
-    Copyright (C) 2010  Alexey Kasyanchuk (deg@uruchie.org)
+    Copyright (C) 2011  Alexey Kasyanchuk (deg@uruchie.org)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ namespace pichi
 
 using namespace gloox;
 
-class core : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
+class Pichi : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		public ConnectionListener, public PresenceHandler, public EventHandler,
 		public SubscriptionHandler
 {
@@ -79,8 +79,8 @@ class core : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		static void *cron(void *context);
 		void firstStart(void);
 	public:
-		core(int argc, char** argv);
-                ~core() throw();
+		Pichi(int argc, char** argv);
+                ~Pichi() throw();
 		bool parseArgs(int argc, char** argv);
 		
 		boost::program_options::variables_map coptions;

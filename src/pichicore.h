@@ -39,7 +39,7 @@
 namespace pichi
 {
 
-class core;
+class Pichi;
 
 class pichicore : public pichiconfig, 
 		  public PichiMessage, 
@@ -47,7 +47,7 @@ class pichicore : public pichiconfig,
 {
 	public:
 		SQLite *sql;
-		core *jabber;
+		Pichi *jabber;
 		commandbase *commander;
 		languages *lang;
 		LexemeBuilder *lex;
