@@ -19,6 +19,7 @@
 */
 
 #include "languages.h"
+#include "pichi.h"
 
 namespace pichi
 {

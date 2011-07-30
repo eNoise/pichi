@@ -18,40 +18,32 @@
 
 */
 
-#ifndef CORE_H
-#define CORE_H
+#ifndef PICHI_H
+#define PICHI_H
 
-#include <gloox/client.h>
+#include <string>
+#include <pthread.h>
+#include <boost/program_options/variables_map.hpp>
+
 #include <gloox/messagehandler.h>
 #include <gloox/presencehandler.h>
-#include <gloox/message.h>
-#include <gloox/mucroom.h>
-#include <gloox/mucroomhandler.h>
-#include <gloox/loghandler.h>
 #include <gloox/connectionlistener.h>
-#include <gloox/presence.h>
+#include <gloox/loghandler.h>
 #include <gloox/eventhandler.h>
 #include <gloox/subscriptionhandler.h>
-#include <gloox/subscription.h>
-#include <gloox/rostermanager.h>
+#include <gloox/mucroomhandler.h>
 
-#include <iostream>
-#include <list>
-#include <time.h>
-#include <pthread.h>
-#include <map>
-#include <sys/stat.h>
-#include <fstream>
-#include <boost/program_options.hpp>
-
-#include "pichicore.h"
-#include "system.h"
-#include "log.h"
-#include "config.h"
-#include "pichidbpatcher.h"
+namespace gloox {
+    class Client;
+    class RosterManager;  
+};
 
 namespace pichi
 {
+
+static std::string RUN_DIR; // Runtime Directory
+
+class PichiCore;
 
 using namespace gloox;
 
@@ -60,6 +52,9 @@ class Pichi : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		public SubscriptionHandler
 {
 	private:
+		bool isConnected;
+		bool isFirstStart;
+	  
 		std::string name;
 		std::string nick;
 		std::string password;
@@ -67,7 +62,7 @@ class Pichi : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		std::string port;
                 std::string roomservice;
 		JID jid;
-		bool was_connected;
+		
 		
 		RosterManager* roster;
 	protected:
@@ -129,4 +124,4 @@ class Pichi : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 
 }
 
-#endif // CORE_H
+#endif // PICHI_H

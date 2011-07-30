@@ -20,6 +20,7 @@
 
 #include "pichicore.h"
 #include "pichi.h"
+#include "gloox/client.h"
 
 namespace pichi
 {

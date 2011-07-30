@@ -20,34 +20,54 @@
 
 #include "pichi.h"
 
+#include <gloox/client.h>
+#include <gloox/rostermanager.h>
+#include <gloox/jid.h>
+#include <gloox/message.h>
+#include <gloox/mucroom.h>
+#include <gloox/presence.h>
+#include <gloox/subscription.h>
+
+#include <list>
+#include <fstream>
+#include <boost/program_options.hpp>
+#include <iostream>
+
+#include "pichicore.h"
+#include "system.h"
+#include "log.h"
+#include "config.h"
+#include "pichidbpatcher.h"
+
 namespace pichi
 {
 
 /*
  *	Only on linux 
  */
-void Pichi::firstStart(void )
+void Pichi::firstStart(void)
 {
+	Log("First Start.", Log::WARNING);
 #ifndef WIN32
-	Log("First StartUp. Creating Structure...", Log::WARNING);
+	// Creating ~
 	std::string dir = system::getFullPath(PICHI_CONFIG_DIR);
 	
+	// construcor checked dir exist... all good
 	mkdir(dir.c_str(), 0775);
 	
-	std::string conf_file;
-	if(system::fileExists("/usr/share/pichi/config/pichi.xml"))
-		conf_file = "/usr/share/pichi/config/pichi.xml";
+	std::string cfgFile;
+	if(system::fileExists(std::string(PICHI_INSTALLED_DIR) + "pichi.xml"))
+		cfgFile = std::string(PICHI_INSTALLED_DIR) + "pichi.xml";
+	else if(system::fileExists("/usr/share/pichi/config/pichi.xml"))
+		cfgFile = "/usr/share/pichi/config/pichi.xml";
 	else if(RUN_DIR.substr(RUN_DIR.size()-4) == "/bin" && system::fileExists(RUN_DIR.substr(0, RUN_DIR.size()-3) + "share/pichi/config/pichi.xml"))
-		conf_file = RUN_DIR.substr(0, RUN_DIR.size()-3) + "share/pichi/config/pichi.xml";
+		cfgFile = RUN_DIR.substr(0, RUN_DIR.size()-3) + "share/pichi/config/pichi.xml";
 	else
-		throw PichiException("Error: no config file founded... delete ~/.pichi and start bot again");
+		throw PichiException("Error: no config file founded... you must delete ~/.pichi and start bot again");
 	
-	std::ifstream ifs(conf_file.c_str(), std::ios::binary);
+	std::ifstream ifs(cfgFile.c_str(), std::ios::binary);
 	std::ofstream ofs((dir + "pichi.xml").c_str(), std::ios::binary);
 	ofs << ifs.rdbuf();
-	
-	Log("Check ~/.pichi/pichi.xml config. Then start pichi again.", Log::WARNING);
-	throw PichiException("Check ~/.pichi/pichi.xml config. Then start pichi again.");
 #endif
 }
   
@@ -82,7 +102,7 @@ void Pichi::botstart(void)
 	if(pthread_create(&thread, NULL, &Pichi::cron, (void*)this) > 0)
 		throw PichiException("Error in cron thread");
 	client->connect();
-	if(!was_connected)
+	if(!isConnected)
 		Log("Pichi didn't connect to the xmpp server. Check connection settings.", Log::WARNING);
 #ifdef WIN32
 	SetConsoleOutputCP(oldcodepage);
@@ -93,31 +113,40 @@ void Pichi::botstart(void)
 
 Pichi::Pichi(int argc, char** argv)
 {
-#ifndef WIN32
+	// Runtime dir
 	char pathbuf[1024];
 	if(getcwd(pathbuf, 1024) == NULL)
 		throw PichiException("Start dir not founded");
 	RUN_DIR = pathbuf;
-	
+
+	// Detect first start
+	isFirstStart = false;
+#ifndef WIN32
 	// First start checks (create dir on linux)
 	if(!system::fileExists(PICHI_CONFIG_DIR))
-		firstStart();
+		isFirstStart = true;
+#else
+	if(!system::fileExists(std::string(PICHI_CONFIG_DIR) + "pichi.db"))
+		isFirstStart = true;
 #endif
-	// Parse args
+	// First start
+	if(isFirstStart)
+		firstStart();
+		
+	// Parsing args
 	if(!parseArgs(argc, argv))
 	{
-		// Null object for safe delete
-		roster = NULL;
-		client = NULL;
-		pichi = NULL;
+		// Close Session
 		return;
 	}
 		
 	// Init pichi
-	was_connected = false; // true if connect was successful
+	isConnected = false; // true if connect was successful
+	// Connect to Pichi core
 	pichi = new PichiCore();
 	pichi->jabber = this;
 	// ----------
+	// Staring DB structure
 	initDBStruct();
 	pichi->reloadSqlConfig();
   
@@ -170,8 +199,7 @@ bool Pichi::parseArgs(int argc, char** argv)
 	catch (const std::exception& e)
 	{
 		/* Неправильные аргументы */
-		std::cout << "Command line error: " << e.what() << std::endl;
-		return false;
+		throw new PichiException(std::string("Command line error: ") + e.what());
 	}
 	
 	if ( coptions.count("help") )
@@ -255,7 +283,7 @@ void Pichi::leftRoom(JID room)
 
 void Pichi::onConnect()
 {
-	was_connected = true;
+	isConnected = true;
 	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
 		it->second->join();
 	times["wait"] = time(NULL);
@@ -418,7 +446,7 @@ void *Pichi::cron(void *context)
 {
 	while(true)
 	{
-		if(((Pichi *)context)->was_connected)
+		if(((Pichi *)context)->isConnected)
 		{
 			if(time(NULL) - ((Pichi *)context)->times["white_ping"] > 5 * 60)
 			{
