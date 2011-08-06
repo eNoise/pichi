@@ -37,10 +37,9 @@
 namespace pichi
 {
 
-PichiCore::PichiCore()
+PichiCore::PichiCore() : PichiOptions(sql)
 {
 	enabled = true;
-	sql_options = & sql;
 	// init commander
 	commander = new commandbase(this);
 	//translater

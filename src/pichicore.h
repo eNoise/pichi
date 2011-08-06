@@ -39,7 +39,7 @@ class PichiEvent;
 
 class PichiCore : public PichiConfig, 
 		  public PichiMessage, 
-		  public pichioptions
+		  public PichiOptions
 {
 	public:
 		SQLite *sql;

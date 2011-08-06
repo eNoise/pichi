@@ -21,22 +21,25 @@
 #ifndef PICHIOPTIONS_H
 #define PICHIOPTIONS_H
 
-#include "sqlite.h"
 #include <map>
 #include <string>
 
 namespace pichi
 {
 
-class pichioptions
-{
+class SQLite;
+  
+class PichiOptions
+{ 
   public:
+	PichiOptions(SQLite* sql);
 	void reloadSqlConfig(void);
 	void setSqlOption(std::string name, std::string value);
 	std::string getSqlOption(std::string name);
   protected:
-	SQLite **sql_options;
 	std::map<std::string, std::string> options;
+  private:
+	SQLite* sql;
 };
 
 }

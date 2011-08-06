@@ -19,24 +19,27 @@
 */
 
 #include "pichioptions.h"
+#include "sqlite.h"
 
 namespace pichi
 {
 
-void pichioptions::reloadSqlConfig(void )
+PichiOptions::PichiOptions(SQLite* sql) : sql(sql)
 {
-	(*sql_options)->query("SELECT * FROM settings;");
-	//$this->log->log("Parse Settings", PichiLog::LEVEL_DEBUG);
+
+}
+  
+void PichiOptions::reloadSqlConfig(void )
+{
+	sql->query("SELECT * FROM settings;");
 	std::map<std::string, std::string> data;
-	while((data = (*sql_options)->fetchArray()).size() > 0)
+	while((data = sql->fetchArray()).size() > 0)
 	{
 		options[ data["name"] ] = data["value"];
-		//$this->log->log("$data[name] = $data[value]", PichiLog::LEVEL_VERBOSE);
 	}
-	//postParseOptions();
 }
 
-void pichioptions::setSqlOption(std::string name, std::string value)
+void PichiOptions::setSqlOption(std::string name, std::string value)
 {
 	if(name == "")
 		return;
@@ -46,10 +49,10 @@ void pichioptions::setSqlOption(std::string name, std::string value)
 	else
 		return;
 		
-	(*sql_options)->exec("UPDATE settings SET value = '" + (*sql_options)->escapeString(value) + "' WHERE name = '" + (*sql_options)->escapeString(name) + "';");
+	sql->exec("UPDATE settings SET value = '" + sql->escapeString(value) + "' WHERE name = '" + sql->escapeString(name) + "';");
 }
 
-std::string pichioptions::getSqlOption(std::string name)
+std::string PichiOptions::getSqlOption(std::string name)
 {
 	return (options[ name ]);
 }

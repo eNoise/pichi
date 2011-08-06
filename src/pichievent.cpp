@@ -21,6 +21,7 @@
 #include "pichievent.h"
 #include "pichicore.h"
 #include "pichi.h"
+#include "sqlite.h"
 
 namespace pichi
 {
