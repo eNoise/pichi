@@ -19,8 +19,20 @@
 */
 
 #include "pichicore.h"
+
+#include <gloox/client.h>
+#include <gloox/jid.h>
+
+#include <vector>
+
 #include "pichi.h"
-#include "gloox/client.h"
+#include "sqlite.h"
+#include "system.h"
+#include "commandbase.h"
+#include "languages.h"
+#include "lexemebuilder.h"
+#include "pichievent.h"
+
 
 namespace pichi
 {
@@ -28,7 +40,6 @@ namespace pichi
 PichiCore::PichiCore()
 {
 	enabled = true;
-	wait_time = system::atoi(config["wait_time"]);
 	sql_options = & sql;
 	// init commander
 	commander = new commandbase(this);
@@ -89,6 +100,10 @@ void PichiCore::setUserInfo(std::string jid, std::string nick, std::string state
 		if(system::in_array(jid, ignore))
 			level = 0;
 
+	/*
+	 *  For Refactor
+	 */
+	/*
 	if(time(NULL) - jabber->times["wait"] > wait_time)
 	{
 		if(state == "available" && old_state == "unavailable")
@@ -104,6 +119,7 @@ void PichiCore::setUserInfo(std::string jid, std::string nick, std::string state
 			event->callEvent("user_left_room", "room=" + room + ",jid=" + jid);
 		}
 	}
+	*/
 	
 	//($hook = PichiPlugin::fetch_hook('pichicore_status_set')) ? eval($hook) : false;
 	if(room != "")
@@ -338,13 +354,7 @@ bool PichiCore::isAccess(int level)
 
 
 bool PichiCore::reciveMessage(const std::string& message, const std::string& type, const std::string& from)
-{
-	if(time(NULL) - jabber->times["wait"] < wait_time)
-	{
-		Log("Ignore Message", Log::DEBUG);
-		return false;
-	}
-  
+{ 
 	if(message == "" || from == "" || type == "")
 	{
 		Log("Some off room values null ... ignore...", Log::WARNING);

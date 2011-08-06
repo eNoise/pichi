@@ -21,25 +21,21 @@
 #ifndef PICHICORE_H
 #define PICHICORE_H
 
-#include "sqlite.h"
+#include <time.h>
+#include <string>
+
 #include "pichiconfig.h"
 #include "pichioptions.h"
 #include "pichimessage.h"
-#include "system.h"
-#include <string>
-#include <vector>
-#include <time.h>
-#include <gloox/jid.h>
-#include "commandbase.h"
-#include "languages.h"
-#include "lexemebuilder.h"
-#include "pichievent.h"
-//#include <boost/timer.hpp>
 
 namespace pichi
 {
 
 class Pichi;
+class commandbase;
+class languages;
+class LexemeBuilder;
+class PichiEvent;
 
 class PichiCore : public pichiconfig, 
 		  public PichiMessage, 
@@ -53,7 +49,6 @@ class PichiCore : public pichiconfig,
 		LexemeBuilder *lex;
 		PichiEvent *event;
 		
-		time_t wait_time;
 		std::map< std::string, double > usermsg_times;
 		std::map<std::string, std::string> reciver;
 		//boost::timer timer;

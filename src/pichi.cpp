@@ -292,14 +292,28 @@ void Pichi::onConnect()
 
 void Pichi::handleMessage( const Message& msg, MessageSession* session = 0 )
 {
-	pichi->cronDo("message");
-	pichi->reciveMessage(msg.body(), "chat", msg.from().full());
+	if(!msg.tag()->hasChild("delay"))
+	{
+		pichi->cronDo("message");
+		pichi->reciveMessage(msg.body(), "chat", msg.from().full());
+	}
+	else
+	{
+		Log("Ignore message with delay", Log::DEBUG);
+	}
 }
 
 void Pichi::handleMUCMessage (MUCRoom *thisroom, const Message &msg, bool priv )
 {
-	pichi->cronDo("muc_message");
-	pichi->reciveMessage(msg.body(), ((priv) ? "chatgroup" : "groupchat"), msg.from().full());
+	if(!msg.tag()->hasChild("delay"))
+	{
+		pichi->cronDo("muc_message");
+		pichi->reciveMessage(msg.body(), ((priv) ? "chatgroup" : "groupchat"), msg.from().full());
+	}
+	else
+	{
+		Log("Ignore message with delay", Log::DEBUG);
+	}
 }
 
 void Pichi::handleMUCParticipantPresence (MUCRoom *thisroom, const MUCRoomParticipant  participant, const Presence &presence)
@@ -411,7 +425,6 @@ void Pichi::handleLog (LogLevel level, LogArea area, const std::string &message)
 
 void Pichi::initDBStruct(void)
 {
-	
 	if(!system::fileExists(PICHI_CONFIG_DIR + pichi->getConfigOption("db_file")))
 	{
 		pichi->sql = new SQLite(system::getFullPath(PICHI_CONFIG_DIR) + pichi->getConfigOption("db_file"));

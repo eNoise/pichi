@@ -23,6 +23,7 @@
 #include "pichi.h"
 #include "gloox/mucroom.h"
 #include "gloox/client.h"
+#include "lexemebuilder.h"
 
 namespace pichi
 {

@@ -19,11 +19,7 @@
                 <option Name="status" type="string">From hell!</option>
                 
                 <option Name="global_admins" type="bool">1</option>
-                <option Name="admins" type="array" sepperator=",">deg@jabber.uruchie.org</option>
-                <option Name="ignore" type="array" sepperator=","></option>
-                
-                <!-- DO NOT MODIFY! -->
-                <option Name="ping_time" type="int">5</option>  <!-- If reconnect problem (in openfire) -->
-                <option Name="wait_time" type="int">5</option>  <!-- Secs to waiting after connect -->
-        </config>
+                <option Name="admins" type="array" separator=",">deg@jabber.uruchie.org</option>
+                <option Name="ignore" type="array" separator=","></option>
+	</config>
 </PichiConfig>
