@@ -28,6 +28,9 @@
 #include <gloox/presence.h>
 #include <gloox/subscription.h>
 
+#ifdef WIN32
+#include <direct.h>
+#endif
 #include <list>
 #include <fstream>
 #include <boost/program_options.hpp>
@@ -115,7 +118,11 @@ Pichi::Pichi(int argc, char** argv)
 {
 	// Runtime dir
 	char pathbuf[1024];
+#ifndef WIN32
 	if(getcwd(pathbuf, 1024) == NULL)
+#else
+	if(_getcwd(pathbuf, 1024) == NULL)
+#endif
 		throw PichiException("Start dir not founded");
 	RUN_DIR = pathbuf;
 
@@ -178,9 +185,6 @@ Pichi::~Pichi() throw()
 {
 	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
 		delete (it->second);
-	delete roster;
-	delete client;
-	delete pichi;
 }
 
 
