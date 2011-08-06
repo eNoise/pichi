@@ -21,26 +21,37 @@
 #ifndef PICHICONFIG_H
 #define PICHICONFIG_H
 
+#include "xmlsimple.h"
+
 #include <map>
 #include <string>
-#include "xmlsimple.h"
-#include "config.h"
-#include "system.h"
 
 namespace pichi
 {
 
-class pichiconfig : public xmlsimple
+class PichiConfig : public xmlsimple
 {
+  public:
+	 enum ConfigType {
+		INT,
+		STRING,
+		ARRAY,
+		BOOL,
+		UNKNOWN
+	 };
+    
+	 PichiConfig();
+	 void loadXmlConfig(const std::string &);
+	 void setCfgOption(const std::string &, const std::string &);
+	 std::string getCfgOption(const std::string &);
+	 std::string operator[] (const std::string &);
+  private:
+	 ConfigType cfg2type(const std::string& type);
   protected:
 	 std::map<std::string, std::string> config;
+	 std::map<std::string, ConfigType> configType;
+	 std::map<std::string, std::string> configSeparator;
 	 int version;
-  public:
-	 pichiconfig();
-	 void loadXmlConfig(const std::string &);
-	 void setConfigOption(const std::string &, const std::string &);
-	 std::string getConfigOption(const std::string &);
-	 std::string operator[] (const std::string &);
 };
 
 }

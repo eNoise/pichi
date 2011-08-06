@@ -37,7 +37,7 @@ class languages;
 class LexemeBuilder;
 class PichiEvent;
 
-class PichiCore : public pichiconfig, 
+class PichiCore : public PichiConfig, 
 		  public PichiMessage, 
 		  public pichioptions
 {

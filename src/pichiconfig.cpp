@@ -20,20 +20,39 @@
 
 #include "pichiconfig.h"
 
+#include "config.h"
+#include "system.h"
+#include "pichiexception.h"
+#include "log.h"
+
 namespace pichi
 {
   
-std::string pichiconfig::getConfigOption(const std::string& name)
+std::string PichiConfig::getCfgOption(const std::string& name)
 {
 	return config[name];
 }
 
-void pichiconfig::setConfigOption(const std::string& name, const std::string& value)
+void PichiConfig::setCfgOption(const std::string& name, const std::string& value)
 {
 	config[name] = value;
 }
 
-void pichiconfig::loadXmlConfig(const std::string& file)
+PichiConfig::ConfigType PichiConfig::cfg2type(const std::string& type)
+{
+	if(type == "int")
+		return INT;
+	else if(type == "string")
+		return STRING;
+	else if(type == "array")
+		return ARRAY;
+	else if(type == "bool")
+		return BOOL;
+	
+	return UNKNOWN;
+}
+
+void PichiConfig::loadXmlConfig(const std::string& file)
 {
 	xmlsimple::loadXmlConfig(file);
   
@@ -46,10 +65,23 @@ void pichiconfig::loadXmlConfig(const std::string& file)
 	xmllevel = xmllevel->FirstChildElement("config");
 	xmllevel = xmllevel->FirstChildElement("option");
 	
+	ConfigType tmpType;
+	
 	while(xmllevel != NULL)
 	{
 		if(xmllevel->GetText() != NULL)
+		{
 			config[ xmllevel->Attribute("Name") ] = static_cast<std::string>(xmllevel->GetText());
+			tmpType = cfg2type(xmllevel->Attribute("type"));
+			if(tmpType == UNKNOWN)
+			{
+				Log("Unknown config option type.", Log::WARNING);
+				throw new PichiException("Unknown config option type. Break.");
+			}
+			configType[ xmllevel->Attribute("Name") ] = tmpType;
+			if(tmpType == ARRAY)
+				configSeparator[ xmllevel->Attribute("Name") ] = xmllevel->Attribute("separator");
+		}
 		xmllevel = xmllevel->NextSiblingElement("option");
 	} 
 	
@@ -57,15 +89,15 @@ void pichiconfig::loadXmlConfig(const std::string& file)
 }
 
 
-pichiconfig::pichiconfig()
+PichiConfig::PichiConfig()
 {
 	version = 0;
 	loadXmlConfig(system::getFullPath(PICHI_CONFIG_DIR) + "pichi.xml");
 }
 
-std::string pichiconfig::operator[](const std::string& str)
+std::string PichiConfig::operator[](const std::string& str)
 {
-	return getConfigOption(str);
+	return getCfgOption(str);
 }
 
 }

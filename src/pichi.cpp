@@ -78,25 +78,25 @@ void Pichi::botstart(void)
 	SetConsoleOutputCP(65001);
 #endif
 	Log("Start Pichi", Log::INFO);
-	if(pichi->getConfigOption("debug") == "1")
+	if(pichi->getCfgOption("debug") == "1")
 	{
-		Log::LEVEL = system::atoi(pichi->getConfigOption("debug_level"));
-		Log("Debug enabled at level: " + pichi->getConfigOption("debug_level"), Log::INFO);
+		Log::LEVEL = system::atoi(pichi->getCfgOption("debug_level"));
+		Log("Debug enabled at level: " + pichi->getCfgOption("debug_level"), Log::INFO);
 	}
-	if(pichi->getConfigOption("port") != "5222")
-		client = new Client( jid, password, system::atoi(pichi->getConfigOption("port")) );
+	if(pichi->getCfgOption("port") != "5222")
+		client = new Client( jid, password, system::atoi(pichi->getCfgOption("port")) );
 	else
 		client = new Client( jid, password );
 	// set my info
 	client->disco()->setVersion("Pichi Bot", PICHI_VERSION);
-	client->setResource(pichi->getConfigOption("resource"));
+	client->setResource(pichi->getCfgOption("resource"));
 	client->logInstance().registerLogHandler(LogLevelDebug, LogAreaAll, this);
 	client->registerConnectionListener( this );
 	client->registerMessageHandler( this );
 	client->registerPresenceHandler( this );
 	client->registerSubscriptionHandler( this );
 	roster = new RosterManager( client );
-	BOOST_FOREACH( std::string room, system::explode(",", pichi->getConfigOption("room")) )
+	BOOST_FOREACH( std::string room, system::explode(",", pichi->getCfgOption("room")) )
 		enterRoom(JID(room + "/" + nick));
 	times["white_ping"] = times["start"] = time(NULL);
 	if(pthread_create(&thread, NULL, &Pichi::cron, (void*)this) > 0)
@@ -150,12 +150,12 @@ Pichi::Pichi(int argc, char** argv)
 	initDBStruct();
 	pichi->reloadSqlConfig();
   
-	name = pichi->getConfigOption("user");
-	nick = pichi->getConfigOption("room_user");
-	password = pichi->getConfigOption("password");
-	server = pichi->getConfigOption("server");
+	name = pichi->getCfgOption("user");
+	nick = pichi->getCfgOption("room_user");
+	password = pichi->getCfgOption("password");
+	server = pichi->getCfgOption("server");
 	jid = name + "@" + server;
-	roomservice = pichi->getConfigOption("room_service");
+	roomservice = pichi->getCfgOption("room_service");
 #ifndef WIN32
 	if(coptions.count("daemonize"))
 	{
@@ -425,15 +425,15 @@ void Pichi::handleLog (LogLevel level, LogArea area, const std::string &message)
 
 void Pichi::initDBStruct(void)
 {
-	if(!system::fileExists(PICHI_CONFIG_DIR + pichi->getConfigOption("db_file")))
+	if(!system::fileExists(PICHI_CONFIG_DIR + pichi->getCfgOption("db_file")))
 	{
-		pichi->sql = new SQLite(system::getFullPath(PICHI_CONFIG_DIR) + pichi->getConfigOption("db_file"));
+		pichi->sql = new SQLite(system::getFullPath(PICHI_CONFIG_DIR) + pichi->getCfgOption("db_file"));
 		PichiDbPather patch(pichi->sql, pichi->lang);
 		patch.initDbStruct();
 	}
 	else
 	{
-		pichi->sql = new SQLite(system::getFullPath(PICHI_CONFIG_DIR) + pichi->getConfigOption("db_file"));
+		pichi->sql = new SQLite(system::getFullPath(PICHI_CONFIG_DIR) + pichi->getCfgOption("db_file"));
 		PichiDbPather patch(pichi->sql, pichi->lang);
 		patch.checkDbStruct();
 	}
