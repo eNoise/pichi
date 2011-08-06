@@ -156,6 +156,10 @@ Pichi::Pichi(int argc, char** argv)
 	server = pichi->getCfgOption("server");
 	jid = name + "@" + server;
 	roomservice = pichi->getCfgOption("room_service");
+	
+	// игнорировать свой jid
+	pichiIgnore.push_back(jid.full());
+	
 #ifndef WIN32
 	if(coptions.count("daemonize"))
 	{
@@ -216,7 +220,7 @@ void Pichi::sendMessage(JID jid, const std::string& message)
 	Message::MessageType type = Message::Chat;
 	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
 	{
-		if(jid.full() == (*it).first.bare())
+		if(jid.full() == it->first.bare())
 		{
 			type = Message::Groupchat;
 			break;
@@ -230,7 +234,7 @@ void Pichi::ban(const std::string& nick, JID room, std::string message)
 {
 	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
 	{
-		if((*it).first.bare() == room.full())
+		if(it->first.bare() == room.full())
 		{
 			it->second->ban(nick, message);
 		}
@@ -241,7 +245,7 @@ void Pichi::unban(const std::string& nick, JID room, std::string message)
 {
 	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
 	{
-		if((*it).first.bare() == room.full())
+		if(it->first.bare() == room.full())
 		{
 			it->second->setAffiliation(nick, AffiliationNone, message);
 		}
@@ -252,7 +256,7 @@ void Pichi::kick(const std::string& nick, JID room, std::string message)
 {
 	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
 	{
-		if((*it).first.bare() == room.full())
+		if(it->first.bare() == room.full())
 		{
 			it->second->kick(nick, message);
 		}
@@ -263,7 +267,11 @@ void Pichi::kick(const std::string& nick, JID room, std::string message)
 MUCRoom* Pichi::enterRoom(JID room)
 {
 	MUCRoom* newroom = new MUCRoom(client, room, this, NULL);
-	rooms.push_back(std::pair<JID, MUCRoom*>(room.bare(), newroom));
+	rooms.push_back(std::pair<JID, MUCRoom*>(room.full(), newroom));
+	
+	// игнорировать свой jid
+	pichiIgnore.push_back(room.full());
+	
 	return newroom;
 }
 
@@ -271,8 +279,11 @@ void Pichi::leftRoom(JID room)
 {
 	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
 	{
-		if(it->first == room || it->first == room.bare())
+		if(it->first.bareJID() == room || it->first.bareJID() == room.bare())
 		{
+			  // игнорировать свой jid
+			pichiIgnore.remove(it->first.full());
+		  
 			it->second->leave();
 			delete (it->second);
 			rooms.erase(it);

@@ -32,14 +32,14 @@ class SQLite;
 class PichiOptions
 { 
   public:
-	PichiOptions(SQLite* sql);
+	PichiOptions(SQLite** sql);
 	void reloadSqlConfig(void);
 	void setSqlOption(std::string name, std::string value);
 	std::string getSqlOption(std::string name);
   protected:
 	std::map<std::string, std::string> options;
   private:
-	SQLite* sql;
+	SQLite** sql;
 };
 
 }

@@ -83,6 +83,7 @@ class Pichi : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		Client* client;
 		std::list< std::pair<JID, MUCRoom*> > rooms;
 		std::map< std::string, time_t > times;
+		std::list< std::string > pichiIgnore; // игорировать JID'ы пичи
 		
 		void sendMessage(JID jid, const std::string& message);
 		MUCRoom* enterRoom(JID room);

@@ -37,7 +37,7 @@
 namespace pichi
 {
 
-PichiCore::PichiCore() : PichiOptions(sql)
+PichiCore::PichiCore() : PichiOptions(&sql)
 {
 	enabled = true;
 	// init commander
@@ -417,8 +417,11 @@ bool PichiCore::reciveMessage(const std::string& message, const std::string& typ
 		return false;
 	
 	//ME breaker
-	if(last_jid == jabber->getMyJID().bare())
+	if(std::find(jabber->pichiIgnore.begin(), jabber->pichiIgnore.end(), last_jid) != jabber->pichiIgnore.end())
+	{
+		Log("Pichi message break", Log::DEBUG);
 		return true;
+	}
 	
 	//to lexems massges
 	if(enabled && !isCommand(last_message) && options["answer_remember"] == "1")

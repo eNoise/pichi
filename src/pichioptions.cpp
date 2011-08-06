@@ -24,16 +24,16 @@
 namespace pichi
 {
 
-PichiOptions::PichiOptions(SQLite* sql) : sql(sql)
+PichiOptions::PichiOptions(SQLite** sql) : sql(sql)
 {
 
 }
   
 void PichiOptions::reloadSqlConfig(void )
 {
-	sql->query("SELECT * FROM settings;");
+	(*sql)->query("SELECT * FROM settings;");
 	std::map<std::string, std::string> data;
-	while((data = sql->fetchArray()).size() > 0)
+	while((data = (*sql)->fetchArray()).size() > 0)
 	{
 		options[ data["name"] ] = data["value"];
 	}
@@ -49,7 +49,7 @@ void PichiOptions::setSqlOption(std::string name, std::string value)
 	else
 		return;
 		
-	sql->exec("UPDATE settings SET value = '" + sql->escapeString(value) + "' WHERE name = '" + sql->escapeString(name) + "';");
+	(*sql)->exec("UPDATE settings SET value = '" + (*sql)->escapeString(value) + "' WHERE name = '" + (*sql)->escapeString(name) + "';");
 }
 
 std::string PichiOptions::getSqlOption(std::string name)
