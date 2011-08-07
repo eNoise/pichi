@@ -84,12 +84,13 @@ class Pichi : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		std::list< std::pair<JID, MUCRoom*> > rooms;
 		std::map< std::string, time_t > times;
 		std::list< std::string > pichiIgnore; // игорировать JID'ы пичи
+		std::map< std::string, std::string > pichiNicks;
 		
 		void sendMessage(JID jid, const std::string& message);
 		MUCRoom* enterRoom(JID room);
 		void leftRoom(JID room);
 		JID& getMyJID(void);
-		std::string getMyNick(void);
+		std::string getMyNick(const std::string& room = "");
 		void kick(const std::string &nick, JID room, std::string message = "");
 		void ban(const std::string &nick, JID room, std::string message = "");
 		void unban(const std::string &nick, JID room, std::string message = "");

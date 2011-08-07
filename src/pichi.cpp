@@ -275,6 +275,8 @@ MUCRoom* Pichi::enterRoom(JID room)
 	
 	// игнорировать свой jid
 	pichiIgnore.push_back(room.full());
+	// в список ников
+	pichiNicks[room.bare()] = room.resource();
 	
 	return newroom;
 }
@@ -288,6 +290,9 @@ void Pichi::leftRoom(JID room)
 			  // игнорировать свой jid
 			pichiIgnore.remove(it->first.full());
 		  
+			// в список ников
+			pichiNicks.erase(it->first.bare());
+			
 			it->second->leave();
 			delete (it->second);
 			rooms.erase(it);
@@ -465,9 +470,12 @@ gloox::JID& Pichi::getMyJID(void )
 	return jid;
 }
 
-std::string Pichi::getMyNick(void )
+std::string Pichi::getMyNick(const std::string& room)
 {
-	return nick;
+	if(room == "")
+		return pichiNicks[pichi->getLastRoom()];
+	else
+		return pichiNicks[room];
 }
 
 void *Pichi::cron(void *context)
