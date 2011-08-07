@@ -457,7 +457,7 @@ void Pichi::initDBStruct(void)
 void Pichi::handleEvent(const Event& event)
 {
 	if(event.eventType() == Event::PingPong)
-		pichi->pingRecive(event.stanza()->from().bare());
+		pichi->pingRecive(event.stanza()->from().full());
 }
 
 gloox::JID& Pichi::getMyJID(void )
