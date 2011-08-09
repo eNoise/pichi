@@ -435,7 +435,7 @@ void Pichi::handlePresence(const Presence& presence)
 	else
 		state = "unavailable";
 
-	pichi->setUserInfo(presence.from().bare(), "", state, "", "participant", presence.status());
+	pichi->setUserInfo(presence.from().bare(), "", state, "", "participant", presence.status(), presence.from().resource());
 }
 
 

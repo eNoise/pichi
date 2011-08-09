@@ -301,7 +301,7 @@ void commandbase::command_plugins(std::string arg)
 void pichi::commandbase::command_info(std::string arg)
 {
 	pichi->sql->query("SELECT `client_name`,`client_version`,`client_os` FROM users WHERE `jid` = '" + pichi->sql->escapeString(pichi->getArgJID(arg)) + "';");
-	if(pichi->sql->numRows() == 1)
+	if(pichi->sql->numRows() > 0)
 	{
 		std::string client = pichi->sql->fetchColumn(0);
 		std::string version = pichi->sql->fetchColumn(1, true);

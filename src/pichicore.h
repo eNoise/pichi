@@ -65,7 +65,7 @@ class PichiCore : public PichiConfig,
 		std::map< std::string, std::map< std::string, time_t > > crons;
 		
 		bool isEnabled(void);
-		void setUserInfo(std::string, std::string, std::string, std::string, std::string, std::string);
+		void setUserInfo(std::string, std::string, std::string, std::string, std::string, std::string, const std::string& resource = "");
 		void cleanUserInfo(void);
 		void setUserClient(const gloox::JID& jid, const std::string& client, const std::string& version, const std::string& os);
 		bool reciveMessage(const std::string& message, const std::string& type, const std::string& from);
