@@ -306,7 +306,8 @@ void pichi::commandbase::command_info(std::string arg)
 		std::string client = pichi->sql->fetchColumn(0);
 		std::string version = pichi->sql->fetchColumn(1, true);
 		std::string os = pichi->sql->fetchColumn(2, true);
-		pichi->sendAnswer(client + " " + version + "\n" + os);
+		if(client.size() > 0 || version.size() > 0 || os.size() > 0)
+			pichi->sendAnswer(client + " " + version + "\n" + os);
 	}
 }
 
