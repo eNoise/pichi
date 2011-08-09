@@ -32,6 +32,7 @@
 #include <gloox/eventhandler.h>
 #include <gloox/subscriptionhandler.h>
 #include <gloox/mucroomhandler.h>
+#include <gloox/iqhandler.h>
 
 namespace gloox {
     class Client;
@@ -49,7 +50,7 @@ using namespace gloox;
 
 class Pichi : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		public ConnectionListener, public PresenceHandler, public EventHandler,
-		public SubscriptionHandler
+		public SubscriptionHandler, public IqHandler
 {
 	private:
 		bool isConnected;
@@ -86,6 +87,7 @@ class Pichi : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		std::list< std::string > pichiIgnore; // игорировать JID'ы пичи
 		std::map< std::string, std::string > pichiNicks;
 		
+		void sendClientDetection(const JID& jid);
 		void sendMessage(JID jid, const std::string& message);
 		MUCRoom* enterRoom(JID room);
 		void leftRoom(JID room);
@@ -121,7 +123,9 @@ class Pichi : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		void handleSubscription( const Subscription& subscription );
 		
 		void handleEvent (const Event &event);
-
+		
+		bool handleIq( const IQ& iq );
+		void handleIqID( const IQ& iq, int context ) {};
 };
 
 }

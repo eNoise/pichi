@@ -33,6 +33,7 @@ commandbase::commandbase(PichiCore* p): commandhandler(p)
 	//base command array
 	commands["help"] = &commandbase::command_help;
 	commands["version"] = &commandbase::command_version;
+	commands["info"] = &commandbase::command_info;
 	commands["enable"] = &commandbase::command_enable;
 	commands["disable"] = &commandbase::command_disable;
 	commands["reload"] = &commandbase::command_reload;
@@ -117,6 +118,7 @@ void commandbase::command_help(std::string arg)
 	helpmap["commands_main"].push_back("on");
 	helpmap["commands_main"].push_back("off");
 	helpmap["commands_main"].push_back("version");
+	helpmap["commands_main"].push_back("info");
 	helpmap["commands_admin"].push_back("topic");
 	helpmap["commands_admin"].push_back("ban");
 	helpmap["commands_admin"].push_back("unban");
@@ -166,6 +168,7 @@ void commandbase::command_help(std::string arg)
 	help["off"] = "!off - " + TR("help_command_description_off") + "\n";
 	help["quit"] = "!quit - " + TR("help_command_description_quit") + "\n";
 	help["version"] = "!version - " + TR("help_command_description_version") + "\n";
+	help["info"] = "!info " + TR("help_command_usage_nick") + " - " + TR("help_command_description_info") + "\n";
 		
 	help["commands_admin"] = "=====  " +  TR("help_admin_commands")  + "  =====\n";
 	help["topic"] = "!topic " + TR("help_command_usage_param") + " - " + TR("help_command_description_topic") + "\n";
@@ -295,6 +298,17 @@ void commandbase::command_plugins(std::string arg)
 	pichi->sendAnswer(TR("command_plugins_no_sorry"));
 }
 
+void pichi::commandbase::command_info(std::string arg)
+{
+	pichi->sql->query("SELECT `client_name`,`client_version`,`client_os` FROM users WHERE `jid` = '" + pichi->sql->escapeString(pichi->getArgJID(arg)) + "';");
+	if(pichi->sql->numRows() == 1)
+	{
+		std::string client = pichi->sql->fetchColumn(0);
+		std::string version = pichi->sql->fetchColumn(1, true);
+		std::string os = pichi->sql->fetchColumn(2, true);
+		pichi->sendAnswer(client + " " + version + "\n" + os);
+	}
+}
 
 void commandbase::command_kick(std::string arg)
 {

@@ -29,6 +29,7 @@
 		<option name="db_configdesc_rand_message" type="string"><![CDATA[Secara berkala mengirim pesan acak dalam obrolan utama. [0 - dinonaktifkan; 1 - diaktifkan] [Bawaan: 0]]]></option>
 		<option name="db_configdesc_msg_limit" type="string"><![CDATA[Jumlah maksimum karakter yang diperbolehkan dalam obrolan utama (sebaliknya menulis pesan di PM) [Bawaan: 500]]]></option>
 		<option name="db_configdesc_msg_max_limit" type="string"><![CDATA[Batas atas untuk pesan, setelah itu pesan akan dibagi menjadi beberapa bagian. [Bawaan: 0]]]></option>
+		<option name="db_configdesc_onstart_client_detection" type="string"><![CDATA[Does pichi determinate user client? Otherwise, pichi will do it in case of need. [Default: 1]]]></option>
 
                 <option name="help_syntaxis_info" type="string">Dasar-dasar panduan:
 Semua perintah diawali dengan!
@@ -52,6 +53,7 @@ paramater1 | parameter2 - paramater1 ATAU parameter2 (salah satu)
 		<option name="help_command_description_uptime" type="string">Berapa lama waktu bot bekerja</option>
 		<option name="help_command_description_quit" type="string">Keluar dari server (bot meninggalkan server dan mati).</option>
 		<option name="help_command_description_version" type="string">Menampilkan versi bot.</option>
+		<option name="help_command_description_info" type="string">Information about user client.</option>
 		<option name="help_command_description_topic" type="string">Menetapkan topik di dalam ruangan. Contoh: !topic Welcome!</option>
 		<option name="help_command_description_ban" type="string">Larang pengguna. Parameter pertama adalah nick atau jid dari pengguna. Yg kedua adalah waktu (anda dapat menggunakan singkatan seperti 5m - 5 menit, 5h - 5 jam, 3M - 3 bulan). Jika waktu telah ditentukan, larangan akan dihapus secara otomatis setelah periode waktu tertentu. Parameter ketiga adalah alasan (pilihan). Contoh: !ban "vovan" "5h" "There is a reason"</option>
 		<option name="help_command_description_unban" type="string">Menghilangkan larangan pengguna yg telah ditentukan. Contoh: !unban vovan@jabber.uruchie.org</option>

@@ -69,6 +69,7 @@ void PichiDbPather::initDbStruct(void )
 	sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('rand_message','0','" + sql->escapeString((*lang)["db_configdesc_rand_message"]) + "');"); // случайны ответ когда скучно
 	sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('msg_limit','500','" + sql->escapeString((*lang)["db_configdesc_msg_limit"]) + "');"); // лимит символов, после чего отправляет ответ в личку
 	sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('msg_max_limit','0','" + sql->escapeString((*lang)["db_configdesc_msg_max_limit"]) + "');"); // вверхний предел
+	sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('onstart_client_detection','1','" + sql->escapeString((*lang)["db_configdesc_onstart_client_detection"]) + "');"); // определение клиента при старте
 }
 
 void PichiDbPather::patch(void )
@@ -95,8 +96,21 @@ void PichiDbPather::patch(void )
 			}
 			dump.clear();
 			sql->finalize();
-			sql->exec("UPDATE db_version SET version = " + boost::lexical_cast<std::string>(PICHI_DB_VERSION_ACTUAL) + ";");
+			sql->exec("UPDATE db_version SET version = 22;");
 			Log("Db pathing 21->22 ... done!", Log::WARNING);
+		}
+		case 22:
+		{
+			Log("DB patching 22->23 ...", Log::WARNING);
+		  
+			sql->exec("ALTER TABLE users ADD client_name TEXT;");
+			sql->exec("ALTER TABLE users ADD client_version TEXT;");
+			sql->exec("ALTER TABLE users ADD client_os TEXT;");
+			
+			sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('onstart_client_detection','1','" + sql->escapeString((*lang)["db_configdesc_onstart_client_detection"]) + "');"); // определение клиента при старте
+			sql->exec("UPDATE db_version SET version = 23;");
+			
+			Log("DB patching 22->23 ... done!", Log::WARNING);
 		}
 	}
 	

@@ -29,6 +29,7 @@
 		<option name="db_configdesc_rand_message" type="string"><![CDATA[Periodically send random messages in the main chat. [0 - disabled; 1 - enabled][Default: 0]]]></option>
 		<option name="db_configdesc_msg_limit" type="string"><![CDATA[Maximum number of characters allowed in the main chat (otherwise writes messages in PM) [Default: 500]]]></option>
 		<option name="db_configdesc_msg_max_limit" type="string"><![CDATA[The upper limit for the message, after which the message will break into several. [Default: 0]]]></option>
+		<option name="db_configdesc_onstart_client_detection" type="string"><![CDATA[Does pichi determinate user client? Otherwise, pichi will do it in case of need. [Default: 1]]]></option>
 
                 <option name="help_syntaxis_info" type="string">Basics of guidance:
 All commands begins with !
@@ -52,6 +53,7 @@ parameter1|parameter2 - parameter1 OR parameter2 (one of)
 		<option name="help_command_description_uptime" type="string">How much time bot works</option>
 		<option name="help_command_description_quit" type="string">Quit the server (bot leaves the server on and off).</option>
 		<option name="help_command_description_version" type="string">Show bot's version.</option>
+		<option name="help_command_description_info" type="string">Information about user client.</option>
 		<option name="help_command_description_topic" type="string">Set topic in the room. Example: !topic Welcome!</option>
 		<option name="help_command_description_ban" type="string">Ban the user. First parameter is nick or jid of user. The second is time (You can use abbreviation like 5m - 5 minutes, 5h - 5 hours, 3M - 3 months). If time is specified, ban will be automatically removed after specified period of time. Third parameter is reason (optional). Example: !ban "vovan" "5h" "There is a reason"</option>
 		<option name="help_command_description_unban" type="string">Unban specified user. Example: !unban vovan@jabber.uruchie.org</option>

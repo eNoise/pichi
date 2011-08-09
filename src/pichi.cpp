@@ -98,6 +98,7 @@ void Pichi::botstart(void)
 	client->registerMessageHandler( this );
 	client->registerPresenceHandler( this );
 	client->registerSubscriptionHandler( this );
+	client->registerIqHandler( this, ExtVersion);
 	roster = new RosterManager( client );
 	BOOST_FOREACH( std::string room, system::explode(",", pichi->getCfgOption("room")) )
 		enterRoom(JID(room + "/" + nick));
@@ -308,6 +309,42 @@ void Pichi::onConnect()
 		it->second->join();
 	times["wait"] = time(NULL);
 	pichi->cleanUserInfo();
+}
+
+void Pichi::sendClientDetection(const gloox::JID& jid)
+{
+	IQ clientDetect(IQ::Get, jid);
+	Tag* root = clientDetect.tag();
+	Tag* query = new Tag("query");
+	query->addAttribute("xmlns", XMLNS_VERSION);
+	root->addChild(query);
+	client->send(root);
+}
+
+bool Pichi::handleIq(const gloox::IQ& iq)
+{
+	// get version
+	if(iq.findExtension(gloox::ExtVersion))
+	{
+		Tag* tag = iq.tag()->findChild("query");
+		if(tag->hasChild("name") && tag->hasChild("version"))
+		{
+			  std::string client = tag->findChild("name")->cdata();
+			  std::string version = tag->findChild("version")->cdata();
+			  std::string os = "";
+			  if(tag->hasChild("os"))
+				os = tag->findChild("os")->cdata();
+			  
+			  // update ingnores for pichi
+			  if(client == "Pichi" && std::find(pichiIgnore.begin(), pichiIgnore.end(), iq.from().full()) == pichiIgnore.end())
+			  {
+				Log("Other pichi detected... ignore: " + iq.from().full(), Log::DEBUG);
+				pichiIgnore.push_back(iq.from().full());
+			  }
+			  
+			  pichi->setUserClient(iq.from(), client, version, os);
+		}
+	}
 }
 
 void Pichi::handleMessage( const Message& msg, MessageSession* session = 0 )

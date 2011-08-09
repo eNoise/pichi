@@ -53,6 +53,7 @@ class commandbase : public commandhandler
 	  std::map<std::string, void (commandbase::*)(std::string)> commands;
 	  
 	  void command_version(std::string);
+	  void command_info(std::string arg);
 	  void command_help(std::string arg);
 	  void command_enable(std::string arg);
 	  void command_disable(std::string arg);

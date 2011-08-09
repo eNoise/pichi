@@ -29,6 +29,7 @@
 		<option name="db_configdesc_rand_message" type="string"><![CDATA[Переодически отправлять случайные фразы в главный чат. [0 - выключить; 1 - включить][По умолчанию: 0]]]></option>
 		<option name="db_configdesc_msg_limit" type="string"><![CDATA[Максимальное количество символов, допустимое в конференции (в противном случае пишет в личку) [По умолчанию: 500]]]></option>
 		<option name="db_configdesc_msg_max_limit" type="string"><![CDATA[Верхний предел для сообщения, после которого сообщение разобьет на несколько [По умолчанию: 0]]]></option>
+		<option name="db_configdesc_onstart_client_detection" type="string"><![CDATA[Определять версию клиента при старте? В противном случае делает это при необходимости. [По умолчанию: 1]]]></option>
 		
                 <option name="help_syntaxis_info" type="string">Основы управления:
 Все команды начинаются с !
@@ -52,6 +53,7 @@
 		<option name="help_command_description_uptime" type="string">Сколько времени работает бот</option>
 		<option name="help_command_description_quit" type="string">Покинуть сервер (бот покидает сервер и отключается).</option>
 		<option name="help_command_description_version" type="string">Показать версию бот.</option>
+		<option name="help_command_description_info" type="string">Информация о клиенте участника.</option>
 		<option name="help_command_description_topic" type="string">Установить тему в комнате. Пример: !topic тема</option>
 		<option name="help_command_description_ban" type="string">Забанить пользователя. Первым параметром является ник или jid пользователя. Второй - время (можно использовать сокращения вида 5m - 5 минут, 5h - 5 часов, 3M - 3 месяца). Если указано время, бан будет автоматически снят спустя указанный промежуток времени. Третий параметр - причина (опционально). Пример: !ban "vovan" "5h" "причина"</option>
 		<option name="help_command_description_unban" type="string">Снять бан с указанного пользователя. Пример: !unban vovan@jabber.uruchie.org</option>

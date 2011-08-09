@@ -28,6 +28,10 @@
 #include "pichioptions.h"
 #include "pichimessage.h"
 
+namespace gloox {
+     class JID;
+}
+
 namespace pichi
 {
 
@@ -63,6 +67,7 @@ class PichiCore : public PichiConfig,
 		bool isEnabled(void);
 		void setUserInfo(std::string, std::string, std::string, std::string, std::string, std::string);
 		void cleanUserInfo(void);
+		void setUserClient(const gloox::JID& jid, const std::string& client, const std::string& version, const std::string& os);
 		bool reciveMessage(const std::string& message, const std::string& type, const std::string& from);
 		void sendAnswer(const std::string& message);
 		void sendAnswer(const std::string& message, const PichiMessage& msg);

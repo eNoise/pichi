@@ -76,6 +76,11 @@ void PichiCore::on(void )
 	enabled = true;
 }
 
+void PichiCore::setUserClient(const JID& jid, const std::string& client, const std::string& version, const std::string& os)
+{
+	sql->exec("UPDATE users SET client_name = '" + sql->escapeString(client) + "', client_version = '" + sql->escapeString(version) + "', client_os = '" + sql->escapeString(os) + "' WHERE jid = '" + sql->escapeString(jid.full()) + "';");
+}
+
 void PichiCore::setUserInfo(std::string jid, std::string nick, std::string state, std::string room, std::string role, std::string status)
 {
 	int level = 1; // defaul access level
@@ -132,6 +137,10 @@ void PichiCore::setUserInfo(std::string jid, std::string nick, std::string state
 		else
 			Log("[PRESENCE][ON] " + jid + "{" + system::itoa(level) + "} [" + status + "]", Log::DEBUG);
 	
+	
+	//get system info
+	if(state == "available" && options["onstart_client_detection"] == "1")
+		jabber->sendClientDetection(jid);
 		
 	sql->query("SELECT COUNT(*) FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
 	if(system::atoi(sql->fetchColumn(0)) > 0)
