@@ -249,6 +249,11 @@ void commandbase::command_version(std::string null)
 	pichi->sendAnswer(
 		static_cast<std::string>("Pichi Bot v.") + PICHI_VERSION
 		+ "\n" + TR("command_version_environment") + "\n" +
+#ifdef WIN32
+		+ "System environment: Windows\n" +
+#else
+		+ "System environment: Unix-based\n" +
+#endif
 		+ "SQLite version: " + SQLITE_VERSION + "\n" +
 		+ "CURL version: " + curl_version() + "\n" +
 		+ "Boost version: " + BOOST_LIB_VERSION + "\n" +
