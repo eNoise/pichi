@@ -43,7 +43,7 @@ private:
   languages* lang;
   int db_version;
   void patch(void);
-  void upVersion(int v);
+  void upVersion(const int v);
 };
   
 }

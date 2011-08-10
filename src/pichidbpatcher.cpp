@@ -96,7 +96,8 @@ void PichiDbPather::patch(void )
 			}
 			dump.clear();
 			sql->finalize();
-			sql->exec("UPDATE db_version SET version = 22;");
+			
+			upVersion(22);
 			Log("Db pathing 21->22 ... done!", Log::WARNING);
 		}
 		case 22:
@@ -108,8 +109,8 @@ void PichiDbPather::patch(void )
 			sql->exec("ALTER TABLE users ADD client_os TEXT;");
 			
 			sql->exec("INSERT INTO settings (`name`, `value`, `description`) VALUES ('onstart_client_detection','1','" + sql->escapeString((*lang)["db_configdesc_onstart_client_detection"]) + "');"); // определение клиента при старте
-			sql->exec("UPDATE db_version SET version = 23;");
 			
+			upVersion(23);
 			Log("DB patching 22->23 ... done!", Log::WARNING);
 		}
 	}
@@ -118,7 +119,7 @@ void PichiDbPather::patch(void )
 		throw PichiException("Pichi Database version discrepancy. Try to patch it manually");
 }
 
-void PichiDbPather::upVersion(int v)
+void PichiDbPather::upVersion(const int v)
 {
 	sql->exec("UPDATE db_version SET version = " + boost::lexical_cast<std::string>(v));
 	db_version = v;
