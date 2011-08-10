@@ -18,6 +18,9 @@ add_definitions(-DGIT_DESCRIBE="${GIT_DESCRIBE}")
 add_definitions(-DGIT_VERSION="${VERSION}")
 
 if (NOT MSVC)
+    #enable c++0X
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+
     if (CMAKE_CROSSCOMPILING)
         set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -enable-auto-import")
     endif (CMAKE_CROSSCOMPILING)

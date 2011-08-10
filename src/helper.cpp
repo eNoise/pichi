@@ -29,6 +29,11 @@ namespace pichi
 std::string Helper::pichiHeader(void )
 {
 	std::string header;
+	header += "\n ______   __     ______     __  __     __    \n";
+	header += "/\\  == \\ /\\ \\   /\\  ___\\   /\\ \\_\\ \\   /\\ \\   \n";
+	header += "\\ \\  _-/ \\ \\ \\  \\ \\ \\____  \\ \\  __ \\  \\ \\ \\  \n";
+	header += " \\ \\_\\    \\ \\_\\  \\ \\_____\\  \\ \\_\\ \\_\\  \\ \\_\\ \n";
+	header += "  \\/_/     \\/_/   \\/_____/   \\/_/\\/_/   \\/_/ \n";
 	return header;
 }
   

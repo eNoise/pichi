@@ -77,6 +77,7 @@ class Pichi : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 	public:
 		Pichi(int argc, char** argv);
                 ~Pichi() throw();
+		bool getFirstStart(void){ return isFirstStart; };
 		bool parseArgs(int argc, char** argv);
 		
 		boost::program_options::variables_map coptions;
@@ -91,6 +92,7 @@ class Pichi : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		void sendMessage(JID jid, const std::string& message);
 		MUCRoom* enterRoom(JID room);
 		void leftRoom(JID room);
+		bool isRoom(const JID& room) const;
 		JID& getMyJID(void);
 		std::string getMyNick(const std::string& room = "");
 		void kick(const std::string &nick, JID room, std::string message = "");

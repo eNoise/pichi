@@ -303,6 +303,11 @@ void Pichi::leftRoom(JID room)
 	}
 }
 
+bool pichi::Pichi::isRoom(const gloox::JID& room) const
+{
+	std::find_if(rooms.begin(), rooms.end(), [&room](const std::pair<JID, MUCRoom*>& r){ return r.first.bare() == room.full(); }) != rooms.end();
+}
+
 void Pichi::onConnect()
 {
 	isConnected = true;
@@ -378,6 +383,7 @@ void Pichi::handleMUCParticipantPresence (MUCRoom *thisroom, const MUCRoomPartic
 {
 	
 	std::string jid = "";
+	std::string resource = "";
 	std::string nick;
 	std::string state;
 	std::string room;
@@ -387,6 +393,7 @@ void Pichi::handleMUCParticipantPresence (MUCRoom *thisroom, const MUCRoomPartic
 	if(participant.jid != NULL)
 	{
 		jid = participant.jid->bare();
+		resource = participant.jid->resource();
 	}
 	//else if(presence.presence() == Presence::Unavailable)
 	//{
@@ -416,7 +423,7 @@ void Pichi::handleMUCParticipantPresence (MUCRoom *thisroom, const MUCRoomPartic
 	status = participant.status;
 	
 	pichi->cronDo("muc_presence");
-	pichi->setUserInfo(jid, nick, state, room, role, status);
+	pichi->setUserInfo(jid, nick, state, room, role, status, resource);
 
 }
 

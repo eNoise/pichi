@@ -99,9 +99,7 @@ void commandbase::fetchCommand(std::string command)
 void commandbase::command_help(std::string arg)
 {
 	std::map< std::string, std::string > help;
-	help["header"] = "-------------------------\n";
-	help["header"] += "        Pichi Bot        \n";
-	help["header"] += "-------------------------\n";
+	help["header"] = Helper::pichiHeader();
 	help["header"] += "--------------------------------------------\n";
 	help["header"] += TR("help_syntaxis_info")  + "\n";
 	help["header"] += "--------------------------------------------\n";
@@ -255,7 +253,8 @@ void commandbase::command_version(std::string null)
 {
 	//global $config;
 	pichi->sendAnswer(
-		static_cast<std::string>("Pichi Bot v.") + PICHI_VERSION
+		Helper::pichiHeader()
+		+ "Pichi Bot v." + PICHI_VERSION
 		+ "\n" + TR("command_version_environment") + "\n" +
 #ifdef WIN32
 		+ "System environment: Windows\n" +
