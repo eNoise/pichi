@@ -19,10 +19,15 @@
 */
 
 #include "commandbase.h"
+
+#include <gloox/mucroom.h>
+#include <gloox/client.h>
+
+#include <boost/foreach.hpp>
+#include <boost/lexical_cast.hpp>
+
 #include "pichicore.h"
 #include "pichi.h"
-#include "gloox/mucroom.h"
-#include "gloox/client.h"
 #include "lexemebuilder.h"
 
 namespace pichi
@@ -260,7 +265,7 @@ void commandbase::command_version(std::string null)
 		+ "SQLite version: " + SQLITE_VERSION + "\n" +
 		+ "CURL version: " + curl_version() + "\n" +
 		+ "Boost version: " + BOOST_LIB_VERSION + "\n" +
-		+ "Pichi DB version: " + system::itoa(PICHI_DB_VERSION_ACTUAL)
+		+ "Pichi DB version: " + Helper::itoa(PICHI_DB_VERSION_ACTUAL)
 	);
 	//($hook = PichiPlugin::fetch_hook("commands_show_version")) ? eval($hook) : false;
 	//pichi->sendAnswer(""+TR("command_version_plugins")+":\n" + PichiPlugin::show_plugin_list());
@@ -272,7 +277,7 @@ void commandbase::command_enable(std::string arg)
 		return;
 	
 	pichi->sendAnswer(TR("command_plugins_no_sorry"));
-	//PichiPlugin::enable(system::atoi(arg));
+	//PichiPlugin::enable(Helper::atoi(arg));
 }
 
 void commandbase::command_disable(std::string arg)
@@ -281,7 +286,7 @@ void commandbase::command_disable(std::string arg)
 		return;
 	
 	pichi->sendAnswer(TR("command_plugins_no_sorry"));
-	//PichiPlugin::disable(system::atoi(arg));
+	//PichiPlugin::disable(Helper::atoi(arg));
 }
 
 void commandbase::command_reload(std::string arg)
@@ -376,7 +381,7 @@ void commandbase::command_banlist(std::string arg)
 	std::map<std::string, std::string> bans;
 	while(!(bans = pichi->sql->fetchArray()).empty())
 	{
-		banlist += bans["jid"] + " " + system::timeToString(system::atot(bans["value"]), "%d.%m.%Y в %H:%M:%S") + "\n";
+		banlist += bans["jid"] + " " + Helper::timeToString(Helper::atot(bans["value"]), "%d.%m.%Y в %H:%M:%S") + "\n";
 	}
 	pichi->sendAnswer(TR("command_banlist_lock") + ":\n" + banlist);
 }
@@ -388,7 +393,7 @@ void commandbase::command_kicklist(std::string arg)
 	std::map<std::string, std::string> kicks;
 	while(!(kicks = pichi->sql->fetchArray()).empty())
 	{
-		kicklist += kicks["jid"] + " " + system::timeToString(system::atot(kicks["value"]), "%d.%m.%Y в %H:%M:%S") + "\n";
+		kicklist += kicks["jid"] + " " + Helper::timeToString(Helper::atot(kicks["value"]), "%d.%m.%Y в %H:%M:%S") + "\n";
 	}
 	pichi->sendAnswer(TR("command_kicklist_lock") + ":\n" + kicklist);
 }
@@ -399,7 +404,7 @@ void commandbase::command_log(std::string arg)
 		int limit = 20, skip = 0;
 		try
 		{
-			limit = system::atoi(w[0]);
+			limit = Helper::atoi(w[0]);
 		}
 		catch(boost::bad_lexical_cast e)
 		{
@@ -407,9 +412,9 @@ void commandbase::command_log(std::string arg)
 		}
 		try
 		{
-			skip = system::atoi(w[1]);
+			skip = Helper::atoi(w[1]);
 		} catch(boost::bad_lexical_cast e) { }
-		pichi->sql->query("SELECT * FROM log ORDER BY time DESC LIMIT " + system::itoa(skip) + "," + system::itoa(limit) + ";");
+		pichi->sql->query("SELECT * FROM log ORDER BY time DESC LIMIT " + Helper::itoa(skip) + "," + Helper::itoa(limit) + ";");
 		std::map< std::string, std::string > data;
 		typedef std::vector< std::map< std::string, std::string > > tp;
 		tp msgs;
@@ -419,7 +424,7 @@ void commandbase::command_log(std::string arg)
 		std::string log = "\n-----------------------------------------------------------------------\n";
 		BOOST_REVERSE_FOREACH(tp::value_type &ms, msgs)
 		{
-			    log += "[" + system::timeToString(system::atot(ms["time"]), "%H:%M:%S") + "]<" + pichi->getArgNick(ms["from"]) + "> " + ms["message"] + "\n";
+			    log += "[" + Helper::timeToString(Helper::atot(ms["time"]), "%H:%M:%S") + "]<" + pichi->getArgNick(ms["from"]) + "> " + ms["message"] + "\n";
 		}
 		log += "-----------------------------------------------------------------------";
 		pichi->sendAnswer(log); 
@@ -448,7 +453,7 @@ void commandbase::command_wtfcount(std::string arg)
 			tmp_ar.push_back(tmp["name"]);
 		std::unique(tmp_ar.begin(),tmp_ar.end());
 		size_t wtfnum = tmp_ar.size();
-		pichi->sendAnswer("" + TR("command_wiki_count") + ": " + system::ttoa(wtfnum));
+		pichi->sendAnswer("" + TR("command_wiki_count") + ": " + Helper::ttoa(wtfnum));
 	}
 	else
 	{
@@ -510,8 +515,8 @@ void commandbase::command_wtfset(std::string arg)
 		std::string rev = pichi->sql->fetchColumn(1, true);
 		std::string val = pichi->sql->fetchColumn(2, true);
 		pichi->sql->query("SELECT revision FROM wiki WHERE name = '" + pichi->sql->escapeString(name) + "' ORDER BY revision DESC LIMIT 0,1;");
-		int newrev = (system::atoi(pichi->sql->fetchColumn(0))) + 1;
-		pichi->sql->query("INSERT INTO wiki (`name`,`revision`,`value`) VALUES ('" + pichi->sql->escapeString(name) + "','" + pichi->sql->escapeString(system::itoa(newrev)) + "','" + pichi->sql->escapeString(val) + "');");
+		int newrev = (Helper::atoi(pichi->sql->fetchColumn(0))) + 1;
+		pichi->sql->query("INSERT INTO wiki (`name`,`revision`,`value`) VALUES ('" + pichi->sql->escapeString(name) + "','" + pichi->sql->escapeString(Helper::itoa(newrev)) + "','" + pichi->sql->escapeString(val) + "');");
 		pichi->sendAnswer(TR2("command_wiki_revision_set", rev.c_str()));
 	}
 	else
@@ -527,14 +532,14 @@ void commandbase::command_top(std::string arg)
 	{
 		try
 		{
-			ct = system::atoi(arg);
+			ct = Helper::atoi(arg);
 		}
 		catch(boost::bad_lexical_cast e)
 		{
 			pichi->sendAnswer(TR("bad_argument"));
 		}
 	}
-	pichi->sql->query("SELECT `lexeme1`, `lexeme2`, `lexeme3`, `count` FROM lexems ORDER BY count DESC LIMIT 0," + system::itoa(ct) + ";");
+	pichi->sql->query("SELECT `lexeme1`, `lexeme2`, `lexeme3`, `count` FROM lexems ORDER BY count DESC LIMIT 0," + Helper::itoa(ct) + ";");
 	pichi->sendAnswer(TR("command_top10"));
 	std::string ans;
 	int ix = 0;
@@ -547,7 +552,7 @@ void commandbase::command_top(std::string arg)
 			lex["lexeme1"] = "("+TR("command_top10_begin")+")";
 		if(lex["lexeme3"] == "#end#")
 			lex["lexeme3"] = "("+TR("command_top10_end")+")";
-		ans += system::itoa(ix) + ". " 
+		ans += Helper::itoa(ix) + ". " 
 			+ lex["lexeme1"] + " " + lex["lexeme2"] + " " + lex["lexeme3"] 
 			+ " [" + lex["count"] + "]" + "\n";
 	}
@@ -562,7 +567,7 @@ void commandbase::command_talkers(std::string arg)
 	std::map<std::string, std::string> fr;
 	int i=0;
 	while(!(fr = pichi->sql->fetchArray(qqr)).empty())
-		ans += TR4("command_talkers_list", system::itoa(++i).c_str(), pichi->getArgNick(fr["jid"]).c_str(), fr["counter"].c_str()) + "\n";
+		ans += TR4("command_talkers_list", Helper::itoa(++i).c_str(), pichi->getArgNick(fr["jid"]).c_str(), fr["counter"].c_str()) + "\n";
 	delete qqr;
 
 	pichi->sendAnswer(ans);
@@ -571,8 +576,8 @@ void commandbase::command_talkers(std::string arg)
 void commandbase::command_count(std::string arg)
 {
 	pichi->sql->query("SELECT COUNT(*) FROM lexems;");
-	size_t lexnum = system::atot(pichi->sql->fetchColumn(0));
-	pichi->sendAnswer(TR2("command_count", system::ttoa(lexnum).c_str()));
+	size_t lexnum = Helper::atot(pichi->sql->fetchColumn(0));
+	pichi->sendAnswer(TR2("command_count", Helper::ttoa(lexnum).c_str()));
 }
 
 void commandbase::command_dfn(std::string arg)
@@ -587,8 +592,8 @@ void commandbase::command_dfn(std::string arg)
 	size_t rev;
 	if(pichi->sql->numRows() > 0)
 	{
-		rev = system::atot(pichi->sql->fetchColumn(0));
-		pichi->sql->query("INSERT INTO wiki (`name`,`revision`,`value`) VALUES ('" + pichi->sql->escapeString(w[0]) + "','" + pichi->sql->escapeString(system::ttoa(rev + 1)) + "','" + pichi->sql->escapeString(w[1]) + "');");
+		rev = Helper::atot(pichi->sql->fetchColumn(0));
+		pichi->sql->query("INSERT INTO wiki (`name`,`revision`,`value`) VALUES ('" + pichi->sql->escapeString(w[0]) + "','" + pichi->sql->escapeString(Helper::ttoa(rev + 1)) + "','" + pichi->sql->escapeString(w[1]) + "');");
 	}
 	else
 	{
@@ -662,7 +667,7 @@ void commandbase::command_users(std::string arg)
 		{
 			try
 			{
-				ct = system::atoi(arg);
+				ct = Helper::atoi(arg);
 			}
 			catch(boost::bad_lexical_cast e)
 			{
@@ -681,11 +686,11 @@ void commandbase::command_users(std::string arg)
 	if(!individual)
 	{
 		pichi->sql->query("SELECT COUNT(*) FROM users WHERE status = 'available' AND room != '';");
-		int avl = system::atoi(pichi->sql->fetchColumn(0));
+		int avl = Helper::atoi(pichi->sql->fetchColumn(0));
 		pichi->sql->query("SELECT COUNT(*) FROM users WHERE status = 'unavailable' AND room != '';");
-		int navl = system::atoi(pichi->sql->fetchColumn(0));
+		int navl = Helper::atoi(pichi->sql->fetchColumn(0));
 	
-		pichi->sql->query("SELECT * FROM users LIMIT 0," + system::itoa(ct) + ";");
+		pichi->sql->query("SELECT * FROM users LIMIT 0," + Helper::itoa(ct) + ";");
 		std::string userlist, online, offline;
 
 		//$this->log->log("Begin creting user list", PichiLog::LEVEL_DEBUG);
@@ -695,22 +700,22 @@ void commandbase::command_users(std::string arg)
 		{
 			if(data["room"] == "")
 				continue;
-			std::string roomname = system::explode("@", data["room"]).at(0);
+			std::string roomname = Helper::explode("@", data["room"]).at(0);
 			if(data["status"] == "available")
 			{
 				n++;
-				online += TR4("command_users_online_seen", system::itoa(n).c_str(), data["nick"].c_str(), roomname.c_str()) + "\n";
+				online += TR4("command_users_online_seen", Helper::itoa(n).c_str(), data["nick"].c_str(), roomname.c_str()) + "\n";
 				//$this->log->log("User $data[nick]: online", PichiLog::LEVEL_VERBOSE);
 			}
 			else
 			{
 				f++;
-				offline += TR5("command_users_offline_seen", system::itoa(f).c_str(), data["nick"].c_str(), system::timeToString(boost::lexical_cast<time_t>(data["time"]), "%d.%m.%Y в %H:%M:%S").c_str(), roomname.c_str()) + "\n";
+				offline += TR5("command_users_offline_seen", Helper::itoa(f).c_str(), data["nick"].c_str(), Helper::timeToString(boost::lexical_cast<time_t>(data["time"]), "%d.%m.%Y в %H:%M:%S").c_str(), roomname.c_str()) + "\n";
 				//$this->log->log("User $data[nick]: offline", PichiLog::LEVEL_VERBOSE);
 			}
 		}
-		online += TR3("command_users_limitshow", system::itoa(n).c_str(), system::itoa(avl).c_str()) + "\n";
-		offline += TR3("command_users_limitshow", system::itoa(f).c_str(), system::itoa(navl).c_str()) + "\n";
+		online += TR3("command_users_limitshow", Helper::itoa(n).c_str(), Helper::itoa(avl).c_str()) + "\n";
+		offline += TR3("command_users_limitshow", Helper::itoa(f).c_str(), Helper::itoa(navl).c_str()) + "\n";
 		userlist += "" + TR("command_users_online") + ":\n" + online;
 		userlist += "" + TR("command_users_offline") + ":\n" + offline;
 		pichi->sendAnswer(userlist);
@@ -796,7 +801,7 @@ void commandbase::command_idle(std::string arg)
 		return;
 	}
 	if(date > 0)
-		pichi->sendAnswer(system::timeToString(date, "%d.%m.%Y в %H:%M:%S"));
+		pichi->sendAnswer(Helper::timeToString(date, "%d.%m.%Y в %H:%M:%S"));
 	else
 		pichi->sendAnswer(TR("bad_argument"));
 }
@@ -819,7 +824,7 @@ void commandbase::command_greet(std::string arg)
 		return;
 	}
 	pichi->sql->query("SELECT COUNT(*) FROM actions WHERE action = 'user_join_room' AND coincidence='room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "';");
-	if(system::atoi(pichi->sql->fetchColumn(0)) > 0)
+	if(Helper::atoi(pichi->sql->fetchColumn(0)) > 0)
 		pichi->sql->exec("UPDATE actions SET value = '" + pichi->sql->escapeString(w[2]) + "'  WHERE action = 'user_join_room' AND coincidence='room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "';");
 	else
 		pichi->sql->exec("INSERT INTO actions (`action`,`coincidence`,`do`,`option`,`value`) VALUES ('user_join_room', 'room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "', 'send_message', '', '" + pichi->sql->escapeString(w[2]) + "');");
@@ -837,7 +842,7 @@ void commandbase::command_farewell(std::string arg)
 		return;
 	}
 	pichi->sql->query("SELECT COUNT(*) FROM actions WHERE action = 'user_left_room' AND coincidence='room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "';");
-	if(system::atoi(pichi->sql->fetchColumn(0)) > 0)
+	if(Helper::atoi(pichi->sql->fetchColumn(0)) > 0)
 		pichi->sql->exec("UPDATE actions SET value = '" + pichi->sql->escapeString(w[2]) + "'  WHERE action = 'user_left_room' AND coincidence='room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "';");
 	else
 		pichi->sql->exec("INSERT INTO actions (`action`,`coincidence`,`do`,`option`,`value`) VALUES ('user_left_room', 'room=" + pichi->sql->escapeString(w[1]) + ",jid=" + pichi->sql->escapeString(w[0]) + "', 'send_message', '', '" + pichi->sql->escapeString(w[2]) + "');");
@@ -886,7 +891,7 @@ void* commandbase::thread_lastfm(void* context)
 		PichiCurl* curl = new PichiCurl();
 		std::string data = curl->readurl("http://ws.audioscrobbler.com/1.0/user/" + user["lastfm_user"] + "/recenttracks.txt");
 		if(data != "")
-			((commandbase*)context)->pichi->sendAnswer( (*((commandbase*)context)->pichi->lang)("command_lastfm_listen", ((commandbase*)context)->pichi->getNickFromJID( last.getJIDlast(), last.getLastRoom() ).c_str(), (system::explode("," , (system::explode("\n", data).at(0)))).at(1).c_str()), last );
+			((commandbase*)context)->pichi->sendAnswer( (*((commandbase*)context)->pichi->lang)("command_lastfm_listen", ((commandbase*)context)->pichi->getNickFromJID( last.getJIDlast(), last.getLastRoom() ).c_str(), (Helper::explode("," , (Helper::explode("\n", data).at(0)))).at(1).c_str()), last );
 		else
 			Log("Music read from last.fm failed. Check internet connection.", Log::WARNING);
 		delete curl;
@@ -929,7 +934,7 @@ void* commandbase::thread_googletranslate(void* context)
 			((commandbase*)context)->pichi->sendAnswer( (*((commandbase*)context)->pichi->lang)("bad_argument"), last );
 			pthread_exit(context);
 		}
-		std::vector< std::string > langs = system::explode("2", w[0]);
+		std::vector< std::string > langs = Helper::explode("2", w[0]);
 		if(!((commandbase*)context)->testArgs(langs, 2))
 		{
 			((commandbase*)context)->pichi->sendAnswer( (*((commandbase*)context)->pichi->lang)("bad_argument"), last );
@@ -1097,10 +1102,10 @@ void commandbase::command_uptime(std::string arg)
 		diff /= ar[i];
 		i++;
 	}
-	std::string ans = system::ttoa(diff) + " " + whatis[i];
+	std::string ans = Helper::ttoa(diff) + " " + whatis[i];
 	for(; i>0; i--)
-		ans += " " + system::ttoa(undiff[i-1]) + " " + whatis[i-1];
-	pichi->sendAnswer("\n" + TR2("command_uptime_start", system::timeToString(pichi->jabber->times["start"],"%d.%m.%Y в %H:%M:%S").c_str()) 
+		ans += " " + Helper::ttoa(undiff[i-1]) + " " + whatis[i-1];
+	pichi->sendAnswer("\n" + TR2("command_uptime_start", Helper::timeToString(pichi->jabber->times["start"],"%d.%m.%Y в %H:%M:%S").c_str()) 
 			+ "\n" + TR2("command_uptime_uptime", ans.c_str()));
 }
 

@@ -24,9 +24,10 @@
 #include <string>
 #include <iostream>
 #include <pthread.h>
-#include "system.h"
+#include "helper.h"
 #include <algorithm>
 #include "pichimessage.h"
+#include <map>
 
 namespace pichi
 {

@@ -24,10 +24,11 @@
 #include <gloox/jid.h>
 
 #include <vector>
+#include <boost/lexical_cast.hpp>
 
 #include "pichi.h"
 #include "sqlite.h"
-#include "system.h"
+#include "helper.h"
 #include "commandbase.h"
 #include "languages.h"
 #include "lexemebuilder.h"
@@ -94,14 +95,14 @@ void PichiCore::setUserInfo(std::string jid, std::string nick, std::string state
 
 	std::vector< std::string > admins, ignore;
 	
-	admins = system::explode(",", config["admins"]);
+	admins = Helper::explode(",", config["admins"]);
 	if(admins.size() > 0)
-		if(system::in_array(jid, admins))
+		if(Helper::in_array(jid, admins))
 			level = 3;
 	
-	ignore = system::explode(",", config["ignore"]);
+	ignore = Helper::explode(",", config["ignore"]);
 	if(ignore.size() > 0)
-		if(system::in_array(jid, ignore))
+		if(Helper::in_array(jid, ignore))
 			level = 0;
 
 	/*
@@ -115,7 +116,7 @@ void PichiCore::setUserInfo(std::string jid, std::string nick, std::string state
 			event->callEvent("user_join_room", "room=" + room + ",jid=" + jid);
 			// autokick
 				sql->query("SELECT COUNT(*) FROM users_data WHERE jid = '" + sql->escapeString(jid) + "' AND name = 'kick' AND groupid = '" + sql->escapeString(room) + "';");
-				if(system::atoi(sql->fetchColumn(0)) > 0)
+				if(Helper::atoi(sql->fetchColumn(0)) > 0)
 					jabber->kick(jid, JID(room), "Auto-kick");
 			}
 		else if(state == "unavailable" && old_state == "available")
@@ -128,14 +129,14 @@ void PichiCore::setUserInfo(std::string jid, std::string nick, std::string state
 	//($hook = PichiPlugin::fetch_hook('pichicore_status_set')) ? eval($hook) : false;
 	if(room != "")
 		if(state == "unavailable")
-			Log("[PRESENCE_ROOM][OFF] " + jid + "{" + system::itoa(level) + "} (" + nick + ")[" + status + "] in " + room, Log::DEBUG);
+			Log("[PRESENCE_ROOM][OFF] " + jid + "{" + Helper::itoa(level) + "} (" + nick + ")[" + status + "] in " + room, Log::DEBUG);
 		else
-			Log("[PRESENCE_ROOM][ON] " + jid + "{" + system::itoa(level) + "} (" + nick + ")[" + status + "] in " + room, Log::DEBUG);
+			Log("[PRESENCE_ROOM][ON] " + jid + "{" + Helper::itoa(level) + "} (" + nick + ")[" + status + "] in " + room, Log::DEBUG);
 	else
 		if(state == "unavailable")
-			Log("[PRESENCE][OFF] " + jid + "{" + system::itoa(level) + "} [" + status + "]", Log::DEBUG);
+			Log("[PRESENCE][OFF] " + jid + "{" + Helper::itoa(level) + "} [" + status + "]", Log::DEBUG);
 		else
-			Log("[PRESENCE][ON] " + jid + "{" + system::itoa(level) + "} [" + status + "]", Log::DEBUG);
+			Log("[PRESENCE][ON] " + jid + "{" + Helper::itoa(level) + "} [" + status + "]", Log::DEBUG);
 	
 	
 	//get system info
@@ -148,14 +149,14 @@ void PichiCore::setUserInfo(std::string jid, std::string nick, std::string state
 	}
 		
 	sql->query("SELECT COUNT(*) FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
-	if(system::atoi(sql->fetchColumn(0)) > 0)
+	if(Helper::atoi(sql->fetchColumn(0)) > 0)
 	{
-		sql->exec("UPDATE users SET nick = '" + sql->escapeString(nick) + "', time = '" + system::stringTime(time(NULL)) + "', status = '" + state + "', role = '" + sql->escapeString(role) + "', level = '" + system::itoa(level) + "' WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
+		sql->exec("UPDATE users SET nick = '" + sql->escapeString(nick) + "', time = '" + Helper::stringTime(time(NULL)) + "', status = '" + state + "', role = '" + sql->escapeString(role) + "', level = '" + Helper::itoa(level) + "' WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
 		//($hook = PichiPlugin::fetch_hook('pichicore_status_update')) ? eval($hook) : false;
 	}
 	else
 	{
-		sql->exec("INSERT INTO users (`jid`,`nick`,`role`,`room`,`time`,`status`,`level`) VALUES ('" + sql->escapeString(jid) + "','" + sql->escapeString(nick) + "','" + sql->escapeString(role) + "','" + sql->escapeString(room) + "','" + system::stringTime(time(NULL)) + "','" + state + "', '" + system::itoa(level) + "');");
+		sql->exec("INSERT INTO users (`jid`,`nick`,`role`,`room`,`time`,`status`,`level`) VALUES ('" + sql->escapeString(jid) + "','" + sql->escapeString(nick) + "','" + sql->escapeString(role) + "','" + sql->escapeString(room) + "','" + Helper::stringTime(time(NULL)) + "','" + state + "', '" + Helper::itoa(level) + "');");
 		sql->query("SELECT COUNT(*) FROM users WHERE jid = '" + sql->escapeString(jid) + "';");
 		//if($this->db->fetchColumn() == 0)
 		//		($hook = PichiPlugin::fetch_hook('pichicore_status_create')) ? eval($hook) : false;
@@ -165,8 +166,8 @@ void PichiCore::setUserInfo(std::string jid, std::string nick, std::string state
 	if(nick != "")
 	{
 		sql->query("SELECT COUNT(*) FROM users_nick WHERE jid = '" + sql->escapeString(jid) + "' AND nick = '" + sql->escapeString(nick) + "' AND room = '" + sql->escapeString(room) + "';");
-		if(system::atoi(sql->fetchColumn(0)) == 0)
-			sql->exec("INSERT INTO users_nick (`jid`,`nick`,`room`,`time`) VALUES ('" + sql->escapeString(jid) + "','" + sql->escapeString(nick) + "','" + sql->escapeString(room) + "','" + system::stringTime(time(NULL)) + "');");
+		if(Helper::atoi(sql->fetchColumn(0)) == 0)
+			sql->exec("INSERT INTO users_nick (`jid`,`nick`,`room`,`time`) VALUES ('" + sql->escapeString(jid) + "','" + sql->escapeString(nick) + "','" + sql->escapeString(room) + "','" + Helper::stringTime(time(NULL)) + "');");
 		
 		// push to lexems nicks
 		lex->addNick(nick);
@@ -191,7 +192,7 @@ bool PichiCore::isBareJID(const std::string& jid)
 
 std::string PichiCore::getJIDpart(const std::string& jid, unsigned int part)
 {
-	std::vector< std::string > exp = system::explode("/", jid);
+	std::vector< std::string > exp = Helper::explode("/", jid);
 	part--;
 	if(part < exp.size())
 		return exp[part];
@@ -348,14 +349,14 @@ bool PichiCore::isAccess(std::string jid, std::string room, int level)
 	int dblevel;
 	try
 	{
-		dblevel = system::atoi(tempresult);
+		dblevel = Helper::atoi(tempresult);
 	}
 	catch(boost::bad_lexical_cast e)
 	{
 		return false;
 	}
 	
-	Log("Test access to " + jid + ": " + tempresult + " >= " + system::itoa(level), Log::VERBOSE);
+	Log("Test access to " + jid + ": " + tempresult + " >= " + Helper::itoa(level), Log::VERBOSE);
 	
 	return (dblevel >= level);
 }
@@ -404,7 +405,7 @@ bool PichiCore::reciveMessage(const std::string& message, const std::string& typ
 		last_jid = getJIDpart(last_from, 1);
 	
 	// Защита от спама
-	double micronow = system::microtime();
+	double micronow = Helper::microtime();
 	if(usermsg_times[last_jid] <= 0 || usermsg_times[last_jid] > micronow) // 2 бред ))
 		usermsg_times[last_jid] = 0; // если пустой контейнер
 	if(micronow - usermsg_times[last_jid] < 0.25) // константа выяснена методом тяжелых проб и ошибок))
@@ -424,7 +425,7 @@ bool PichiCore::reciveMessage(const std::string& message, const std::string& typ
 	//$this->log->log("Call message method", PichiLog::LEVEL_DEBUG);
 	
 	if(enabled && !isCommand(last_message) && options["log_enabled"] == "1")
-		sql->exec("INSERT INTO log (`jid`,`room`,`from`,`time`,`type`,`message`) VALUES ('" + sql->escapeString(last_jid) + "','" + sql->escapeString(last_room) + "','" + sql->escapeString(last_from) + "','" + sql->escapeString(system::stringTime(time(NULL))) + "','" + sql->escapeString(last_type) + "','" + sql->escapeString(last_message) + "');");
+		sql->exec("INSERT INTO log (`jid`,`room`,`from`,`time`,`type`,`message`) VALUES ('" + sql->escapeString(last_jid) + "','" + sql->escapeString(last_room) + "','" + sql->escapeString(last_from) + "','" + sql->escapeString(Helper::stringTime(time(NULL))) + "','" + sql->escapeString(last_type) + "','" + sql->escapeString(last_message) + "');");
 	
 	// В лог записали, остальное считает как спам
 	if(ignore_this)
@@ -449,7 +450,7 @@ bool PichiCore::reciveMessage(const std::string& message, const std::string& typ
 	if(enabled && !isCommand(last_message) && options["answer_mode"] == "1")
 	{
 		std::string answer;
-		if(options["answer_random"] == "0" || (1 + rand() % system::atoi(options["answer_random"])) == 1)
+		if(options["answer_random"] == "0" || (1 + rand() % Helper::atoi(options["answer_random"])) == 1)
 		{
 		  /*
 			$this->syntax->generate();
@@ -497,7 +498,7 @@ void PichiCore::sendAnswer(const std::string& message)
 	else
 		to = last_from;
 	
-	if(message.size() > system::atot(options["msg_limit"]) && system::atot(options["msg_limit"]) > 1 && last_type == "groupchat")
+	if(message.size() > Helper::atot(options["msg_limit"]) && Helper::atot(options["msg_limit"]) > 1 && last_type == "groupchat")
 	{
 		jabber->sendMessage(JID(last_room), (*lang)("message_to_private_chat"));
 		to = last_jid;
@@ -517,7 +518,7 @@ void PichiCore::sendAnswer(const std::string& message, const pichi::PichiMessage
 	else
 		to = msg.last_from;
 	
-	if(message.size() > system::atot(options["msg_limit"]) && system::atot(options["msg_limit"]) > 1 && msg.last_type == "groupchat")
+	if(message.size() > Helper::atot(options["msg_limit"]) && Helper::atot(options["msg_limit"]) > 1 && msg.last_type == "groupchat")
 	{
 		jabber->sendMessage(JID(msg.last_room), (*lang)("message_to_private_chat"));
 		to = msg.last_jid;
@@ -538,7 +539,7 @@ bool PichiCore::setOption(std::string option, std::string value)
 {
 
 	sql->query("SELECT COUNT(*) FROM settings WHERE name = '" + sql->escapeString(option) + "';");
-	if(system::atoi(sql->fetchColumn(0)) > 0)
+	if(Helper::atoi(sql->fetchColumn(0)) > 0)
 	{
 		setSqlOption(option, value);
 		Log("Updated option '" + option + "' = " + value, Log::DEBUG);
@@ -571,7 +572,7 @@ bool PichiCore::isOnline(std::string jid)
 	int count;
 	try
 	{
-		count = system::atoi(sql->fetchColumn(0));
+		count = Helper::atoi(sql->fetchColumn(0));
 	}
 	catch(boost::bad_lexical_cast e)
 	{
@@ -583,13 +584,13 @@ bool PichiCore::isOnline(std::string jid)
 void PichiCore::ping(std::string jid)
 {
 	//timer = boost::timer();
-	reciver["ping_" + jid] = boost::lexical_cast<std::string>(system::microtime());
+	reciver["ping_" + jid] = boost::lexical_cast<std::string>(Helper::microtime());
 	jabber->client->xmppPing(JID(jid), jabber);  	
 }
 
 void PichiCore::pingRecive(std::string jid)
 {
-	double diff =  system::microtime() - boost::lexical_cast<double>(reciver["ping_" + jid]);
+	double diff =  Helper::microtime() - boost::lexical_cast<double>(reciver["ping_" + jid]);
 	reciver.erase("ping_" + jid);
 	std::string str = boost::lexical_cast<std::string>(diff * 1000.0);
 	str = str.substr(0, str.find(".") + 3);
@@ -600,7 +601,7 @@ void PichiCore::pingRecive(std::string jid)
 void PichiCore::setJIDinfo(std::string jid, std::string name, std::string value, std::string groupid)
 {
 	SQLite::q* qu = sql->squery("SELECT COUNT(*) FROM users_data WHERE jid = '" + sql->escapeString(jid) + "' AND name = '" + sql->escapeString(name) + "'" + ((groupid != "") ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
-	if(system::atoi(sql->fetchColumn(qu, 0)) > 0)
+	if(Helper::atoi(sql->fetchColumn(qu, 0)) > 0)
 		sql->exec("UPDATE users_data SET value = '" + sql->escapeString(value) + "'  WHERE jid = '" + sql->escapeString(jid) + "' AND name = '" + sql->escapeString(name) + "'" + ((groupid != "") ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
 	else
 		sql->exec("INSERT INTO users_data (`jid`,`name`,`value`,`groupid`) VALUES ('" + sql->escapeString(jid) + "','" + sql->escapeString(name) + "','" + sql->escapeString(value) + "','" + ((groupid != "") ? sql->escapeString(groupid) : "") + "');");
@@ -634,7 +635,7 @@ void PichiCore::ban(std::string jid, std::string time, std::string reason, std::
 	if(time != "")
 	{
 		time_t tm = convertTime(time);
-		setJIDinfo(jid, "ban", system::stringTime(tm + ::time(NULL)), room);
+		setJIDinfo(jid, "ban", Helper::stringTime(tm + ::time(NULL)), room);
 		setJIDinfo(jid, "ban_reason", reason, room);
 		setJIDinfo(jid, "ban_room", room, room);
 	}
@@ -662,7 +663,7 @@ void PichiCore::kick(std::string jid, std::string time, std::string reason, std:
 	if(time != "")
 	{
 		time_t tm = convertTime(time);
-		setJIDinfo(jid, "kick", system::stringTime(tm + ::time(NULL)), room);
+		setJIDinfo(jid, "kick", Helper::stringTime(tm + ::time(NULL)), room);
 		setJIDinfo(jid, "kick_reason", reason, room);
 		setJIDinfo(jid, "kick_room", room, room);
 	}
@@ -689,31 +690,31 @@ time_t PichiCore::convertTime(std::string time)
 	switch(boost::lexical_cast<char>(time.substr(time.length()-1).c_str()))
 	{
 		case 'm':
-			realtime = system::atot(time.substr(0,time.length()-1));
+			realtime = Helper::atot(time.substr(0,time.length()-1));
 			return realtime * 60;
 			break;
 		case 'h':
-			realtime = system::atot(time.substr(0,time.length()-1));
+			realtime = Helper::atot(time.substr(0,time.length()-1));
 			return realtime * 60 * 60;
 			break;
 		case 'd':
-			realtime = system::atot(time.substr(0,time.length()-1));
+			realtime = Helper::atot(time.substr(0,time.length()-1));
 			return realtime * 60 * 60 * 24;
 			break;
 		case 'w':
-			realtime = system::atot(time.substr(0,time.length()-1));
+			realtime = Helper::atot(time.substr(0,time.length()-1));
 			return realtime * 60 * 60 * 24 * 7;
 			break;
 		case 'M':
-			realtime = system::atot(time.substr(0,time.length()-1));
+			realtime = Helper::atot(time.substr(0,time.length()-1));
 			return realtime * 60 * 60 * 24 * 30;
 			break;
 		case 'Y':
-			realtime = system::atot(time.substr(0,time.length()-1));
+			realtime = Helper::atot(time.substr(0,time.length()-1));
 			return realtime * 60 * 60 * 24 * 30 * 12;
 				break;
 		default:
-			return system::atot(time);
+			return Helper::atot(time);
 			break;
 	}
 }

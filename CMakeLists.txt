@@ -76,7 +76,7 @@ set(PICHI_CPP 	src/pichiexception.cpp
 		src/pichimessage.cpp
 		src/commandhandler.cpp
 		src/pichiconfig.cpp
-		src/system.cpp
+		src/helper.cpp
 		src/pichi.cpp
 		src/sqlite.cpp
 		src/pichidbpatcher.cpp

@@ -24,7 +24,7 @@
 #include <map>
 #include <string>
 #include "xmlsimple.h"
-#include "system.h"
+#include "helper.h"
 #include <vector>
 #include <stdarg.h>
 #include <boost/algorithm/string/replace.hpp>

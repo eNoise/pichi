@@ -34,10 +34,11 @@
 #include <list>
 #include <fstream>
 #include <boost/program_options.hpp>
+#include <boost/foreach.hpp>
 #include <iostream>
 
 #include "pichicore.h"
-#include "system.h"
+#include "helper.h"
 #include "log.h"
 #include "config.h"
 #include "pichidbpatcher.h"
@@ -53,17 +54,17 @@ void Pichi::firstStart(void)
 	Log("First Start.", Log::WARNING);
 #ifndef WIN32
 	// Creating ~
-	std::string dir = system::getFullPath(PICHI_CONFIG_DIR);
+	std::string dir = Helper::getFullPath(PICHI_CONFIG_DIR);
 	
 	// construcor checked dir exist... all good
 	mkdir(dir.c_str(), 0775);
 	
 	std::string cfgFile;
-	if(system::fileExists(std::string(PICHI_INSTALLED_DIR) + "pichi.xml"))
+	if(Helper::fileExists(std::string(PICHI_INSTALLED_DIR) + "pichi.xml"))
 		cfgFile = std::string(PICHI_INSTALLED_DIR) + "pichi.xml";
-	else if(system::fileExists("/usr/share/pichi/config/pichi.xml"))
+	else if(Helper::fileExists("/usr/share/pichi/config/pichi.xml"))
 		cfgFile = "/usr/share/pichi/config/pichi.xml";
-	else if(RUN_DIR.substr(RUN_DIR.size()-4) == "/bin" && system::fileExists(RUN_DIR.substr(0, RUN_DIR.size()-3) + "share/pichi/config/pichi.xml"))
+	else if(RUN_DIR.substr(RUN_DIR.size()-4) == "/bin" && Helper::fileExists(RUN_DIR.substr(0, RUN_DIR.size()-3) + "share/pichi/config/pichi.xml"))
 		cfgFile = RUN_DIR.substr(0, RUN_DIR.size()-3) + "share/pichi/config/pichi.xml";
 	else
 		throw PichiException("Error: no config file founded... you must delete ~/.pichi and start bot again");
@@ -83,11 +84,11 @@ void Pichi::botstart(void)
 	Log("Start Pichi", Log::INFO);
 	if(pichi->getCfgOption("debug") == "1")
 	{
-		Log::LEVEL = system::atoi(pichi->getCfgOption("debug_level"));
+		Log::LEVEL = Helper::atoi(pichi->getCfgOption("debug_level"));
 		Log("Debug enabled at level: " + pichi->getCfgOption("debug_level"), Log::INFO);
 	}
 	if(pichi->getCfgOption("port") != "5222")
-		client = new Client( jid, password, system::atoi(pichi->getCfgOption("port")) );
+		client = new Client( jid, password, Helper::atoi(pichi->getCfgOption("port")) );
 	else
 		client = new Client( jid, password );
 	// set my info
@@ -100,7 +101,7 @@ void Pichi::botstart(void)
 	client->registerSubscriptionHandler( this );
 	client->registerIqHandler( this, ExtVersion);
 	roster = new RosterManager( client );
-	BOOST_FOREACH( std::string room, system::explode(",", pichi->getCfgOption("room")) )
+	BOOST_FOREACH( std::string room, Helper::explode(",", pichi->getCfgOption("room")) )
 		enterRoom(JID(room + "/" + nick));
 	times["white_ping"] = times["start"] = time(NULL);
 	if(pthread_create(&thread, NULL, &Pichi::cron, (void*)this) > 0)
@@ -131,10 +132,10 @@ Pichi::Pichi(int argc, char** argv)
 	isFirstStart = false;
 #ifndef WIN32
 	// First start checks (create dir on linux)
-	if(!system::fileExists(PICHI_CONFIG_DIR))
+	if(!Helper::fileExists(PICHI_CONFIG_DIR))
 		isFirstStart = true;
 #else
-	if(!system::fileExists(std::string(PICHI_CONFIG_DIR) + "pichi.db"))
+	if(!Helper::fileExists(std::string(PICHI_CONFIG_DIR) + "pichi.db"))
 		isFirstStart = true;
 #endif
 	// First start
@@ -196,8 +197,8 @@ bool Pichi::parseArgs(int argc, char** argv)
 	arg::options_description description("Allowed options");
 	description.add_options()
 		("help,h", "Help message")
-		("log,l", arg::value< std::string >()->default_value(system::getFullPath(PICHI_LOG_FILE)), "Log file path")
-		("pid,p", arg::value< std::string >()->default_value(system::getFullPath(PICHI_PID_FILE)), "PID file path")
+		("log,l", arg::value< std::string >()->default_value(Helper::getFullPath(PICHI_LOG_FILE)), "Log file path")
+		("pid,p", arg::value< std::string >()->default_value(Helper::getFullPath(PICHI_PID_FILE)), "PID file path")
 		("no-pid,n", "Start pichi without pid file")
 		("daemonize,d", "Run Pichi as a daemon");
 	try 
@@ -482,15 +483,15 @@ void Pichi::handleLog (LogLevel level, LogArea area, const std::string &message)
 
 void Pichi::initDBStruct(void)
 {
-	if(!system::fileExists(PICHI_CONFIG_DIR + pichi->getCfgOption("db_file")))
+	if(!Helper::fileExists(PICHI_CONFIG_DIR + pichi->getCfgOption("db_file")))
 	{
-		pichi->sql = new SQLite(system::getFullPath(PICHI_CONFIG_DIR) + pichi->getCfgOption("db_file"));
+		pichi->sql = new SQLite(Helper::getFullPath(PICHI_CONFIG_DIR) + pichi->getCfgOption("db_file"));
 		PichiDbPather patch(pichi->sql, pichi->lang);
 		patch.initDbStruct();
 	}
 	else
 	{
-		pichi->sql = new SQLite(system::getFullPath(PICHI_CONFIG_DIR) + pichi->getCfgOption("db_file"));
+		pichi->sql = new SQLite(Helper::getFullPath(PICHI_CONFIG_DIR) + pichi->getCfgOption("db_file"));
 		PichiDbPather patch(pichi->sql, pichi->lang);
 		patch.checkDbStruct();
 	}

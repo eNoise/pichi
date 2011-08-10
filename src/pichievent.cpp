@@ -49,8 +49,8 @@ void PichiEvent::doAction(std::string action, std::string doaction, std::string 
 		std::string room;
 		if(coincidence != "")
 		{
-			exploder = system::explode(",", coincidence);
-			exploder = system::explode("=", exploder[0]);
+			exploder = Helper::explode(",", coincidence);
+			exploder = Helper::explode("=", exploder[0]);
 			if(exploder[0] == "room")
 			{
 				room = exploder[1];

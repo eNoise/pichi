@@ -20,6 +20,7 @@
 
 #include "commandhandler.h"
 #include "pichicore.h"
+#include <boost/foreach.hpp>
 
 namespace pichi
 {
@@ -57,10 +58,10 @@ void commandhandler::fetchCommand(std::string command)
 	if(command.substr(0,1) != "!")
 		return;
 	std::string news = command.substr(1);
-	std::vector< std::string > str = system::explode(" ", news);
+	std::vector< std::string > str = Helper::explode(" ", news);
 	last_command = str[0];
 	str.erase(str.begin());
-	last_args = system::implode(" ", str);
+	last_args = Helper::implode(" ", str);
 	pichi->last_args = last_args;
 	pichi->last_command = last_command;
 }
@@ -75,11 +76,11 @@ std::vector< std::string > commandhandler::seperate(std::string str, int level)
 	}
 	if(str.find("=") != std::string::npos)
 	{
-		return system::explode("=", str);
+		return Helper::explode("=", str);
 	}
 	else if(str.find("\"") != std::string::npos)
 	{
-		std::vector< std::string > w = system::explode("\"", str);
+		std::vector< std::string > w = Helper::explode("\"", str);
 		std::vector< std::string > ret;
 		for(size_t i = 1; i < w.size(); i = i+2)
 			ret.push_back(w[i]);
@@ -88,7 +89,7 @@ std::vector< std::string > commandhandler::seperate(std::string str, int level)
 	else
 	{
 		level--;
-		std::vector< std::string > w = system::explode(" ", str);
+		std::vector< std::string > w = Helper::explode(" ", str);
 		std::vector< std::string > ret, temp;
 		std::vector< std::string >::iterator it = w.begin();
 		int i;
@@ -96,7 +97,7 @@ std::vector< std::string > commandhandler::seperate(std::string str, int level)
 			ret.push_back((*(it++)));
 		temp.resize(w.size()-i);
 		copy(it, w.end(), temp.begin());
-		ret.push_back(system::implode(" ", temp));
+		ret.push_back(Helper::implode(" ", temp));
 		return ret;
 	}
 }

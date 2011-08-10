@@ -21,7 +21,7 @@
 #include "pichiconfig.h"
 
 #include "config.h"
-#include "system.h"
+#include "helper.h"
 #include "pichiexception.h"
 #include "log.h"
 
@@ -92,7 +92,7 @@ void PichiConfig::loadXmlConfig(const std::string& file)
 PichiConfig::PichiConfig()
 {
 	version = 0;
-	loadXmlConfig(system::getFullPath(PICHI_CONFIG_DIR) + "pichi.xml");
+	loadXmlConfig(Helper::getFullPath(PICHI_CONFIG_DIR) + "pichi.xml");
 }
 
 std::string PichiConfig::operator[](const std::string& str)

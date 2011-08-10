@@ -21,7 +21,7 @@
 #include "log.h"
 
 #include <iostream>
-#include "system.h"
+#include "helper.h"
 #include "config.h"
 #include <fstream>
 #include <boost/algorithm/string/erase.hpp>
@@ -31,7 +31,7 @@ namespace pichi
 
 int Log::LEVEL = 3; //default
 bool Log::file_log = false;
-std::string Log::log_file = system::getFullPath(PICHI_LOG_FILE);
+std::string Log::log_file = Helper::getFullPath(PICHI_LOG_FILE);
 
 void Log::showLog(std::string lst, LogType type)
 {
@@ -40,23 +40,23 @@ std::string logthis;
 	{
 	  case ERROR:
 		if(LEVEL > 0)
-			logthis += ((file_log) ? "[" + system::timeToString(time(NULL), "%d.%m.%y") + "]" : "") + "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][ERROR] " + lst + "\n";
+			logthis += ((file_log) ? "[" + Helper::timeToString(time(NULL), "%d.%m.%y") + "]" : "") + "[" + Helper::timeToString(time(NULL), "%H:%M:%S") + "][ERROR] " + lst + "\n";
 		break;
 	  case WARNING:
 		if(LEVEL > 1)
-			logthis += ((file_log) ? "[" + system::timeToString(time(NULL), "%d.%m.%y") + "]" : "") + "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][WARNING] " + lst + "\n";
+			logthis += ((file_log) ? "[" + Helper::timeToString(time(NULL), "%d.%m.%y") + "]" : "") + "[" + Helper::timeToString(time(NULL), "%H:%M:%S") + "][WARNING] " + lst + "\n";
 		break;
 	  case INFO:
 		if(LEVEL > 2)
-			logthis += ((file_log) ? "[" + system::timeToString(time(NULL), "%d.%m.%y") + "]" : "") + "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][INFO] " + lst + "\n";
+			logthis += ((file_log) ? "[" + Helper::timeToString(time(NULL), "%d.%m.%y") + "]" : "") + "[" + Helper::timeToString(time(NULL), "%H:%M:%S") + "][INFO] " + lst + "\n";
 		break;
 	  case DEBUG:
 		if(LEVEL > 3)
-			logthis += ((file_log) ? "[" + system::timeToString(time(NULL), "%d.%m.%y") + "]" : "") + "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][DEBUG] " + lst + "\n";
+			logthis += ((file_log) ? "[" + Helper::timeToString(time(NULL), "%d.%m.%y") + "]" : "") + "[" + Helper::timeToString(time(NULL), "%H:%M:%S") + "][DEBUG] " + lst + "\n";
 		break;
 	  case VERBOSE:
 		if(LEVEL > 4)
-			logthis += ((file_log) ? "[" + system::timeToString(time(NULL), "%d.%m.%y") + "]" : "") + "[" + system::timeToString(time(NULL), "%H:%M:%S") + "][VERBOSE] " + lst + "\n";
+			logthis += ((file_log) ? "[" + Helper::timeToString(time(NULL), "%d.%m.%y") + "]" : "") + "[" + Helper::timeToString(time(NULL), "%H:%M:%S") + "][VERBOSE] " + lst + "\n";
 		break;
 	}
 	if(file_log)

@@ -19,6 +19,7 @@
 */
 
 #include "lexemebuilder.h"
+#include <boost/foreach.hpp>
 
 namespace pichi
 {
@@ -44,7 +45,7 @@ void LexemeBuilder::parseText(std::string text)
 	if(message_size_limit > 0 && text.size() > message_size_limit)
 		return;
 	
-	std::vector<std::string> base = system::explode(" ", text);
+	std::vector<std::string> base = Helper::explode(" ", text);
 	std::string beg("#beg#"), end("#end#");
 	
 	std::vector<std::string> tmp(3);
@@ -81,7 +82,7 @@ void LexemeBuilder::buildArray(void )
 	std::map<std::string, std::string> gt;
 	while(!(gt = (*sql)->fetchArray()).empty())
 	{
-		answers.push_back( std::pair< int, std::vector<std::string> >( system::atoi(gt["count"]), std::vector<std::string>(3) ) );
+		answers.push_back( std::pair< int, std::vector<std::string> >( Helper::atoi(gt["count"]), std::vector<std::string>(3) ) );
 		answers.back().second[0] = gt["lexeme1"];
 		answers.back().second[1] = gt["lexeme2"];
 		answers.back().second[2] = gt["lexeme3"];
@@ -138,7 +139,7 @@ std::string LexemeBuilder::genFullRandom()
 	
 	for(int i=0; ((is_answer_limit) ? i < limit : true); i++)
 	{
-		(*sql)->query("SELECT * FROM lexems WHERE lexeme1 = '" + (*sql)->escapeString(lastx[1]) + "' AND lexeme2 = '" + (*sql)->escapeString(lastx[2]) + "' ORDER BY `count` DESC LIMIT 0," + system::ttoa(query_limit) + ";");
+		(*sql)->query("SELECT * FROM lexems WHERE lexeme1 = '" + (*sql)->escapeString(lastx[1]) + "' AND lexeme2 = '" + (*sql)->escapeString(lastx[2]) + "' ORDER BY `count` DESC LIMIT 0," + Helper::ttoa(query_limit) + ";");
 		if((*sql)->numRows() == 0)
 			break; //больше нет совпадений
 		//if($i != $limit-1)
@@ -181,7 +182,7 @@ std::string LexemeBuilder::genFromWord(const std::string& word)
 	// left
 	for(int i = 0; ((is_answer_limit) ? i < limit : true) && lastx[0] != "#beg#"; i++)
 	{
-		(*sql)->query("SELECT * FROM lexems WHERE lexeme2 = '" + (*sql)->escapeString(lastx[0]) + "' AND lexeme3 = '" + (*sql)->escapeString(lastx[1]) + "' ORDER BY `count` DESC LIMIT 0," + system::ttoa(query_limit) + ";");
+		(*sql)->query("SELECT * FROM lexems WHERE lexeme2 = '" + (*sql)->escapeString(lastx[0]) + "' AND lexeme3 = '" + (*sql)->escapeString(lastx[1]) + "' ORDER BY `count` DESC LIMIT 0," + Helper::ttoa(query_limit) + ";");
 		if((*sql)->numRows() == 0)
 			break; //больше нет совпадений
 		//if($i != $limit-1)
@@ -197,7 +198,7 @@ std::string LexemeBuilder::genFromWord(const std::string& word)
 	lastx = blastx; // возращаем исходную фразу
 	for(int i = 0; ((is_answer_limit) ? i < limit : true) && lastx[2] != "#end#"; i++)
 	{
-		(*sql)->query("SELECT * FROM lexems WHERE lexeme1 = '" + (*sql)->escapeString(lastx[1]) + "' AND lexeme2 = '" + (*sql)->escapeString(lastx[2]) + "' ORDER BY `count` DESC LIMIT 0," + system::ttoa(query_limit) + ";");
+		(*sql)->query("SELECT * FROM lexems WHERE lexeme1 = '" + (*sql)->escapeString(lastx[1]) + "' AND lexeme2 = '" + (*sql)->escapeString(lastx[2]) + "' ORDER BY `count` DESC LIMIT 0," + Helper::ttoa(query_limit) + ";");
 		if((*sql)->numRows() == 0)
 			break; //больше нет совпадений
 		//if($i != $limit-1)

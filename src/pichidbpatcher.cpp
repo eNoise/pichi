@@ -19,6 +19,7 @@
 */
 
 #include "pichidbpatcher.h"
+#include <boost/lexical_cast.hpp>
 
 namespace pichi
 {
@@ -91,7 +92,7 @@ void PichiDbPather::patch(void )
 			std::vector<std::string> expl;
 			for(std::vector< std::pair<std::string, std::string> >::iterator it = dump.begin(); it != dump.end(); it++)
 			{
-				expl = system::explode(" ", it->first);
+				expl = Helper::explode(" ", it->first);
 				sql->exec("INSERT INTO lexems (`lexeme1`,`lexeme2`,`lexeme3`,`count`) VALUES('" + sql->escapeString(expl[0]) + "', '" + sql->escapeString(expl[1]) + "', '" + sql->escapeString(expl[2]) + "', '" + it->second + "');");
 			}
 			dump.clear();

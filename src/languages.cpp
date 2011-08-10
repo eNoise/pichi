@@ -27,16 +27,16 @@ namespace pichi
 const std::string languages::findLangDir(void )
 {
 #ifndef WIN32
-	if(system::fileExists(system::getFullPath(PICHI_CONFIG_DIR) + "languages/"))
-		return (system::getFullPath(PICHI_CONFIG_DIR) + "languages/");
-	else if(system::fileExists("/usr/share/pichi/languages/"))
+	if(Helper::fileExists(Helper::getFullPath(PICHI_CONFIG_DIR) + "languages/"))
+		return (Helper::getFullPath(PICHI_CONFIG_DIR) + "languages/");
+	else if(Helper::fileExists("/usr/share/pichi/languages/"))
 		return "/usr/share/pichi/languages/";
-	else if(RUN_DIR.substr(RUN_DIR.size() - 4) == "/bin" && system::fileExists(RUN_DIR.substr(0, RUN_DIR.size() - 3) + "share/pichi/languages/"))
+	else if(RUN_DIR.substr(RUN_DIR.size() - 4) == "/bin" && Helper::fileExists(RUN_DIR.substr(0, RUN_DIR.size() - 3) + "share/pichi/languages/"))
 		return (RUN_DIR.substr(0, RUN_DIR.size() - 3) + "share/pichi/languages/");
 	else
 		throw PichiException("No language directory's founded...");
 #else
-	return system::getFullPath(PICHI_CONFIG_DIR) + "languages/";
+	return Helper::getFullPath(PICHI_CONFIG_DIR) + "languages/";
 #endif
 	return "";
 }  
@@ -110,7 +110,7 @@ std::string languages::operator()(const std::string& first, ...)
 	//boost::regex reg("#\\{([0-9]+)\\}#sU", boost::match_perl|boost::format_perl);
 	//text = boost::regex_replace(text, reg, "%\\\\1$s");
 	// fuck!!! regex don't work as I needed, so we use not protected method =((
-	std::vector<std::string> past = system::explode("\\{", text);
+	std::vector<std::string> past = Helper::explode("\\{", text);
 	size_t h;
 	for(std::vector<std::string>::iterator it = past.begin(); it != past.end(); it++)
 	{
@@ -119,8 +119,8 @@ std::string languages::operator()(const std::string& first, ...)
 		if(h != std::string::npos)
 			(*it) = it->substr(h+1);
 	}
-	//text = system::implode("%", past);
-	text = system::implode("%s", past); // redo!
+	//text = Helper::implode("%", past);
+	text = Helper::implode("%s", past); // redo!
 	
 	char inbuf[65536], outbuf[65536];
 	strcpy(inbuf, text.c_str());

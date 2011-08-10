@@ -26,22 +26,20 @@
 #include <time.h>
 #include <sys/time.h>
 #include <vector>
-#include <boost/algorithm/string/regex.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/foreach.hpp>
 #include <stdlib.h>
 
 namespace pichi
 {
 
-class system
+class Helper
 {
   protected:
 	
   public:
-	system();
-	~system();
+	Helper();
+	~Helper();
 	
+	static std::string pichiHeader(void);
 	static std::vector< std::string > explode(std::string seperator, std::string str);
 	static std::string implode(std::string, std::vector< std::string >);
 	static std::string timeToString(time_t, std::string);

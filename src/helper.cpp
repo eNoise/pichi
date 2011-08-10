@@ -18,12 +18,21 @@
 
 */
 
-#include "system.h"
+#include "helper.h"
+#include <boost/algorithm/string/regex.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/foreach.hpp>
 
 namespace pichi
 {
 
-std::string system::timeToString(time_t t, std::string format)
+std::string Helper::pichiHeader(void )
+{
+	std::string header;
+	return header;
+}
+  
+std::string Helper::timeToString(time_t t, std::string format)
 {
 	struct tm * ptm = localtime(&t);
 	char buf[100];
@@ -33,14 +42,14 @@ std::string system::timeToString(time_t t, std::string format)
 	return result;
 }
 
-std::vector< std::string > system::explode(std::string seperator, std::string str)
+std::vector< std::string > Helper::explode(std::string seperator, std::string str)
 {
 	std::vector< std::string > ret;
 	boost::split_regex( ret, str, boost::regex( seperator ) ) ;
 	return ret;
 }
 
-std::string system::implode(std::string seperator, std::vector< std::string > strs)
+std::string Helper::implode(std::string seperator, std::vector< std::string > strs)
 {
 	  std::string ret;
 
@@ -55,29 +64,29 @@ std::string system::implode(std::string seperator, std::vector< std::string > st
 	 return ret;
 }
 
-template<typename compT> bool system::in_array(compT& val, std::vector<compT>& array)
+template<typename compT> bool Helper::in_array(compT& val, std::vector<compT>& array)
 {
 	return (std::find(array.begin(), array.end(), val) != array.end());
 }
 
-template bool system::in_array<std::string>(std::string& val, std::vector<std::string>& array);
+template bool Helper::in_array<std::string>(std::string& val, std::vector<std::string>& array);
 
-std::string system::stringTime(time_t time)
+std::string Helper::stringTime(time_t time)
 {
 	return boost::lexical_cast<std::string>(time);
 }
 
-int system::atoi(std::string str)
+int Helper::atoi(std::string str)
 {
 	return boost::lexical_cast<int>( str );
 }
 
-std::string system::itoa(int num)
+std::string Helper::itoa(int num)
 {
 	return boost::lexical_cast<std::string>( num );
 }
 
-std::vector< std::string > system::splitBySize(std::string& str, size_t size)
+std::vector< std::string > Helper::splitBySize(std::string& str, size_t size)
 {
 	std::vector< std::string > ret;
 	for(size_t cursize = 0; cursize < str.size(); cursize += size)
@@ -86,17 +95,17 @@ std::vector< std::string > system::splitBySize(std::string& str, size_t size)
 	return ret;
 }
 
-size_t system::atot(std::string str)
+size_t Helper::atot(std::string str)
 {
 	return boost::lexical_cast<size_t>( str );
 }
 
-std::string system::ttoa(size_t t)
+std::string Helper::ttoa(size_t t)
 {
 	return boost::lexical_cast<std::string>( t );
 }
 
-const std::string system::getFullPath(const std::string& dir)
+const std::string Helper::getFullPath(const std::string& dir)
 {
 	if (dir[0] != '~')
 		return dir;
@@ -108,13 +117,13 @@ const std::string system::getFullPath(const std::string& dir)
 #endif
 }
 
-bool system::fileExists(const std::string& file)
+bool Helper::fileExists(const std::string& file)
 {
 	struct stat st;
 	return (stat(getFullPath(file).c_str(), &st ) == 0);
 }
 
-double system::microtime(void )
+double Helper::microtime(void )
 {
 	struct timeval tp;
 	gettimeofday(&tp, NULL);
