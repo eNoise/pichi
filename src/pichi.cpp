@@ -31,6 +31,7 @@
 #ifdef WIN32
 #include <direct.h>
 #endif
+#include <sys/stat.h>
 #include <list>
 #include <fstream>
 #include <boost/program_options.hpp>

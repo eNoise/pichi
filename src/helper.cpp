@@ -23,6 +23,11 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/foreach.hpp>
 
+#include <dirent.h>
+#include <sys/time.h>
+#include <sys/stat.h>
+
+
 namespace pichi
 {
 
@@ -126,6 +131,19 @@ bool Helper::fileExists(const std::string& file)
 {
 	struct stat st;
 	return (stat(getFullPath(file).c_str(), &st ) == 0);
+}
+
+std::vector< std::string > Helper::getDirFiles(const std::string& path)
+{
+	std::vector< std::string > files;
+	DIR* dp;
+	struct dirent *dirp;
+	if((dp = opendir(path.c_str())) == NULL)
+		return files;
+	while((dirp = readdir(dp)) != NULL)
+		files.push_back(dirp->d_name);
+	closedir(dp);
+	return files;
 }
 
 double Helper::microtime(void )

@@ -22,11 +22,9 @@
 #define SYSTEM_H
 
 #include <string>
-#include <sys/stat.h>
 #include <time.h>
-#include <sys/time.h>
 #include <vector>
-#include <stdlib.h>
+
 
 namespace pichi
 {
@@ -52,6 +50,7 @@ class Helper
 	static const std::string getFullPath(const std::string& dir);
 	static bool fileExists(const std::string& file);
 	template<typename compT> static bool in_array(compT&, std::vector<compT>&);
+	static std::vector< std::string > getDirFiles(const std::string& path);
 	static double microtime(void);
 };
 

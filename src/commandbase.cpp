@@ -25,6 +25,9 @@
 
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
+#ifdef WITH_LUA
+#include <lua.h>
+#endif
 
 #include "pichicore.h"
 #include "pichi.h"
@@ -264,6 +267,9 @@ void commandbase::command_version(std::string null)
 		+ "SQLite version: " + SQLITE_VERSION + "\n" +
 		+ "CURL version: " + curl_version() + "\n" +
 		+ "Boost version: " + BOOST_LIB_VERSION + "\n" +
+#ifdef WITH_LUA
+		+ "Lua version: " + LUA_RELEASE + "\n" +
+#endif
 		+ "Pichi DB version: " + Helper::itoa(PICHI_DB_VERSION_ACTUAL)
 	);
 	//($hook = PichiPlugin::fetch_hook("commands_show_version")) ? eval($hook) : false;
