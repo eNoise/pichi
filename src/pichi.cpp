@@ -305,7 +305,7 @@ void Pichi::leftRoom(JID room)
 
 bool pichi::Pichi::isRoom(const gloox::JID& room) const
 {
-	std::find_if(rooms.begin(), rooms.end(), [&room](const std::pair<JID, MUCRoom*>& r){ return r.first.bare() == room.full(); }) != rooms.end();
+	return std::find_if(rooms.begin(), rooms.end(), [&room](const std::pair<JID, MUCRoom*>& r){ return r.first.bare() == room.full(); }) != rooms.end();
 }
 
 void Pichi::onConnect()
