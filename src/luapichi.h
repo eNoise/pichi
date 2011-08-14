@@ -36,6 +36,10 @@ private:
 	void loadLuaFiles(void);
 };
 
+struct PichiManager {
+	static int sendAnswer(lua_State* L);
+};
+
 };
 
 #endif // WITH_LUA

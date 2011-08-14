@@ -257,7 +257,7 @@ void commandbase::command_version(std::string null)
 	//global $config;
 	pichi->sendAnswer(
 		Helper::pichiHeader()
-		+ "Pichi Bot v." + PICHI_VERSION
+		+ "Pichi v." + PICHI_VERSION
 		+ "\n" + TR("command_version_environment") + "\n" +
 #ifdef WIN32
 		+ "System environment: Windows\n" +
@@ -305,7 +305,9 @@ void commandbase::command_reload(std::string arg)
 	
 void commandbase::command_plugins(std::string arg)
 {
-	pichi->sendAnswer(TR("command_plugins_no_sorry"));
+	pichi->luaPush(pichi);
+	pichi->luaPush("lua test");
+	pichi->callEvent("PichiCommands", "plugins", 2);
 }
 
 void pichi::commandbase::command_info(std::string arg)

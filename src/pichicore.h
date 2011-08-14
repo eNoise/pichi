@@ -27,7 +27,9 @@
 #include "pichiconfig.h"
 #include "pichioptions.h"
 #include "pichimessage.h"
+#ifdef WITH_LUA
 #include "luapichi.h"
+#endif
 
 namespace gloox {
      class JID;
@@ -45,7 +47,9 @@ class PichiEvent;
 class PichiCore : public PichiConfig, 
 		  public PichiMessage, 
 		  public PichiOptions,
+#ifdef WITH_LUA
 		  public LuaPichi
+#endif
 {
 	public:
 		SQLite *sql;

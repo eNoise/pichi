@@ -35,6 +35,7 @@ endif (NOT MSVC)
 
 option (LOCAL_GLOOX "Use local gloox lib" OFF)
 option (LOCAL_TINYXML "Use local tinyxml lib" OFF)
+option (LOCAL_LUA "Use local lua lib" OFF)
 option (WITH_LUA "Lua scripting" ON)
 
 CHECK_INCLUDE_FILE (time.h HAVE_TIME_H)
@@ -73,9 +74,15 @@ else (LOCAL_TINYXML)
 endif (LOCAL_TINYXML)
 
 if (WITH_LUA)
-  find_package(Lua51 REQUIRED)
+  if (LOCAL_LUA)
+      add_subdirectory(luasrc)
+      include_directories ("${PROJECT_SOURCE_DIR}/luasrc")
+      set (LUA_LIBRARIES "lua")
+  else (LOCAL_LUA)
+      find_package(Lua51 REQUIRED)
+      include_directories(${LUA_INCLUDE_DIR})
+  endif (LOCAL_LUA)
   add_definitions(-DWITH_LUA)
-  include_directories(${LUA_INCLUDE_DIR})
 endif (WITH_LUA)
 
 

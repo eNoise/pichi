@@ -34,11 +34,11 @@ namespace pichi
 std::string Helper::pichiHeader(void )
 {
 	std::string header;
-	header += "\n ______   __     ______     __  __     __    \n";
-	header += "/\\  == \\ /\\ \\   /\\  ___\\   /\\ \\_\\ \\   /\\ \\   \n";
-	header += "\\ \\  _-/ \\ \\ \\  \\ \\ \\____  \\ \\  __ \\  \\ \\ \\  \n";
-	header += " \\ \\_\\    \\ \\_\\  \\ \\_____\\  \\ \\_\\ \\_\\  \\ \\_\\ \n";
-	header += "  \\/_/     \\/_/   \\/_____/   \\/_/\\/_/   \\/_/ \n";
+	header += "\n ______   __   ______      __  __   __    \n";
+	header += "/\\  == \\ /\\ \\   /\\  ___\\     /\\ \\_\\ \\   /\\ \\   \n";
+	header += "\\ \\   _-/   \\ \\ \\  \\ \\ \\____   \\ \\  __ \\  \\ \\ \\  \n";
+	header += " \\ \\_\\       \\ \\_\\  \\ \\_____\\  \\ \\_\\ \\_\\  \\ \\_\\ \n";
+	header += "  \\/_/        \\/_/   \\/_____/   \\/_/\\/_/   \\/_/ \n";
 	return header;
 }
   
@@ -141,7 +141,8 @@ std::vector< std::string > Helper::getDirFiles(const std::string& path)
 	if((dp = opendir(path.c_str())) == NULL)
 		return files;
 	while((dirp = readdir(dp)) != NULL)
-		files.push_back(dirp->d_name);
+		if(std::string(dirp->d_name) != "." && std::string(dirp->d_name) != "..")
+			files.push_back(dirp->d_name);
 	closedir(dp);
 	return files;
 }

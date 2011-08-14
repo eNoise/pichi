@@ -34,6 +34,8 @@ extern "C" {
 namespace pichi
 {
 
+class PichiCore;
+  
 class LuaManager
 {
 public:
@@ -44,9 +46,16 @@ public:
 		lua_close(L);
 	};
 	
-	int exec(const std::string& table, const std::string& method, int args = 0, int ret = LUA_MULTRET);
+	int callEvent(const std::string& table, const std::string& method, int args = 0, int ret = LUA_MULTRET);
 	void registerFunction(const char *name, lua_CFunction func);
 	void loadFile(const char* filename);
+	
+	void luaPush(int i);
+	void luaPush(bool b);
+	void luaPush(const std::string& str);
+	void luaPush(const char* str);
+	void luaPush(void* func);
+	template< typename T > void luaPush(T* p){ luaPush((void*)p); };
 protected:
 	lua_State *L;
 	int status;

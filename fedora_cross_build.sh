@@ -7,7 +7,7 @@ rm -fr win32build
 mkdir win32build
 cd win32build
 mkdir pichi
-mingw32-cmake -DCMAKE_BUILD_TYPE=Release -DLOCAL_GLOOX=ON -DLOCAL_TINYXML=ON -DCMAKE_INSTALL_PREFIX=`pwd`/pichi ../
+mingw32-cmake -DCMAKE_BUILD_TYPE=Release -DLOCAL_GLOOX=ON -DLOCAL_TINYXML=ON -DLOCAL_LUA=ON -DWITH_LUA=ON -DCMAKE_INSTALL_PREFIX=`pwd`/pichi ../
 mingw32-make -j4
 mingw32-make install
 cd pichi

@@ -22,9 +22,11 @@
 #include "luapichi.h"
 
 #include <algorithm>
+
 #include "helper.h"
 #include "log.h"
 #include "pichiexception.h"
+#include "pichicore.h"
 
 namespace pichi
 {
@@ -32,6 +34,8 @@ namespace pichi
 LuaPichi::LuaPichi()
 {
 	loadLuaFiles();
+	
+	luaMap["SendAnswer"] = PichiManager::sendAnswer;
 }
   
 void LuaPichi::loadLuaFiles(void )
@@ -48,6 +52,13 @@ void LuaPichi::loadLuaFiles(void )
 		if(loadFileStatus != 0)
 		      throw PichiException("Load lua file " + fileName + " problem...");
 	});
+}
+
+int PichiManager::sendAnswer(lua_State* L)
+{
+	PichiCore* pichi = (PichiCore*)lua_touserdata(L, 2);
+	std::string toSend = lua_tostring(L, -1);
+	pichi->sendAnswer(toSend);
 }
 
 };

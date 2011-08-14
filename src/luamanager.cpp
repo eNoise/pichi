@@ -21,6 +21,7 @@
 
 #include "luamanager.h"
 #include "log.h"
+#include "string.h"
 
 namespace pichi
 {
@@ -33,8 +34,9 @@ void LuaManager::loadLuaLibs(void )
 	luaopen_math(L);
 }
 
-int LuaManager::exec(const std::string& table, const std::string& method, int args, int ret)
+int LuaManager::callEvent(const std::string& table, const std::string& method, int args, int ret)
 {
+	Log(std::string("[LUA][CALL]") + table + ":" + method, Log::VERBOSE);
 	lua_getglobal(L, table.c_str()); // args + 1
 	lua_pushstring(L, method.c_str()); // args + 2
 	if(lua_istable(L, -2)) // есть такая таблица
@@ -50,11 +52,13 @@ int LuaManager::exec(const std::string& table, const std::string& method, int ar
 
 void LuaManager::registerFunction(const char* name, lua_CFunction func)
 {
+	Log(std::string("[LUA][REGISTER]") + name, Log::DEBUG);
 	lua_register(L, name, func);
 }
 
 void LuaManager::loadFile(const char* filename)
 {
+	Log(std::string("[LUA][LOAD]") + filename, Log::DEBUG);
 	loadFileStatus = luaL_loadfile(L, filename);
 }
 
@@ -64,6 +68,32 @@ void LuaManager::reportError(void )
 		Log(std::string("[LUA][ERROR]") + lua_tostring(L, -1), Log::WARNING);
 		lua_pop(L, 1);
 	}
+}
+
+
+void LuaManager::luaPush(int i)
+{
+	lua_pushnumber(L, i);
+}
+
+void LuaManager::luaPush(bool b)
+{
+	lua_pushboolean(L, b);
+}
+
+void LuaManager::luaPush(const std::string& str)
+{
+	lua_pushlstring(L, str.data(), str.size());
+}
+
+void LuaManager::luaPush(const char* str)
+{
+	lua_pushlstring(L, str, strlen(str));
+}
+
+void LuaManager::luaPush(void* func)
+{
+	lua_pushlightuserdata(L, func);
 }
 
 
