@@ -28,10 +28,15 @@ namespace pichi
  
 void LuaManager::loadLuaLibs(void )
 {
+	/*
+	luaopen_io(L);
+	
 	luaopen_base(L);
 	luaopen_table(L);
 	luaopen_string(L);
 	luaopen_math(L);
+	*/
+	luaL_openlibs(L);
 }
 
 int LuaManager::callEvent(const std::string& table, const std::string& method, int args, int ret)
@@ -39,6 +44,7 @@ int LuaManager::callEvent(const std::string& table, const std::string& method, i
 	Log(std::string("[LUA][CALL]") + table + ":" + method, Log::VERBOSE);
 	lua_getglobal(L, table.c_str()); // args + 1
 	lua_pushstring(L, method.c_str()); // args + 2
+	lua_getglobal(L, method.c_str());
 	if(lua_istable(L, -2)) // есть такая таблица
 	{
 		lua_gettable(L, -2); // args + 2
@@ -46,6 +52,10 @@ int LuaManager::callEvent(const std::string& table, const std::string& method, i
 		lua_insert(L, 1); // args + 1 (смещаем на 1 вниз)
 		status = lua_pcall(L, args, ret, 0);
 		reportError();
+	}
+	else 
+	{
+		lua_settop(L, 0);
 	}
 	return status;
 }

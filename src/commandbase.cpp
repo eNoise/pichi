@@ -305,9 +305,9 @@ void commandbase::command_reload(std::string arg)
 	
 void commandbase::command_plugins(std::string arg)
 {
-	pichi->luaPush(pichi);
-	pichi->luaPush("lua test");
-	pichi->callEvent("PichiCommands", "plugins", 2);
+	//pichi->luaPush(pichi);
+	//pichi->luaPush("lua test");
+	pichi->callEvent("pl", "plugins", 0);
 }
 
 void pichi::commandbase::command_info(std::string arg)
