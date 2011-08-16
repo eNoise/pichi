@@ -352,6 +352,7 @@ bool Pichi::handleIq(const gloox::IQ& iq)
 			  pichi->setUserClient(iq.from(), client, version, os);
 		}
 	}
+	return true;
 }
 
 void Pichi::handleMessage( const Message& msg, MessageSession* session = 0 )

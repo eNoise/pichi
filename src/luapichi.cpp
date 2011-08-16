@@ -79,7 +79,7 @@ std::list<std::string> LuaPichi::getLuaFunctionsList(void)
 int LuaPichi::callEvent(const std::string& table, const std::string& method, int args, int ret)
 {
 	luaHandlersList[table].push_back(method);
-	LuaManager::callEvent(table, method, args, ret);
+	return LuaManager::callEvent(table, method, args, ret);
 }
 
 void LuaPichi::appendModule(const pichi::LuaPichi::LuaModuleInfo& info)
@@ -107,6 +107,7 @@ int PichiManager::registerModule(lua_State* L)
 		lua_tostring(L, -1), //author_contact;
 	};
 	pichiLua->appendModule(module);
+	return 0;
 }
 
 
