@@ -305,9 +305,25 @@ void commandbase::command_reload(std::string arg)
 	
 void commandbase::command_plugins(std::string arg)
 {
-	pichi->luaPush(pichi);
-	pichi->luaPush("hi from lua");
-	pichi->callEvent("PichiCommands", "plugins", 2);
+#ifdef WITH_LUA
+	std::list<std::string> luas = pichi->getLuaList();
+	std::list<std::string> regs = pichi->getLuaFunctionsList();
+	std::string pluginsInfo = "\nLua plugins list:\n";
+	
+	std::for_each(luas.begin(), luas.end(), [&pluginsInfo](std::string& lua){
+		pluginsInfo += lua + "\n";
+	});
+	
+	pluginsInfo += "\nRegistred functions:\n";
+	
+	std::for_each(regs.begin(), regs.end(), [&pluginsInfo](std::string& reg){
+		pluginsInfo += reg + " ";
+	});
+	
+	pichi->sendAnswer(pluginsInfo);
+#else
+	pichi->sendAnswer(TR("command_plugins_no_sorry"));
+#endif
 }
 
 void pichi::commandbase::command_info(std::string arg)

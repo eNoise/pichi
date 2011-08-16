@@ -46,9 +46,9 @@ class PichiEvent;
 
 class PichiCore : public PichiConfig, 
 		  public PichiMessage, 
-		  public PichiOptions,
+		  public PichiOptions
 #ifdef WITH_LUA
-		  public LuaPichi
+		  ,public LuaPichi
 #endif
 {
 	public:

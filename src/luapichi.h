@@ -24,6 +24,7 @@
 #ifdef WITH_LUA
 
 #include "luamap.h"
+#include <list>
 
 namespace pichi
 {
@@ -32,8 +33,11 @@ class LuaPichi : public LuaMap
 {
 public:
 	LuaPichi();
+	std::list<std::string> getLuaFunctionsList(void);
+	std::list<std::string> getLuaList(void) { return loadedLuaList; };
 private:
 	void loadLuaFiles(void);
+	std::list<std::string> loadedLuaList;
 };
 
 struct PichiManager {

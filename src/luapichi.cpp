@@ -51,8 +51,19 @@ void LuaPichi::loadLuaFiles(void )
 	std::for_each(luaFiles.begin(), luaFiles.end(), [this](const std::string& fileName){
 		loadFile((PICHI_INSTALLED_DIR + std::string("lua/") + fileName).c_str());
 		if(loadFileStatus != 0)
-		      throw PichiException("Load lua file " + fileName + " problem...");
+			throw PichiException("Load lua file " + fileName + " problem...");
+		else
+			loadedLuaList.push_back(fileName);
 	});
+}
+
+std::list<std::string> LuaPichi::getLuaFunctionsList(void)
+{
+     std::list<std::string> registerList;
+     std::for_each(luaMap.begin(), luaMap.end(), [&registerList](std::pair<const char * const, lua_CFunction>& p){
+		registerList.push_back(p.first);
+     });
+     return registerList;
 }
 
 int PichiManager::sendAnswer(lua_State* L)
