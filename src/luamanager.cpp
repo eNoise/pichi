@@ -28,6 +28,7 @@ namespace pichi
  
 void LuaManager::loadLuaLibs(void )
 {
+	Log("[LUA][INIT] Initialization", Log::DEBUG);
 	/*
 	luaopen_io(L);
 	
@@ -44,7 +45,6 @@ int LuaManager::callEvent(const std::string& table, const std::string& method, i
 	Log(std::string("[LUA][CALL]") + table + ":" + method, Log::VERBOSE);
 	lua_getglobal(L, table.c_str()); // args + 1
 	lua_pushstring(L, method.c_str()); // args + 2
-	lua_getglobal(L, method.c_str());
 	if(lua_istable(L, -2)) // есть такая таблица
 	{
 		lua_gettable(L, -2); // args + 2
@@ -69,7 +69,8 @@ void LuaManager::registerFunction(const char* name, lua_CFunction func)
 void LuaManager::loadFile(const char* filename)
 {
 	Log(std::string("[LUA][LOAD]") + filename, Log::DEBUG);
-	loadFileStatus = luaL_loadfile(L, filename);
+	//loadFileStatus = luaL_loadfile(L, filename);
+	loadFileStatus = luaL_dofile(L, filename);
 }
 
 void LuaManager::reportError(void )

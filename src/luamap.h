@@ -31,10 +31,9 @@ namespace pichi
 
 class LuaMap : public LuaManager
 {
-public:
-	LuaMap();
 protected:
 	std::map<const char *, lua_CFunction> luaMap;
+	void registerLuaMap(void);
 };
 
 };

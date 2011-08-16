@@ -36,6 +36,7 @@ LuaPichi::LuaPichi()
 	loadLuaFiles();
 	
 	luaMap["SendAnswer"] = PichiManager::sendAnswer;
+	registerLuaMap(); // регитрируем map
 }
   
 void LuaPichi::loadLuaFiles(void )
@@ -56,7 +57,7 @@ void LuaPichi::loadLuaFiles(void )
 
 int PichiManager::sendAnswer(lua_State* L)
 {
-	PichiCore* pichi = (PichiCore*)lua_touserdata(L, 2);
+	PichiCore* pichi = (PichiCore*)lua_touserdata(L, -2);
 	std::string toSend = lua_tostring(L, -1);
 	pichi->sendAnswer(toSend);
 }

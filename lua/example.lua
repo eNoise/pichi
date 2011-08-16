@@ -1,9 +1,8 @@
 
-if not pl then
-    pl = {}
+if not PichiCommands then
+    PichiCommands = {}
 end
 
-function plugins ( )
-		io.write( "::::::::::hahahahahaha" )
-		--SendAnswer( pichi, msg )
+function PichiCommands.plugins ( pichi, text )
+		SendAnswer( pichi, text )
 end
