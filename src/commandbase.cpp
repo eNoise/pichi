@@ -254,9 +254,8 @@ void commandbase::command_help(std::string arg)
 
 void commandbase::command_version(std::string null)
 {
-	//global $config;
-	pichi->sendAnswer(
-		Helper::pichiHeader()
+	
+	std::string version = Helper::pichiHeader()
 		+ "Pichi v." + PICHI_VERSION
 		+ "\n" + TR("command_version_environment") + "\n" +
 #ifdef WIN32
@@ -271,7 +270,18 @@ void commandbase::command_version(std::string null)
 		+ "Lua version: " + LUA_RELEASE + "\n" +
 #endif
 		+ "Pichi DB version: " + Helper::itoa(PICHI_DB_VERSION_ACTUAL)
-	);
+#ifndef WITH_LUA
+		; // end of string def
+#else
+		+ "\n-=-=-=-= Lua modules versions =-=-=-=-\n";
+		
+		std::list<LuaPichi::LuaModuleInfo> modules = pichi->getModulesInfo();
+		
+		std::for_each(modules.begin(), modules.end(), [&version](LuaPichi::LuaModuleInfo& m){
+			version += m.toString() + "\n";
+		});
+#endif
+	pichi->sendAnswer(version);
 	//($hook = PichiPlugin::fetch_hook("commands_show_version")) ? eval($hook) : false;
 	//pichi->sendAnswer(""+TR("command_version_plugins")+":\n" + PichiPlugin::show_plugin_list());
 }
@@ -308,10 +318,20 @@ void commandbase::command_plugins(std::string arg)
 #ifdef WITH_LUA
 	std::list<std::string> luas = pichi->getLuaList();
 	std::list<std::string> regs = pichi->getLuaFunctionsList();
+	std::map<std::string, std::list<std::string> > handlers = pichi->getLuaHandlersList();
+	
 	std::string pluginsInfo = "\nLua plugins list:\n";
 	
 	std::for_each(luas.begin(), luas.end(), [&pluginsInfo](std::string& lua){
 		pluginsInfo += lua + "\n";
+	});
+
+	pluginsInfo += "\nStarted handlers:\n";
+	
+	std::for_each(handlers.begin(), handlers.end(), [&pluginsInfo](std::pair<const std::string, std::list<std::string> >& handler){
+		std::for_each(handler.second.begin(), handler.second.end(), [&pluginsInfo, &handler](const std::string& h){
+			pluginsInfo += " " + handler.first + "::" + h + "\n";
+		});
 	});
 	
 	pluginsInfo += "\nRegistred functions:\n";

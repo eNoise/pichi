@@ -32,16 +32,35 @@ namespace pichi
 class LuaPichi : public LuaMap
 {
 public:
+	struct LuaModuleInfo {
+		std::string name;
+		std::string description;
+		std::string version;
+		std::string author;
+		std::string author_contact;
+		
+		std::string toString();
+	};
+  
 	LuaPichi();
 	std::list<std::string> getLuaFunctionsList(void);
 	std::list<std::string> getLuaList(void) { return loadedLuaList; };
+	std::map<std::string, std::list<std::string> > getLuaHandlersList(void) { return luaHandlersList; };
+	std::list<LuaModuleInfo> getModulesInfo(void) { return luaModules; };
+	
+	int callEvent(const std::string& table, const std::string& method, int args = 0, int ret = LUA_MULTRET);
+	
+	void appendModule(const LuaModuleInfo& info);
 private:
 	void loadLuaFiles(void);
 	std::list<std::string> loadedLuaList;
+	std::map<std::string, std::list<std::string> > luaHandlersList;
+	std::list<LuaModuleInfo> luaModules;
 };
 
 struct PichiManager {
 	static int sendAnswer(lua_State* L);
+	static int registerModule(lua_State* L);
 };
 
 };

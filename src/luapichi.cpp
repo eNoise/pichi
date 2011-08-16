@@ -31,14 +31,24 @@
 namespace pichi
 {
 
+std::string LuaPichi::LuaModuleInfo::toString()
+{
+	return name + " " + version + " " + "(" + description + ")" + " [" + author + " <" + author_contact + "> " + "]";
+}
+  
 LuaPichi::LuaPichi()
 {
 	loadLuaFiles();
 	
 	luaMap["SendAnswer"] = PichiManager::sendAnswer;
+	luaMap["RegisterModule"] = PichiManager::registerModule;
 	registerLuaMap(); // регитрируем map
+	
+	// init call
+	luaPush(this);
+	callEvent("PichiLua", "init", 1);
 }
-  
+
 void LuaPichi::loadLuaFiles(void )
 {
 	std::vector< std::string > luaFiles = Helper::getDirFiles(PICHI_INSTALLED_DIR + std::string("lua/"));
@@ -66,6 +76,18 @@ std::list<std::string> LuaPichi::getLuaFunctionsList(void)
      return registerList;
 }
 
+int LuaPichi::callEvent(const std::string& table, const std::string& method, int args, int ret)
+{
+	luaHandlersList[table].push_back(method);
+	LuaManager::callEvent(table, method, args, ret);
+}
+
+void LuaPichi::appendModule(const pichi::LuaPichi::LuaModuleInfo& info)
+{
+	luaModules.push_back(info);
+}
+
+
 int PichiManager::sendAnswer(lua_State* L)
 {
 	PichiCore* pichi = (PichiCore*)lua_touserdata(L, -2);
@@ -73,6 +95,20 @@ int PichiManager::sendAnswer(lua_State* L)
 	pichi->sendAnswer(toSend);
 	return 0;
 }
+
+int PichiManager::registerModule(lua_State* L)
+{
+	LuaPichi* pichiLua = (LuaPichi*)lua_touserdata(L, -6);
+	LuaPichi::LuaModuleInfo module = {
+		lua_tostring(L, -5), //name;
+		lua_tostring(L, -4), //description;
+		lua_tostring(L, -3), //version;
+		lua_tostring(L, -2), //author;
+		lua_tostring(L, -1), //author_contact;
+	};
+	pichiLua->appendModule(module);
+}
+
 
 };
 

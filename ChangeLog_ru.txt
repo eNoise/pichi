@@ -5,6 +5,8 @@
 * Анализатор и игнорирование других pichi в комнате :).
 * Lua плагины
 * !plugins отображает состояние lua
+* Lua Function: RegisterModule
+* Lua Handler: PichiLua::init
 
 ===== 0.7.0 alpha1 (2011.08.06) =====
 * Ускорена работа со связками слов.
