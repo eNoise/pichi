@@ -28,7 +28,7 @@ void LuaMap::registerLuaMap(void )
 {
 	// lambda (gcc >= 4.5.0)
 	std::for_each(luaMap.begin(), luaMap.end(), [this](std::pair<const char * const, lua_CFunction>& p){
-		registerFunction(p.first, p.second);
+		this->registerFunction(p.first, p.second);
 	});
 }
 

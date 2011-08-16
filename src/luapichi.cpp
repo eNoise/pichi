@@ -49,11 +49,11 @@ void LuaPichi::loadLuaFiles(void )
 	}
 	
 	std::for_each(luaFiles.begin(), luaFiles.end(), [this](const std::string& fileName){
-		loadFile((PICHI_INSTALLED_DIR + std::string("lua/") + fileName).c_str());
-		if(loadFileStatus != 0)
+		this->loadFile((PICHI_INSTALLED_DIR + std::string("lua/") + fileName).c_str());
+		if(this->loadFileStatus != 0)
 			throw PichiException("Load lua file " + fileName + " problem...");
 		else
-			loadedLuaList.push_back(fileName);
+			this->loadedLuaList.push_back(fileName);
 	});
 }
 
@@ -71,6 +71,7 @@ int PichiManager::sendAnswer(lua_State* L)
 	PichiCore* pichi = (PichiCore*)lua_touserdata(L, -2);
 	std::string toSend = lua_tostring(L, -1);
 	pichi->sendAnswer(toSend);
+	return 0;
 }
 
 };
