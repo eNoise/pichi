@@ -20,12 +20,13 @@ Building (Linux)
 
     mkdir build
     cd build
-    cmake -DCMAKE_BUILD_TYPE=Release -DLOCAL_GLOOX=ON -DLOCAL_TINYXML=ON -DCMAKE_INSTALL_PREFIX='Directory to install' ../
+    cmake -DCMAKE_BUILD_TYPE=Release -DWITH_LUA=ON -DLOCAL_GLOOX=ON -DLOCAL_TINYXML=ON -DCMAKE_INSTALL_PREFIX='Directory to install' ../
     make
     make install
 
 * -DLOCAL_GLOOX=ON - Enables built-in gloox library.
 * -DLOCAL_TINYXML=ON - Enables built-in tinyxml library.
+* -DLOCAL_LUA=ON - Enables built-in lia library.
 
 Binaries (Windows) and Linux Packages
 ----------------
