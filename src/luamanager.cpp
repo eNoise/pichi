@@ -73,6 +73,14 @@ void LuaManager::loadFile(const char* filename)
 	loadFileStatus = luaL_dofile(L, filename);
 }
 
+void LuaManager::reload()
+{
+	// Full reload
+	lua_close(L);
+	L = lua_open();
+	loadLuaLibs();
+}
+
 void LuaManager::reportError(void )
 {
 	if(status != 0) {

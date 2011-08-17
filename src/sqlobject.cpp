@@ -18,34 +18,9 @@
 */
 
 
-#ifndef LUAMAP_H
-#define LUAMAP_H
-
-#ifdef WITH_LUA
-
-#include "luamanager.h"
-#include <list>
+#include "sqlobject.h"
 
 namespace pichi
 {
 
-class LuaMap : public LuaManager
-{
-public:
-	struct LuaFunction {
-		const char* name;
-		lua_CFunction function;
-		bool enabled;
-	};
-  
-	void reload();
-protected:
-	std::list<LuaFunction> luaMap;
-	void registerLuaMap(void);
-};
-
-};
-
-#endif // WITH_LUA
-
-#endif // LUAMAP_H
+}

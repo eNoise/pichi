@@ -40,13 +40,61 @@ LuaPichi::LuaPichi()
 {
 	loadLuaFiles();
 	
-	luaMap["SendAnswer"] = PichiManager::sendAnswer;
-	luaMap["RegisterModule"] = PichiManager::registerModule;
+	luaMap.push_back({"SendAnswer", PichiManager::sendAnswer, true});
+	luaMap.push_back({"RegisterModule", PichiManager::registerModule, true});
 	registerLuaMap(); // регитрируем map
 	
 	// init call
 	luaPush(this);
 	callEvent("PichiLua", "init", 1);
+}
+
+void LuaPichi::reload()
+{
+	LuaMap::reload();
+	//load files
+	std::for_each(loadedLuaList.begin(), loadedLuaList.end(), [this](LuaFile& file){
+		if(file.enabled)
+		{
+			this->loadFile(file.path.c_str());
+			if(this->loadFileStatus != 0)
+				throw PichiException("Load lua file " + file.name + " problem...");
+		}
+	});
+	
+	// DONE!
+	
+	// someclear
+	luaModules.clear();
+	
+	//reload
+	luaPush(this);
+	callEvent("PichiLua", "reload", 1);
+	// init call
+	luaPush(this);
+	callEvent("PichiLua", "init", 1);
+}
+
+void LuaPichi::disable(const std::string& file)
+{
+	std::list<LuaFile>::iterator it = std::find_if(loadedLuaList.begin(), loadedLuaList.end(), [&file](LuaFile& testFile){
+		return testFile.name == file;
+	});
+	if(it != loadedLuaList.end()) {
+		it->enabled = false;
+		reload();
+	}
+}
+
+void LuaPichi::enable(const std::string& file)
+{
+	std::list<LuaFile>::iterator it = std::find_if(loadedLuaList.begin(), loadedLuaList.end(), [&file](LuaFile& testFile){
+		return testFile.name == file;
+	});
+	if(it != loadedLuaList.end()) {
+		it->enabled = true;
+		reload();
+	}
 }
 
 void LuaPichi::loadLuaFiles(void )
@@ -59,26 +107,28 @@ void LuaPichi::loadLuaFiles(void )
 	}
 	
 	std::for_each(luaFiles.begin(), luaFiles.end(), [this](const std::string& fileName){
-		this->loadFile((PICHI_INSTALLED_DIR + std::string("lua/") + fileName).c_str());
+		std::string filePath = PICHI_INSTALLED_DIR + std::string("lua/") + fileName;
+		this->loadFile(filePath.c_str());
 		if(this->loadFileStatus != 0)
 			throw PichiException("Load lua file " + fileName + " problem...");
 		else
-			this->loadedLuaList.push_back(fileName);
+			this->loadedLuaList.push_back({fileName, filePath, true});
 	});
 }
 
 std::list<std::string> LuaPichi::getLuaFunctionsList(void)
 {
      std::list<std::string> registerList;
-     std::for_each(luaMap.begin(), luaMap.end(), [&registerList](std::pair<const char * const, lua_CFunction>& p){
-		registerList.push_back(p.first);
+     std::for_each(luaMap.begin(), luaMap.end(), [&registerList](LuaMap::LuaFunction& func){
+		registerList.push_back(func.name);
      });
      return registerList;
 }
 
 int LuaPichi::callEvent(const std::string& table, const std::string& method, int args, int ret)
 {
-	luaHandlersList[table].push_back(method);
+	if(std::find(luaHandlersList[table].begin(), luaHandlersList[table].end(), method) == luaHandlersList[table].end())
+		luaHandlersList[table].push_back(method);
 	return LuaManager::callEvent(table, method, args, ret);
 }
 

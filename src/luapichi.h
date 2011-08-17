@@ -25,6 +25,7 @@
 
 #include "luamap.h"
 #include <list>
+#include <map>
 
 namespace pichi
 {
@@ -41,19 +42,28 @@ public:
 		
 		std::string toString();
 	};
-  
+	
+	struct LuaFile {
+		std::string name;
+		std::string path;
+		bool enabled;
+	};
+	
 	LuaPichi();
 	std::list<std::string> getLuaFunctionsList(void);
-	std::list<std::string> getLuaList(void) { return loadedLuaList; };
+	std::list<LuaFile> getLuaList(void) { return loadedLuaList; };
 	std::map<std::string, std::list<std::string> > getLuaHandlersList(void) { return luaHandlersList; };
 	std::list<LuaModuleInfo> getModulesInfo(void) { return luaModules; };
 	
 	int callEvent(const std::string& table, const std::string& method, int args = 0, int ret = LUA_MULTRET);
+	void reload();
+	void enable(const std::string& file);
+	void disable(const std::string& file);
 	
 	void appendModule(const LuaModuleInfo& info);
 private:
 	void loadLuaFiles(void);
-	std::list<std::string> loadedLuaList;
+	std::list<LuaFile> loadedLuaList;
 	std::map<std::string, std::list<std::string> > luaHandlersList;
 	std::list<LuaModuleInfo> luaModules;
 };

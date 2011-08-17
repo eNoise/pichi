@@ -49,6 +49,7 @@ public:
 	int callEvent(const std::string& table, const std::string& method, int args = 0, int ret = LUA_MULTRET);
 	void registerFunction(const char *name, lua_CFunction func);
 	void loadFile(const char* filename);
+	void reload();
 	
 	void luaPush(int i);
 	void luaPush(bool b);

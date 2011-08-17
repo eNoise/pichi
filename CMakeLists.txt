@@ -100,6 +100,7 @@ set(PICHI_CPP   src/pichiexception.cpp
 		src/pichiconfig.cpp
 		src/helper.cpp
 		src/pichi.cpp
+		src/sqlobject.cpp
 		src/sqlite.cpp
 		src/pichidbpatcher.cpp
 		src/pichicore.cpp

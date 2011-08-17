@@ -97,6 +97,13 @@ void commandbase::fetchCommand(std::string command)
 	commandhandler::fetchCommand(command);
 	if(commands.find(last_command) != commands.end())
 		(this->*(commands[last_command]))(last_args);
+#ifdef WITH_LUA
+	else {
+		pichi->luaPush(last_args);
+		pichi->luaPush(pichi);
+		pichi->callEvent("PichiCommands", last_command, 2);
+	}
+#endif
 }
 
 void commandbase::command_help(std::string arg)
@@ -291,8 +298,13 @@ void commandbase::command_enable(std::string arg)
 	if(!pichi->isAccess())
 		return;
 	
-	pichi->sendAnswer(TR("command_plugins_no_sorry"));
+	//pichi->sendAnswer(TR("command_plugins_no_sorry"));
 	//PichiPlugin::enable(Helper::atoi(arg));
+#ifdef WITH_LUA
+	pichi->enable(arg);
+#else
+	pichi->sendAnswer(TR("command_plugins_no_sorry"));
+#endif
 }
 
 void commandbase::command_disable(std::string arg)
@@ -300,8 +312,12 @@ void commandbase::command_disable(std::string arg)
 	if(!pichi->isAccess())
 		return;
 	
+	//pichi->sendAnswer(TR("command_plugins_no_sorry"));
+#ifdef WITH_LUA
+	pichi->disable(arg);
+#else
 	pichi->sendAnswer(TR("command_plugins_no_sorry"));
-	//PichiPlugin::disable(Helper::atoi(arg));
+#endif
 }
 
 void commandbase::command_reload(std::string arg)
@@ -309,21 +325,25 @@ void commandbase::command_reload(std::string arg)
 	if(!pichi->isAccess())
 		return;
 	
+	//pichi->sendAnswer(TR("command_plugins_no_sorry"));
+#ifdef WITH_LUA
+	pichi->reload();
+#else
 	pichi->sendAnswer(TR("command_plugins_no_sorry"));
-	//PichiPlugin::reload();
+#endif
 }
 	
 void commandbase::command_plugins(std::string arg)
 {
 #ifdef WITH_LUA
-	std::list<std::string> luas = pichi->getLuaList();
+	std::list<LuaPichi::LuaFile> luas = pichi->getLuaList();
 	std::list<std::string> regs = pichi->getLuaFunctionsList();
 	std::map<std::string, std::list<std::string> > handlers = pichi->getLuaHandlersList();
 	
 	std::string pluginsInfo = "\nLua plugins list:\n";
 	
-	std::for_each(luas.begin(), luas.end(), [&pluginsInfo](std::string& lua){
-		pluginsInfo += lua + "\n";
+	std::for_each(luas.begin(), luas.end(), [&pluginsInfo](LuaPichi::LuaFile& lua){
+		pluginsInfo += lua.name + " (" + ((lua.enabled) ? "enabled" : "disabled") + ")" + "\n";
 	});
 
 	pluginsInfo += "\nStarted handlers:\n";

@@ -27,11 +27,17 @@ namespace pichi
 void LuaMap::registerLuaMap(void )  
 {
 	// lambda (gcc >= 4.5.0)
-	std::for_each(luaMap.begin(), luaMap.end(), [this](std::pair<const char * const, lua_CFunction>& p){
-		this->registerFunction(p.first, p.second);
+	std::for_each(luaMap.begin(), luaMap.end(), [this](LuaMap::LuaFunction& func){
+		if(func.enabled)
+			this->registerFunction(func.name, func.function);
 	});
 }
 
+void LuaMap::reload()
+{
+	LuaManager::reload();
+	registerLuaMap();
+}
   
 };
   
