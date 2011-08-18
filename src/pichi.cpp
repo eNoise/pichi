@@ -61,7 +61,7 @@ void Pichi::firstStart(void)
 	std::string dir = Helper::getFullPath(PICHI_CONFIG_DIR);
 	
 	// construcor checked dir exist... all good
-	mkdir(dir.c_str(), 0775);
+	Helper::createDirectory(dir);
 	
 	std::string cfgFile;
 	if(Helper::fileExists(std::string(PICHI_INSTALLED_DIR) + "pichi.xml"))

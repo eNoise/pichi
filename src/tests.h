@@ -42,6 +42,9 @@ public:
     static bool test_helper_implode(const std::string& arg);
     static bool test_helper_splitbysize(const std::string& arg);
     static bool test_helper_file_exist(const std::string& arg);
+    static bool test_helper_microtime(const std::string& arg);
+    static bool test_helper_createdirectory(const std::string& arg);
+    static bool test_helper_removedirectory(const std::string& arg);
 };
 
 };

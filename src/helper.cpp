@@ -150,6 +150,16 @@ std::vector< std::string > Helper::getDirFiles(const std::string& path)
 	return files;
 }
 
+bool Helper::createDirectory(const std::string& path, const int mask)
+{
+	return mkdir(path.c_str(), mask) == 0;
+}
+
+bool Helper::removeDirectory(const std::string& path)
+{
+	return rmdir(path.c_str()) == 0;
+}
+
 double Helper::microtime(void )
 {
 	struct timeval tp;

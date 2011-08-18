@@ -252,9 +252,25 @@ install (DIRECTORY lua/ DESTINATION "${CLIENT_DATA_DIR}/lua")
 
 if(WITH_TESTS)
   do_test(regexp_split)
+
   do_test(helper_explode)
+
   do_test(helper_implode)
+
   do_test(helper_splitbysize)
+
+  # Testing non-exist file
   do_test_fail(helper_file_exist "dsdfhsdfkjsf")
+  # Testing existed file
   do_test(helper_file_exist "${PROJECT_SOURCE_DIR}/pichi.xml")
+  # Testing non-exist dir
+  do_test_fail(helper_file_exist "/var/www/asasdsads")
+  # Testing existed dir
+  do_test(helper_file_exist "${PROJECT_SOURCE_DIR}")
+
+  do_test(helper_microtime)
+
+  do_test(helper_createdirectory)
+
+  do_test(helper_removedirectory)
 endif(WITH_TESTS)

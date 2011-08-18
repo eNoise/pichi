@@ -23,6 +23,7 @@
 
 #include <boost/algorithm/string/regex.hpp>
 #include "helper.h"
+#include "config.h"
 
 namespace pichi {
 
@@ -35,6 +36,9 @@ void Tests::init()
 	Tests::testMap["helper_implode"] = Tests::test_helper_implode;
 	Tests::testMap["helper_splitbysize"] = Tests::test_helper_splitbysize;
 	Tests::testMap["helper_file_exist"] = Tests::test_helper_file_exist;
+	Tests::testMap["helper_microtime"] = Tests::test_helper_microtime;
+	Tests::testMap["helper_createdirectory"] = Tests::test_helper_createdirectory;
+	Tests::testMap["helper_removedirectory"] = Tests::test_helper_removedirectory;
 }
 
 
@@ -94,6 +98,41 @@ bool Tests::test_helper_splitbysize(const std::string& arg)
 bool Tests::test_helper_file_exist(const std::string& arg)
 {
 	return Helper::fileExists(arg);
+}
+
+bool Tests::test_helper_microtime(const std::string& arg)
+{
+	return Helper::microtime() > 1000000;
+}
+
+bool Tests::test_helper_createdirectory(const std::string& arg)
+{
+	bool test;
+	if(Helper::fileExists(Helper::getFullPath(PICHI_CONFIG_DIR))) {
+		test = Helper::createDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "/tests");
+		Helper::removeDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "/tests");
+	} else {
+		test = Helper::createDirectory(Helper::getFullPath(PICHI_CONFIG_DIR));
+	}
+	return test;
+}
+
+bool Tests::test_helper_removedirectory(const std::string& arg)
+{
+	bool test;
+	if(Helper::fileExists(Helper::getFullPath(PICHI_CONFIG_DIR))) {
+		if(Helper::fileExists(Helper::getFullPath(PICHI_CONFIG_DIR) + "/tests")) {
+			test = Helper::removeDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "/tests");
+		} else {
+			Helper::createDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "/tests");
+			test = Helper::removeDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "/tests");
+		}
+	} else {
+		Helper::createDirectory(Helper::getFullPath(PICHI_CONFIG_DIR));
+		Helper::createDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "/tests");
+		test = Helper::removeDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "/tests");
+	}
+	return test;
 }
 
 

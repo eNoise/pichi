@@ -1,7 +1,10 @@
 ===== 0.7.0 alpha3 =====
 * Возможность перезагрузки lua модулей.
 * Восстановлена работоспособность !reload, !enable, !disable с LUA
+* Система тестов
 
+* New Tests: pichitest_regexp_split, pichitest_helper_explode, pichitest_helper_implode, pichitest_helper_splitbysize,
+	      pichitest_helper_file_exist, pichitest_helper_microtime, pichitest_helper_createdirectory, pichitest_helper_removedirectory
 * Lua Handlers: PichiCommands::*, PichiLua::reload
 
 ===== 0.7.0 alpha2 (2011.08.17) =====

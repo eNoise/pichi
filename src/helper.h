@@ -51,6 +51,8 @@ class Helper
 	static bool fileExists(const std::string& file);
 	template<typename compT> static bool in_array(compT&, std::vector<compT>&);
 	static std::vector< std::string > getDirFiles(const std::string& path);
+	static bool createDirectory(const std::string& path, const int mask = 0775);
+	static bool removeDirectory(const std::string& path);
 	static double microtime(void);
 };
 
