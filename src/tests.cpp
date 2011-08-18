@@ -31,6 +31,8 @@ std::map<std::string, Tests::TestFunction> Tests::testMap = std::map<std::string
 void Tests::init()
 {
 	Tests::testMap["regexp_split"] = Tests::test_regexp_split;
+	Tests::testMap["helper_explode"] = Tests::test_helper_explode;
+	Tests::testMap["helper_implode"] = Tests::test_helper_implode;
 }
 
 
@@ -53,12 +55,29 @@ bool Tests::test_regexp_split(const std::string& arg)
 
 bool Tests::test_helper_explode(const std::string& arg)
 {
+	// простой тест
+	bool test1 = (Helper::explode(" ", "one two three") == std::vector< std::string >({"one", "two", "three"}));
+	// с другим разделителем
+	bool test2 = (Helper::explode("::", "one::two::three") == std::vector< std::string >({"one", "two", "three"}));
+	// проверим по бокам
+	bool test3 = (Helper::explode("::", "::one::two::three::") == std::vector< std::string >({"", "one", "two", "three",""}));
+	// проверим на нули
+	bool test4 = true;
+	//if(!arg.empty())
+	//	test4 = 
 	
+	
+	return test1 && test2 && test3 && test4;
 }
 
 bool Tests::test_helper_implode(const std::string& arg)
 {
-
+	// простой тест
+	bool test1 = (Helper::implode(" ", {"one", "two", "three"}) == "one two three");
+	// с пустыми по бокам
+	bool test2 = (Helper::implode(" ", {"", "one", "two", "three", std::string()}) == " one two three ");
+	
+	return test1 && test2;
 }
 
 

@@ -198,4 +198,6 @@ install (DIRECTORY lua/ DESTINATION "${CLIENT_DATA_DIR}/lua")
 
 if(WITH_TESTS)
   do_test(regexp_split)
+  do_test(helper_explode)
+  do_test(helper_implode)
 endif(WITH_TESTS)
