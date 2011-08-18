@@ -7,7 +7,7 @@ Build requirements
 ------------------
 
 * cmake (http://www.cmake.org/)
-* gcc-c++ >= 4.5.0 / gcc-g++ >= 4.5.0 / mingw-gcc-g++ >= 4.5.0
+* gcc-c++ >= 4.6.0 / gcc-g++ >= 4.6.0 / mingw-gcc-g++ >= 4.6.0
 * boost >= 1.41.0, boost-regex >= 1.41.0, boost-program_options  >= 1.41.0
 * libsqlite3 (http://www.sqlite.org/)
 * pthread

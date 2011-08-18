@@ -1,6 +1,6 @@
 #rev_ver=`svn info|grep Revision|cut -d: -f2|awk '{print $1}'`
 
-PICHI_BOOST_GCC=gcc45
+PICHI_BOOST_GCC=gcc46
 PICHI_BOOST_VERSION=1_46_1
 
 rm -fr win32build
