@@ -67,8 +67,10 @@ std::string logthis;
 	}
 	else
 	{
+#ifndef WITH_TESTS
 		boost::erase_all(logthis, "\n");
 		std::cout << logthis << std::endl;
+#endif
 	}
 }
 

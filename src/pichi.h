@@ -75,8 +75,10 @@ class Pichi : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		static void *cron(void *context);
 		void firstStart(void);
 	public:
-		Pichi(int argc, char** argv);
+		Pichi() {};
                 ~Pichi() throw();
+		int start(int argc, char** argv);
+		
 		bool getFirstStart(void){ return isFirstStart; };
 		bool parseArgs(int argc, char** argv);
 		

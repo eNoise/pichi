@@ -1,6 +1,6 @@
 /*
-    Pichi XMPP (Jabber) Bot.
-    Copyright (C) 2011  Alexey Kasyanchuk (deg@uruchie.org)
+    <one line to give the program's name and a brief idea of what it does.>
+    Copyright (C) 2011  <copyright holder> <email>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,14 +15,35 @@
     You should have received a copy of the GNU General Public License along
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-
 */
 
-#include "pichi.h"
-using namespace pichi;
 
-int main(int argc, char** argv)
+#ifndef TESTS_H
+#define TESTS_H
+
+#ifdef WITH_TESTS
+
+#include <map>
+#include <string>
+
+namespace pichi {
+
+class Tests
 {
-    Pichi pichi;      
-    return pichi.start(argc, argv);
-}
+public:
+    typedef bool (*TestFunction)(const std::string&);
+    static std::map<std::string, TestFunction> testMap;
+    static void init();
+    static int runTest(const std::string& test, const std::string& arg);
+    
+    // tests
+    static bool test_regexp_split(const std::string& arg);
+    static bool test_helper_explode(const std::string& arg);
+    static bool test_helper_implode(const std::string& arg);
+};
+
+};
+
+#endif
+
+#endif // TESTS_H

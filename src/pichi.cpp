@@ -43,6 +43,9 @@
 #include "log.h"
 #include "config.h"
 #include "pichidbpatcher.h"
+#ifdef WITH_TESTS
+#include "tests.h"
+#endif
 
 namespace pichi
 {
@@ -117,8 +120,27 @@ void Pichi::botstart(void)
 	Log("Stop Pichi", Log::INFO);
 }
 
-Pichi::Pichi(int argc, char** argv)
+int Pichi::start(int argc, char** argv)
 {
+	// Parsing args
+	if(!parseArgs(argc, argv))
+	{
+		// Close Session
+		return 1;
+	}
+
+#ifdef WITH_TESTS
+	// Starting tests
+	if(coptions.count("test"))
+	{
+		Tests::init();
+		return Tests::runTest(
+				      coptions["test"].as<std::string>(), 
+				      ((coptions.count("testargs")) ? Helper::implode(" ", coptions["testargs"].as< std::vector< std::string > >()) : "") 
+				     );
+	}
+#endif
+  
 	// Runtime dir
 	char pathbuf[1024];
 #ifndef WIN32
@@ -142,13 +164,6 @@ Pichi::Pichi(int argc, char** argv)
 	// First start
 	if(isFirstStart)
 		firstStart();
-		
-	// Parsing args
-	if(!parseArgs(argc, argv))
-	{
-		// Close Session
-		return;
-	}
 		
 	// Init pichi
 	isConnected = false; // true if connect was successful
@@ -182,6 +197,8 @@ Pichi::Pichi(int argc, char** argv)
 	}
 #endif
 	botstart();
+	
+	return 0;
 }
 
 Pichi::~Pichi() throw()
@@ -201,11 +218,23 @@ bool Pichi::parseArgs(int argc, char** argv)
 		("log,l", arg::value< std::string >()->default_value(Helper::getFullPath(PICHI_LOG_FILE)), "Log file path")
 		("pid,p", arg::value< std::string >()->default_value(Helper::getFullPath(PICHI_PID_FILE)), "PID file path")
 		("no-pid,n", "Start pichi without pid file")
+#ifdef WITH_TESTS
+		("test,t", arg::value< std::string >(), "Start test module")
+		("testargs,a", arg::value< std::vector< std::string > >(), "Testings args")
+#endif
 		("daemonize,d", "Run Pichi as a daemon");
+#ifdef WITH_TESTS
+	arg::positional_options_description pdesc;
+	pdesc.add("testargs", -1);
+#endif
 	try 
 	{
 		/* разбор аргументов */
+#ifdef WITH_TESTS
+		arg::store(arg::command_line_parser(argc, argv).options(description).positional(pdesc).run(), coptions);
+#else
 		arg::store(arg::parse_command_line(argc, argv, description), coptions);
+#endif
 	} 
 	catch (const std::exception& e)
 	{

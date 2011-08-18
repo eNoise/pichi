@@ -4,6 +4,7 @@ set (PROJECT_NAME_GLOBAL pichi)
 set (VERSION "0.7.0dev")
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include (CheckIncludeFile)
+#include (CTest)
 
 execute_process(COMMAND ${PROJECT_SOURCE_DIR}/getrevision.sh
 		OUTPUT_VARIABLE GIT_REVISION 
@@ -37,6 +38,21 @@ option (LOCAL_GLOOX "Use local gloox lib" OFF)
 option (LOCAL_TINYXML "Use local tinyxml lib" OFF)
 option (LOCAL_LUA "Use local lua lib" OFF)
 option (WITH_LUA "Lua scripting" ON)
+option (WITH_TESTS "Enable testing" ON)
+if (WITH_TESTS)
+   enable_testing()
+   add_definitions(-DWITH_TESTS)
+endif(WITH_TESTS)
+
+# Tests macro
+macro(do_test arg result)
+  add_test(pichitest_${arg} pichi -t ${arg})
+  set_tests_properties(pichitest_${arg} PROPERTIES PASS_REGULAR_EXPRESSION ${result})
+endmacro(do_test)
+
+macro(do_test arg)
+  add_test(pichitest_${arg} pichi -t ${arg})
+endmacro(do_test)
 
 CHECK_INCLUDE_FILE (time.h HAVE_TIME_H)
 CHECK_INCLUDE_FILE (dirent.h HAVE_DIRENT_H)
@@ -86,7 +102,8 @@ if (WITH_LUA)
 endif (WITH_LUA)
 
 
-set(PICHI_CPP   src/pichiexception.cpp	
+set(PICHI_CPP 	src/tests.cpp   
+		src/pichiexception.cpp	
 		src/pichievent.cpp
 		src/log.cpp
 		src/pichicurl.cpp
@@ -179,3 +196,6 @@ endif(WIN32)
 install (DIRECTORY languages/ DESTINATION "${CLIENT_DATA_DIR}/languages")
 install (DIRECTORY lua/ DESTINATION "${CLIENT_DATA_DIR}/lua")
 
+if(WITH_TESTS)
+  do_test(regexp_split)
+endif(WITH_TESTS)
