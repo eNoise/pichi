@@ -33,6 +33,8 @@ void Tests::init()
 	Tests::testMap["regexp_split"] = Tests::test_regexp_split;
 	Tests::testMap["helper_explode"] = Tests::test_helper_explode;
 	Tests::testMap["helper_implode"] = Tests::test_helper_implode;
+	Tests::testMap["helper_splitbysize"] = Tests::test_helper_splitbysize;
+	Tests::testMap["helper_file_exist"] = Tests::test_helper_file_exist;
 }
 
 
@@ -78,6 +80,20 @@ bool Tests::test_helper_implode(const std::string& arg)
 	bool test2 = (Helper::implode(" ", {"", "one", "two", "three", std::string()}) == " one two three ");
 	
 	return test1 && test2;
+}
+
+bool Tests::test_helper_splitbysize(const std::string& arg)
+{
+	// простой тест
+	bool test1 = (Helper::splitBySize("1234",2) == std::vector<std::string>({"12", "34"}));
+	bool test2 = (Helper::splitBySize("1234",0) == std::vector<std::string>({"1234"}));
+	
+	return test1 && test2;
+}
+
+bool Tests::test_helper_file_exist(const std::string& arg)
+{
+	return Helper::fileExists(arg);
 }
 
 

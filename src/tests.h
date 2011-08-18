@@ -40,6 +40,8 @@ public:
     static bool test_regexp_split(const std::string& arg);
     static bool test_helper_explode(const std::string& arg);
     static bool test_helper_implode(const std::string& arg);
+    static bool test_helper_splitbysize(const std::string& arg);
+    static bool test_helper_file_exist(const std::string& arg);
 };
 
 };

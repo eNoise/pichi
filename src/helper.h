@@ -43,7 +43,7 @@ class Helper
 	static std::string timeToString(time_t, std::string);
 	static std::string stringTime(time_t);
 	static std::string itoa(int);
-	static std::vector< std::string > splitBySize(std::string& str, size_t size);
+	static std::vector< std::string > splitBySize(const std::string& str, size_t size);
 	static int atoi(std::string);
 	static size_t atot(std::string);
 	static std::string ttoa(size_t);

@@ -96,11 +96,14 @@ std::string Helper::itoa(int num)
 	return boost::lexical_cast<std::string>( num );
 }
 
-std::vector< std::string > Helper::splitBySize(std::string& str, size_t size)
+std::vector< std::string > Helper::splitBySize(const std::string& str, size_t size)
 {
 	std::vector< std::string > ret;
-	for(size_t cursize = 0; cursize < str.size(); cursize += size)
+	for(size_t cursize = 0; cursize < str.size() && size > 0; cursize += size)
 		ret.push_back(str.substr(cursize, size));
+	
+	if(ret.size() == 0)
+		ret.push_back(str);
 	
 	return ret;
 }
