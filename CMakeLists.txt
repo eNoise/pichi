@@ -284,4 +284,6 @@ if(WITH_TESTS)
   do_test(helper_createdirectory)
 
   do_test(helper_removedirectory)
+
+  do_test(sqlite_open)
 endif(WITH_TESTS)

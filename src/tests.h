@@ -45,6 +45,7 @@ public:
     static bool test_helper_microtime(const std::string& arg);
     static bool test_helper_createdirectory(const std::string& arg);
     static bool test_helper_removedirectory(const std::string& arg);
+    static bool test_sqlite_open(const std::string& arg);
 };
 
 };

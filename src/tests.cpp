@@ -24,6 +24,7 @@
 #include <boost/algorithm/string/regex.hpp>
 #include "helper.h"
 #include "config.h"
+#include "sqlite.h"
 
 namespace pichi {
 
@@ -39,6 +40,7 @@ void Tests::init()
 	Tests::testMap["helper_microtime"] = Tests::test_helper_microtime;
 	Tests::testMap["helper_createdirectory"] = Tests::test_helper_createdirectory;
 	Tests::testMap["helper_removedirectory"] = Tests::test_helper_removedirectory;
+	Tests::testMap["sqlite_open"] = Tests::test_sqlite_open;
 }
 
 
@@ -109,8 +111,8 @@ bool Tests::test_helper_createdirectory(const std::string& arg)
 {
 	bool test;
 	if(Helper::fileExists(Helper::getFullPath(PICHI_CONFIG_DIR))) {
-		test = Helper::createDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "/tests");
-		Helper::removeDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "/tests");
+		test = Helper::createDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "tests");
+		Helper::removeDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "tests");
 	} else {
 		test = Helper::createDirectory(Helper::getFullPath(PICHI_CONFIG_DIR));
 	}
@@ -121,17 +123,27 @@ bool Tests::test_helper_removedirectory(const std::string& arg)
 {
 	bool test;
 	if(Helper::fileExists(Helper::getFullPath(PICHI_CONFIG_DIR))) {
-		if(Helper::fileExists(Helper::getFullPath(PICHI_CONFIG_DIR) + "/tests")) {
-			test = Helper::removeDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "/tests");
+		if(Helper::fileExists(Helper::getFullPath(PICHI_CONFIG_DIR) + "tests")) {
+			test = Helper::removeDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "tests");
 		} else {
-			Helper::createDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "/tests");
-			test = Helper::removeDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "/tests");
+			Helper::createDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "tests");
+			test = Helper::removeDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "tests");
 		}
 	} else {
 		Helper::createDirectory(Helper::getFullPath(PICHI_CONFIG_DIR));
-		Helper::createDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "/tests");
-		test = Helper::removeDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "/tests");
+		Helper::createDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "tests");
+		test = Helper::removeDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "tests");
 	}
+	return test;
+}
+
+bool Tests::test_sqlite_open(const std::string& arg)
+{
+	std::string path = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.db";
+	SQLite* sql = new SQLite(path);
+	delete sql;
+	bool test = Helper::fileExists(path);
+	Helper::removeFile(path);
 	return test;
 }
 

@@ -53,6 +53,7 @@ class Helper
 	static std::vector< std::string > getDirFiles(const std::string& path);
 	static bool createDirectory(const std::string& path, const int mask = 0775);
 	static bool removeDirectory(const std::string& path);
+	static bool removeFile(const std::string& path);
 	static double microtime(void);
 };
 

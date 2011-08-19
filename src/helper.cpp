@@ -164,6 +164,11 @@ bool Helper::removeDirectory(const std::string& path)
 	return rmdir(path.c_str()) == 0;
 }
 
+bool Helper::removeFile(const std::string& path)
+{
+	return remove(path.c_str()) == 0;
+}
+
 double Helper::microtime(void )
 {
 	struct timeval tp;
