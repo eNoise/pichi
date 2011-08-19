@@ -286,4 +286,10 @@ if(WITH_TESTS)
   do_test(helper_removedirectory)
 
   do_test(sqlite_open)
+
+  do_test(sqlite_query)
+
+  do_test(sqlite_query_async)
+
+  do_test(sqlite_escape_string)
 endif(WITH_TESTS)

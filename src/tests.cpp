@@ -41,6 +41,9 @@ void Tests::init()
 	Tests::testMap["helper_createdirectory"] = Tests::test_helper_createdirectory;
 	Tests::testMap["helper_removedirectory"] = Tests::test_helper_removedirectory;
 	Tests::testMap["sqlite_open"] = Tests::test_sqlite_open;
+	Tests::testMap["sqlite_query"] = Tests::test_sqlite_query;
+	Tests::testMap["sqlite_query_async"] = Tests::test_sqlite_query_async;
+	Tests::testMap["sqlite_escape_string"] = Tests::test_sqlite_escape_string;
 }
 
 
@@ -147,6 +150,73 @@ bool Tests::test_sqlite_open(const std::string& arg)
 	return test;
 }
 
+bool Tests::test_sqlite_query(const std::string& arg)
+{
+	std::string path = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.db";
+	SQLite* sql = new SQLite(path);
+	
+	sql->exec("CREATE TABLE `testing` (`test` TEXT);");
+	sql->exec("INSERT INTO `testing` VALUES ('testx');");
+	sql->query("SELECT * FROM `testing`;");
+	std::string xxx = sql->fetchColumn(0);
+	
+	bool test = (xxx == "testx");
+	
+	delete sql;
+	Helper::removeFile(path);
+	return test;
+}
+
+bool Tests::test_sqlite_query_async(const std::string& arg)
+{
+	std::string path = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.db";
+	SQLite* sql = new SQLite(path);
+	
+	sql->exec("CREATE TABLE `testing` (`test` TEXT, `somewhere` TEXT);");
+	sql->exec("INSERT INTO `testing` VALUES ('testx', '1');");
+	sql->exec("INSERT INTO `testing` VALUES ('testy', '2');");
+	sql->exec("INSERT INTO `testing` VALUES ('testz', '3');");
+	
+	sql->query("SELECT * FROM `testing` WHERE somewhere = '1';");
+	SQLite::q* qu1 = sql->squery("SELECT * FROM `testing` WHERE somewhere = '2';");
+	SQLite::q* qu2 = sql->squery("SELECT * FROM `testing` WHERE somewhere = '3';");
+	
+	std::map<std::string, std::string> data;
+	std::pair<std::string, std::string> map1, map2;
+	
+	if(sql->numRows() == 1) {
+		while(!(data = sql->fetchArray()).empty()){
+		      map1.first = data["test"];
+		      map1.second = data["somewhere"];
+		}
+	}
+	std::string y1 = sql->fetchColumn(qu1, 0);
+	std::string y2 = sql->fetchColumn(qu1, 1, true);
+	if(sql->numRows(qu2) == 1) {
+		while(!(data = sql->fetchArray(qu2)).empty()){
+		      map2.first = data["test"];
+		      map2.second = data["somewhere"];
+		}
+	}
+	bool test = (map1.first == "testx" && map1.second == "1") && (y1 == "testy" && y2 == "2") && (map2.first == "testz" && map2.second == "3");
+	
+	delete sql, qu1, qu2;
+	Helper::removeFile(path);
+	return test;
+}
+
+bool Tests::test_sqlite_escape_string(const std::string& arg)
+{
+	std::string path = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.db";
+	SQLite* sql = new SQLite(path);
+	
+	std::string esc = sql->escapeString("'x");
+	bool test = (esc == "''x");
+	
+	delete sql;
+	Helper::removeFile(path);
+	return test;
+}
 
 }
 
