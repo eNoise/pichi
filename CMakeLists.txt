@@ -6,6 +6,12 @@ set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include (CheckIncludeFile)
 #include (CTest)
 
+if(WIN32)
+  set(PROJECT_BINARY ${PROJECT_NAME_GLOBAL}.exe)
+else(WIN32)
+  set(PROJECT_BINARY ${PROJECT_NAME_GLOBAL})
+endif(WIN32)
+
 execute_process(COMMAND ${PROJECT_SOURCE_DIR}/getrevision.sh
 		OUTPUT_VARIABLE GIT_REVISION 
 		OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -21,6 +27,11 @@ add_definitions(-DGIT_VERSION="${VERSION}")
 if (NOT MSVC)
     #enable c++0X
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+    
+    #enable win32 defs
+    if (WIN32)
+      add_definitions(-DWIN32 -D_WIN32)
+    endif (WIN32)
 
     if (CMAKE_CROSSCOMPILING)
         set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -enable-auto-import")
@@ -75,9 +86,9 @@ macro(do_test test)
 
   get_test_num_postfix(${test})
   if(runarg)
-    add_test(pichitest_${test}${testpostfix} pichi -t ${test} ${runarg})
+    add_test(pichitest_${test}${testpostfix} ${PROJECT_BINARY} -t ${test} ${runarg})
   else(runarg)
-    add_test(pichitest_${test}${testpostfix} pichi -t ${test})
+    add_test(pichitest_${test}${testpostfix} ${PROJECT_BINARY} -t ${test})
   endif(runarg)
   if(result)
     set_tests_properties(pichitest_${test}${testpostfix} PROPERTIES PASS_REGULAR_EXPRESSION ${result})
@@ -97,9 +108,9 @@ macro(do_test_fail test)
 
   get_test_num_postfix(${test})
   if(runarg)
-    add_test(pichitest_${test}${testpostfix} pichi -t ${test} ${runarg})
+    add_test(pichitest_${test}${testpostfix} ${PROJECT_BINARY} -t ${test} ${runarg})
   else(runarg)
-    add_test(pichitest_${test}${testpostfix} pichi -t ${test})
+    add_test(pichitest_${test}${testpostfix} ${PROJECT_BINARY} -t ${test})
   endif(runarg)
   if(result)
     set_tests_properties(pichitest_${test}${testpostfix} PROPERTIES PASS_REGULAR_EXPRESSION ${result})

@@ -152,7 +152,11 @@ std::vector< std::string > Helper::getDirFiles(const std::string& path)
 
 bool Helper::createDirectory(const std::string& path, const int mask)
 {
+#ifndef WIN32
 	return mkdir(path.c_str(), mask) == 0;
+#else
+	return _mkdir(path.c_str()) == 0;
+#endif
 }
 
 bool Helper::removeDirectory(const std::string& path)
