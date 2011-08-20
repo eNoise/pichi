@@ -1,10 +1,14 @@
-===== 0.7.0 alpha3 =====
+===== 0.7.0 alpha3 (2011.08.20) =====
 * Возможность перезагрузки lua модулей.
 * Восстановлена работоспособность !reload, !enable, !disable с LUA
 * Система тестов
+* Исправлен флуд iq пакетами
+* Ведение учета ресурсов у клиентов
 
-* New Tests: pichitest_regexp_split, pichitest_helper_explode, pichitest_helper_implode, pichitest_helper_splitbysize,
-	      pichitest_helper_file_exist, pichitest_helper_microtime, pichitest_helper_createdirectory, pichitest_helper_removedirectory
+* New Tests: regexp_split, helper_explode, helper_implode, helper_splitbysize,
+	      helper_file_exist, helper_microtime, helper_createdirectory, helper_removedirectory,
+	      sqlite_open, sqlite_query, sqlite_query_async, sqlite_escape_string,
+	      lua_fileload, lua_fileload_wrongsyntax, lua_handler_pushpop
 * Lua Handlers: PichiCommands::*, PichiLua::reload
 
 ===== 0.7.0 alpha2 (2011.08.17) =====
