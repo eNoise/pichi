@@ -368,14 +368,26 @@ void commandbase::command_plugins(std::string arg)
 
 void pichi::commandbase::command_info(std::string arg)
 {
-	pichi->sql->query("SELECT `client_name`,`client_version`,`client_os` FROM users WHERE `jid` = '" + pichi->sql->escapeString(pichi->getArgJID(arg)) + "';");
-	if(pichi->sql->numRows() > 0)
+	if(pichi->getSqlOption("onstart_client_detection") == "1")
 	{
-		std::string client = pichi->sql->fetchColumn(0);
-		std::string version = pichi->sql->fetchColumn(1, true);
-		std::string os = pichi->sql->fetchColumn(2, true);
-		if(client.size() > 0 || version.size() > 0 || os.size() > 0)
-			pichi->sendAnswer(client + " " + version + "\n" + os);
+		pichi->sql->query("SELECT `client_name`,`client_version`,`client_os` FROM users WHERE `jid` = '" + pichi->sql->escapeString(pichi->getArgJID(arg)) + "';");
+		if(pichi->sql->numRows() > 0)
+		{
+			std::string client = pichi->sql->fetchColumn(0);
+			std::string version = pichi->sql->fetchColumn(1, true);
+			std::string os = pichi->sql->fetchColumn(2, true);
+			if(client.size() > 0 || version.size() > 0 || os.size() > 0)
+				pichi->sendAnswer(client + " " + version + "\n" + os);
+		}
+	}
+	else
+	{
+		std::string jid = pichi->getArgJID(arg, true);
+		if(!jid.empty())
+		{
+			pichi->pushUserClientAnswer(jid);
+			pichi->jabber->sendClientDetection(jid);
+		}
 	}
 }
 

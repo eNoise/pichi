@@ -80,6 +80,17 @@ void PichiCore::on(void )
 void PichiCore::setUserClient(const JID& jid, const std::string& client, const std::string& version, const std::string& os)
 {
 	sql->exec("UPDATE users SET client_name = '" + sql->escapeString(client) + "', client_version = '" + sql->escapeString(version) + "', client_os = '" + sql->escapeString(os) + "' WHERE jid = '" + sql->escapeString(jid.full()) + "' OR jid = '" + sql->escapeString(jid.bare()) + "';");
+	
+	if(userClientAnswer.size() > 0) {
+		std::list<std::string>::iterator it = std::find_if(userClientAnswer.begin(), userClientAnswer.end(), [&jid](const std::string& str){ return jid.full() == str; });
+		if(it != userClientAnswer.end()) {
+			userClientAnswer.erase(it);
+			if(client.size() > 0 || version.size() > 0 || os.size() > 0) {
+				Log("UserInfo answer", Log::DEBUG);
+				sendAnswer(client + " " + version + "\n" + os);
+			}
+		}
+	}
 }
 
 void PichiCore::setUserInfo(std::string jid, std::string nick, std::string state, std::string room, std::string role, std::string status, const std::string& resource)
@@ -215,7 +226,7 @@ std::string PichiCore::getJIDpart(const std::string& jid, unsigned int part)
 	return "";
 }
 
-std::string PichiCore::getJIDfromNick(const std::string& nick, std::string room, bool all_rooms, int like_room)
+std::string PichiCore::getJIDfromNick(const std::string& nick, std::string room, bool all_rooms, int like_room, bool full_jid)
 {
 	Log("[JID] From nick " + nick, Log::VERBOSE);
 	
@@ -243,8 +254,13 @@ std::string PichiCore::getJIDfromNick(const std::string& nick, std::string room,
 		}
 	}
 	
-	SQLite::q* qu = sql->squery("SELECT `jid` FROM users WHERE nick = '" + sql->escapeString(nick) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + likeQuery + ";");
+	SQLite::q* qu = sql->squery("SELECT `jid`,`resource` FROM users WHERE nick = '" + sql->escapeString(nick) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + likeQuery + ";");
 	std::string jid = sql->fetchColumn(qu, 0);
+	if(full_jid && !jid.empty()) {
+		std::string resource = sql->fetchColumn(qu, 1, true);
+		if(!resource.empty())
+			jid += "/" + resource; // добавляем ресурс
+	}
 	delete qu;
 	return jid;
 }
@@ -284,38 +300,42 @@ std::string PichiCore::getJIDfromNicks(const std::string& nick, std::string room
 }
 
 
-std::string PichiCore::getArgJID(const std::string& arg)
+std::string PichiCore::getArgJID(const std::string& arg, bool withResource)
 {
 	std::string jid;
-	if(isBareJID(arg))
+	if(isBareJID(arg) && !withResource)
 		return arg; // Обычный jid, все впорядке
 	if(!isBareJID(arg) && isJID(arg))
-		return getJIDpart(arg, 1); // длинный JID, получаем 1 часть
-	// Скорей всего ник (преобразум в настоящий jid)
-	jid = getJIDfromNick(arg, last_room, false, -1); // Ищет среди последней комнаты (или лички, если сообщение не в комнате)
+		if(!withResource)
+			return getJIDpart(arg, 1); // длинный JID, получаем 1 часть
+		else
+			return arg;
+	// Скорей всего ник (пробуем найти среди настоящих jid'ов)
+	jid = getJIDfromNick(arg, last_room, false, -1, withResource); // Ищет среди последней комнаты (или лички, если сообщение не в комнате)
 	if(jid != "")
 		return jid;
-	// Скорей всего ник (пробуем в комнатный jid)
-	jid = getJIDfromNick(arg, last_room, false, 1); // Ищет среди последней комнаты (или лички, если сообщение не в комнате)
+	// Скорей всего ник (пробуем найти среди jid'ов из комнаты)
+	jid = getJIDfromNick(arg, last_room, false, 1, withResource); // Ищет среди последней комнаты (или лички, если сообщение не в комнате)
 	if(jid != "")
 		return jid;
-	// Скорей всего из другой комнаты (преобразум в настоящий jid)
-	jid = getJIDfromNick(arg, "", true, -1); // Ищет среди всех комнат и личек
+	// Скорей всего из другой комнаты (пробуем найти среди настоящих jid'ов из других комнат)
+	jid = getJIDfromNick(arg, "", true, -1, withResource); // Ищет среди всех комнат и личек
 	if(jid != "")
 		return jid;
-	// Скорей всего из другой комнаты (преобразум в комнатный jid)
-	jid = getJIDfromNick(arg, "", true, 1); // Ищет среди всех комнат и личек
+	// Скорей всего из другой комнаты (пробуем найти среди jid'ов из комнаты в виде комнатного-jid'a)
+	jid = getJIDfromNick(arg, "", true, 1, withResource); // Ищет среди всех комнат и личек
 	if(jid != "")
 		return jid;
 	// значит среди старых ников (преобразум в настоящий jid)
-	jid = getJIDfromNicks(arg, "", true, -1); // Ищет среди всех встречающихся ников, по всем комнатам или личкам
-	if(jid != "")
-		return jid;
-	// значит среди старых ников (преобразум в комнатный jid)
-	jid = getJIDfromNicks(arg, "", true, 1); // Ищет среди всех встречающихся ников, по всем комнатам или личкам
-	if(jid != "")
-		return jid;
-	// Ну это уже вообще ппц тогда... нету такого
+	if(!withResource) { // не имеет смысла искать ресурс среди старых jid'в (использовать неактуально)
+		jid = getJIDfromNicks(arg, "", true, -1); // Ищет среди всех встречающихся ников, по всем комнатам или личкам
+		if(jid != "")
+			return jid;
+		// значит среди старых ников (преобразум в комнатный jid)
+		jid = getJIDfromNicks(arg, "", true, 1); // Ищет среди всех встречающихся ников, по всем комнатам или личкам
+		if(jid != "")
+			return jid;
+	}
 	return "";
 }
 

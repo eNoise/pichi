@@ -23,6 +23,7 @@
 
 #include <time.h>
 #include <string>
+#include <list>
 
 #include "pichiconfig.h"
 #include "pichioptions.h"
@@ -74,17 +75,18 @@ class PichiCore : public PichiConfig,
 		void setUserInfo(std::string, std::string, std::string, std::string, std::string, std::string, const std::string& resource = "");
 		void cleanUserInfo(void);
 		void setUserClient(const gloox::JID& jid, const std::string& client, const std::string& version, const std::string& os);
+		void pushUserClientAnswer(const std::string& jid){ userClientAnswer.push_back(jid); };
 		bool reciveMessage(const std::string& message, const std::string& type, const std::string& from);
 		void sendAnswer(const std::string& message);
 		void sendAnswer(const std::string& message, const PichiMessage& msg);
 		
 		bool isJID(const std::string& jid);
 		bool isBareJID(const std::string& jid);
-		std::string getJIDfromNick(const std::string& nick, std::string room, bool all_rooms = false, int like_room = 0);
+		std::string getJIDfromNick(const std::string& nick, std::string room, bool all_rooms = false, int like_room = 0, bool full_jid = false);
 		std::string getJIDfromNicks(const std::string& nick, std::string room, bool all_rooms = false, int like_room = 0);
 		std::string getNickFromJID(const std::string& jid, std::string room, bool all_rooms = false);
 		std::string getJIDpart(const std::string& jid, unsigned int part);
-		std::string getArgJID(const std::string& arg);
+		std::string getArgJID(const std::string& arg, bool withResource = false);
 		std::string getArgNick(const std::string& arg);
 		
 		std::string getDefaultRoom(void);
@@ -115,6 +117,7 @@ class PichiCore : public PichiConfig,
 	protected:
 		bool enabled;
 	private:
+		std::list<std::string> userClientAnswer;
 };
 
 }
