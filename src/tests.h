@@ -49,6 +49,11 @@ public:
     static bool test_sqlite_query(const std::string& arg);
     static bool test_sqlite_query_async(const std::string& arg);
     static bool test_sqlite_escape_string(const std::string& arg);
+#ifdef WITH_LUA
+    static bool test_lua_fileload(const std::string& arg);
+    static bool test_lua_fileload_wrongsyntax(const std::string& arg);
+    static bool test_lua_handler_pushpop(const std::string& arg);
+#endif
 };
 
 };

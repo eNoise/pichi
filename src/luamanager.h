@@ -49,7 +49,11 @@ public:
 	int callEvent(const std::string& table, const std::string& method, int args = 0, int ret = LUA_MULTRET);
 	void registerFunction(const char *name, lua_CFunction func);
 	void loadFile(const char* filename);
+	void loadFile(const std::string& filename) { loadFile(filename.c_str()); };
 	void reload();
+	
+	int getStatus(){ return status; };
+	int getFileStatus(){ return loadFileStatus; };
 	
 	void luaPush(int i);
 	void luaPush(bool b);
@@ -57,6 +61,15 @@ public:
 	void luaPush(const char* str);
 	void luaPush(void* func);
 	template< typename T > void luaPush(T* p){ luaPush((void*)p); };
+	std::string luaPopString(void);
+	double luaPopNumber(void);
+	template< typename T> T* luaPopData(void) {
+		T* back;
+		if(lua_isuserdata(L, -1))
+			back = lua_touserdata(L, -1);
+		lua_pop(L, 1);
+		return back;
+	};
 protected:
 	lua_State *L;
 	int status;

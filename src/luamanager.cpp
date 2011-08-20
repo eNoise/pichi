@@ -116,6 +116,25 @@ void LuaManager::luaPush(void* func)
 }
 
 
+double LuaManager::luaPopNumber(void )
+{
+	double back;
+	if(lua_isnumber(L, -1))
+		back = lua_tonumber(L, -1);
+	lua_pop(L, 1);
+	return back;
+}
+
+std::string LuaManager::luaPopString(void )
+{
+	std::string back;
+	if(lua_isstring(L, -1))
+		back = lua_tostring(L, -1);
+	lua_pop(L, 1);
+	return back;
+}
+
+
 }
 
 

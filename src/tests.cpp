@@ -25,6 +25,10 @@
 #include "helper.h"
 #include "config.h"
 #include "sqlite.h"
+#ifdef WITH_LUA
+#include "luapichi.h"
+#endif
+#include <fstream>
 
 namespace pichi {
 
@@ -44,6 +48,11 @@ void Tests::init()
 	Tests::testMap["sqlite_query"] = Tests::test_sqlite_query;
 	Tests::testMap["sqlite_query_async"] = Tests::test_sqlite_query_async;
 	Tests::testMap["sqlite_escape_string"] = Tests::test_sqlite_escape_string;
+#ifdef WITH_LUA
+	Tests::testMap["lua_fileload"] = Tests::test_lua_fileload;
+	Tests::testMap["lua_fileload_wrongsyntax"] = Tests::test_lua_fileload_wrongsyntax;
+	Tests::testMap["lua_handler_pushpop"] = Tests::test_lua_handler_pushpop;
+#endif
 }
 
 
@@ -217,6 +226,71 @@ bool Tests::test_sqlite_escape_string(const std::string& arg)
 	Helper::removeFile(path);
 	return test;
 }
+
+#ifdef WITH_LUA
+
+bool Tests::test_lua_fileload(const std::string& arg)
+{
+	LuaPichi* lua = new LuaPichi();
+	lua->loadFile(arg);
+	bool test = lua->getFileStatus() == 0;
+	delete lua;
+	return test;
+}
+
+bool Tests::test_lua_fileload_wrongsyntax(const std::string& arg)
+{
+	std::string path = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.lua";
+	std::ofstream file(path);
+	
+	file << "function test()\n"
+	     << " io.write(\"hahaha\")\n"
+	     << "endf\n"; // no end f
+	
+	file.close();
+	
+	LuaPichi* lua = new LuaPichi();
+	lua->loadFile(path);
+	bool test = lua->getFileStatus() != 0;
+	delete lua;
+	
+	Helper::removeFile(path);
+	
+	return test;
+}
+
+bool Tests::test_lua_handler_pushpop(const std::string& arg)
+{
+	std::string path = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.lua";
+	std::ofstream file(path);
+	
+	file << "testarea = {}\n"
+	     << "function testarea.test(one, two)\n"
+	     << " if one == 10 then\n"
+	     << "   return two\n"
+	     << " end\n"
+	     << "end\n"; // no end f
+	
+	file.close();
+	
+	LuaPichi* lua = new LuaPichi();
+	lua->loadFile(path);
+	bool test = lua->getFileStatus() == 0; // test 1
+	
+	lua->luaPush(10);
+	lua->luaPush("tt");
+	lua->callEvent("testarea", "test", 2, 1);
+	std::string two = lua->luaPopString();
+	delete lua;
+	
+	test &= two == "tt";
+	
+	Helper::removeFile(path); // test 2
+	
+	return test;
+}
+
+#endif
 
 }
 

@@ -261,6 +261,12 @@ endif(WIN32)
 install (DIRECTORY languages/ DESTINATION "${CLIENT_DATA_DIR}/languages")
 install (DIRECTORY lua/ DESTINATION "${CLIENT_DATA_DIR}/lua")
 
+#if(WIN32)
+#  set(PICHI_SOURCE_DIR "../")
+#else(WIN32)
+  set(PICHI_SOURCE_DIR ${PROJECT_SOURCE_DIR})
+#endif(WIN32)
+
 if(WITH_TESTS)
   do_test(regexp_split)
 
@@ -273,11 +279,11 @@ if(WITH_TESTS)
   # Testing non-exist file
   do_test_fail(helper_file_exist "dsdfhsdfkjsf")
   # Testing existed file
-  do_test(helper_file_exist "${PROJECT_SOURCE_DIR}/pichi.xml")
+  do_test(helper_file_exist "${PICHI_SOURCE_DIR}/pichi.xml")
   # Testing non-exist dir
   do_test_fail(helper_file_exist "/var/www/asasdsads")
   # Testing existed dir
-  do_test(helper_file_exist "${PROJECT_SOURCE_DIR}")
+  do_test(helper_file_exist "${PICHI_SOURCE_DIR}")
 
   do_test(helper_microtime)
 
@@ -292,4 +298,13 @@ if(WITH_TESTS)
   do_test(sqlite_query_async)
 
   do_test(sqlite_escape_string)
+
+  if(WITH_LUA)
+    do_test_fail(lua_fileload "${PICHI_SOURCE_DIR}/noexist.lua")
+    do_test(lua_fileload "${PICHI_SOURCE_DIR}/lua/example.lua")
+
+    do_test(lua_fileload_wrongsyntax)
+
+    do_test(lua_handler_pushpop)
+  endif(WITH_LUA)
 endif(WITH_TESTS)
