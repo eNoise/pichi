@@ -53,6 +53,7 @@ public:
     static bool test_lua_fileload(const std::string& arg);
     static bool test_lua_fileload_wrongsyntax(const std::string& arg);
     static bool test_lua_handler_pushpop(const std::string& arg);
+    static bool test_lua_pichilua_core_listener(const std::string& pichilua);
 #endif
 };
 

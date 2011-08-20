@@ -52,6 +52,7 @@ void Tests::init()
 	Tests::testMap["lua_fileload"] = Tests::test_lua_fileload;
 	Tests::testMap["lua_fileload_wrongsyntax"] = Tests::test_lua_fileload_wrongsyntax;
 	Tests::testMap["lua_handler_pushpop"] = Tests::test_lua_handler_pushpop;
+	Tests::testMap["lua_pichilua_core_listener"] = Tests::test_lua_pichilua_core_listener;
 #endif
 }
 
@@ -288,6 +289,45 @@ bool Tests::test_lua_handler_pushpop(const std::string& arg)
 	Helper::removeFile(path); // test 2
 	
 	return test;
+}
+
+bool Tests::test_lua_pichilua_core_listener(const std::string& pichilua)
+{
+	std::string path = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.lua";
+	std::ofstream file(path);
+	
+	file << "testarea = {}\n"
+	     << "function testarea.test()\n"
+	     << "  for k,f in pairs(pichi:getListeners(\"runtest\")) do\n"
+	     << "    f()\n"
+	     << "  end\n"
+	     << "end\n"
+	     << "pichi:setListener( \"runtest\", \"realtest1\","
+	     << "  function( pichiobject )"
+	     << "    io.write(\"goodtest1\")"
+	     << "  end\n" 
+	     << ")\n"
+	     << "pichi:setListener( \"runtest\", \"realtest2\","
+	     << "  function( pichiobject )"
+	     << "    io.write(\"goodtest2\")"
+	     << "  end\n" 
+	     << ")\n";
+	
+	file.close();
+	
+	LuaPichi* lua = new LuaPichi();
+	lua->loadFile(pichilua);
+	if(lua->getFileStatus() != 0)
+		return false;
+	lua->loadFile(path);
+	if(lua->getFileStatus() != 0)
+		return false;
+	lua->callEvent("testarea", "test", 0, 0);
+	delete lua;
+	
+	Helper::removeFile(path); // test 2
+	
+	return true;
 }
 
 #endif

@@ -306,5 +306,8 @@ if(WITH_TESTS)
     do_test(lua_fileload_wrongsyntax)
 
     do_test(lua_handler_pushpop)
+
+    do_test(lua_pichilua_core_listener "${PICHI_SOURCE_DIR}/lua/pichi.lua" "goodtest1")
+    do_test(lua_pichilua_core_listener "${PICHI_SOURCE_DIR}/lua/pichi.lua" "goodtest2")
   endif(WITH_LUA)
 endif(WITH_TESTS)
