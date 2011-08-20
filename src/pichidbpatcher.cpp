@@ -52,7 +52,7 @@ void PichiDbPather::initDbStruct(void )
 	sql->exec("CREATE TABLE lexems (`lexeme1` TEXT, `lexeme2` TEXT, `lexeme3` TEXT, `count` INT NOT NULL DEFAULT '0', UNIQUE (`lexeme1`, `lexeme2`, `lexeme3`));");
 	sql->exec("CREATE TABLE wiki (`name` TEXT UNIQUE, `revision` INT NOT NULL DEFAULT '0', `value` TEXT);");
 	sql->exec("CREATE TABLE settings (`name` TEXT UNIQUE, `value` TEXT, `description` TEXT);");
-	sql->exec("CREATE TABLE users (`jid` TEXT, `nick` TEXT, `role` TEXT, `room` TEXT, `time` TEXT, `status` TEXT, `level` INT NOT NULL DEFAULT '1', `client_name` TEXT, `client_version` TEXT, `client_os` TEXT);");
+	sql->exec("CREATE TABLE users (`jid` TEXT, `resource` TEXT, `nick` TEXT, `role` TEXT, `room` TEXT, `time` TEXT, `status` TEXT, `level` INT NOT NULL DEFAULT '1', `client_name` TEXT, `client_version` TEXT, `client_os` TEXT);");
 	sql->exec("CREATE TABLE users_data (`jid` TEXT, `name` TEXT, `value` TEXT, `groupid` TEXT);");
 	sql->exec("CREATE TABLE users_nick (`jid` TEXT, `nick` TEXT, `room` TEXT, `time` TEXT);");
 	sql->exec("CREATE TABLE stats (`name` TEXT UNIQUE, `value` TEXT);");
@@ -113,6 +113,15 @@ void PichiDbPather::patch(void )
 			
 			upVersion(23);
 			Log("DB patching 22->23 ... done!", Log::WARNING);
+		}
+		case 23:
+		{
+			Log("DB patching 23->24 ...", Log::WARNING);
+		  
+			sql->exec("ALTER TABLE users ADD `resource` TEXT;");
+			
+			upVersion(24);
+			Log("DB patching 23->24 ... done!", Log::WARNING);
 		}
 	}
 	

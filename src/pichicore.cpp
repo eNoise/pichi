@@ -140,7 +140,7 @@ void PichiCore::setUserInfo(std::string jid, std::string nick, std::string state
 	
 	
 	//get system info
-	if(state == "available" && options["onstart_client_detection"] == "1")
+	if(state == "available" && old_state != "available" && options["onstart_client_detection"] == "1")
 	{
 		if(resource.size() > 0) // пришел полный джид не из комнаты, отправляем с ресурсом
 			jabber->sendClientDetection(jid + "/" + resource);
@@ -151,12 +151,28 @@ void PichiCore::setUserInfo(std::string jid, std::string nick, std::string state
 	sql->query("SELECT COUNT(*) FROM users WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
 	if(Helper::atoi(sql->fetchColumn(0)) > 0)
 	{
-		sql->exec("UPDATE users SET nick = '" + sql->escapeString(nick) + "', time = '" + Helper::stringTime(time(NULL)) + "', status = '" + state + "', role = '" + sql->escapeString(role) + "', level = '" + Helper::itoa(level) + "' WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
+		sql->exec("UPDATE users SET nick = '" + sql->escapeString(nick)
+				      + "', resource = '" + sql->escapeString(resource)
+				      + "', time = '" + Helper::stringTime(time(NULL)) 
+				      + "', status = '" + state 
+				      + "', role = '" + sql->escapeString(role) 
+				      + "', level = '" + Helper::itoa(level) 
+				      + "' WHERE jid = '" + sql->escapeString(jid) 
+					+ "' AND room = '" + sql->escapeString(room) 
+					+ "';");
 		//($hook = PichiPlugin::fetch_hook('pichicore_status_update')) ? eval($hook) : false;
 	}
 	else
 	{
-		sql->exec("INSERT INTO users (`jid`,`nick`,`role`,`room`,`time`,`status`,`level`) VALUES ('" + sql->escapeString(jid) + "','" + sql->escapeString(nick) + "','" + sql->escapeString(role) + "','" + sql->escapeString(room) + "','" + Helper::stringTime(time(NULL)) + "','" + state + "', '" + Helper::itoa(level) + "');");
+		sql->exec("INSERT INTO users (`jid`,`resource`,`nick`,`role`,`room`,`time`,`status`,`level`) VALUES ('" 
+					    + sql->escapeString(jid) + "','" 
+					    + sql->escapeString(resource) + "','"
+					    + sql->escapeString(nick) + "','" 
+					    + sql->escapeString(role) + "','" 
+					    + sql->escapeString(room) + "','" 
+					    + Helper::stringTime(time(NULL)) + "','" 
+					    + state + "','" 
+					    + Helper::itoa(level) + "');");
 		sql->query("SELECT COUNT(*) FROM users WHERE jid = '" + sql->escapeString(jid) + "';");
 		//if($this->db->fetchColumn() == 0)
 		//		($hook = PichiPlugin::fetch_hook('pichicore_status_create')) ? eval($hook) : false;

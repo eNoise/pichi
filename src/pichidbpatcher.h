@@ -26,7 +26,7 @@
 #include "log.h"
 #include "pichiexception.h"
 
-#define PICHI_DB_VERSION_ACTUAL 23
+#define PICHI_DB_VERSION_ACTUAL 24
 
 namespace pichi
 {
