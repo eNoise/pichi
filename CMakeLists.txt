@@ -301,7 +301,7 @@ if(WITH_TESTS)
 
   if(WITH_LUA)
     do_test_fail(lua_fileload "${PICHI_SOURCE_DIR}/noexist.lua")
-    do_test(lua_fileload "${PICHI_SOURCE_DIR}/lua/example.lua")
+    do_test(lua_fileload "${PICHI_SOURCE_DIR}/lua/pichi.lua")
 
     do_test(lua_fileload_wrongsyntax)
 
