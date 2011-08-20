@@ -97,6 +97,7 @@ void Pichi::botstart(void)
 		client = new Client( jid, password );
 	// set my info
 	client->disco()->setVersion("Pichi", PICHI_VERSION);
+	client->disco()->setIdentity("client", "pc", "Pichi");
 	client->setResource(pichi->getCfgOption("resource"));
 	client->logInstance().registerLogHandler(LogLevelDebug, LogAreaAll, this);
 	client->registerConnectionListener( this );
