@@ -54,7 +54,7 @@ void LuaPichi::reload()
 	LuaMap::reload();
 	//load files
 	std::for_each(loadedLuaList.begin(), loadedLuaList.end(), [this](LuaFile& file){
-		if(file.enabled)
+		if(file.enabled || file.name == "pichi.lua") // Либо это pichi.lua (загружается всегда) либо включен
 		{
 			this->loadFile(file.path.c_str());
 			if(this->loadFileStatus != 0)
@@ -81,7 +81,8 @@ void LuaPichi::disable(const std::string& file)
 		return testFile.name == file;
 	});
 	if(it != loadedLuaList.end()) {
-		it->enabled = false;
+		if(it->name != "pichi.lua")
+			it->enabled = false;
 		reload();
 	}
 }
@@ -92,7 +93,8 @@ void LuaPichi::enable(const std::string& file)
 		return testFile.name == file;
 	});
 	if(it != loadedLuaList.end()) {
-		it->enabled = true;
+		if(it->name != "pichi.lua")
+			it->enabled = true;
 		reload();
 	}
 }
@@ -106,8 +108,19 @@ void LuaPichi::loadLuaFiles(void )
 		return;
 	}
 	
-	std::for_each(luaFiles.begin(), luaFiles.end(), [this](const std::string& fileName){
-		std::string filePath = PICHI_INSTALLED_DIR + std::string("lua/") + fileName;
+	std::string filePath = PICHI_INSTALLED_DIR + std::string("lua/pichi.lua");
+	this->loadFile(filePath.c_str());
+	if(this->loadFileStatus != 0)
+		throw PichiException("Load lua file pichi.lua problem...");
+	else
+		this->loadedLuaList.push_back({"pichi.lua", filePath, true});
+	
+	std::for_each(luaFiles.begin(), luaFiles.end(), [this,&filePath](const std::string& fileName){
+		if(fileName == "pichi.lua")
+			return; // уже загружен
+		if(fileName.substr(fileName.size() - 4) != ".lua")
+			return;
+		filePath = PICHI_INSTALLED_DIR + std::string("lua/") + fileName;
 		this->loadFile(filePath.c_str());
 		if(this->loadFileStatus != 0)
 			throw PichiException("Load lua file " + fileName + " problem...");
