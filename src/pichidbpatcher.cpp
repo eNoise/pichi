@@ -57,6 +57,8 @@ void PichiDbPather::initDbStruct(void )
 	sql->exec("CREATE TABLE users_nick (`jid` TEXT, `nick` TEXT, `room` TEXT, `time` TEXT);");
 	sql->exec("CREATE TABLE stats (`name` TEXT UNIQUE, `value` TEXT);");
 	sql->exec("CREATE TABLE actions (`action` TEXT, `coincidence` TEXT, `do` TEXT, `option` TEXT, `value` TEXT);");
+	sql->exec("CREATE TABLE banlist (`jid` TEXT, `time` TEXT, `reason` TEXT, `room` TEXT, `nick` TEXT);");
+	sql->exec("CREATE TABLE kicklist (`jid` TEXT, `time` TEXT, `reason` TEXT, `room` TEXT, `nick` TEXT);");
 	sql->exec("CREATE TABLE db_version (`version` TEXT, `value` TEXT);");
   
 	sql->exec("INSERT INTO db_version (`version`) VALUES ('" + boost::lexical_cast<std::string>(PICHI_DB_VERSION_ACTUAL) + "');");
@@ -122,6 +124,16 @@ void PichiDbPather::patch(void )
 			
 			upVersion(24);
 			Log("DB patching 23->24 ... done!", Log::WARNING);
+		}
+		case 24:
+		{
+			Log("DB patching 24->25 ...", Log::WARNING);
+		  
+			sql->exec("CREATE TABLE banlist (`jid` TEXT, `time` TEXT, `reason` TEXT, `room` TEXT, `nick` TEXT);");
+			sql->exec("CREATE TABLE kicklist (`jid` TEXT, `time` TEXT, `reason` TEXT, `room` TEXT, `nick` TEXT);");
+			
+			upVersion(25);
+			Log("DB patching 24->25 ... done!", Log::WARNING);
 		}
 	}
 	

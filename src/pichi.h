@@ -97,9 +97,10 @@ class Pichi : 	public MessageHandler, public MUCRoomHandler, public LogHandler,
 		bool isRoom(const JID& room) const;
 		JID& getMyJID(void);
 		std::string getMyNick(const std::string& room = "");
-		void kick(const std::string &nick, JID room, std::string message = "");
-		void ban(const std::string &nick, JID room, std::string message = "");
-		void unban(const std::string &nick, JID room, std::string message = "");
+		
+		void kick(const std::string& nick, const JID& room, const std::string& message = "");
+		void ban(const std::string& nick, const JID& room, const std::string& message = "");
+		void unban(const std::string& nick, const JID& room, const std::string& message = "");
 		
 		// stubs
                 void onConnect();

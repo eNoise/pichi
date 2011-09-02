@@ -347,7 +347,7 @@ std::string PichiCore::getDefaultRoom(void)
 	return (*first_room).first.bare();
 }
 
-std::string PichiCore::getNickFromJID(const std::string& jid, std::string room, bool all_rooms)
+std::string PichiCore::getNickFromJID(const std::string& jid, const std::string& room, bool all_rooms)
 {
 	Log("[NICK] From JID " + jid, Log::VERBOSE);
 	SQLite::q* qu = sql->squery("SELECT `nick` FROM users WHERE jid = '" + sql->escapeString(jid) + "'" + ((!all_rooms) ? " AND room = '" + sql->escapeString(room) + "'" : "" ) + ";");
@@ -633,75 +633,82 @@ void PichiCore::pingRecive(std::string jid)
 	sendAnswer( (*lang)("command_ping_pong", str.c_str()) );
 }
 
-// устанавливает информацию о jid
-void PichiCore::setJIDinfo(std::string jid, std::string name, std::string value, std::string groupid)
+void PichiCore::setJIDinfo(const std::string& jid, const std::string& name, const std::string& value, const std::string& groupid)
 {
-	SQLite::q* qu = sql->squery("SELECT COUNT(*) FROM users_data WHERE jid = '" + sql->escapeString(jid) + "' AND name = '" + sql->escapeString(name) + "'" + ((groupid != "") ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
+	SQLite::q* qu = sql->squery("SELECT COUNT(*) FROM users_data WHERE jid = '" + sql->escapeString(jid) + "' AND name = '" + sql->escapeString(name) + "'" + ((!groupid.empty()) ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
 	if(Helper::atoi(sql->fetchColumn(qu, 0)) > 0)
-		sql->exec("UPDATE users_data SET value = '" + sql->escapeString(value) + "'  WHERE jid = '" + sql->escapeString(jid) + "' AND name = '" + sql->escapeString(name) + "'" + ((groupid != "") ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
+		sql->exec("UPDATE users_data SET value = '" + sql->escapeString(value) + "'  WHERE jid = '" + sql->escapeString(jid) + "' AND name = '" + sql->escapeString(name) + "'" + ((!groupid.empty()) ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
 	else
-		sql->exec("INSERT INTO users_data (`jid`,`name`,`value`,`groupid`) VALUES ('" + sql->escapeString(jid) + "','" + sql->escapeString(name) + "','" + sql->escapeString(value) + "','" + ((groupid != "") ? sql->escapeString(groupid) : "") + "');");
+		sql->exec("INSERT INTO users_data (`jid`,`name`,`value`,`groupid`) VALUES ('" + sql->escapeString(jid) + "','" + sql->escapeString(name) + "','" + sql->escapeString(value) + "','" + ((!groupid.empty()) ? sql->escapeString(groupid) : "") + "');");
 	delete qu;
 }
 
-// а теперь получить инфу
-std::map<std::string, std::string> PichiCore::getJIDinfo(std::string jid, std::string name, std::string groupid)
+std::map<std::string, std::string> PichiCore::getJIDinfo(const std::string& jid, const std::string& name, const std::string& groupid)
 {
 	std::map<std::string, std::string> retmap, data;
-	SQLite::q* qu = sql->squery("SELECT * FROM users_data WHERE jid = '" + sql->escapeString(jid) + "'" + ((name != "") ? " AND name = '" + sql->escapeString(name) + "'" : "") + ((groupid != "") ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
+	SQLite::q* qu = sql->squery("SELECT * FROM users_data WHERE jid = '" + sql->escapeString(jid) + "'" + ((!name.empty()) ? " AND name = '" + sql->escapeString(name) + "'" : "") + ((!groupid.empty()) ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
 	while(!(data = sql->fetchArray(qu)).empty())
 		retmap[data["name"]] = data["value"];
 	delete qu;
 	return retmap;
 }
 
-// ну и удалить
-void PichiCore::delJIDinfo(std::string jid, std::string name, std::string groupid)
+void PichiCore::delJIDinfo(const std::string& jid, const std::string& name, const std::string& groupid)
 {
-	sql->exec("DELETE FROM users_data WHERE jid = '" + sql->escapeString(jid) + "'" + ((name != "") ? " AND name = '" + sql->escapeString(name) + "'" : "") + ((groupid != "") ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
+	sql->exec("DELETE FROM users_data WHERE jid = '" + sql->escapeString(jid) + "'" + ((!name.empty()) ? " AND name = '" + sql->escapeString(name) + "'" : "") + ((!groupid.empty()) ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
 }
 
-void PichiCore::ban(std::string jid, std::string time, std::string reason, std::string room)
+void PichiCore::ban(const std::string& jid, const std::string& time, const std::string& reason, std::string room)
 {
-	if(jid == "")
+	if(jid.empty())
 		return;
-	if(room == "")
-		room = getLastRoom(); // main room
-	jabber->ban(jid, JID(room), reason);
-	if(time != "")
+	if(room.empty())
+		room = last_room;
+	std::string nick = getNickFromJID(jid, room);
+	jabber->ban(nick, room, reason);
+	if(!time.empty())
 	{
 		time_t tm = convertTime(time);
-		setJIDinfo(jid, "ban", Helper::stringTime(tm + ::time(NULL)), room);
-		setJIDinfo(jid, "ban_reason", reason, room);
-		setJIDinfo(jid, "ban_room", room, room);
+		sql->query("INSERT INTO banlist (`jid`,`time`,`reason`, `room`, `nick`) VALUES ('" 
+												+ sql->escapeString(jid) + "','" 
+												+ Helper::stringTime(tm + ::time(NULL)) + "','" 
+												+ sql->escapeString(reason) + "','"
+												+ sql->escapeString(room) + "','"
+												+ sql->escapeString(nick) + "');");
 	}
 }
         
-void PichiCore::unban(std::string jid, std::string reason, std::string room)
+void PichiCore::unban(const std::string& jid, const std::string& reason, std::string room)
 {
-  	if(jid == "")
+	if(jid.empty())
 		return;
-	if(room == "")
+	if(room.empty())
 		room = getLastRoom(); // main room
-	jabber->unban(jid, JID(room), reason);
+	std::string nick = getNickFromJID(jid, room);
+	jabber->unban(nick, room, reason);
 	delJIDinfo(jid, "ban", room);
 	delJIDinfo(jid, "ban_reason", room);
 	delJIDinfo(jid, "ban_room", room);
+	delJIDinfo(jid, "ban_nick", room);
 }
         
-void PichiCore::kick(std::string jid, std::string time, std::string reason, std::string room)
+void PichiCore::kick(const std::string& jid, const std::string& time, const std::string& reason, std::string room)
 {
-  	if(jid == "")
+  	if(jid.empty())
 		return;
-	if(room == "")
+	if(room.empty())
 		room = getLastRoom(); // main room
-	jabber->kick(getNickFromJID(jid, room), JID(room), reason);
-	if(time != "")
+	std::string nick = getNickFromJID(jid, room);
+	jabber->kick(nick, room, reason);
+	if(!time.empty())
 	{
 		time_t tm = convertTime(time);
-		setJIDinfo(jid, "kick", Helper::stringTime(tm + ::time(NULL)), room);
-		setJIDinfo(jid, "kick_reason", reason, room);
-		setJIDinfo(jid, "kick_room", room, room);
+		sql->query("INSERT INTO kicklist (`jid`,`time`,`reason`, `room`, `nick`) VALUES ('" 
+												+ sql->escapeString(jid) + "','" 
+												+ Helper::stringTime(tm + ::time(NULL)) + "','" 
+												+ sql->escapeString(reason) + "','"
+												+ sql->escapeString(room) + "','"
+												+ sql->escapeString(nick) + "');");
 	}
 }
         

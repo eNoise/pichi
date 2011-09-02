@@ -84,7 +84,7 @@ class PichiCore : public PichiConfig,
 		bool isBareJID(const std::string& jid);
 		std::string getJIDfromNick(const std::string& nick, std::string room, bool all_rooms = false, int like_room = 0, bool full_jid = false);
 		std::string getJIDfromNicks(const std::string& nick, std::string room, bool all_rooms = false, int like_room = 0);
-		std::string getNickFromJID(const std::string& jid, std::string room, bool all_rooms = false);
+		std::string getNickFromJID(const std::string& jid, const std::string& room, bool all_rooms = false);
 		std::string getJIDpart(const std::string& jid, unsigned int part);
 		std::string getArgJID(const std::string& arg, bool withResource = false);
 		std::string getArgNick(const std::string& arg);
@@ -99,13 +99,13 @@ class PichiCore : public PichiConfig,
 		void ping(std::string jid);
 		void pingRecive(std::string id);
 		
-		void setJIDinfo(std::string jid, std::string name, std::string value, std::string groupid = "");
-		std::map<std::string, std::string> getJIDinfo(std::string jid, std::string name = "", std::string groupid = "");
-		void delJIDinfo(std::string jid, std::string name = "", std::string groupid = "");
+		void setJIDinfo(const std::string& jid, const std::string& name, const std::string& value, const std::string& groupid = "");
+		std::map<std::string, std::string> getJIDinfo(const std::string& jid, const std::string& name = "", const std::string& groupid = "");
+		void delJIDinfo(const std::string& jid, const std::string& name = "", const std::string& groupid = "");
 		
-		void ban(std::string jid, std::string time = "", std::string reason = "", std::string room = "");
-		void unban(std::string jid, std::string reason = "", std::string room = "");
-		void kick(std::string jid, std::string time = "", std::string reason = "", std::string room = "");
+		void ban(const std::string& jid, const std::string& time = "", const std::string& reason = "", std::string room = "");
+		void unban(const std::string& jid, const std::string& reason = "", std::string room = "");
+		void kick(const std::string& jid, const std::string& time = "", const std::string& reason = "", std::string room = "");
 		void unkick(std::string jid, std::string room = "");
 		
 		time_t convertTime(std::string time);

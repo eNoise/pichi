@@ -267,37 +267,31 @@ void Pichi::sendMessage(JID jid, const std::string& message)
 	client->send( m );
 }
 
-void Pichi::ban(const std::string& nick, JID room, std::string message)
+void Pichi::ban(const std::string& nick, const JID& room, const std::string& message)
 {
-	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
-	{
-		if(it->first.bare() == room.full())
-		{
-			it->second->ban(nick, message);
-		}
-	}
+	std::list< std::pair<JID, MUCRoom*> >::iterator it = std::find_if(rooms.begin(), rooms.end(), [&room](const std::pair<JID, MUCRoom*>& someroom){
+		return someroom.first.bare() == room.full();
+	});
+	if(it != rooms.end())
+		it->second->ban(nick, message);
 }
 
-void Pichi::unban(const std::string& nick, JID room, std::string message)
+void Pichi::unban(const std::string& nick, const JID& room, const std::string& message)
 {
-	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
-	{
-		if(it->first.bare() == room.full())
-		{
-			it->second->setAffiliation(nick, AffiliationNone, message);
-		}
-	}
+	std::list< std::pair<JID, MUCRoom*> >::iterator it = std::find_if(rooms.begin(), rooms.end(), [&room](const std::pair<JID, MUCRoom*>& someroom){
+		return someroom.first.bare() == room.full();
+	});
+	if(it != rooms.end())
+		it->second->setAffiliation(nick, AffiliationNone, message);
 }
 
-void Pichi::kick(const std::string& nick, JID room, std::string message)
+void Pichi::kick(const std::string& nick, const JID& room, const std::string& message)
 {
-	for(std::list< std::pair<JID, MUCRoom*> >::iterator it=rooms.begin(); it!=rooms.end(); it++)
-	{
-		if(it->first.bare() == room.full())
-		{
-			it->second->kick(nick, message);
-		}
-	}
+	std::list< std::pair<JID, MUCRoom*> >::iterator it = std::find_if(rooms.begin(), rooms.end(), [&room](const std::pair<JID, MUCRoom*>& someroom){
+		return someroom.first.bare() == room.full();
+	});
+	if(it != rooms.end())
+		it->second->kick(nick, message);
 }
 
 // С ником
