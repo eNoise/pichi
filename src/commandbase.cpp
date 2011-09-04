@@ -452,24 +452,24 @@ void commandbase::command_unban(std::string arg)
 
 void commandbase::command_banlist(std::string arg)
 {
-	pichi->sql->query("SELECT `jid`,`value` FROM users_data WHERE name = 'ban';");
+	pichi->sql->query("SELECT * FROM banlist;");
 	std::string banlist = "";
-	std::map<std::string, std::string> bans;
+	SQLite::SQLRow bans;
 	while(!(bans = pichi->sql->fetchArray()).empty())
 	{
-		banlist += bans["jid"] + " " + Helper::timeToString(Helper::atot(bans["value"]), "%d.%m.%Y в %H:%M:%S") + "\n";
+		banlist += bans["jid"] + " " + Helper::timeToString(Helper::atot(bans["time"]), "%d.%m.%Y в %H:%M:%S") + "\n";
 	}
 	pichi->sendAnswer(TR("command_banlist_lock") + ":\n" + banlist);
 }
 
 void commandbase::command_kicklist(std::string arg)
 {
-	pichi->sql->query("SELECT `jid`,`value` FROM users_data WHERE name = 'kick';");
+	pichi->sql->query("SELECT * FROM kicklist;");
 	std::string kicklist = "";
-	std::map<std::string, std::string> kicks;
+	SQLite::SQLRow kicks;
 	while(!(kicks = pichi->sql->fetchArray()).empty())
 	{
-		kicklist += kicks["jid"] + " " + Helper::timeToString(Helper::atot(kicks["value"]), "%d.%m.%Y в %H:%M:%S") + "\n";
+		kicklist += kicks["jid"] + " " + Helper::timeToString(Helper::atot(kicks["time"]), "%d.%m.%Y в %H:%M:%S") + "\n";
 	}
 	pichi->sendAnswer(TR("command_kicklist_lock") + ":\n" + kicklist);
 }
