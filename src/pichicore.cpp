@@ -53,15 +53,6 @@ PichiCore::PichiCore() : PichiOptions(&sql)
 	crons["bans"]["interval"] = 10;
 }
 
-PichiCore::~PichiCore()
-{
-	delete commander;
-	delete sql;
-	delete lang;
-	delete lex;
-	delete event;
-}
-
 bool PichiCore::isEnabled(void)
 {
 	return enabled;
@@ -637,7 +628,7 @@ void PichiCore::setJIDinfo(const std::string& jid, const std::string& name, cons
 
 std::map<std::string, std::string> PichiCore::getJIDinfo(const std::string& jid, const std::string& name, const std::string& groupid)
 {
-	std::map<std::string, std::string> retmap, data;
+	SQLite::SQLRow retmap, data;
 	SQLite::q* qu = sql->squery("SELECT * FROM users_data WHERE jid = '" + sql->escapeString(jid) + "'" + ((!name.empty()) ? " AND name = '" + sql->escapeString(name) + "'" : "") + ((!groupid.empty()) ? " AND groupid = '" + sql->escapeString(groupid) + "'" : "") + ";");
 	while(!(data = sql->fetchArray(qu)).empty())
 		retmap[data["name"]] = data["value"];

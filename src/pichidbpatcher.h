@@ -21,18 +21,15 @@
 #ifndef PICHIDBPATCHER_H
 #define PICHIDBPATCHER_H
 
-#include "sqlite.h"
-#include "languages.h"
-#include "log.h"
-#include "pichiexception.h"
-
 #define PICHI_DB_VERSION_ACTUAL 25
 
 namespace pichi
 {
+  class SQLite;
+  class languages;
   
 class PichiDbPather
-{
+{ 
 public:
   PichiDbPather(SQLite* sql, languages* lang);
   void checkDbStruct(void);

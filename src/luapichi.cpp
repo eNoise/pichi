@@ -42,6 +42,9 @@ LuaPichi::LuaPichi()
 	
 	luaMap.push_back({"SendAnswer", PichiManager::sendAnswer, true});
 	luaMap.push_back({"RegisterModule", PichiManager::registerModule, true});
+	luaMap.push_back({"SetJIDinfo", PichiManager::setJIDinfo, true});
+	luaMap.push_back({"GetJIDinfo", PichiManager::getJIDinfo, true});
+	luaMap.push_back({"DelJIDinfo", PichiManager::delJIDinfo, true});
 	registerLuaMap(); // регитрируем map
 	
 	// init call
@@ -170,6 +173,114 @@ int PichiManager::registerModule(lua_State* L)
 		lua_tostring(L, -1), //author_contact;
 	};
 	pichiLua->appendModule(module);
+	return 0;
+}
+
+int PichiManager::delJIDinfo(lua_State* L)
+{
+	if(lua_gettop(L) < 2 || lua_gettop(L) > 4)
+		return 0;
+  
+	PichiCore* pichi;
+	std::string jid;
+	std::string name;
+	std::string group;
+	
+	switch(lua_gettop(L))
+	{
+		case 2:
+			pichi = (PichiCore*)lua_touserdata(L, -2);
+			jid = lua_tostring(L, -1);
+			break;
+		case 3:
+			pichi = (PichiCore*)lua_touserdata(L, -3);
+			jid = lua_tostring(L, -2);
+			name = lua_tostring(L, -1);
+			break;
+		case 4:
+			pichi = (PichiCore*)lua_touserdata(L, -4);
+			jid = lua_tostring(L, -3);
+			name = lua_tostring(L, -2);
+			group = lua_tostring(L, -1);
+			break;
+	}
+	
+	pichi->delJIDinfo(jid, name, group);
+	return 0;
+}
+
+int PichiManager::getJIDinfo(lua_State* L)
+{
+	if(lua_gettop(L) < 2 || lua_gettop(L) > 4)
+		return 0;
+	PichiCore* pichi;
+	std::string jid;
+	std::string name;
+	std::string group;
+	switch(lua_gettop(L))
+	{
+		case 2:
+			pichi = (PichiCore*)lua_touserdata(L, -2);
+			jid = lua_tostring(L, -1);
+			break;
+		case 3:
+			pichi = (PichiCore*)lua_touserdata(L, -3);
+			jid = lua_tostring(L, -2);
+			name = lua_tostring(L, -1);
+			break;
+		case 4:
+			pichi = (PichiCore*)lua_touserdata(L, -4);
+			jid = lua_tostring(L, -3);
+			name = lua_tostring(L, -2);
+			group = lua_tostring(L, -1);
+			break;
+	}
+	std::map<std::string, std::string> data = pichi->getJIDinfo(jid, name, group);
+	lua_newtable(L);
+	for(std::pair<std::string, std::string> row : data)
+	{
+		lua_pushstring(L, row.first.c_str());
+		lua_pushstring(L, row.second.c_str());
+		lua_settable(L,-3);
+	}
+	return 1;
+}
+
+int PichiManager::setJIDinfo(lua_State* L)
+{
+	if(lua_gettop(L) < 2 || lua_gettop(L) > 5)
+		return 0;
+	PichiCore* pichi;
+	std::string jid;
+	std::string name;
+	std::string value;
+	std::string group;
+	switch(lua_gettop(L))
+	{
+		case 2:
+			pichi = (PichiCore*)lua_touserdata(L, -2);
+			jid = lua_tostring(L, -1);
+			break;
+		case 3:
+			pichi = (PichiCore*)lua_touserdata(L, -3);
+			jid = lua_tostring(L, -2);
+			name = lua_tostring(L, -1);
+			break;
+		case 4:
+			pichi = (PichiCore*)lua_touserdata(L, -4);
+			jid = lua_tostring(L, -3);
+			name = lua_tostring(L, -2);
+			value = lua_tostring(L, -1);
+			break;
+		case 5:
+			pichi = (PichiCore*)lua_touserdata(L, -5);
+			jid = lua_tostring(L, -4);
+			name = lua_tostring(L, -3);
+			value = lua_tostring(L, -2);
+			group = lua_tostring(L, -1);
+			break;
+	}
+	pichi->setJIDinfo(jid, name, value, group);
 	return 0;
 }
 

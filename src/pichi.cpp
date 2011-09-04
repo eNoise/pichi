@@ -38,6 +38,7 @@
 #include <boost/foreach.hpp>
 #include <iostream>
 
+#include "sqlite.h"
 #include "pichicore.h"
 #include "helper.h"
 #include "log.h"

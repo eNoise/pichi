@@ -24,13 +24,8 @@
 #include <map>
 #include <string>
 #include "xmlsimple.h"
-#include "helper.h"
-#include <vector>
 #include <stdarg.h>
-#include <boost/algorithm/string/replace.hpp>
-//#include <boost/regex.hpp>
 #include <stdio.h>
-#include "config.h"
 
 namespace pichi
 {

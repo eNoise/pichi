@@ -113,7 +113,6 @@ class PichiCore : public PichiConfig,
 		PichiMessage& operator=(const PichiCore& lst);
 		
 		PichiCore();
-		~PichiCore();
 	protected:
 		bool enabled;
 	private:

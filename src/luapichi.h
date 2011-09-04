@@ -69,8 +69,13 @@ private:
 };
 
 struct PichiManager {
-	static int sendAnswer(lua_State* L);
 	static int registerModule(lua_State* L);
+	
+	static int sendAnswer(lua_State* L);
+	
+	static int setJIDinfo(lua_State* L);
+	static int getJIDinfo(lua_State* L);
+	static int delJIDinfo(lua_State* L);
 };
 
 };

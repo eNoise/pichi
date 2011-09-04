@@ -23,6 +23,9 @@
 
 #include <boost/algorithm/string/regex.hpp>
 #include "helper.h"
+#include "pichicore.h"
+#include "pichidbpatcher.h"
+#include "languages.h"
 #include "config.h"
 #include "sqlite.h"
 #ifdef WITH_LUA
@@ -53,6 +56,7 @@ void Tests::init()
 	Tests::testMap["lua_fileload_wrongsyntax"] = Tests::test_lua_fileload_wrongsyntax;
 	Tests::testMap["lua_handler_pushpop"] = Tests::test_lua_handler_pushpop;
 	Tests::testMap["lua_pichilua_core_listener"] = Tests::test_lua_pichilua_core_listener;
+	Tests::testMap["lua_functions_userdata"] = Tests::test_lua_functions_userdata;
 #endif
 }
 
@@ -326,6 +330,53 @@ bool Tests::test_lua_pichilua_core_listener(const std::string& pichilua)
 	delete lua;
 	
 	Helper::removeFile(path); // test 2
+	
+	return true;
+}
+
+bool Tests::test_lua_functions_userdata(const std::string& pichilua)
+{
+	std::string sqlpath = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.db";
+	SQLite* sql = new SQLite(sqlpath);
+	languages* lang = new languages("en");
+	PichiDbPather patch(sql, lang);
+	patch.initDbStruct();
+    
+	PichiCore* pichi = new PichiCore();
+	pichi->sql = sql;
+	
+	std::string path = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.lua";
+	std::ofstream file(path);
+	
+	file << "testarea = {}\n"
+	     << "function testarea.test( pichiObject )\n"
+	     << " SetJIDinfo( pichiObject, 'deg1@j.ru', 'test', 'badtest' )\n"
+	     << " SetJIDinfo( pichiObject, 'deg2@j.ru', 'test', 'badtest' )\n"
+	     << " SetJIDinfo( pichiObject, 'deg1@j.ru', 'test', 'goodtest' )\n"
+	     << " DelJIDinfo( pichiObject, 'deg2@j.ru', 'test' )\n"
+	     << " io.write( GetJIDinfo( pichiObject, 'deg1@j.ru', 'test' ).test )\n"
+	     << " io.write( GetJIDinfo( pichiObject, 'deg2@j.ru', 'test' ).test )\n"
+	     << "end\n";
+	
+	file.close();
+	
+	LuaPichi* lua = new LuaPichi();
+	lua->loadFile(pichilua);
+	if(lua->getFileStatus() != 0)
+		return false;
+	lua->loadFile(path);
+	if(lua->getFileStatus() != 0)
+		return false;
+	lua->luaPush(pichi);
+	lua->callEvent("testarea", "test", 1, 0);
+	delete lua;
+	
+	Helper::removeFile(path);
+	Helper::removeFile(sqlpath);
+
+	delete sql;
+	delete lang;
+	delete pichi;
 	
 	return true;
 }

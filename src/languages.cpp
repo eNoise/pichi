@@ -19,7 +19,12 @@
 */
 
 #include "languages.h"
+
 #include "pichi.h"
+#include "helper.h"
+#include "config.h"
+#include <boost/algorithm/string/replace.hpp>
+
 
 namespace pichi
 {

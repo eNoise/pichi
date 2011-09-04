@@ -19,7 +19,14 @@
 */
 
 #include "pichidbpatcher.h"
+
+#include "sqlite.h"
+#include "languages.h"
+#include "log.h"
+#include "helper.h"
+#include "pichiexception.h"
 #include <boost/lexical_cast.hpp>
+#include <vector>
 
 namespace pichi
 {

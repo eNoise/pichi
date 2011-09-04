@@ -309,5 +309,8 @@ if(WITH_TESTS)
 
     do_test(lua_pichilua_core_listener "${PICHI_SOURCE_DIR}/lua/pichi.lua" "goodtest1")
     do_test(lua_pichilua_core_listener "${PICHI_SOURCE_DIR}/lua/pichi.lua" "goodtest2")
+
+    do_test(lua_functions_userdata "${PICHI_SOURCE_DIR}/lua/pichi.lua" "goodtest")
+    do_test_fail(lua_functions_userdata "${PICHI_SOURCE_DIR}/lua/pichi.lua" "badtest")
   endif(WITH_LUA)
 endif(WITH_TESTS)
