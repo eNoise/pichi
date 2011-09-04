@@ -1,6 +1,7 @@
 ===== 0.7.0 alpha4 =====
 * [#U175] Исправлен автокик
 * [#U178] Исправлена комманда бана.
+* [#U176][#U177] Улучшение отображения киклиста и банлиста
 
 * New Tests: lua_functions_userdata
 * Lua Function: SetJIDinfo, GetJIDinfo, DelJIDinfo

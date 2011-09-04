@@ -652,9 +652,10 @@ void PichiCore::ban(const std::string& jid, const std::string& time, const std::
 	if(!time.empty())
 	{
 		time_t tm = convertTime(time);
-		sql->query("INSERT INTO banlist (`jid`,`time`,`reason`, `room`, `nick`) VALUES ('" 
+		sql->query("INSERT INTO banlist (`jid`,`time`,`starttime`,`reason`, `room`, `nick`) VALUES ('" 
 												+ sql->escapeString(jid) + "','" 
-												+ Helper::stringTime(tm + ::time(NULL)) + "','" 
+												+ Helper::stringTime(tm + ::time(NULL)) + "','"
+												+ Helper::stringTime(::time(NULL)) + "','"
 												+ sql->escapeString(reason) + "','"
 												+ sql->escapeString(room) + "','"
 												+ sql->escapeString(nick) + "');");
@@ -689,9 +690,10 @@ void PichiCore::kick(const std::string& jid, const std::string& time, const std:
 	if(!time.empty())
 	{
 		time_t tm = convertTime(time);
-		sql->query("INSERT INTO kicklist (`jid`,`time`,`reason`, `room`, `nick`) VALUES ('" 
+		sql->query("INSERT INTO kicklist (`jid`,`time`,`starttime`,`reason`, `room`, `nick`) VALUES ('" 
 												+ sql->escapeString(jid) + "','" 
-												+ Helper::stringTime(tm + ::time(NULL)) + "','" 
+												+ Helper::stringTime(tm + ::time(NULL)) + "','"
+												+ Helper::stringTime(::time(NULL)) + "','"
 												+ sql->escapeString(reason) + "','"
 												+ sql->escapeString(room) + "','"
 												+ sql->escapeString(nick) + "');");

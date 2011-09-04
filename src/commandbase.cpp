@@ -457,7 +457,14 @@ void commandbase::command_banlist(std::string arg)
 	SQLite::SQLRow bans;
 	while(!(bans = pichi->sql->fetchArray()).empty())
 	{
-		banlist += bans["jid"] + " " + Helper::timeToString(Helper::atot(bans["time"]), "%d.%m.%Y в %H:%M:%S") + "\n";
+		banlist += bans["jid"] 
+			  + " " 
+			  + Helper::timeToString(Helper::atot(bans["starttime"]), "%d.%m.%Y at %H:%M:%S")
+			  + "-"
+			  + Helper::timeToString(Helper::atot(bans["time"]), "%d.%m.%Y at %H:%M:%S")
+			  + " ("
+			  + bans["reason"]
+			  + ")\n";
 	}
 	pichi->sendAnswer(TR("command_banlist_lock") + ":\n" + banlist);
 }
@@ -469,7 +476,14 @@ void commandbase::command_kicklist(std::string arg)
 	SQLite::SQLRow kicks;
 	while(!(kicks = pichi->sql->fetchArray()).empty())
 	{
-		kicklist += kicks["jid"] + " " + Helper::timeToString(Helper::atot(kicks["time"]), "%d.%m.%Y в %H:%M:%S") + "\n";
+		kicklist += kicks["jid"] 
+			  + " " 
+			  + Helper::timeToString(Helper::atot(kicks["starttime"]), "%d.%m.%Y at %H:%M:%S")
+			  + "-"
+			  + Helper::timeToString(Helper::atot(kicks["time"]), "%d.%m.%Y at %H:%M:%S")
+			  + " ("
+			  + kicks["reason"]
+			  + ")\n";
 	}
 	pichi->sendAnswer(TR("command_kicklist_lock") + ":\n" + kicklist);
 }

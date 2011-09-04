@@ -142,6 +142,16 @@ void PichiDbPather::patch(void )
 			upVersion(25);
 			Log("DB patching 24->25 ... done!", Log::WARNING);
 		}
+		case 25:
+		{
+			Log("DB patching 25->26 ...", Log::WARNING);
+		  
+			sql->exec("ALTER TABLE banlist ADD `starttime` TEXT;");
+			sql->exec("ALTER TABLE kicklist ADD `starttime` TEXT;");
+			
+			upVersion(26);
+			Log("DB patching 25->26 ... done!", Log::WARNING);
+		}
 	}
 	
 	if(getDbVersion() != PICHI_DB_VERSION_ACTUAL)

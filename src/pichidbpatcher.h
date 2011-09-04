@@ -21,7 +21,7 @@
 #ifndef PICHIDBPATCHER_H
 #define PICHIDBPATCHER_H
 
-#define PICHI_DB_VERSION_ACTUAL 25
+#define PICHI_DB_VERSION_ACTUAL 26
 
 namespace pichi
 {
