@@ -25,7 +25,9 @@
 
 namespace pichi
 {
- 
+
+int LuaManager::status;
+  
 void LuaManager::loadLuaLibs(void )
 {
 	Log("[LUA][INIT] Initialization", Log::DEBUG);
@@ -40,24 +42,38 @@ void LuaManager::loadLuaLibs(void )
 	luaL_openlibs(L);
 }
 
-int LuaManager::callEvent(const std::string& table, const std::string& method, int args, int ret)
+void* LuaManager::call_thread(void* context)
 {
-	Log(std::string("[LUA][CALL]") + table + ":" + method, Log::VERBOSE);
-	lua_getglobal(L, table.c_str()); // args + 1
-	lua_pushstring(L, method.c_str()); // args + 2
-	if(lua_istable(L, -2)) // есть такая таблица
+	LuaManager* th = (LuaManager*)context;
+	Log(std::string("[LUA][CALL]") + th->callArgs.table + ":" + th->callArgs.method, Log::VERBOSE);
+	lua_getglobal(th->L, th->callArgs.table.c_str()); // args + 1
+	lua_pushstring(th->L, th->callArgs.method.c_str()); // args + 2
+	if(lua_istable(th->L, -2)) // есть такая таблица
 	{
-		lua_gettable(L, -2); // args + 2
-		lua_remove(L, -2); // args + 1
-		lua_insert(L, 1); // args + 1 (смещаем на 1 вниз)
-		status = lua_pcall(L, args, ret, 0);
-		reportError();
+		lua_gettable(th->L, -2); // args + 2
+		lua_remove(th->L, -2); // args + 1
+		lua_insert(th->L, 1); // args + 1 (смещаем на 1 вниз)
+		LuaManager::status = lua_pcall(th->L, th->callArgs.args, th->callArgs.ret, 0);
+		reportError(th->L);
 	}
 	else 
 	{
-		lua_settop(L, 0);
+		lua_settop(th->L, 0);
 	}
-	return status;
+	
+	pthread_exit(context);
+	return context;
+}
+
+int LuaManager::callEvent(const std::string& table, const std::string& method, int args, int ret, bool async)
+{
+	callArgs = {table, method, args, ret, async};
+	if(pthread_create(&callThread[table + method], NULL, &LuaManager::call_thread, (void*)this) != 0)
+		return 1;
+	if(!async)
+		if(pthread_join(callThread[table + method], NULL) != 0)
+			return 1;
+	return 0;
 }
 
 void LuaManager::registerFunction(const char* name, lua_CFunction func)
@@ -81,9 +97,9 @@ void LuaManager::reload()
 	loadLuaLibs();
 }
 
-void LuaManager::reportError(void )
+void LuaManager::reportError(lua_State *L)
 {
-	if(status != 0) {
+	if(LuaManager::status != 0) {
 		Log(std::string("[LUA][ERROR]") + lua_tostring(L, -1), Log::WARNING);
 		lua_pop(L, 1);
 	}

@@ -30,6 +30,8 @@ extern "C" {
 }
 
 #include <string>
+#include <map>
+#include <pthread.h>
 
 namespace pichi
 {
@@ -46,7 +48,14 @@ public:
 		lua_close(L);
 	};
 	
-	int callEvent(const std::string& table, const std::string& method, int args = 0, int ret = LUA_MULTRET);
+	int callEvent(const std::string& table, const std::string& method, int args = 0, int ret = LUA_MULTRET, bool async = false);
+	struct CallEventArgs {
+		std::string table;
+		std::string method;
+		int args;
+		int ret;
+		bool async;
+	} callArgs;
 	void registerFunction(const char *name, lua_CFunction func);
 	void loadFile(const char* filename);
 	void loadFile(const std::string& filename) { loadFile(filename.c_str()); };
@@ -72,11 +81,13 @@ public:
 	};
 protected:
 	lua_State *L;
-	int status;
+	std::map<std::string, pthread_t> callThread;
+	static void *call_thread(void *context);
+	static int status;
 	int loadFileStatus;
 private:
 	void loadLuaLibs(void);
-	void reportError(void);
+	static void reportError(lua_State *L);
 };
 
 };
