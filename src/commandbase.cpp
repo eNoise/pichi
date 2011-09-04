@@ -460,7 +460,7 @@ void commandbase::command_banlist(std::string arg)
 		banlist += bans["jid"]
 			  + "  START:" 
 			  + Helper::timeToString(Helper::atot(bans["starttime"]), "%d.%m.%Y-%H:%M:%S")
-			  + "  EXPIRED"
+			  + "  EXPIRED:"
 			  + Helper::timeToString(Helper::atot(bans["time"]), "%d.%m.%Y-%H:%M:%S")
 			  + "  REASON:"
 			  + bans["reason"]
@@ -479,7 +479,7 @@ void commandbase::command_kicklist(std::string arg)
 		kicklist += kicks["jid"]
 			  + "  START:" 
 			  + Helper::timeToString(Helper::atot(kicks["starttime"]), "%d.%m.%Y-%H:%M:%S")
-			  + "  EXPIRED"
+			  + "  EXPIRED:"
 			  + Helper::timeToString(Helper::atot(kicks["time"]), "%d.%m.%Y-%H:%M:%S")
 			  + "  REASON:"
 			  + kicks["reason"]
