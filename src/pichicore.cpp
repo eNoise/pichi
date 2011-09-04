@@ -50,7 +50,7 @@ PichiCore::PichiCore() : PichiOptions(&sql)
 	
 	//timers
 	crons["bans"]["last"] = time(NULL);
-	crons["bans"]["interval"] = 5;
+	crons["bans"]["interval"] = 10;
 }
 
 PichiCore::~PichiCore()
@@ -116,26 +116,18 @@ void PichiCore::setUserInfo(std::string jid, std::string nick, std::string state
 		if(Helper::in_array(jid, ignore))
 			level = 0;
 
-	/*
-	 *  For Refactor
-	 */
-	/*
-	if(time(NULL) - jabber->times["wait"] > wait_time)
+	if(state == "available" && old_state == "unavailable")
 	{
-		if(state == "available" && old_state == "unavailable")
+		//event->callEvent("user_join_room", "room=" + room + ",jid=" + jid);
+		// autokick
+		SQLite::q* qu = sql->squery("SELECT nick FROM kicklist WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
+		if(sql->numRows(qu) == 1)
 		{
-			event->callEvent("user_join_room", "room=" + room + ",jid=" + jid);
-			// autokick
-				sql->query("SELECT COUNT(*) FROM users_data WHERE jid = '" + sql->escapeString(jid) + "' AND name = 'kick' AND groupid = '" + sql->escapeString(room) + "';");
-				if(Helper::atoi(sql->fetchColumn(0)) > 0)
-					jabber->kick(jid, JID(room), "Auto-kick");
-			}
-		else if(state == "unavailable" && old_state == "available")
-		{
-			event->callEvent("user_left_room", "room=" + room + ",jid=" + jid);
+			SQLite::SQLRow kickinfo = sql->fetchArray(qu);
+			jabber->kick(kickinfo["nick"], room, "Auto-kick");
 		}
+		delete qu;
 	}
-	*/
 	
 	//($hook = PichiPlugin::fetch_hook('pichicore_status_set')) ? eval($hook) : false;
 	if(room != "")
@@ -683,13 +675,16 @@ void PichiCore::unban(const std::string& jid, const std::string& reason, std::st
 	if(jid.empty())
 		return;
 	if(room.empty())
-		room = getLastRoom(); // main room
-	std::string nick = getNickFromJID(jid, room);
-	jabber->unban(nick, room, reason);
-	delJIDinfo(jid, "ban", room);
-	delJIDinfo(jid, "ban_reason", room);
-	delJIDinfo(jid, "ban_room", room);
-	delJIDinfo(jid, "ban_nick", room);
+		room = last_room; // main room
+	//std::string nick = getNickFromJID(jid, room);
+	SQLite::q* qu = sql->squery("SELECT * FROM banlist WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
+	if(sql->numRows(qu) == 1)
+	{
+		SQLite::SQLRow baninfo = sql->fetchArray(qu);
+		jabber->unban(baninfo["nick"], room, reason);
+		sql->exec("DELETE FROM banlist WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
+	}
+	delete qu;
 }
         
 void PichiCore::kick(const std::string& jid, const std::string& time, const std::string& reason, std::string room)
@@ -714,13 +709,11 @@ void PichiCore::kick(const std::string& jid, const std::string& time, const std:
         
 void PichiCore::unkick(std::string jid, std::string room)
 {
-  	if(jid == "")
+  	if(jid.empty())
 		return;
-	if(room == "")
-		room = getLastRoom(); // main room
-	delJIDinfo(jid, "kick", room);
-	delJIDinfo(jid, "kick_reason", room);
-	delJIDinfo(jid, "kick_room", room);
+	if(room.empty())
+		room = last_room; // main room
+	sql->exec("DELETE FROM kicklist WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
 }
 
 time_t PichiCore::convertTime(std::string time)
@@ -769,20 +762,20 @@ void PichiCore::cronDo(std::string eventer)
     {
 	Log("[CRON] Bans", Log::VERBOSE);
 	//Check bans and kicks
-	SQLite::q* qu = sql->squery("SELECT `jid`,`value`,`name`,`groupid` FROM users_data WHERE name = 'ban' OR name = 'kick';");
-	std::map<std::string, std::string> bans;
+	SQLite::q* qu = sql->squery("SELECT 'ban' AS type,* FROM banlist UNION ALL SELECT 'kick' AS type,* FROM kicklist;");
+	SQLite::SQLRow bans;
 	while(!(bans = sql->fetchArray(qu)).empty())
 	{
-		if(boost::lexical_cast<time_t>(bans["value"]) <= time(NULL))
+		if(boost::lexical_cast<time_t>(bans["time"]) <= time(NULL))
 		{
-			if(bans["name"] == "ban")
-				unban(bans["jid"], "Auto-unban", bans["groupid"]);
-			else if(bans["name"] == "kick")
-				unkick(bans["jid"], bans["groupid"]);
+			if(bans["type"] == "ban")
+				unban(bans["jid"], "Auto-unban", bans["room"]);
+			else if(bans["type"] == "kick")
+				unkick(bans["jid"], bans["room"]);
 		}
 	}
 	delete qu;
-	crons["bans"]["last"] = time(NULL); 
+	crons["bans"]["last"] = time(NULL);
     }
 }
 

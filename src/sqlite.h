@@ -33,6 +33,7 @@ namespace pichi
 class SQLite
 {
 	public:
+		typedef std::map<std::string, std::string> SQLRow;
 		struct q // query struct
 		{
 			sqlite3_stmt *statement;
@@ -51,7 +52,7 @@ class SQLite
 		bool query(const std::string&);
 		q* squery(const std::string&);
 		bool exec(const std::string&);
-		std::map<std::string, std::string> fetchArray(q* state = NULL);
+		SQLRow fetchArray(q* state = NULL);
 		std::string fetchColumn(const int num, bool stay = false);
 		std::string fetchColumn(q* state, const int num, bool stay = false);
 		const int numColumns() const;
