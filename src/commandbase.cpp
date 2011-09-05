@@ -103,6 +103,9 @@ void commandbase::fetchCommand(std::string command)
 		pichi->luaPush(last_args);
 		pichi->luaPush(pichi);
 		pichi->callEvent("PichiCommands", last_command, 2);
+		pichi->luaPush(last_args);
+		pichi->luaPush(pichi);
+		pichi->callEvent("PichiCommandsAsync", last_command, 2, 0, true);
 	}
 #endif
 }

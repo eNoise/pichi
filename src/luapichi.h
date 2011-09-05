@@ -55,7 +55,7 @@ public:
 	std::map<std::string, std::list<std::string> > getLuaHandlersList(void) { return luaHandlersList; };
 	std::list<LuaModuleInfo> getModulesInfo(void) { return luaModules; };
 	
-	int callEvent(const std::string& table, const std::string& method, int args = 0, int ret = LUA_MULTRET);
+	int callEvent(const std::string& table, const std::string& method, int args = 0, int ret = LUA_MULTRET, bool async = false);
 	void reload();
 	void enable(const std::string& file);
 	void disable(const std::string& file);

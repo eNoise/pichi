@@ -141,11 +141,11 @@ std::list<std::string> LuaPichi::getLuaFunctionsList(void)
      return registerList;
 }
 
-int LuaPichi::callEvent(const std::string& table, const std::string& method, int args, int ret)
+int LuaPichi::callEvent(const std::string& table, const std::string& method, int args, int ret, bool async)
 {
 	if(std::find(luaHandlersList[table].begin(), luaHandlersList[table].end(), method) == luaHandlersList[table].end())
 		luaHandlersList[table].push_back(method);
-	return LuaManager::callEvent(table, method, args, ret);
+	return LuaManager::callEvent(table, method, args, ret, async);
 }
 
 void LuaPichi::appendModule(const pichi::LuaPichi::LuaModuleInfo& info)
