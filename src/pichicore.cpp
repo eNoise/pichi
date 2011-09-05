@@ -670,7 +670,7 @@ void PichiCore::unban(const std::string& jid, const std::string& reason, std::st
 		room = last_room; // main room
 	//std::string nick = getNickFromJID(jid, room);
 	SQLite::q* qu = sql->squery("SELECT * FROM banlist WHERE jid = '" + sql->escapeString(jid) + "' AND room = '" + sql->escapeString(room) + "';");
-	if(sql->numRows(qu) == 1)
+	if(sql->numRows(qu) > 0)
 	{
 		SQLite::SQLRow baninfo = sql->fetchArray(qu);
 		jabber->unban(baninfo["nick"], room, reason);
