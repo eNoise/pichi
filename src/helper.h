@@ -55,6 +55,7 @@ class Helper
 	static bool removeDirectory(const std::string& path);
 	static bool removeFile(const std::string& path);
 	static double microtime(void);
+	static std::string md5sum(const std::string& tomd5);
 };
 
 }

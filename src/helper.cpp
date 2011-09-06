@@ -26,6 +26,7 @@
 #include <dirent.h>
 #include <sys/time.h>
 #include <sys/stat.h>
+#include <openssl/md5.h>
 
 
 namespace pichi
@@ -177,5 +178,20 @@ double Helper::microtime(void )
 	double sec = tp.tv_sec;
 	return (sec + msec);
 }
+
+std::string Helper::md5sum(const std::string& tomd5)
+{
+	unsigned char tmp_hash[MD5_DIGEST_LENGTH];
+	MD5((const unsigned char*)tomd5.c_str(), tomd5.size(), tmp_hash);
+	char buffer[10];
+	std::string ret;
+	for(int i=0; i <MD5_DIGEST_LENGTH; i++)
+	{
+		sprintf(buffer, "%02x", tmp_hash[i]);
+		ret.append(buffer);
+	}
+	return ret;
+}
+
 
 }

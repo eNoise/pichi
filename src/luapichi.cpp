@@ -42,6 +42,7 @@ LuaPichi::LuaPichi()
 	
 	luaMap.push_back({"SendAnswer", PichiManager::sendAnswer, true});
 	luaMap.push_back({"RegisterModule", PichiManager::registerModule, true});
+	luaMap.push_back({"md5sum", PichiManager::md5sum, true});
 	luaMap.push_back({"SetJIDinfo", PichiManager::setJIDinfo, true});
 	luaMap.push_back({"GetJIDinfo", PichiManager::getJIDinfo, true});
 	luaMap.push_back({"DelJIDinfo", PichiManager::delJIDinfo, true});
@@ -284,6 +285,11 @@ int PichiManager::setJIDinfo(lua_State* L)
 	return 0;
 }
 
+int PichiManager::md5sum(lua_State* L)
+{
+	lua_pushstring(L, Helper::md5sum(lua_tostring(L, -1)).c_str());
+	return 1;
+}
 
 };
 

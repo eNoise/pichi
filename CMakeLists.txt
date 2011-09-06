@@ -135,6 +135,7 @@ else(WIN32)
     find_package (Boost REQUIRED COMPONENTS regex program_options)
 endif(WIN32)
 find_package (CURL REQUIRED)
+find_package (OpenSSL REQUIRED)
 
 if (LOCAL_GLOOX)
   add_subdirectory(gloox)
@@ -199,6 +200,7 @@ set(LINK_LIBS	${CMAKE_THREAD_LIBS_INIT}
 		${SQLITE3_LIBRARIES}
 		${Boost_LIBRARIES}
 		${CURL_LIBRARIES}
+		${OPENSSL_LIBRARIES}
 )
 if (WITH_LUA)
 	set(LINK_LIBS ${LINK_LIBS} ${LUA_LIBRARIES})
@@ -228,6 +230,7 @@ include_directories(
 			${SQLITE3_INCLUDE_DIR}
 			${Boost_INCLUDE_DIRS}
 			${CURL_INCLUDE_DIRS}
+			${OPENSSL_INCLUDE_DIR}
 		   )
 ADD_EXECUTABLE(pichi ${PICHI_CPP})
 target_link_libraries (pichi ${LINK_LIBS})
@@ -290,6 +293,8 @@ if(WITH_TESTS)
   do_test(helper_createdirectory)
 
   do_test(helper_removedirectory)
+
+  do_test(helper_md5sum)
 
   do_test(sqlite_open)
 

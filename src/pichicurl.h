@@ -23,6 +23,7 @@
 
 #include <curl/curl.h>
 #include <string>
+#include <map>
 
 namespace pichi
 {
@@ -38,6 +39,7 @@ class PichiCurl
     void setReferer(const std::string& u);
     void setAuth(const std::string& user, const std::string& pass);
     void setPostArgs(const std::string& args);
+    void setPostArgs(const std::map<std::string, std::string>& args);
     const std::string urlencode(const std::string& u) const;
     const std::string urldecode(const std::string& u) const;
   private:

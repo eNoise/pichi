@@ -89,6 +89,15 @@ void PichiCurl::setPostArgs(const std::string& args)
 	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postargs->data()); 
 }
 
+void PichiCurl::setPostArgs(const std::map< std::string, std::string >& args)
+{
+	std::string fullArgs = "";
+	int i = 0;
+	for(std::pair<std::string, std::string> arg : args)
+		fullArgs += ((i++ == 0) ? "" : "&") +  arg.first + "=" + urlencode(arg.second);
+	setPostArgs(fullArgs);
+}
+
 const std::string PichiCurl::urlencode(const std::string& u) const
 {
 	return curl_easy_escape(curl, u.c_str(), u.length());

@@ -47,6 +47,7 @@ void Tests::init()
 	Tests::testMap["helper_microtime"] = Tests::test_helper_microtime;
 	Tests::testMap["helper_createdirectory"] = Tests::test_helper_createdirectory;
 	Tests::testMap["helper_removedirectory"] = Tests::test_helper_removedirectory;
+	Tests::testMap["helper_md5sum"] = Tests::test_helper_md5sum;
 	Tests::testMap["sqlite_open"] = Tests::test_sqlite_open;
 	Tests::testMap["sqlite_query"] = Tests::test_sqlite_query;
 	Tests::testMap["sqlite_query_async"] = Tests::test_sqlite_query_async;
@@ -152,6 +153,14 @@ bool Tests::test_helper_removedirectory(const std::string& arg)
 		test = Helper::removeDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "tests");
 	}
 	return test;
+}
+
+bool Tests::test_helper_md5sum(const std::string& arg)
+{
+	bool test1 = Helper::md5sum("") == "d41d8cd98f00b204e9800998ecf8427e";
+	bool test2 = Helper::md5sum("md5") == "1bc29b36f623ba82aaf6724fd3b16718";
+	bool test3 = Helper::md5sum("рус") == "d31757c0969e08011ecd9cbc0ecf7ae7";
+	return test1 && test2 && test3;
 }
 
 bool Tests::test_sqlite_open(const std::string& arg)
