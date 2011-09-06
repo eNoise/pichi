@@ -35,5 +35,22 @@ function PichiCommands.forum ( arg, pichiobject )
 end
 
 function UruchieForumCommands.whoami ( args, pichiobject )
-	SendAnswer( pichiobject, "Ты никто!!!")
+	local user = GetJIDinfo( pichiobject, GetLastJID( pichiobject ), "uforum_user" )
+	for k,v in pairs(user) do
+		SendAnswer( pichiobject, "Ты " .. v)
+	end
+end
+
+function UruchieForumCommands.login ( args, pichiobject )
+	local user, password
+	if type(args) == "string" then
+		user, password = string.match(args, "(%a+) (%a+)")
+	end
+	if not user or not password then
+		SendAnswer( pichiobject, "введите полную информацию и попробуйте опять")
+		return
+	end
+	SetJIDinfo( pichiobject, GetLastJID( pichiobject ), "uforum_user", user )
+	SetJIDinfo( pichiobject, GetLastJID( pichiobject ), "uforum_password", password )
+	SendAnswer( pichiobject, "установлено")
 end

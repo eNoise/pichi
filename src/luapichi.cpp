@@ -41,6 +41,7 @@ LuaPichi::LuaPichi()
 	loadLuaFiles();
 	
 	luaMap.push_back({"SendAnswer", PichiManager::sendAnswer, true});
+	luaMap.push_back({"GetLastJID", PichiManager::getLastJID, true});
 	luaMap.push_back({"RegisterModule", PichiManager::registerModule, true});
 	luaMap.push_back({"md5sum", PichiManager::md5sum, true});
 	luaMap.push_back({"SetJIDinfo", PichiManager::setJIDinfo, true});
@@ -161,6 +162,15 @@ int PichiManager::sendAnswer(lua_State* L)
 	std::string toSend = lua_tostring(L, -1);
 	pichi->sendAnswer(toSend);
 	return 0;
+}
+
+int PichiManager::getLastJID(lua_State* L)
+{
+	if(lua_gettop(L) != 1)
+		return 0;
+	PichiCore* pichi = (PichiCore*)lua_touserdata(L, -1);
+	lua_pushstring(L, pichi->getJIDlast().c_str());
+	return 1;
 }
 
 int PichiManager::registerModule(lua_State* L)
@@ -287,6 +297,8 @@ int PichiManager::setJIDinfo(lua_State* L)
 
 int PichiManager::md5sum(lua_State* L)
 {
+	if(lua_gettop(L) != 1)
+		return 0;
 	lua_pushstring(L, Helper::md5sum(lua_tostring(L, -1)).c_str());
 	return 1;
 }
