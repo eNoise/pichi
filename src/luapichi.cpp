@@ -27,6 +27,7 @@
 #include "log.h"
 #include "pichiexception.h"
 #include "pichicore.h"
+#include "pichicurl.h"
 
 namespace pichi
 {
@@ -44,6 +45,7 @@ LuaPichi::LuaPichi()
 	luaMap.push_back({"GetLastJID", PichiManager::getLastJID, true});
 	luaMap.push_back({"RegisterModule", PichiManager::registerModule, true});
 	luaMap.push_back({"md5sum", PichiManager::md5sum, true});
+	luaMap.push_back({"ReadUrl", PichiManager::readUrl, true});
 	luaMap.push_back({"SetJIDinfo", PichiManager::setJIDinfo, true});
 	luaMap.push_back({"GetJIDinfo", PichiManager::getJIDinfo, true});
 	luaMap.push_back({"DelJIDinfo", PichiManager::delJIDinfo, true});
@@ -300,6 +302,42 @@ int PichiManager::md5sum(lua_State* L)
 	if(lua_gettop(L) != 1)
 		return 0;
 	lua_pushstring(L, Helper::md5sum(lua_tostring(L, -1)).c_str());
+	return 1;
+}
+
+int PichiManager::readUrl(lua_State* L)
+{
+	if(lua_gettop(L) < 1 || lua_gettop(L) > 2)
+		return 0;
+	
+	PichiCurl* curl = new PichiCurl();
+	std::string url;
+	std::map<std::string, std::string> table;
+	
+	switch(lua_gettop(L))
+	{
+		case 1:
+			url = lua_tostring(L, -1);
+			break;
+		case 2:
+			url = lua_tostring(L, -2);
+			if(lua_istable(L, -1))
+			{
+				lua_pushnil(L);
+				while(lua_next(L, -2) != 0)
+				{
+					table[lua_tostring(L, -2)] = lua_tostring(L, -1);
+					lua_pop(L, 1);
+				}
+			}
+			break;
+	}
+	
+	if(table.size() > 0)
+		curl->setPostArgs(table);
+	lua_pushstring(L, curl->readurl(url).c_str());
+	
+	delete curl;
 	return 1;
 }
 

@@ -3,7 +3,14 @@ if not PichiCommands then
     PichiCommands = {}
 end
 
-UruchieForumCommands = {}
+if not PichiCommandsAsync then
+    PichiCommandsAsync = {}
+end
+
+--local json = require("dkjson")
+
+local UruchieForumCommands = {}
+local UruchieForumCommandsAsync = {}
 
 -- register module
 pichi:setListener( "init", "uforum",
@@ -28,9 +35,20 @@ function PichiCommands.forum ( arg, pichiobject )
 		SendAnswer( pichiobject, [[
 
 !forum - это подсказка
-!forum whoami - к какому акаунту я привязан
+!forum whoami - к какому аккаунту я привязан
 !forum login user password - связать себя с аккаунтом форума
 ]] )
+	end
+end
+
+function PichiCommandsAsync.forum ( arg, pichiobject )
+	local command, args
+	command, args = string.match(arg, "(%a+) (.+)")
+	if not command then
+		command = string.match(arg, "(%a+)")
+	end
+	if command and UruchieForumCommandsAsync[command] then
+		UruchieForumCommandsAsync[command]( args, pichiobject )
 	end
 end
 
@@ -53,4 +71,8 @@ function UruchieForumCommands.login ( args, pichiobject )
 	SetJIDinfo( pichiobject, GetLastJID( pichiobject ), "uforum_user", user )
 	SetJIDinfo( pichiobject, GetLastJID( pichiobject ), "uforum_password", password )
 	SendAnswer( pichiobject, "установлено")
+end
+
+function UruchieForumCommands.test( args, pichiobject )
+	io.write(ReadUrl( "http://uruchie.org", {arg1 = "aaa", arg2 = "bbb"} ))
 end

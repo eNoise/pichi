@@ -79,6 +79,8 @@ struct PichiManager {
 	static int delJIDinfo(lua_State* L);
 	
 	static int md5sum(lua_State* L);
+	
+	static int readUrl(lua_State* L);
 };
 
 };
