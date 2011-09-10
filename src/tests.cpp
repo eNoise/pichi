@@ -58,6 +58,7 @@ void Tests::init()
 	Tests::testMap["lua_handler_pushpop"] = Tests::test_lua_handler_pushpop;
 	Tests::testMap["lua_pichilua_core_listener"] = Tests::test_lua_pichilua_core_listener;
 	Tests::testMap["lua_functions_userdata"] = Tests::test_lua_functions_userdata;
+	Tests::testMap["lua_functions_jsondecode"] = Tests::test_lua_functions_jsondecode;
 #endif
 }
 
@@ -389,6 +390,58 @@ bool Tests::test_lua_functions_userdata(const std::string& pichilua)
 	
 	return true;
 }
+
+bool Tests::test_lua_functions_jsondecode(const std::string& pichilua)
+{
+	std::string path = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.lua";
+	std::ofstream file(path);
+	
+	file << "testarea = {}\n"
+	     << "function testarea.test()\n"
+	     << " realtest = JsonDecode([[\n"
+	     << "  {\n"
+	     << "   \"first\": \"test1\",\n"
+	     << "   \"second\": \"test1\",\n"
+	     << "   \"age\": 25,\n"
+	     << "   \"some1\" : { \"some1st\": \"xxx\" },\n"
+	     << "   \"some2\": [\n"
+	     << "    {\n"
+	     << "     \"t\": \"x\"\n"
+	     << "    },\n"
+	     << "    {\n"
+	     << "     \"t\": \"y\"\n"
+	     << "    }\n"
+	     << "   ]\n"
+	     << "  }\n"
+	     << " ]])\n"
+	     << " if realtest.second == \"test1\" then\n"
+	     << "  io.write(\"goodtest1\")\n"
+	     << " end\n"
+	     << " if realtest.some1.some1st == \"xxx\" then\n"
+	     << "  io.write(\"goodtest2\")\n"
+	     << " end\n"
+	     << " if realtest.some2[1].t == \"x\" then\n"
+	     << "  io.write(\"goodtest3\")\n"
+	     << " end\n"
+	     << "end\n";
+	
+	file.close();
+	
+	LuaPichi* lua = new LuaPichi();
+	lua->loadFile(pichilua);
+	if(lua->getFileStatus() != 0)
+		return false;
+	lua->loadFile(path);
+	if(lua->getFileStatus() != 0)
+		return false;
+	lua->callEvent("testarea", "test", 0, 0);
+	delete lua;
+	
+	Helper::removeFile(path); // test 2
+	
+	return true;
+}
+
 
 #endif
 

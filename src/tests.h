@@ -56,6 +56,7 @@ public:
     static bool test_lua_handler_pushpop(const std::string& arg);
     static bool test_lua_pichilua_core_listener(const std::string& pichilua);
     static bool test_lua_functions_userdata(const std::string& pichilua);
+    static bool test_lua_functions_jsondecode(const std::string& pichilua);
 #endif
 };
 

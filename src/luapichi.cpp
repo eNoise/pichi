@@ -22,6 +22,7 @@
 #include "luapichi.h"
 
 #include <algorithm>
+#include <boost/property_tree/json_parser.hpp>
 
 #include "helper.h"
 #include "log.h"
@@ -46,6 +47,7 @@ LuaPichi::LuaPichi()
 	luaMap.push_back({"RegisterModule", PichiManager::registerModule, true});
 	luaMap.push_back({"md5sum", PichiManager::md5sum, true});
 	luaMap.push_back({"ReadUrl", PichiManager::readUrl, true});
+	luaMap.push_back({"JsonDecode", PichiManager::jsonDecode, true});
 	luaMap.push_back({"SetJIDinfo", PichiManager::setJIDinfo, true});
 	luaMap.push_back({"GetJIDinfo", PichiManager::getJIDinfo, true});
 	luaMap.push_back({"DelJIDinfo", PichiManager::delJIDinfo, true});
@@ -339,6 +341,40 @@ int PichiManager::readUrl(lua_State* L)
 	
 	delete curl;
 	return 1;
+}
+
+int PichiManager::jsonDecode(lua_State* L)
+{
+	if(lua_gettop(L) != 1)
+		return 0;
+	
+	boost::property_tree::ptree ptree;
+	std::stringstream stream(lua_tostring(L, -1));
+	boost::property_tree::json_parser::read_json(stream, ptree);
+	
+	lua_newtable(L);
+	jsonDecodeParse(L, ptree);
+	
+	return 1;
+}
+
+void PichiManager::jsonDecodeParse(lua_State* L, boost::property_tree::ptree& ptree)
+{
+	int i = 1;
+	for(boost::property_tree::ptree::value_type &v : ptree)
+	{
+		if(v.first.empty())
+			lua_pushnumber(L, i++);
+		else
+			lua_pushstring(L, v.first.c_str());
+		if(v.second.size() > 0) {
+			lua_newtable(L);
+			jsonDecodeParse(L, v.second);
+		} else {
+			lua_pushstring(L, v.second.data().c_str());
+		}
+		lua_settable(L,-3);
+	}
 }
 
 };

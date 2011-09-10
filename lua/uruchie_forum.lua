@@ -74,5 +74,5 @@ function UruchieForumCommands.login ( args, pichiobject )
 end
 
 function UruchieForumCommands.test( args, pichiobject )
-	io.write(ReadUrl( "http://uruchie.org", {arg1 = "aaa", arg2 = "bbb"} ))
+
 end

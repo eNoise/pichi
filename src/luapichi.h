@@ -26,6 +26,7 @@
 #include "luamap.h"
 #include <list>
 #include <map>
+#include <boost/property_tree/ptree.hpp>
 
 namespace pichi
 {
@@ -81,6 +82,8 @@ struct PichiManager {
 	static int md5sum(lua_State* L);
 	
 	static int readUrl(lua_State* L);
+	static int jsonDecode(lua_State* L);
+	static void jsonDecodeParse(lua_State* L, boost::property_tree::ptree& ptree);
 };
 
 };
