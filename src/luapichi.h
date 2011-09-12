@@ -84,6 +84,8 @@ struct PichiManager {
 	static int readUrl(lua_State* L);
 	static int jsonDecode(lua_State* L);
 	static void jsonDecodeParse(lua_State* L, boost::property_tree::ptree& ptree);
+	
+	static int utf8Decode(lua_State* L);
 };
 
 };

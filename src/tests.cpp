@@ -48,6 +48,7 @@ void Tests::init()
 	Tests::testMap["helper_createdirectory"] = Tests::test_helper_createdirectory;
 	Tests::testMap["helper_removedirectory"] = Tests::test_helper_removedirectory;
 	Tests::testMap["helper_md5sum"] = Tests::test_helper_md5sum;
+	Tests::testMap["helper_utf8decode"] = Tests::test_helper_utf8decode;
 	Tests::testMap["sqlite_open"] = Tests::test_sqlite_open;
 	Tests::testMap["sqlite_query"] = Tests::test_sqlite_query;
 	Tests::testMap["sqlite_query_async"] = Tests::test_sqlite_query_async;
@@ -163,6 +164,15 @@ bool Tests::test_helper_md5sum(const std::string& arg)
 	bool test3 = Helper::md5sum("рус") == "d31757c0969e08011ecd9cbc0ecf7ae7";
 	return test1 && test2 && test3;
 }
+
+bool Tests::test_helper_utf8decode(const std::string& arg)
+{
+	bool test1 = Helper::decodeUnicodeString("\\u0442\\u0435\\u0441\\u0442") == "тест";
+	bool test2 = Helper::decodeUnicodeString("a\\u0442\\u0435\\u0441\\u0442b") == "aтестb";
+	bool test3 = Helper::decodeUnicodeString("a\\u0442c\u0435d\u0441e\\u0442b") == "aтcеdсeтb";
+	return test1 && test2 && test3;
+}
+
 
 bool Tests::test_sqlite_open(const std::string& arg)
 {

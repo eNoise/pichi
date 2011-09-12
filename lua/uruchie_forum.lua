@@ -28,7 +28,7 @@ function PichiCommands.forum ( arg, pichiobject )
 	if command then
 		if UruchieForumCommands[command] then
 			UruchieForumCommands[command]( args, pichiobject )
-		else
+		elseif not UruchieForumCommandsAsync[command] then
 			SendAnswer( pichiobject, "Такой команды нет.")
 		end
 	else
@@ -71,6 +71,23 @@ function UruchieForumCommands.login ( args, pichiobject )
 	SetJIDinfo( pichiobject, GetLastJID( pichiobject ), "uforum_user", user )
 	SetJIDinfo( pichiobject, GetLastJID( pichiobject ), "uforum_password", password )
 	SendAnswer( pichiobject, "установлено")
+end
+
+function UruchieForumCommandsAsync.getpost( args, pichiobject )
+	  local thread = string.match(args or "", "%d+")
+	  local reciveposts = ReadUrl("http://uruchie.org/api.php", {
+			module = "forum",
+			action = "lastmessages",
+			limit = 5,
+			structfilter = "posts,user,usergroup,thread",
+			threadid = thread or 0
+		})
+	 local getposts = JsonDecode(Utf8Decode(reciveposts))
+	 local answer = "\n"
+	 for k,post in pairs(getposts.posts) do
+		answer = answer .. "-------------\n" .. post.pagetext .. "\n"
+	 end
+	 SendAnswer(pichiobject, answer)
 end
 
 function UruchieForumCommands.test( args, pichiobject )

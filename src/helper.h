@@ -32,7 +32,15 @@ namespace pichi
 class Helper
 {
   protected:
-	
+	static inline std::string codePointToUTF8(unsigned int cp);
+	static inline bool decodeUnicodeEscapeSequence( const std::string& str, 
+	                                     size_t current, 
+	                                     size_t end, 
+	                                     unsigned int &unicode );
+	//static bool decodeUnicodeCodePoint( const std::string& str, 
+	//                                     size_t current, 
+	//                                     size_t end, 
+	//                                     unsigned int &unicode );
   public:
 	Helper();
 	~Helper();
@@ -56,6 +64,9 @@ class Helper
 	static bool removeFile(const std::string& path);
 	static double microtime(void);
 	static std::string md5sum(const std::string& tomd5);
+	
+	static std::string decodeUnicodeString( const std::string& str );
+
 };
 
 }

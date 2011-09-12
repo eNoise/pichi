@@ -46,6 +46,7 @@ public:
     static bool test_helper_createdirectory(const std::string& arg);
     static bool test_helper_removedirectory(const std::string& arg);
     static bool test_helper_md5sum(const std::string& arg);
+    static bool test_helper_utf8decode(const std::string& arg);
     static bool test_sqlite_open(const std::string& arg);
     static bool test_sqlite_query(const std::string& arg);
     static bool test_sqlite_query_async(const std::string& arg);

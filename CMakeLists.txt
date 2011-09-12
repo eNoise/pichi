@@ -296,6 +296,8 @@ if(WITH_TESTS)
 
   do_test(helper_md5sum)
 
+  do_test(helper_utf8decode)
+
   do_test(sqlite_open)
 
   do_test(sqlite_query)

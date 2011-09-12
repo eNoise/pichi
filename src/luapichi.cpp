@@ -47,6 +47,7 @@ LuaPichi::LuaPichi()
 	luaMap.push_back({"RegisterModule", PichiManager::registerModule, true});
 	luaMap.push_back({"md5sum", PichiManager::md5sum, true});
 	luaMap.push_back({"ReadUrl", PichiManager::readUrl, true});
+	luaMap.push_back({"Utf8Decode", PichiManager::utf8Decode, true});
 	luaMap.push_back({"JsonDecode", PichiManager::jsonDecode, true});
 	luaMap.push_back({"SetJIDinfo", PichiManager::setJIDinfo, true});
 	luaMap.push_back({"GetJIDinfo", PichiManager::getJIDinfo, true});
@@ -340,6 +341,14 @@ int PichiManager::readUrl(lua_State* L)
 	lua_pushstring(L, curl->readurl(url).c_str());
 	
 	delete curl;
+	return 1;
+}
+
+int PichiManager::utf8Decode(lua_State* L)
+{
+	if(lua_gettop(L) != 1)
+		return 0;
+	lua_pushstring(L, Helper::decodeUnicodeString(lua_tostring(L, -1)).c_str());
 	return 1;
 }
 

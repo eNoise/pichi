@@ -193,5 +193,115 @@ std::string Helper::md5sum(const std::string& tomd5)
 	return ret;
 }
 
+bool Helper::decodeUnicodeEscapeSequence( const std::string& str, 
+	                                     size_t current, 
+	                                     size_t end, 
+	                                     unsigned int &unicode )
+{
+	   if ( end - current < 4 )
+	      return false;
+	   unicode = 0;
+	   for ( int index =0; index < 4; ++index )
+	   {
+	      char c = str[ current + index ];
+	      unicode *= 16;
+	      if ( c >= '0'  &&  c <= '9' )
+	         unicode += c - '0';
+	      else if ( c >= 'a'  &&  c <= 'f' )
+	         unicode += c - 'a' + 10;
+	      else if ( c >= 'A'  &&  c <= 'F' )
+	         unicode += c - 'A' + 10;
+	      else
+	         return false;
+	   }
+	   return true;
+}
+
+/*
+bool Helper::decodeUnicodeCodePoint( const std::string& str, 
+	                                     size_t current, 
+	                                     size_t end, 
+	                                     unsigned int &unicode )
+{
+	   if ( !decodeUnicodeEscapeSequence( str, current, end, unicode ) )
+	      return false;
+	   if (unicode >= 0xD800 && unicode <= 0xDBFF)
+	   {
+	      // surrogate pairs
+	      if (end - current < 6)
+	         return false;
+	      unsigned int surrogatePair;
+	      if (*(current++) == '\\' && *(current++)== 'u')
+	      {
+	         if (decodeUnicodeEscapeSequence( token, current, end, surrogatePair ))
+	         {
+	            unicode = 0x10000 + ((unicode & 0x3FF) << 10) + (surrogatePair & 0x3FF);
+	         } 
+	         else
+	            return false;
+	      } 
+	      else
+	         return false;
+	   }
+	   return true;   
+}
+*/
+
+std::string Helper::decodeUnicodeString( const std::string& str )
+{
+   std::string parsed;
+   for(size_t i = 0; i < str.length(); ++i)
+   {
+      if ( str[i] == '\\' && i+1 < str.length() && str[i+1] == 'u')
+      {
+         unsigned int unicode;
+         //if ( !decodeUnicodeCodePoint(str, i+2, str.length()-1, unicode ) )
+	 if ( !decodeUnicodeEscapeSequence(str, i+2, str.length(), unicode ) )
+             return "";
+         parsed += codePointToUTF8(unicode);
+	 i += 5;
+      }
+      else
+      {
+         parsed += str[i];
+      }
+   }
+   return parsed;
+}
+
+std::string Helper::codePointToUTF8(unsigned int cp)
+{
+	  std::string result; 
+	   // based on description from http://en.wikipedia.org/wiki/UTF-8
+	
+	   if (cp <= 0x7f) 
+	   {
+	      result.resize(1);
+	      result[0] = static_cast<char>(cp);
+	   } 
+	   else if (cp <= 0x7FF) 
+	   {
+	      result.resize(2);
+	      result[1] = static_cast<char>(0x80 | (0x3f & cp));
+	      result[0] = static_cast<char>(0xC0 | (0x1f & (cp >> 6)));
+	   } 
+	   else if (cp <= 0xFFFF) 
+	   {
+	      result.resize(3);
+	      result[2] = static_cast<char>(0x80 | (0x3f & cp));
+	      result[1] = 0x80 | static_cast<char>((0x3f & (cp >> 6)));
+	      result[0] = 0xE0 | static_cast<char>((0xf & (cp >> 12)));
+	   }
+	   else if (cp <= 0x10FFFF) 
+	   {
+	      result.resize(4);
+	      result[3] = static_cast<char>(0x80 | (0x3f & cp));
+	      result[2] = static_cast<char>(0x80 | (0x3f & (cp >> 6)));
+	      result[1] = static_cast<char>(0x80 | (0x3f & (cp >> 12)));
+	      result[0] = static_cast<char>(0xF0 | (0x7 & (cp >> 18)));
+	   }
+	
+	   return result;
+}
 
 }
