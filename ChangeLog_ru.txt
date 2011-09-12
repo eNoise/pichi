@@ -1,10 +1,12 @@
-===== 0.7.0 alpha4 =====
+===== 0.7.0 beta1 (2011.09.13) =====
 * [#U175] Исправлен автокик
 * [#U178] Исправлена комманда бана.
 * [#U176][#U177] Улучшение отображения киклиста и банлиста
+* Uruchie Forum Module (Some Fun plugin)
 
-* New Tests: lua_functions_userdata
-* Lua Function: SetJIDinfo, GetJIDinfo, DelJIDinfo
+* New Tests: lua_functions_userdata, lua_functions_jsondecode, helper_md5sum, helper_utf8decode
+* Lua Function: SetJIDinfo, GetJIDinfo, DelJIDinfo, md5sum , ReadUrl, JsonDescode, Utf8Decode
+* Lua Handlers: PichiCommandsAsync::*
 
 ===== 0.7.0 alpha3 (2011.08.20) =====
 * Возможность перезагрузки lua модулей.
