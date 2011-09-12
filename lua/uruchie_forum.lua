@@ -85,7 +85,11 @@ function UruchieForumCommandsAsync.getpost( args, pichiobject )
 	 local getposts = JsonDecode(Utf8Decode(reciveposts))
 	 local answer = "\n"
 	 for k,post in pairs(getposts.posts) do
-		answer = answer .. "-------------\n" .. post.pagetext .. "\n"
+		answer = answer 
+			  .. "-------------\n"
+			  .. (thread or "Тема: " .. post.thread.title .. "\n")
+			  .. post.pagetext 
+			  .. "\n"
 	 end
 	 SendAnswer(pichiobject, answer)
 end
