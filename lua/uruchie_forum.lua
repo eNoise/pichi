@@ -19,6 +19,24 @@ pichi:setListener( "init", "uforum",
 	end
 )
 
+pichi:setListener( "command_help", "uforum",
+	function( help )
+		local new_help = {
+			forum = "!forum - это подсказка\n",
+			forum_whoami = "!forum whoami - к какому аккаунту я привязан\n",
+			forum_login = "!forum login user password - связать себя с аккаунтом форума\n",
+			forum_getpost = "!forum getpost [тема] - получить посты\n",
+			forum_setkarma = "!forum setkarma user +1|-1 - поднять, опустить карму\n",
+			forum_setrating = "!forum setrating post +1|-1 - поднять, опустить рейтинг\n"
+		}
+		
+		for k,v in pairs(help) do
+			new_help[k] = v
+		end
+		return new_help
+	end
+)
+
 function PichiCommands.forum ( arg, pichiobject )
 	local command, args
 	command, args = string.match(arg, "(%a+) (.+)")
