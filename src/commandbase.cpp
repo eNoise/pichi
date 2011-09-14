@@ -234,6 +234,16 @@ void commandbase::command_help(std::string arg)
 	help["subgroup_google"] = "--- Google Search ---";
 	help["google"] = "!google " + TR("help_command_usage_param") + " - " + TR("help_command_description_google") + "\n";
 	
+#ifdef WITH_LUA
+	pichi->callEvent("PichiCommand", "help", 0, 1);
+	std::map<std::string, std::string> luahelp = pichi->luaPopTable();
+	for(std::pair<std::string, std::string> pr : luahelp) {
+		help.insert(pr);
+		helpmap["commands_lua"].push_back(pr.first);
+	}
+	help["commands_lua"] = "=====  Plugins  =====\n";
+#endif
+	
 	if(arg != "")
 	{
 		boost::erase_all(arg, "!");

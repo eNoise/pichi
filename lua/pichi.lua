@@ -31,3 +31,17 @@ function PichiLua.init ( pichiobject )
 		f( pichiobject )
 	end
 end
+
+-- Help Command mod
+if not PichiCommand then
+    PichiCommand = {}
+end
+
+function PichiCommand.help ( )
+	local help = {}
+	for k,f in pairs(pichi:getListeners("command_help")) do
+		help = f( help )
+	end
+	return help
+end
+-- end help command

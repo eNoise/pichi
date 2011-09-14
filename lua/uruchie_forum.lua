@@ -39,6 +39,7 @@ function PichiCommands.forum ( arg, pichiobject )
 !forum login user password - связать себя с аккаунтом форума
 !forum getpost [тема] - получить посты
 !forum setkarma user +1|-1 - поднять, опустить карму
+!forum setrating post +1|-1 - поднять, опустить рейтинг
 ]] )
 	end
 end
@@ -141,6 +142,39 @@ function UruchieForumCommandsAsync.setkarma( args, pichiobject )
 		SendAnswer(pichiobject, "произошла ошибка: " .. karma.error.description)
 	else
 		SendAnswer(pichiobject, "Карма успешно изменена")
+	end
+end
+
+function UruchieForumCommandsAsync.setrating( args, pichiobject )
+	 local target, sub
+	 if type(args) == "string" then
+		target, sub = string.match(args, "(%d+) ([1+-]+)")
+	 end
+	 if sub ~= "+1" and sub ~= "-1" then
+		SendAnswer(pichiobject, "проверьте введенные параметры")
+		return
+	 end
+	 target = tonumber(target)
+	 local user = GetJIDinfo( pichiobject, GetLastJID( pichiobject ), "uforum_user" )
+	 local password = GetJIDinfo( pichiobject, GetLastJID( pichiobject ), "uforum_password" )
+	 user = user.uforum_user
+	 password = password.uforum_password
+	 if not user or not password then
+		SendAnswer(pichiobject, "установите свои данные")
+		return
+	 end
+	 local rating = ReadUrl("http://uruchie.org/api.php", {
+			module = "forum",
+			action = (sub == "+1" and "plusrating") or "minusrating",
+			username = user,
+			password = md5sum(password),
+			postid = target
+		})
+	rating = JsonDecode(Utf8Decode(rating))
+	if rating.error.error == "true" then
+		SendAnswer(pichiobject, "произошла ошибка: " .. rating.error.description)
+	else
+		SendAnswer(pichiobject, "Рейтинг изменен")
 	end
 end
 

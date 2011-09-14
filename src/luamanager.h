@@ -67,6 +67,7 @@ public:
 	void luaPush(int i);
 	void luaPush(bool b);
 	void luaPush(const std::string& str);
+	void luaPush(const std::map<std::string, std::string>& map);
 	void luaPush(const char* str);
 	void luaPush(void* func);
 	template< typename T > void luaPush(T* p){ luaPush((void*)p); };
@@ -79,6 +80,7 @@ public:
 		lua_pop(L, 1);
 		return back;
 	};
+	std::map<std::string, std::string> luaPopTable(void);
 protected:
 	lua_State *L;
 	std::map<std::string, pthread_t> callThread;

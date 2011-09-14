@@ -131,6 +131,16 @@ void LuaManager::luaPush(void* func)
 	lua_pushlightuserdata(L, func);
 }
 
+void LuaManager::luaPush(const std::map< std::string, std::string >& map)
+{
+	lua_newtable(L);
+	for(std::pair<std::string, std::string> row : map)
+	{
+		lua_pushstring(L, row.first.c_str());
+		lua_pushstring(L, row.second.c_str());
+		lua_settable(L,-3);
+	}
+}
 
 double LuaManager::luaPopNumber(void )
 {
@@ -150,6 +160,22 @@ std::string LuaManager::luaPopString(void )
 	return back;
 }
 
+std::map< std::string, std::string > LuaManager::luaPopTable(void )
+{
+	std::map< std::string, std::string > table;
+	if(lua_istable(L, -1))
+	{
+		lua_pushnil(L);
+		while(lua_next(L, -2) != 0)
+		{
+			table[lua_tostring(L, -2)] = lua_tostring(L, -1);
+			lua_pop(L, 1);
+		}
+		lua_pop(L, 1); // remove key
+		lua_pop(L, 1); // remove table
+	}
+	return table;
+}
 
 }
 
