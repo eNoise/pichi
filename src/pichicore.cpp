@@ -463,7 +463,7 @@ bool PichiCore::reciveMessage(const std::string& message, const std::string& typ
 	if(isCommand(last_message))
 	{
 		std::string commandReal = last_message;
-		if(commandReal.substr(0,jabber->getMyNick().size()) == jabber->getMyNick()) {
+		if(jabber->getMyNick().size() > 0 && commandReal.substr(0,jabber->getMyNick().size()) == jabber->getMyNick()) {
 			commandReal = commandReal.substr(jabber->getMyNick().size() + 2, commandReal.size() - (jabber->getMyNick().size() + 2));
 		}
 		commander->fetchCommand(commandReal);

@@ -27,6 +27,7 @@ pichi:setListener( "command_help", "uforum",
 			forum_login = "!forum login user password - связать себя с аккаунтом форума\n",
 			forum_getpost = "!forum getpost [тема] - получить посты\n",
 			forum_setkarma = "!forum setkarma user +1|-1 - поднять, опустить карму\n",
+			forum_getkarma = "!forum getkarma user - получить карму пользователя\n",
 			forum_setrating = "!forum setrating post +1|-1 - поднять, опустить рейтинг\n"
 		}
 		
@@ -57,6 +58,7 @@ function PichiCommands.forum ( arg, pichiobject )
 !forum login user password - связать себя с аккаунтом форума
 !forum getpost [тема] - получить посты
 !forum setkarma user +1|-1 - поднять, опустить карму
+!forum getkarma user - получить карму пользователя
 !forum setrating post +1|-1 - поднять, опустить рейтинг
 ]] )
 	end
@@ -124,7 +126,7 @@ end
 function UruchieForumCommandsAsync.setkarma( args, pichiobject )
 	 local target, sub
 	 if type(args) == "string" then
-		target, sub = string.match(args, "(%a+) ([1+-]+)")
+		target, sub = string.match(args, "([%a0-9А-Яа-я]+) ([1+-]+)")
 	 end
 	 if sub ~= "+1" and sub ~= "-1" then
 		SendAnswer(pichiobject, "проверьте введенные параметры")
@@ -148,6 +150,7 @@ function UruchieForumCommandsAsync.setkarma( args, pichiobject )
 	 if not target or target == "false" or target == "0" then
 		SendAnswer(pichiobject, "неверный ник")
 	 end
+	 SetJIDinfo( pichiobject, GetLastJID( pichiobject ), "uforum_current_userid", target ) -- Выставляем текущего пользователя
 	 local karma = ReadUrl("http://uruchie.org/api.php", {
 			module = "forum",
 			action = (sub == "+1" and "pluskarma") or "minuskarma",
@@ -160,6 +163,49 @@ function UruchieForumCommandsAsync.setkarma( args, pichiobject )
 		SendAnswer(pichiobject, "произошла ошибка: " .. karma.error.description)
 	else
 		SendAnswer(pichiobject, "Карма успешно изменена")
+	end
+end
+
+function UruchieForumCommandsAsync.getkarma( args, pichiobject )
+	 local userid
+	 if type(args) == "string" then
+		userid = string.match(args, "(%d+)")
+	 end
+	 if not userid and type(args) == "string" then
+		-- Пытаемся вытащить из последнего
+		userid = string.match(args, "([%a0-9А-Яа-я]+)")
+		if userid then
+			local gertarget = ReadUrl("http://uruchie.org/api.php", {
+				module = "forum",
+				action = "username2userid",
+				username = userid
+			})
+			target = JsonDecode(gertarget)
+			userid = target.userid
+		end
+	 end
+	 if not userid then
+		-- Пытаемся вытащить из последнего
+		local user = GetJIDinfo( pichiobject, GetLastJID( pichiobject ), "uforum_current_userid" )
+		for k,v in pairs(user) do
+			userid = v
+		end
+	 end
+	 if not userid then
+		SendAnswer(pichiobject, "проверьте введенных корректность данных")
+		return
+	 end
+	 SetJIDinfo( pichiobject, GetLastJID( pichiobject ), "uforum_current_userid", userid ) -- Выставляем текущего пользователя
+	 local user = ReadUrl("http://uruchie.org/api.php", {
+			module = "forum",
+			action = "getuserinfo",
+			userid = userid
+		})
+	user = JsonDecode(Utf8Decode(user))
+	if user.error.error == "true" then
+		SendAnswer(pichiobject, "произошла ошибка: " .. user.error.description)
+	else
+		SendAnswer(pichiobject, "Карма пользователя " .. user.user.username .. ": " .. user.user.karma .. ".")
 	end
 end
 
@@ -181,6 +227,7 @@ function UruchieForumCommandsAsync.setrating( args, pichiobject )
 		SendAnswer(pichiobject, "установите свои данные")
 		return
 	 end
+	 SetJIDinfo( pichiobject, GetLastJID( pichiobject ), "uforum_current_postid", target ) -- Выставляем текущий пост
 	 local rating = ReadUrl("http://uruchie.org/api.php", {
 			module = "forum",
 			action = (sub == "+1" and "plusrating") or "minusrating",
