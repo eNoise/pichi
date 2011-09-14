@@ -439,10 +439,7 @@ bool PichiCore::reciveMessage(const std::string& message, const std::string& typ
 		Log("Acess denied at message reciver", Log::DEBUG);
 		return false;
 	}
-	
-	//($hook = PichiPlugin::fetch_hook('pichicore_message_recive_begin')) ? eval($hook) : false;
-	//$this->log->log("Call message method", PichiLog::LEVEL_DEBUG);
-	
+		
 	if(enabled && !isCommand(last_message) && options["log_enabled"] == "1")
 		sql->exec("INSERT INTO log (`jid`,`room`,`from`,`time`,`type`,`message`) VALUES ('" + sql->escapeString(last_jid) + "','" + sql->escapeString(last_room) + "','" + sql->escapeString(last_from) + "','" + sql->escapeString(Helper::stringTime(time(NULL))) + "','" + sql->escapeString(last_type) + "','" + sql->escapeString(last_message) + "');");
 	
@@ -464,7 +461,13 @@ bool PichiCore::reciveMessage(const std::string& message, const std::string& typ
 	event->callEvent("message_recive_completed", "jid=" + last_jid);
 		
 	if(isCommand(last_message))
-		commander->fetchCommand(last_message);
+	{
+		std::string commandReal = last_message;
+		if(commandReal.substr(0,jabber->getMyNick().size()) == jabber->getMyNick()) {
+			commandReal = commandReal.substr(jabber->getMyNick().size() + 2, commandReal.size() - (jabber->getMyNick().size() + 2));
+		}
+		commander->fetchCommand(commandReal);
+	}
 	
 	if(enabled && !isCommand(last_message) && options["answer_mode"] == "1")
 	{
@@ -551,7 +554,11 @@ void PichiCore::sendAnswer(const std::string& message, const pichi::PichiMessage
 
 bool PichiCore::isCommand(std::string& str)
 {
-	return (str.substr(0,1) == "!");
+	if(str.substr(0,1) == "!" && str.size() > 1)
+		return true;
+	return str.size() > jabber->getMyNick().size() 
+		&& (str.substr(0,jabber->getMyNick().size()) == jabber->getMyNick())
+		&& str.substr(jabber->getMyNick().size(), 3) == ": !";
 }
 
 bool PichiCore::setOption(std::string option, std::string value)
