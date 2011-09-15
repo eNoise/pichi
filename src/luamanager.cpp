@@ -171,7 +171,6 @@ std::map< std::string, std::string > LuaManager::luaPopTable(void )
 			table[lua_tostring(L, -2)] = lua_tostring(L, -1);
 			lua_pop(L, 1);
 		}
-		lua_pop(L, 1); // remove key
 		lua_pop(L, 1); // remove table
 	}
 	return table;
