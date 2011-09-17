@@ -65,7 +65,7 @@ rm -rf %{buildroot}
 %{_datadir}/pichi/config/pichi.xml
 
 %changelog
-* Sat Dec 25 2010 Alexey Kasyanchuk <deg@uruchie.org> - 0.7.0-0.1.beta2
+* Sat Sep 01 2011 Alexey Kasyanchuk <deg@uruchie.org> - 0.7.0-0.1.beta2
 - 0.7.0 beta2
 
 * Sat Dec 25 2010 Alexey Kasyanchuk <deg@uruchie.org> - 0.6.1-1
