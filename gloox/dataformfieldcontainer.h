@@ -25,7 +25,7 @@ namespace gloox
   class DataFormField;
 
   /**
-    * @brief An abstract base class for a XEP-0004 Data Form.
+    * @brief An abstract base class for a @xep{0004} Data Form.
     *
     * You shouldn't need to use this class directly. Use DataForm instead.
     *
@@ -52,7 +52,7 @@ namespace gloox
       virtual ~DataFormFieldContainer();
 
       /**
-        * A list of XEP-0004 Data Form Fields.
+        * A list of @xep{0004} Data Form Fields.
         */
       typedef std::list<DataFormField*> FieldList;
 

@@ -32,7 +32,7 @@ namespace gloox
     class ResultHandler;
 
     /**
-     * @brief This manager is used to interact with PubSub services (XEP-0060).
+     * @brief This manager is used to interact with PubSub services (@xep{0060}).
      *
      * @note PubSub support in gloox is still relatively young and you are most
      * welcome to ask questions, criticize the API and so on.
@@ -111,6 +111,27 @@ namespace gloox
                                      int depth = 1, const std::string& expire = EmptyString );
 
         /**
+         * Subscribe to a node and configure options.
+         *
+         * @param service Service hosting the node.
+         * @param node ID of the node to subscribe to.
+         * @param handler The ResultHandler.
+         * @param jid JID to subscribe. If empty, the client's JID will be used
+         *        (ie. self subscription).
+         * @param options The options to configure while subscribing.
+         *        Should be a TypeSubmit form, with a field named FORM_TYPE having the value
+         *        http://jabber.org/protocol/pubsub#subscribe_options
+         *        See @xep{0060}, "Subscribe and Configure".
+         *        Will be owned and deleted by the PubSub object.
+         * @return The IQ ID used in the request.
+         *
+         * @see ResultHandler::handleSubscriptionResult
+         */
+        const std::string subscribe( const JID& service, const std::string& node,
+                                     ResultHandler* handler, const JID& jid,
+                                     DataForm* options );
+
+        /**
          * Unsubscribe from a node.
          *
          * @param service Service hosting the node.
@@ -170,6 +191,7 @@ namespace gloox
          * @param jid Subscribed entity.
          * @param node Node ID of the node.
          * @param handler The SubscriptionListHandler to handle the result.
+         * @param subid An optional subscription ID.
          * @return The IQ ID used in the request.
          *
          * @see ResultHandler::handleSubscriptionOptions
@@ -177,8 +199,9 @@ namespace gloox
         const std::string getSubscriptionOptions( const JID& service,
                                                   const JID& jid,
                                                   const std::string& node,
-                                                  ResultHandler* handler)
-          { return subscriptionOptions( GetSubscriptionOptions, service, jid, node, handler, 0 ); }
+                                                  ResultHandler* handler,
+                                                  const std::string& subid = EmptyString)
+          { return subscriptionOptions( GetSubscriptionOptions, service, jid, node, handler, 0, subid ); }
 
         /**
          * Modifies subscription options.
@@ -188,6 +211,7 @@ namespace gloox
          * @param node Node ID of the node.
          * @param df New configuration. The DataForm will be owned and deleted by the Manager.
          * @param handler The handler to handle the result.
+         * @param subid An optional subscription ID.
          * @return The IQ ID used in the request.
          *
          * @see ResultHandler::handleSubscriptionOptionsResult
@@ -196,8 +220,9 @@ namespace gloox
                                                   const JID& jid,
                                                   const std::string& node,
                                                   DataForm* df,
-                                                  ResultHandler* handler )
-          { return subscriptionOptions( SetSubscriptionOptions, service, jid, node, handler, df ); }
+                                                  ResultHandler* handler,
+                                                  const std::string& subid = EmptyString )
+          { return subscriptionOptions( SetSubscriptionOptions, service, jid, node, handler, df, subid ); }
 
         /**
          * Requests the affiliation list for a node.
@@ -660,6 +685,8 @@ namespace gloox
             void setOptions( const std::string& node, DataForm* df )
             {
               m_options.node = node;
+              if( m_options.df != 0 )
+                delete m_options.df;
               m_options.df = df;
             }
 
@@ -803,7 +830,8 @@ namespace gloox
                                                const JID& jid,
                                                const std::string& node,
                                                ResultHandler* handler,
-                                               DataForm* df );
+                                               DataForm* df,
+                                               const std::string& subid = EmptyString );
 
         const std::string getSubscriptionsOrAffiliations( const JID& service,
             ResultHandler* handler,

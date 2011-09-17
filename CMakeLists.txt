@@ -48,7 +48,7 @@ if (NOT MSVC)
     #set (CMAKE_CXX_FLAGS_DEBUG       "${CMAKE_CXX_FLAGS_DEBUG} -UNDEBUG -g3 -pipe")
 endif (NOT MSVC)
 
-option (LOCAL_GLOOX "Use local gloox lib" OFF)
+option (LOCAL_GLOOX "Use local gloox lib" ON) #gloox 1.0.1dev
 option (LOCAL_TINYXML "Use local tinyxml lib" OFF)
 option (LOCAL_LUA "Use local lua lib" OFF)
 option (WITH_LUA "Lua scripting" ON)

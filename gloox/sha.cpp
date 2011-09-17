@@ -214,7 +214,7 @@ namespace gloox
   {
     Message_Block[Message_Block_Index++] = 0x80;
 
-    if( Message_Block_Index > 55 )
+    if( Message_Block_Index > 56 )
     {
       while( Message_Block_Index < 64 )
       {

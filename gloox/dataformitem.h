@@ -20,9 +20,9 @@ namespace gloox
 {
 
   /**
-   * @brief An abstraction of an &lt;item&gt; element in a XEP-0004 Data Form of type result.
+   * @brief An abstraction of an &lt;item&gt; element in a @xep{0004} Data Form of type result.
    *
-   * There are some constraints regarding usage of this element you should be aware of. Check XEP-0004
+   * There are some constraints regarding usage of this element you should be aware of. Check @xep{0004}
    * section 3.4. This class does not enforce correct usage at this point.
    *
    * @author Jakob Schroeter <js@camaya.net>

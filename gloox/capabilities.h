@@ -27,7 +27,7 @@ namespace gloox
   class Tag;
 
   /**
-   * @brief This is an implementation of XEP-0115 (Entity Capabilities).
+   * @brief This is an implementation of @xep{0115} (Entity Capabilities).
    *
    * XEP Version: 1.5-15
    * @author Jakob Schroeter <js@camaya.net>

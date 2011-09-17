@@ -27,7 +27,7 @@ namespace gloox
   {
 
     /**
-     * @brief Abstracts a PubSub Item (XEP-0060).
+     * @brief Abstracts a PubSub Item (@xep{0060}).
      *
      * XEP Version: 1.12
      *

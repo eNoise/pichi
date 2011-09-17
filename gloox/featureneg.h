@@ -25,7 +25,7 @@ namespace gloox
   class Tag;
 
   /**
-   * @brief An abstraction of Feature Negotiation (XEP-0020), implemented
+   * @brief An abstraction of Feature Negotiation (@xep{0020}), implemented
    * as a StanzaExtension.
    *
    * XEP Version: 1.5

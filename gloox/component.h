@@ -25,7 +25,7 @@ namespace gloox
   /**
    * @brief This is an implementation of a basic jabber Component.
    *
-   * It's using XEP-0114 (Jabber Component Protocol) to authenticate with a server.
+   * It's using @xep{0114} (Jabber Component Protocol) to authenticate with a server.
    *
    * @author Jakob Schroeter <js@camaya.net>
    * @since 0.3
@@ -36,7 +36,7 @@ namespace gloox
       /**
        * Constructs a new Component.
        * @param ns The namespace that qualifies the stream. Either @b jabber:component:accept or
-       * @b jabber:component:connect. See XEP-0114 for details.
+       * @b jabber:component:connect. See @xep{0114} for details.
        * @param server The server to connect to.
        * @param component The component's hostname. FQDN.
        * @param password The component's password.

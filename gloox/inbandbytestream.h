@@ -27,7 +27,7 @@ namespace gloox
   class Message;
 
   /**
-   * @brief An implementation of a single In-Band Bytestream (XEP-0047).
+   * @brief An implementation of a single In-Band Bytestream (@xep{0047}).
    *
    * One instance of this class handles a single byte stream.
    *

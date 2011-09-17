@@ -25,7 +25,7 @@ namespace gloox
   class Tag;
 
   /**
-   * @brief An implementation/abstraction of Stanza Headers and Internet Metadata (SHIM, XEP-0131).
+   * @brief An implementation/abstraction of Stanza Headers and Internet Metadata (SHIM, @xep{0131}).
    *
    * XEP Version: 1.2
    *

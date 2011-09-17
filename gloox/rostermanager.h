@@ -39,7 +39,7 @@ namespace gloox
    * You can modify any number of RosterItems within the Roster at any time. These changes must be
    * synchronized with the server by calling @ref synchronize(). Note that incoming Roster pushes
    * initiated by other resources may overwrite changed values.
-   * Additionally, XEP-0083 (Nested Roster Groups) is implemented herein.
+   * Additionally, @xep{0083} (Nested Roster Groups) is implemented herein.
    *
    * @author Jakob Schroeter <js@camaya.net>
    * @since 0.3
@@ -134,14 +134,14 @@ namespace gloox
       void ackSubscriptionRequest( const JID& to, bool ack );
 
       /**
-       * Use this function to retrieve the delimiter of Nested Roster Groups (XEP-0083).
+       * Use this function to retrieve the delimiter of Nested Roster Groups (@xep{0083}).
        * @return The group delimiter.
        * @since 0.7
        */
       const std::string& delimiter() const { return m_delimiter; }
 
       /**
-       * Use this function to set the group delimiter (XEP-0083).
+       * Use this function to set the group delimiter (@xep{0083}).
        * @param delimiter The group delimiter.
        * @since 0.7
        */

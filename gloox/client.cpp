@@ -438,10 +438,11 @@ namespace gloox
 
   bool Client::selectResource( const std::string& resource )
   {
+    m_selectedResource = resource; // TODO: remove for 1.1
+    m_jid.setResource( resource );
+
     if( !( m_streamFeatures & StreamFeatureUnbind ) )
       return false;
-
-    m_selectedResource = resource;
 
     return true;
   }

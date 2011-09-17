@@ -24,7 +24,7 @@ namespace gloox
   class Tag;
 
   /**
-   * @brief An implementation of Message Receipts (XEP-0184) as a StanzaExtension.
+   * @brief An implementation of Message Receipts (@xep{0184}) as a StanzaExtension.
    *
    * @author Jakob Schroeter <js@camaya.net>
    * @since 1.0
@@ -33,7 +33,7 @@ namespace gloox
   {
     public:
       /**
-       * Contains valid receipt types (XEP-0184).
+       * Contains valid receipt types (@xep{0184}).
        */
       enum ReceiptType
       {

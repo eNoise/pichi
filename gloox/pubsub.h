@@ -128,7 +128,7 @@ namespace gloox
     };
 
     /**
-     * Describes the different PubSub features (XEP-0060 Sect. 10).
+     * Describes the different PubSub features (@xep{0060} Sect. 10).
      */
     enum PubSubFeature
     {

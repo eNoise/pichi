@@ -115,7 +115,7 @@
  *
  * A component in the Jabber/XMPP network is an add-on to a server which runs externally
  * to the actual server software, but can have similar privileges. Components use a protocol described in
- * XEP-0114 to connect and authenticate to a server.
+ * @xep{0114} to connect and authenticate to a server.
  *
  * The @link gloox::Component Component @endlink class supports this protocol and can be used to create
  * a new Jabber component. It's as simple as:
@@ -262,7 +262,7 @@
  *
  * @section auth_sec Authentication
  *
- * gloox supports old-style IQ-based authentication defined in XEP-0078 as well as several SASL mechanisms.
+ * gloox supports old-style IQ-based authentication defined in @xep{0078} as well as several SASL mechanisms.
  * See the documentation of the @link gloox::Client Client @endlink class for more information.
  *
  * @section msg_sec Sending and Receiving of Chat Messages
@@ -276,58 +276,58 @@
  * The XMPP Standards Foundation has published a number of extensions to the core protocols, called
  * XMPP Extension Protocols (XEPs). A couple of these XEPs are implemented in gloox:
  *
- * @li XEP-0004 @link gloox::DataForm Data Forms @endlink
- * @li XEP-0012 @link gloox::LastActivity  Last Activity @endlink
- * @li XEP-0013 @link gloox::FlexibleOffline Flexible Offline Message Retrieval @endlink
- * @li XEP-0022 Message Events (see @link gloox::MessageSession MessageSession @endlink for examples)
- * @li XEP-0027 Current Jabber OpenPGP Usage (see @link gloox::GPGSigned GPGSigned @endlink
+ * @li @xep{0004} @link gloox::DataForm Data Forms @endlink
+ * @li @xep{0012} @link gloox::LastActivity  Last Activity @endlink
+ * @li @xep{0013} @link gloox::FlexibleOffline Flexible Offline Message Retrieval @endlink
+ * @li @xep{0022} Message Events (see @link gloox::MessageSession MessageSession @endlink for examples)
+ * @li @xep{0027} Current Jabber OpenPGP Usage (see @link gloox::GPGSigned GPGSigned @endlink
  * and @link gloox::GPGEncrypted GPGEncrypted @endlink)
- * @li XEP-0030 @link gloox::Disco Service Discovery @endlink
- * @li XEP-0045 @link gloox::MUCRoom Multi-User Chat @endlink
- * @li XEP-0047 Used with @ref filetransfer_sec
- * @li XEP-0048 @link gloox::BookmarkStorage Bookmark Storage @endlink
- * @li XEP-0049 @link gloox::PrivateXML Private XML Storage @endlink
- * @li XEP-0050 @link gloox::Adhoc Ad-hoc Commands @endlink
- * @li XEP-0054 @link gloox::VCardManager vcard-temp @endlink
- * @li XEP-0060 @link gloox::PubSub::Manager Publish-Subscribe @endlink
- * @li XEP-0065 @link gloox::SOCKS5BytestreamManager SOCKS5 Bytestreams @endlink, used with
+ * @li @xep{0030} @link gloox::Disco Service Discovery @endlink
+ * @li @xep{0045} @link gloox::MUCRoom Multi-User Chat @endlink
+ * @li @xep{0047} Used with @ref filetransfer_sec
+ * @li @xep{0048} @link gloox::BookmarkStorage Bookmark Storage @endlink
+ * @li @xep{0049} @link gloox::PrivateXML Private XML Storage @endlink
+ * @li @xep{0050} @link gloox::Adhoc Ad-hoc Commands @endlink
+ * @li @xep{0054} @link gloox::VCardManager vcard-temp @endlink
+ * @li @xep{0060} @link gloox::PubSub::Manager Publish-Subscribe @endlink
+ * @li @xep{0065} @link gloox::SOCKS5BytestreamManager SOCKS5 Bytestreams @endlink, used with
  * @ref filetransfer_sec and @ref proxy_sec
- * @li XEP-0066 @link gloox::OOB Out of Band Data @endlink, also used with @ref filetransfer_sec
- * @li XEP-0077 @link gloox::Registration In-Band Registration @endlink
- * @li XEP-0078 Non-SASL Authentication (automatically used if the server does not support SASL)
- * @li XEP-0079 @link gloox::AMP Advanced Message Processing @endlink
- * @li XEP-0083 Nested Roster Groups (automatically used if supported by the server. see
+ * @li @xep{0066} @link gloox::OOB Out of Band Data @endlink, also used with @ref filetransfer_sec
+ * @li @xep{0077} @link gloox::Registration In-Band Registration @endlink
+ * @li @xep{0078} Non-SASL Authentication (automatically used if the server does not support SASL)
+ * @li @xep{0079} @link gloox::AMP Advanced Message Processing @endlink
+ * @li @xep{0083} Nested Roster Groups (automatically used if supported by the server. see
  * @link gloox::RosterManager::delimiter() RosterManager @endlink)
- * @li XEP-0085 Chat State Notifications (see @link gloox::MessageSession MessageSession @endlink for
+ * @li @xep{0085} Chat State Notifications (see @link gloox::MessageSession MessageSession @endlink for
  * examples)
- * @li XEP-0091 @link gloox::DelayedDelivery Delayed Delivery @endlink (old spec)
- * @li XEP-0092 Software Version (integrated into @link gloox::Disco Service Discovery @endlink)
- * @li XEP-0095 @link gloox::SIManager Stream Initiation @endlink, used with @ref filetransfer_sec
- * @li XEP-0096 @ref filetransfer_sec
- * @li XEP-0106 @link gloox::JID::escapeNode() JID Escaping @endlink
- * @li XEP-0114 @link gloox::Component Jabber Component Protocol @endlink
- * @li XEP-0115 @link gloox::Capabilities Entity Capabilities @endlink (used automatically internally)
- * @li XEP-0124 @link gloox::ConnectionBOSH Bidirectional-streams Over Synchronous HTTP (BOSH) @endlink
- * @li XEP-0131 @link gloox::SHIM Stanza Headers and Internet Metadata @endlink
- * @li XEP-0138 Stream Compression (used automatically if gloox is compiled with zlib and if the server
+ * @li @xep{0091} @link gloox::DelayedDelivery Delayed Delivery @endlink (old spec)
+ * @li @xep{0092} Software Version (integrated into @link gloox::Disco Service Discovery @endlink)
+ * @li @xep{0095} @link gloox::SIManager Stream Initiation @endlink, used with @ref filetransfer_sec
+ * @li @xep{0096} @ref filetransfer_sec
+ * @li @xep{0106} @link gloox::JID::escapeNode() JID Escaping @endlink
+ * @li @xep{0114} @link gloox::Component Jabber Component Protocol @endlink
+ * @li @xep{0115} @link gloox::Capabilities Entity Capabilities @endlink (used automatically internally)
+ * @li @xep{0124} @link gloox::ConnectionBOSH Bidirectional-streams Over Synchronous HTTP (BOSH) @endlink
+ * @li @xep{0131} @link gloox::SHIM Stanza Headers and Internet Metadata @endlink
+ * @li @xep{0138} Stream Compression (used automatically if gloox is compiled with zlib and if the server
  * supports it)
- * @li XEP-0145 @link gloox::Annotations Annotations @endlink
- * @li XEP-0153 @link gloox::VCardUpdate vCard-based Avatars @endlink
- * @li XEP-0172 @link gloox::Nickname User Nickname @endlink
- * @li XEP-0184 @link gloox::Receipt Message Receipts @endlink
- * @li XEP-0199 @link gloox::ClientBase::xmppPing() XMPP Ping @endlink
- * @li XEP-0203 @link gloox::DelayedDelivery Delayed Delivery @endlink (new spec)
- * @li XEP-0206 @link gloox::ConnectionBOSH see BOSH @endlink
- * @li XEP-0224 @link gloox::Attention Attention @endlink
- * @li XEP-0256 @link gloox::LastActivity::Query Last Activity in Presence @endlink
+ * @li @xep{0145} @link gloox::Annotations Annotations @endlink
+ * @li @xep{0153} @link gloox::VCardUpdate vCard-based Avatars @endlink
+ * @li @xep{0172} @link gloox::Nickname User Nickname @endlink
+ * @li @xep{0184} @link gloox::Receipt Message Receipts @endlink
+ * @li @xep{0199} @link gloox::ClientBase::xmppPing() XMPP Ping @endlink
+ * @li @xep{0203} @link gloox::DelayedDelivery Delayed Delivery @endlink (new spec)
+ * @li @xep{0206} @link gloox::ConnectionBOSH see BOSH @endlink
+ * @li @xep{0224} @link gloox::Attention Attention @endlink
+ * @li @xep{0256} @link gloox::LastActivity::Query Last Activity in Presence @endlink
  *
  * Further extensions can easily be implemented using
  * @link gloox::StanzaExtension StanzaExtensions @endlink.
  *
  * @section filetransfer_sec File Transfer
  *
- * For file transfer, gloox implements XEP-0095 (Stream Initiation) as well XEP-0096 (File Transfer)
- * for the signalling, and XEP-0065 (SOCKS5 Bytestreams) as well as XEP-0047 (In-Band Bytestreams)
+ * For file transfer, gloox implements @xep{0095} (Stream Initiation) as well @xep{0096} (File Transfer)
+ * for the signalling, and @xep{0065} (SOCKS5 Bytestreams) as well as @xep{0047} (In-Band Bytestreams)
  * for the transport. See @link gloox::SIProfileFT SIProfileFT @endlink.
  *
  * @section proxy_sec HTTP and SOCKS5 Proxy support
@@ -362,160 +362,160 @@ namespace gloox
   /** Client namespace (RFC 3920)*/
   GLOOX_API extern const std::string XMLNS_CLIENT;
 
-  /** Component Accept namespace (XEP-0114) */
+  /** Component Accept namespace (@xep{0114}) */
   GLOOX_API extern const std::string XMLNS_COMPONENT_ACCEPT;
 
-  /** Component Connect namespace (XEP-0114) */
+  /** Component Connect namespace (@xep{0114}) */
   GLOOX_API extern const std::string XMLNS_COMPONENT_CONNECT;
 
-  /** Service Discovery Info namespace (XEP-0030) */
+  /** Service Discovery Info namespace (@xep{0030}) */
   GLOOX_API extern const std::string XMLNS_DISCO_INFO;
 
-  /** Service Discovery Items namespace (XEP-0030) */
+  /** Service Discovery Items namespace (@xep{0030}) */
   GLOOX_API extern const std::string XMLNS_DISCO_ITEMS;
 
-  /** Service Discovery Publish namespace (XEP-0030) */
+  /** Service Discovery Publish namespace (@xep{0030}) */
   GLOOX_API extern const std::string XMLNS_DISCO_PUBLISH;
 
-  /** Adhoc Commands namespace (XEP-0050) */
+  /** Adhoc Commands namespace (@xep{0050}) */
   GLOOX_API extern const std::string XMLNS_ADHOC_COMMANDS;
 
-  /** Stream Compression namespace (XEP-0138) */
+  /** Stream Compression namespace (@xep{0138}) */
   GLOOX_API extern const std::string XMLNS_COMPRESSION;
 
-  /** Flexible Offline Message Retrieval (XEP-0013) */
+  /** Flexible Offline Message Retrieval (@xep{0013}) */
   GLOOX_API extern const std::string XMLNS_OFFLINE;
 
-  /** Chat State Notifications namespace (XEP-0085) */
+  /** Chat State Notifications namespace (@xep{0085}) */
   GLOOX_API extern const std::string XMLNS_CHAT_STATES;
 
-  /** Advanced Message Processing (XEP-0079) */
+  /** Advanced Message Processing (@xep{0079}) */
   GLOOX_API extern const std::string XMLNS_AMP;
 
-  /** In-Band Bytestreams namespace (XEP-0047) */
+  /** In-Band Bytestreams namespace (@xep{0047}) */
   GLOOX_API extern const std::string XMLNS_IBB;
 
-  /** Feature Negotiation namespace (XEP-0020) */
+  /** Feature Negotiation namespace (@xep{0020}) */
   GLOOX_API extern const std::string XMLNS_FEATURE_NEG;
 
-  /** Chat Session Negotiation namespace (XEP-0155) */
+  /** Chat Session Negotiation namespace (@xep{0155}) */
   GLOOX_API extern const std::string XMLNS_CHATNEG;
 
-  /** XHTML-IM namespace (XEP-0071) */
+  /** XHTML-IM namespace (@xep{0071}) */
   GLOOX_API extern const std::string XMLNS_XHTML_IM;
 
-  /** Delayed Delivery namespace (XEP-0203) */
+  /** Delayed Delivery namespace (@xep{0203}) */
   GLOOX_API extern const std::string XMLNS_DELAY;
 
   /** Roster namespace (RFC 3921) */
   GLOOX_API extern const std::string XMLNS_ROSTER;
 
-  /** Software Version namespace (XEP-0092) */
+  /** Software Version namespace (@xep{0092}) */
   GLOOX_API extern const std::string XMLNS_VERSION;
 
-  /** In-Band Registration namespace (XEP-0077) */
+  /** In-Band Registration namespace (@xep{0077}) */
   GLOOX_API extern const std::string XMLNS_REGISTER;
 
   /** Privacy lists namespace (RFC 3921) */
   GLOOX_API extern const std::string XMLNS_PRIVACY;
 
-  /** Non-SASL Authentication namespace (XEP-0078) */
+  /** Non-SASL Authentication namespace (@xep{0078}) */
   GLOOX_API extern const std::string XMLNS_AUTH;
 
-  /** Private XML Storage namespace (XEP-0049) */
+  /** Private XML Storage namespace (@xep{0049}) */
   GLOOX_API extern const std::string XMLNS_PRIVATE_XML;
 
-  /** Last Activity namespace (XEP-0012) */
+  /** Last Activity namespace (@xep{0012}) */
   GLOOX_API extern const std::string XMLNS_LAST;
 
-  /** Jabber Search namespace (XEP-0055) */
+  /** Jabber Search namespace (@xep{0055}) */
   GLOOX_API extern const std::string XMLNS_SEARCH;
 
-  /** Out of Band Data (IQ) namespace (XEP-0066) */
+  /** Out of Band Data (IQ) namespace (@xep{0066}) */
   GLOOX_API extern const std::string XMLNS_IQ_OOB;
 
-  /** Data Forms namespace (XEP-0004) */
+  /** Data Forms namespace (@xep{0004}) */
   GLOOX_API extern const std::string XMLNS_X_DATA;
 
-  /** Message Events (XEP-0022) */
+  /** Message Events (@xep{0022}) */
   GLOOX_API extern const std::string XMLNS_X_EVENT;
 
-  /** Out of Band Data (X) namespace (XEP-0066) */
+  /** Out of Band Data (X) namespace (@xep{0066}) */
   GLOOX_API extern const std::string XMLNS_X_OOB;
 
-  /** Delayed Delivery namespace (XEP-0091) */
+  /** Delayed Delivery namespace (@xep{0091}) */
   GLOOX_API extern const std::string XMLNS_X_DELAY;
 
-  /** Current Jabber OpenPGP Usage (Sign.) (XEP-0027) */
+  /** Current Jabber OpenPGP Usage (Sign.) (@xep{0027}) */
   GLOOX_API extern const std::string XMLNS_X_GPGSIGNED;
 
-  /** Current Jabber OpenPGP Usage (Enc.) (XEP-0027) */
+  /** Current Jabber OpenPGP Usage (Enc.) (@xep{0027}) */
   GLOOX_API extern const std::string XMLNS_X_GPGENCRYPTED;
 
-  /** vcard-temp namespace (XEP-0054) */
+  /** vcard-temp namespace (@xep{0054}) */
   GLOOX_API extern const std::string XMLNS_VCARD_TEMP;
 
-  /** vCard-Based Avatars namespace (XEP-0153) */
+  /** vCard-Based Avatars namespace (@xep{0153}) */
   GLOOX_API extern const std::string XMLNS_X_VCARD_UPDATE;
 
-  /** Bookmark Storage namespace (XEP-0048) */
+  /** Bookmark Storage namespace (@xep{0048}) */
   GLOOX_API extern const std::string XMLNS_BOOKMARKS;
 
-  /** Annotations namespace (XEP-0145) */
+  /** Annotations namespace (@xep{0145}) */
   GLOOX_API extern const std::string XMLNS_ANNOTATIONS;
 
-  /** Nested Roster Groups namespace (XEP-0083) */
+  /** Nested Roster Groups namespace (@xep{0083}) */
   GLOOX_API extern const std::string XMLNS_ROSTER_DELIMITER;
 
-  /** XMPP Ping namespace (XEP-0199) */
+  /** XMPP Ping namespace (@xep{0199}) */
   GLOOX_API extern const std::string XMLNS_XMPP_PING;
 
-  /** Stream Initiation namespace (XEP-0095) */
+  /** Stream Initiation namespace (@xep{0095}) */
   GLOOX_API extern const std::string XMLNS_SI;
 
-  /** File transfer profile of Stream Initiation (XEP-0096) */
+  /** File transfer profile of Stream Initiation (@xep{0096}) */
   GLOOX_API extern const std::string XMLNS_SI_FT;
 
-  /** SOCKS5 Bytestreams namespace (XEP-0065) */
+  /** SOCKS5 Bytestreams namespace (@xep{0065}) */
   GLOOX_API extern const std::string XMLNS_BYTESTREAMS;
 
-  /** Multi-User Chat namespace (XEP-0045) */
+  /** Multi-User Chat namespace (@xep{0045}) */
   GLOOX_API extern const std::string XMLNS_MUC;
 
-  /** Multi-User Chat namespace (user) (XEP-0045) */
+  /** Multi-User Chat namespace (user) (@xep{0045}) */
   GLOOX_API extern const std::string XMLNS_MUC_USER;
 
-  /** Multi-User Chat namespace (admin) (XEP-0045) */
+  /** Multi-User Chat namespace (admin) (@xep{0045}) */
   GLOOX_API extern const std::string XMLNS_MUC_ADMIN;
 
-  /** Multi-User Chat namespace (unique) (XEP-0045) */
+  /** Multi-User Chat namespace (unique) (@xep{0045}) */
   GLOOX_API extern const std::string XMLNS_MUC_UNIQUE;
 
-  /** Multi-User Chat namespace (owner) (XEP-0045) */
+  /** Multi-User Chat namespace (owner) (@xep{0045}) */
   GLOOX_API extern const std::string XMLNS_MUC_OWNER;
 
-  /** Multi-User Chat namespace (roominfo) (XEP-0045) */
+  /** Multi-User Chat namespace (roominfo) (@xep{0045}) */
   GLOOX_API extern const std::string XMLNS_MUC_ROOMINFO;
 
-  /** Multi-User Chat namespace (rooms) (XEP-0045) */
+  /** Multi-User Chat namespace (rooms) (@xep{0045}) */
   GLOOX_API extern const std::string XMLNS_MUC_ROOMS;
 
-  /** Multi-User Chat namespace (request) (XEP-0045) */
+  /** Multi-User Chat namespace (request) (@xep{0045}) */
   GLOOX_API extern const std::string XMLNS_MUC_REQUEST;
 
-  /** PubSub namespace (XEP-0060) */
+  /** PubSub namespace (@xep{0060}) */
   GLOOX_API extern const std::string XMLNS_PUBSUB;
 
-  /** PubSub namespace (errors) (XEP-0060) */
+  /** PubSub namespace (errors) (@xep{0060}) */
   GLOOX_API extern const std::string XMLNS_PUBSUB_ERRORS;
 
-  /** PubSub namespace (event) (XEP-0060) */
+  /** PubSub namespace (event) (@xep{0060}) */
   GLOOX_API extern const std::string XMLNS_PUBSUB_EVENT;
 
-  /** PubSub namespace (owner) (XEP-0060) */
+  /** PubSub namespace (owner) (@xep{0060}) */
   GLOOX_API extern const std::string XMLNS_PUBSUB_OWNER;
 
-  /** Entity Capabilities namespace (XEP-0115) */
+  /** Entity Capabilities namespace (@xep{0115}) */
   GLOOX_API extern const std::string XMLNS_CAPS;
 
   /** SOCKS5 Fast Mode namespace */
@@ -542,46 +542,46 @@ namespace gloox
   /** Session Create Stream Feature (RFC 3921) */
   GLOOX_API extern const std::string XMLNS_STREAM_SESSION;
 
-  /** Non-SASL Auth. Stream Feature (XEP-0078) */
+  /** Non-SASL Auth. Stream Feature (@xep{0078}) */
   GLOOX_API extern const std::string XMLNS_STREAM_IQAUTH;
 
-  /** In-Band Registration namespace (XEP-0077) */
+  /** In-Band Registration namespace (@xep{0077}) */
   GLOOX_API extern const std::string XMLNS_STREAM_IQREGISTER;
 
-  /** Stream Compression Feature namespace (XEP-0138) */
+  /** Stream Compression Feature namespace (@xep{0138}) */
   GLOOX_API extern const std::string XMLNS_STREAM_COMPRESS;
 
-  /** General HTTP binding (BOSH) namespace (XEP-0124) */
+  /** General HTTP binding (BOSH) namespace (@xep{0124}) */
   GLOOX_API extern const std::string XMLNS_HTTPBIND;
 
-  /** XMPP-over-BOSH extensions (XEP-0206) */
+  /** XMPP-over-BOSH extensions (@xep{0206}) */
   GLOOX_API extern const std::string XMLNS_XMPP_BOSH;
 
-  /** Message Receipt namespace (XEP-0184) */
+  /** Message Receipt namespace (@xep{0184}) */
   GLOOX_API extern const std::string XMLNS_RECEIPTS;
 
-  /** Message Receipt namespace (XEP-0172) */
+  /** Message Receipt namespace (@xep{0172}) */
   GLOOX_API extern const std::string XMLNS_NICKNAME;
 
-  /** Jingle namespace (XEP-0166) */
+  /** Jingle namespace (@xep{0166}) */
   GLOOX_API extern const std::string XMLNS_JINGLE;
 
-  /** Jingle Audio via RTP namespace (XEP-0167) */
+  /** Jingle Audio via RTP namespace (@xep{0167}) */
   GLOOX_API extern const std::string XMLNS_JINGLE_AUDIO_RTP;
 
-  /** Jingle ICE-UDP Transport namespace (XEP-0176) */
+  /** Jingle ICE-UDP Transport namespace (@xep{0176}) */
   GLOOX_API extern const std::string XMLNS_JINGLE_ICE_UDP;
 
-  /** Jingle Raw UDP Transport namespace (XEP-0177) */
+  /** Jingle Raw UDP Transport namespace (@xep{0177}) */
   GLOOX_API extern const std::string XMLNS_JINGLE_RAW_UDP;
 
-  /** Jingle Video via RTP namespace (XEP-0180) */
+  /** Jingle Video via RTP namespace (@xep{0180}) */
   GLOOX_API extern const std::string XMLNS_JINGLE_VIDEO_RTP;
 
-  /** Stanza Headers and Internet Metadata (SHIM) namespace (XEP-0131) */
+  /** Stanza Headers and Internet Metadata (SHIM) namespace (@xep{0131}) */
   GLOOX_API extern const std::string XMLNS_SHIM;
 
-  /** Attention namespace (XEP-0224) */
+  /** Attention namespace (@xep{0224}) */
   GLOOX_API extern const std::string XMLNS_ATTENTION;
 
 
@@ -694,13 +694,13 @@ namespace gloox
     StreamFeatureUnbind           =    2, /**< The server supports binding multiple resources. */
     StreamFeatureSession          =    4, /**< The server supports sessions. */
     StreamFeatureStartTls         =    8, /**< The server supports &lt;starttls&gt;. */
-    StreamFeatureIqRegister       =   16, /**< The server supports XEP-0077 (In-Band
+    StreamFeatureIqRegister       =   16, /**< The server supports @xep{0077} (In-Band
                                            * Registration). */
-    StreamFeatureIqAuth           =   32, /**< The server supports XEP-0078 (Non-SASL
+    StreamFeatureIqAuth           =   32, /**< The server supports @xep{0078} (Non-SASL
                                            * Authentication). */
-    StreamFeatureCompressZlib     =   64, /**< The server supports XEP-0138 (Stream
+    StreamFeatureCompressZlib     =   64, /**< The server supports @xep{0138} (Stream
                                            * Compression) (Zlib). */
-    StreamFeatureCompressDclz     =  128  /**< The server supports XEP-0138 (Stream
+    StreamFeatureCompressDclz     =  128  /**< The server supports @xep{0138} (Stream
                                            * Compression) (LZW/DCLZ). */
     // SASLMechanism below must be adjusted accordingly.
   };
@@ -993,9 +993,9 @@ namespace gloox
     SaslTemporaryAuthFailure,       /**< The authentication failed because of a temporary error condition
                                      * within the receiving entity; sent in reply to an &lt;auth/&gt; element
                                      * or &lt;response/&gt; element. */
-    NonSaslConflict,                /**< XEP-0078: Resource Conflict */
-    NonSaslNotAcceptable,           /**< XEP-0078: Required Information Not Provided */
-    NonSaslNotAuthorized            /**< XEP-0078: Incorrect Credentials */
+    NonSaslConflict,                /**< @xep{0078}: Resource Conflict */
+    NonSaslNotAcceptable,           /**< @xep{0078}: Required Information Not Provided */
+    NonSaslNotAuthorized            /**< @xep{0078}: Incorrect Credentials */
   };
 
   /**
@@ -1035,7 +1035,7 @@ namespace gloox
   };
 
   /**
-   * The possible Message Events according to XEP-0022.
+   * The possible Message Events according to @xep{0022}.
    */
   enum MessageEventType
   {
@@ -1050,7 +1050,7 @@ namespace gloox
   };
 
   /**
-   * The possible Chat States according to XEP-0085.
+   * The possible Chat States according to @xep{0085}.
    */
   enum ChatStateType
   {
@@ -1091,12 +1091,12 @@ namespace gloox
    */
   enum MessageSessionFilter
   {
-    FilterMessageEvents    = 1,     /**< Message Events (XEP-0022) */
-    FilterChatStates       = 2      /**< Chat State Notifications (XEP-0085) */
+    FilterMessageEvents    = 1,     /**< Message Events (@xep{0022}) */
+    FilterChatStates       = 2      /**< Chat State Notifications (@xep{0085}) */
   };
 
   /**
-   * Defined MUC room affiliations. See XEP-0045 for default privileges.
+   * Defined MUC room affiliations. See @xep{0045} for default privileges.
    */
   enum MUCRoomAffiliation
   {
@@ -1109,7 +1109,7 @@ namespace gloox
   };
 
   /**
-   * Defined MUC room roles. See XEP-0045 for default privileges.
+   * Defined MUC room roles. See @xep{0045} for default privileges.
    */
   enum MUCRoomRole
   {

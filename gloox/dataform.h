@@ -46,7 +46,7 @@ namespace gloox
   };
 
   /**
-   * @brief An abstraction of a XEP-0004 Data Form.
+   * @brief An abstraction of a @xep{0004} Data Form.
    *
    *
    *

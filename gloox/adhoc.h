@@ -35,7 +35,7 @@ namespace gloox
   class AdhocCommandProvider;
 
   /**
-   * @brief This class implements a provider for XEP-0050 (Ad-hoc Commands).
+   * @brief This class implements a provider for @xep{0050} (Ad-hoc Commands).
    *
    * The current, not complete, implementation is probably best suited for fire-and-forget
    * type of commands. Any additional feature, like multiple stages, etc., would have to be
@@ -81,7 +81,7 @@ namespace gloox
   {
     public:
       /**
-       * @brief An abstraction of an Adhoc Command element (from Adhoc Commands, XEP-0050)
+       * @brief An abstraction of an Adhoc Command element (from Adhoc Commands, @xep{0050})
        * as a StanzaExtension.
        *
        * @author Jakob Schroeter <js@camaya.net>
@@ -411,7 +411,7 @@ namespace gloox
 
       /**
        * Using this function, you can register a AdhocCommandProvider -derived object as
-       * handler for a specific Ad-hoc Command as defined in XEP-0050.
+       * handler for a specific Ad-hoc Command as defined in @xep{0050}.
        * @param acp The obejct to register as handler for the specified command.
        * @param command The node name of the command. Will be announced in disco#items.
        * @param name The natural-language name of the command. Will be announced in disco#items.

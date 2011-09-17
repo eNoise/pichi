@@ -36,7 +36,7 @@ namespace gloox
   class Message;
 
   /**
-   * @brief This is an implementation of XEP-0045 (Multi-User Chat).
+   * @brief This is an implementation of @xep{0045} (Multi-User Chat).
    *
    * Usage is pretty simple:
    *
@@ -99,7 +99,7 @@ namespace gloox
         HistorySeconds,             /**< Send only the messages received in the last "X" seconds. */
         HistorySince,               /**< Send only the messages received since the datetime specified
                                      * (which MUST conform to the DateTime profile specified in Jabber
-                                     * Date and Time Profiles (XEP-0082)). */
+                                     * Date and Time Profiles (@xep{0082})). */
         HistoryUnknown              /**< It is up to the service to decide how much history to send.
                                      * This is the default. */
       };
@@ -535,7 +535,7 @@ namespace gloox
        * Use this function to request room history since specific datetime.
        * History is sent only once after entering a room. You should use this function before joining.
        * @param since A string representing a datetime conforming to the DateTime profile specified
-       * in Jabber Date and Time Profiles (XEP-0082).
+       * in Jabber Date and Time Profiles (@xep{0082}).
        * @note If this function is not used to request a specific amount of room history, it is up
        * to the MUC service to decide how much history to send.
        */

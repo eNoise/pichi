@@ -14,6 +14,8 @@
 #ifndef STANZAEXTENSIONFACTORY_H__
 #define STANZAEXTENSIONFACTORY_H__
 
+#include "mutex.h"
+
 #include <list>
 
 namespace gloox
@@ -82,6 +84,7 @@ namespace gloox
     private:
       typedef std::list<StanzaExtension*> SEList;
       SEList m_extensions;
+      util::Mutex m_extensionsMutex;
 
   };
 

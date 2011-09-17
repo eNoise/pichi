@@ -25,7 +25,7 @@ namespace gloox
   class Tag;
 
   /**
-    * @brief An abstraction of a single field in a XEP-0004 Data Form.
+    * @brief An abstraction of a single field in a @xep{0004} Data Form.
     *
     * @author Jakob Schroeter <js@camaya.net>
     * @since 0.7

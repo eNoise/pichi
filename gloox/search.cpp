@@ -157,7 +157,7 @@ namespace gloox
 
     const std::string& id = m_parent->getID();
 
-    IQ iq( IQ::Set, directory );
+    IQ iq( IQ::Set, directory, id );
     iq.addExtension( new Query( fields, values ) );
 
     m_track[id] = sh;

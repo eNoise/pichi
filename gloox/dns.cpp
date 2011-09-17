@@ -98,7 +98,7 @@ namespace gloox
     HEADER* hdr = (HEADER*)srvbuf.buf;
     unsigned char* here = srvbuf.buf + NS_HFIXEDSZ;
 
-    if( ( hdr->tc ) || ( srvbuf.len < NS_HFIXEDSZ ) )
+    if( srvbuf.len < NS_HFIXEDSZ )
       error = true;
 
     if( hdr->rcode >= 1 && hdr->rcode <= 5 )
@@ -301,7 +301,7 @@ namespace gloox
 #if defined( _WIN32 ) && !defined( __SYMBIAN32__ )
         "WSAGetLastError: " + util::int2string( ::WSAGetLastError() );
 #else
-        "errno: " + util::int2string( errno );
+        "errno: " + util::int2string( errno ) + ": " + strerror( errno );
 #endif
     logInstance.dbg( LogAreaClassDns, message );
 
@@ -353,7 +353,7 @@ namespace gloox
 #if defined( _WIN32 ) && !defined( __SYMBIAN32__ )
           "WSAGetLastError: " + util::int2string( ::WSAGetLastError() )
 #else
-          "errno: " + util::int2string( errno );
+          "errno: " + util::int2string( errno ) + ": " + strerror( errno );
 #endif
           + ". Falling back to IPPROTO_TCP: " + util::int2string( IPPROTO_TCP );
       logInstance.dbg( LogAreaClassDns, message );
@@ -381,7 +381,7 @@ namespace gloox
 #if defined( _WIN32 ) && !defined( __SYMBIAN32__ )
           "WSAGetLastError: " + util::int2string( ::WSAGetLastError() );
 #else
-          "errno: " + util::int2string( errno );
+          "errno: " + util::int2string( errno ) + ": " + strerror( errno );
 #endif
       logInstance.dbg( LogAreaClassDns, message );
 
@@ -409,6 +409,7 @@ namespace gloox
     {
       logInstance.dbg( LogAreaClassDns, "gethostbyname() failed for " + host + "." );
       cleanup( logInstance );
+      closeSocket( fd, logInstance );
       return -ConnDnsError;
     }
 
@@ -420,6 +421,7 @@ namespace gloox
     {
       logInstance.dbg( LogAreaClassDns, "gethostbyname() returned unexpected structure." );
       cleanup( logInstance );
+      closeSocket( fd, logInstance );
       return -ConnDnsError;
     }
     else
@@ -443,7 +445,7 @@ namespace gloox
 #if defined( _WIN32 ) && !defined( __SYMBIAN32__ )
         "WSAGetLastError: " + util::int2string( ::WSAGetLastError() );
 #else
-        "errno: " + util::int2string( errno );
+        "errno: " + util::int2string( errno ) + ": " + strerror( errno );
 #endif
     logInstance.dbg( LogAreaClassDns, message );
 
@@ -465,7 +467,7 @@ namespace gloox
 #if defined( _WIN32 ) && !defined( __SYMBIAN32__ )
           "WSAGetLastError: " + util::int2string( ::WSAGetLastError() );
 #else
-          "errno: " + util::int2string( errno );
+          "errno: " + util::int2string( errno ) + ": " + strerror( errno );
 #endif
       logInstance.dbg( LogAreaClassDns, message );
     }

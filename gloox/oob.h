@@ -26,7 +26,7 @@ namespace gloox
 
   /**
    * @brief This is an abstraction of a jabber:x:oob namespace element or a jabber:iq:oob namespace element
-   * as specified in XEP-0066.
+   * as specified in @xep{0066}.
    *
    * XEP version: 1.5
    * @author Jakob Schroeter <js@camaya.net>

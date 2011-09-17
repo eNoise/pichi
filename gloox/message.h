@@ -123,6 +123,8 @@ namespace gloox
       /**
        * Convenience function that returns a pointer to a DelayedDelivery StanzaExtension, if the
        * message contains one.
+       * Make sure you have registered a DelayedDelivery instance with your ClientBase (this is not done automatically),
+       * otherwise this method will always return 0.
        * @return A pointer to a DelayedDelivery object, or 0.
        */
       const DelayedDelivery* when() const

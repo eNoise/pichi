@@ -40,7 +40,7 @@ namespace gloox
        */
       enum S10nType
       {
-        Subscribe,                  /**> A subscription request. */
+        Subscribe,                  /**< A subscription request. */
         Subscribed,                 /**< A subscription notification. */
         Unsubscribe,                /**< An unsubscription request. */
         Unsubscribed,               /**< An unsubscription notification. */

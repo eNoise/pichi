@@ -18,7 +18,6 @@
 #include "clientbase.h"
 #include "macros.h"
 #include "jid.h"
-#include "mucroom.h"
 
 #include <string>
 
@@ -40,11 +39,7 @@ namespace gloox
        * Constructor. Prepares the given ClientBase for receiving MUC invitations..
        * @param parent A ClientBase instance to prepare.
        */
-      MUCInvitationHandler( ClientBase* parent )
-      {
-        if( parent )
-          parent->registerStanzaExtension( new MUCRoom::MUCUser() );
-      }
+      MUCInvitationHandler( ClientBase* parent );
 
       /**
        * Virtual Destructor.

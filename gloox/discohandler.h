@@ -25,7 +25,7 @@ namespace gloox
   class IQ;
 
   /**
-   * @brief A virtual interface that enables objects to receive Service Discovery (XEP-0030) events.
+   * @brief A virtual interface that enables objects to receive Service Discovery (@xep{0030}) events.
    *
    * A class implementing this interface can receive the results of sent disco queries.
    *

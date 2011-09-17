@@ -24,7 +24,7 @@ namespace gloox
 {
 
   /**
-   * @brief An implementation of XEP-0013 (Flexible Offline Message Retrieval).
+   * @brief An implementation of @xep{0013} (Flexible Offline Message Retrieval).
    *
    * Use the FlexibleOfflineHandler to receive results.
    *
@@ -84,7 +84,7 @@ namespace gloox
         { messageOperation( FORemoveMsgs, msgs ); }
 
       /**
-       * Registers a FlexibleOfflineHandler as object that receives results of XEP-0013 queries.
+       * Registers a FlexibleOfflineHandler as object that receives results of @xep{0013} queries.
        * Only one Handler at a time is possible.
        * @param foh The Handler object to register.
        */

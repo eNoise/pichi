@@ -30,7 +30,7 @@ namespace gloox
   class Tag;
 
   /**
-   * @brief This is an implementation of XEP-0048 (Bookmark Storage).
+   * @brief This is an implementation of @xep{0048} (Bookmark Storage).
    *
    * You can use this class to store bookmarks to multi-user chat rooms or ordinary URLs
    * on the server (and to retrieve them later on).

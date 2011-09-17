@@ -109,7 +109,7 @@ namespace gloox
       return ConnNotConnected;
 
     ConnectionError err = ConnNoError;
-    while( !m_cancel && ( err = recv( 10 ) ) == ConnNoError )
+    while( !m_cancel && ( err = recv( 1000000 ) ) == ConnNoError )
       ;
     return err == ConnNoError ? ConnNotConnected : err;
   }

@@ -16,13 +16,12 @@
 
 #include "macros.h"
 #include "connectionhandler.h"
+#include "connectiontcpserver.h"
 #include "logsink.h"
 #include "mutex.h"
 
 namespace gloox
 {
-
-  class ConnectionTCPServer;
 
   /**
    * @brief A server listening for SOCKS5 bytestreams.
@@ -86,6 +85,12 @@ namespace gloox
        * @return The locally bound IP address.
        */
       const std::string localInterface() const;
+
+      /**
+       * Exposes the local socket.
+       * @return The local socket.
+       */
+      int serverSocket() const { return m_tcpServer->socket(); }
 
       // reimplemented from ConnectionHandler
       virtual void handleIncomingConnection( ConnectionBase* server, ConnectionBase* connection );

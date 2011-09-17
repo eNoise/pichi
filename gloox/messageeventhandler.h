@@ -23,7 +23,7 @@ namespace gloox
 
   /**
    * @brief A virtual interface that enables an object to be notified about
-   * Message Events (XEP-0022).
+   * Message Events (@xep{0022}).
    *
    * @author Jakob Schroeter <js@camaya.net>
    * @since 0.8

@@ -24,7 +24,7 @@ namespace gloox
   class Tag;
 
   /**
-   * @brief An implementation of Chat State Notifications (XEP-0085) as a StanzaExtension.
+   * @brief An implementation of Chat State Notifications (@xep{0085}) as a StanzaExtension.
    *
    * @author Vincent Thomasset
    * @author Jakob Schroeter <js@camaya.net>

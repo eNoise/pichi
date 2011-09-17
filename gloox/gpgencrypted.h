@@ -25,7 +25,7 @@ namespace gloox
   class Tag;
 
   /**
-   * @brief This is an abstraction of a jabber:x:encrypted namespace element, as used in XEP-0027
+   * @brief This is an abstraction of a jabber:x:encrypted namespace element, as used in @xep{0027}
    * (Current Jabber OpenPGP Usage).
    *
    * This class does not encrypt or decrypt any stanza content. It's meant to be an abstraction

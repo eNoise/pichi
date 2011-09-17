@@ -26,7 +26,7 @@ namespace gloox
   class Tag;
 
   /**
-   * @brief This is a wrapper of an XHTML-IM (XEP-0071) message body.
+   * @brief This is a wrapper of an XHTML-IM (@xep{0071}) message body.
    *
    * @author Jakob Schroeter <js@camaya.net>
    * @since 1.0

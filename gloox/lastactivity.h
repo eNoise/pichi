@@ -26,7 +26,7 @@ namespace gloox
   class LastActivityHandler;
 
   /**
-   * @brief This is an implementation of XEP-0012 (Last Activity) for both clients and components.
+   * @brief This is an implementation of @xep{0012} (Last Activity) for both clients and components.
    *
    * LastActivity can be used to query remote entities about their last activity time as well
    * as answer incoming last-activity-queries.
@@ -41,10 +41,10 @@ namespace gloox
     public:
       /**
        * @brief This is an abstraction of a LastActivity Query that
-       * can be used in XEP-0012 as well as XEP-0256.
+       * can be used in @xep{0012} as well as @xep{0256}.
        *
-       * XEP-Version: 2.0 (XEP-0012)
-       * XEP-Version: 0.1 (XEP-0256)
+       * XEP-Version: 2.0 (@xep{0012})
+       * XEP-Version: 0.1 (@xep{0256})
        *
        * @author Jakob Schroeter <js@camaya.net>
        * @since 1.0

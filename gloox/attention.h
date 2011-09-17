@@ -26,7 +26,7 @@ namespace gloox
   class Tag;
 
   /**
-   * @brief This is an implementation of XEP-0224 as a StanzaExtension.
+   * @brief This is an implementation of @xep{0224} as a StanzaExtension.
    *
    * @author Jakob Schroeter <js@camaya.net>
    * @since 1.0

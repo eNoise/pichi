@@ -32,7 +32,7 @@ namespace gloox
   class Disco;
 
   /**
-   * @brief An implementation of XEP-0055 (Jabber Search)
+   * @brief An implementation of @xep{0055} (Jabber Search)
    *
    * To perform a search in a directory (e.g., a User Directory):
    *
@@ -113,7 +113,7 @@ namespace gloox
     public:
 #endif
       /**
-       * @brief A wrapping class for the XEP-0055 &lt;query&gt; element.
+       * @brief A wrapping class for the @xep{0055} &lt;query&gt; element.
        *
        * @author Jakob Schroeter <js@camaya.net>
        * @since 1.0

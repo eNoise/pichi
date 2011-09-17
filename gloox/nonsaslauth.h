@@ -26,7 +26,7 @@ namespace gloox
   class Tag;
 
   /**
-   * @brief This class is an implementation of XEP-0078 (Non-SASL Authentication).
+   * @brief This class is an implementation of @xep{0078} (Non-SASL Authentication).
    *
    * It is invoked by @ref Client automatically if supported by the server and if SASL authentication
    * is not supported.
@@ -68,7 +68,7 @@ namespace gloox
     public:
 #endif
       /**
-       * @brief An abstraction of an IQ extension used for Non-SASL authentication (XEP-0078).
+       * @brief An abstraction of an IQ extension used for Non-SASL authentication (@xep{0078}).
        *
        * @author Jakob Schroeter <js@camaya.net>
        * @since 1.0

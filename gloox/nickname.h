@@ -24,7 +24,7 @@ namespace gloox
   class Tag;
 
   /**
-   * @brief An implementation of User Nickname (XEP-0172) as a StanzaExtension.
+   * @brief An implementation of User Nickname (@xep{0172}) as a StanzaExtension.
    *
    * XEP version: 1.0
    * @author Jakob Schroeter <js@camaya.net>

@@ -34,9 +34,9 @@ namespace gloox
        */
       enum EventType
       {
-        PingPing,                     /**< Incoming Ping (XEP-0199). */
-        PingPong,                     /**< Incoming Pong (XEP-0199). */
-        PingError                     /**< Incoming Error Pong (XEP-0199). */
+        PingPing,                     /**< Incoming Ping (@xep{0199}). */
+        PingPong,                     /**< Incoming Pong (@xep{0199}). */
+        PingError                     /**< Incoming Error Pong (@xep{0199}). */
       };
 
       /**

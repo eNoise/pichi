@@ -25,7 +25,7 @@ namespace gloox
   class Tag;
 
   /**
-   * @brief This is an abstraction of a vcard-temp:x:update namespace element, as used in XEP-0153
+   * @brief This is an abstraction of a vcard-temp:x:update namespace element, as used in @xep{0153}
    * (vCard-Based Avatars).
    *
    * XEP version: 1.0

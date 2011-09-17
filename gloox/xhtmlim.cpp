@@ -50,7 +50,7 @@ namespace gloox
   {
     XHtmlIM* x = new XHtmlIM();
     x->m_xhtml = m_xhtml ? m_xhtml->clone() : 0;
-    return 0;
+    return x;
   }
 
 }

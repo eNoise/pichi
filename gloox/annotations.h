@@ -30,7 +30,7 @@ namespace gloox
   class Tag;
 
   /**
-   * @brief This is an implementation of XEP-0145 (Annotations).
+   * @brief This is an implementation of @xep{0145} (Annotations).
    *
    * You can use this class to store arbitrary notes about a roster item on the server
    * (and to retrieve them later on).

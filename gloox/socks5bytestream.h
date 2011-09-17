@@ -29,7 +29,7 @@ namespace gloox
   class LogSink;
 
   /**
-   * @brief An implementation of a single SOCKS5 Bytestream (XEP-0065).
+   * @brief An implementation of a single SOCKS5 Bytestream (@xep{0065}).
    *
    * One instance of this class handles one bytestream.
    *

@@ -28,7 +28,7 @@ namespace gloox
   class Tag;
 
   /**
-   * @brief This is an implementation of XEP-0079 (Advanced Message Processing)
+   * @brief This is an implementation of @xep{0079} (Advanced Message Processing)
    * as a StanzaExtension.
    *
    * XEP Version: 1.2
@@ -125,7 +125,7 @@ namespace gloox
 
           /**
            * Creates a new AMP rule object with a condition of 'expire-at'.
-           * @param date The expiry date/time in the format defined in XEP-0082.
+           * @param date The expiry date/time in the format defined in @xep{0082}.
            * @param action The rule's action.
            */
           Rule( const std::string& date, ActionType action );

@@ -23,7 +23,7 @@ namespace gloox
 
   /**
    * @brief A virtual interface that enables an object to be notified about
-   * a remote entity's Chat States (XEP-0085).
+   * a remote entity's Chat States (@xep{0085}).
    *
    * @author Jakob Schroeter <js@camaya.net>
    * @since 0.8

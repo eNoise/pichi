@@ -969,6 +969,9 @@ namespace gloox
         m_roomHandler->handleMUCParticipantPresence( this, party, presence );
 
       delete party.nick;
+      delete party.jid;
+      delete party.actor;
+      delete party.alternate;
     }
   }
 

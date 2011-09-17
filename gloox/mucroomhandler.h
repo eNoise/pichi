@@ -192,7 +192,7 @@ namespace gloox
        * @param features ORed MUCRoomFlag's.
        * @param name The room's name as returned by Service Discovery.
        * @param infoForm A DataForm containing extended room information. May be 0 if the service
-       * doesn't support extended room information. See Section 15.5 of XEP-0045 for defined
+       * doesn't support extended room information. See Section 15.5 of @xep{0045} for defined
        * field types. You should not delete the form.
        *
        * @note This function may be called without a prior call to MUCRoom::getRoomInfo(). This

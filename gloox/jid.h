@@ -145,14 +145,14 @@ namespace gloox
       operator bool() const { return m_valid; }
 
       /**
-       * XEP-0106: JID Escaping
+       * @xep{0106}: JID Escaping
        * @param node The node to escape.
        * @return The escaped node.
        */
       static std::string escapeNode( const std::string& node );
 
       /**
-       * XEP-0106: JID Escaping
+       * @xep{0106}: JID Escaping
        * @param node The node to unescape.
        * @return The unescaped node.
        */

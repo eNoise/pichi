@@ -280,7 +280,7 @@ namespace gloox
        * A convenience function that sends the given Presence stanza.
        * @param pres The Presence stanza to send.
        */
-      void send( Presence& pres );
+      void send( const Presence& pres );
 
       /**
        * Returns whether authentication has taken place and was successful.
@@ -363,7 +363,7 @@ namespace gloox
       void whitespacePing();
 
       /**
-       * Sends a XMPP Ping (XEP-0199) to the given JID.
+       * Sends a XMPP Ping (@xep{0199}) to the given JID.
        * @param to Then entity to ping.
        * @param eh An EventHandler to inform about the reply.
        * @since 0.9
@@ -830,8 +830,10 @@ namespace gloox
       /** A list of permanent presence extensions. */
       StanzaExtensionList m_presenceExtensions;
 
-      std::string m_selectedResource;    /**< The currently selected resource.
-                                          * See Client::selectResource() and Client::binRessource(). */
+      GLOOX_DEPRECATED std::string m_selectedResource; /**< The currently selected resource.
+                                          * See Client::selectResource() and Client::bindRessource().
+                                          * @deprecated Not used anymore. Will be removed for 1.1.
+                                          * @todo Remove for 1.1 */
       std::string m_clientCerts;         /**< TLS client certificates. */
       std::string m_clientKey;           /**< TLS client private key. */
       std::string m_namespace;           /**< Default namespace. */
@@ -999,6 +1001,9 @@ namespace gloox
       MessageSessionHandler  * m_messageSessionHandlerNormal;
 
       util::Mutex m_iqHandlerMapMutex;
+      util::Mutex m_iqExtHandlerMapMutex; // TODO Enable this mutex again. However
+                                          // it must be possible to register new IQ handlers
+                                          // while an IQ is being handled!
 
       Parser m_parser;
       LogSink m_logInstance;

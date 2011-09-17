@@ -14,38 +14,39 @@
 
 #include "config.h"
 
+#include "base64.h"
 #include "clientbase.h"
-#include "connectionbase.h"
-#include "tlsbase.h"
 #include "compressionbase.h"
+#include "compressionzlib.h"
+#include "connectionbase.h"
+#include "connectionlistener.h"
 #include "connectiontcpclient.h"
 #include "disco.h"
-#include "messagesessionhandler.h"
-#include "tag.h"
-#include "iq.h"
-#include "message.h"
-#include "subscription.h"
-#include "presence.h"
-#include "connectionlistener.h"
-#include "iqhandler.h"
-#include "messagehandler.h"
-#include "presencehandler.h"
-#include "rosterlistener.h"
-#include "subscriptionhandler.h"
-#include "loghandler.h"
-#include "taghandler.h"
-#include "mucinvitationhandler.h"
-#include "mucroom.h"
-#include "jid.h"
-#include "base64.h"
 #include "error.h"
-#include "md5.h"
-#include "util.h"
-#include "tlsdefault.h"
-#include "compressionzlib.h"
-#include "stanzaextensionfactory.h"
 #include "eventhandler.h"
 #include "event.h"
+#include "iq.h"
+#include "iqhandler.h"
+#include "jid.h"
+#include "loghandler.h"
+#include "md5.h"
+#include "message.h"
+#include "messagehandler.h"
+#include "messagesessionhandler.h"
+#include "mucinvitationhandler.h"
+#include "mucroom.h"
+#include "mutexguard.h"
+#include "presence.h"
+#include "presencehandler.h"
+#include "rosterlistener.h"
+#include "stanzaextensionfactory.h"
+#include "subscription.h"
+#include "subscriptionhandler.h"
+#include "tag.h"
+#include "taghandler.h"
+#include "tlsbase.h"
+#include "tlsdefault.h"
+#include "util.h"
 
 #include <cstdlib>
 #include <string>
@@ -60,6 +61,7 @@
 
 #if defined( _WIN32 ) && !defined( __SYMBIAN32__ )
 #include <tchar.h>
+#include <winbase.h>
 #endif
 
 namespace gloox
@@ -136,6 +138,14 @@ namespace gloox
 
   ClientBase::~ClientBase()
   {
+    m_iqHandlerMapMutex.lock();
+    m_iqIDHandlers.clear();
+    m_iqHandlerMapMutex.unlock();
+
+//     m_iqExtHandlerMapMutex.lock();
+    m_iqExtHandlers.clear();
+//     m_iqExtHandlerMapMutex.unlock();
+
     delete m_connection;
     delete m_encryption;
     delete m_compression;
@@ -495,20 +505,70 @@ namespace gloox
       {
 #if defined( _WIN32 ) && !defined( __SYMBIAN32__ )
         a->addAttribute( "mechanism", "NTLM" );
-        SEC_WINNT_AUTH_IDENTITY identity, *ident = 0;
+        SEC_WINNT_AUTH_IDENTITY_W identity, *ident = 0;
         memset( &identity, 0, sizeof( identity ) );
+
+        WCHAR *usernameW = 0, *domainW = NULL, *passwordW = 0;
+        int cchUsernameW = 0, cchDomainW = 0, cchPasswordW = 0;
+
         if( m_jid.username().length() > 0 )
         {
-          identity.User = (unsigned char*)m_jid.username().c_str();
-          identity.UserLength = (unsigned long)m_jid.username().length();
-          identity.Domain = (unsigned char*)m_ntlmDomain.c_str();
-          identity.DomainLength = (unsigned long)m_ntlmDomain.length();
-          identity.Password = (unsigned char*)m_password.c_str();
-          identity.PasswordLength = (unsigned long)m_password.length();
+          // NOTE: The return values of MultiByteToWideChar will include room
+          //  for the NUL character since we use -1 for the input length.
+
+          cchUsernameW = ::MultiByteToWideChar( CP_UTF8, 0, m_jid.username().c_str(), -1, 0, 0 );
+          if( cchUsernameW > 0 )
+          {
+            usernameW = new WCHAR[cchUsernameW];
+            ::MultiByteToWideChar( CP_UTF8, 0, m_jid.username().c_str(), -1, usernameW, cchUsernameW );
+            // Guarantee its NUL terminated.
+            usernameW[cchUsernameW-1] = L'\0';
+          }
+          cchDomainW = ::MultiByteToWideChar( CP_UTF8, 0, m_ntlmDomain.c_str(), -1, 0, 0 );
+          if( cchDomainW > 0 )
+          {
+            domainW = new WCHAR[cchDomainW];
+            ::MultiByteToWideChar( CP_UTF8, 0, m_ntlmDomain.c_str(), -1, domainW, cchDomainW );
+            // Guarantee its NUL terminated.
+            domainW[cchDomainW-1] = L'\0';
+          }
+          cchPasswordW = ::MultiByteToWideChar( CP_UTF8, 0, m_password.c_str(), -1, 0, 0 );
+          if( cchPasswordW > 0 )
+          {
+            passwordW = new WCHAR[cchPasswordW];
+            ::MultiByteToWideChar( CP_UTF8, 0, m_password.c_str(), -1, passwordW, cchPasswordW );
+            // Guarantee its NUL terminated.
+            passwordW[cchPasswordW-1] = L'\0';
+          }
+          identity.User = (unsigned short*)usernameW;
+          identity.UserLength = (unsigned long)cchUsernameW-1;
+          identity.Domain = (unsigned short*)domainW;
+          identity.DomainLength = (unsigned long)cchDomainW-1;
+          identity.Password = (unsigned short*)passwordW;
+          identity.PasswordLength = (unsigned long)cchPasswordW-1;
           identity.Flags = SEC_WINNT_AUTH_IDENTITY_UNICODE;
           ident = &identity;
         }
-        AcquireCredentialsHandle( 0, _T( "NTLM" ), SECPKG_CRED_OUTBOUND, 0, ident, 0, 0, &m_credHandle, 0 );
+
+        AcquireCredentialsHandleW( 0, L"NTLM", SECPKG_CRED_OUTBOUND, 0, ident, 0, 0, &m_credHandle, 0 );
+
+        if( usernameW != 0 )
+        {
+          delete[] usernameW;
+          usernameW = 0;
+        }
+        if( domainW != 0 )
+        {
+          delete[] domainW;
+          domainW = 0;
+        }
+        if( passwordW != 0 )
+        {
+          ::ZeroMemory( passwordW, cchPasswordW* sizeof( WCHAR ) );
+          delete[] passwordW;
+          passwordW = 0;
+        }
+
 #else
         logInstance().err( LogAreaClassClientbase,
                     "SASL NTLM is not supported on this platform. You should never see this." );
@@ -756,7 +816,7 @@ namespace gloox
     send( tag );
   }
 
-  void ClientBase::send( Presence& pres )
+  void ClientBase::send( const Presence& pres )
   {
     ++m_stats.presenceStanzasSent;
     Tag* tag = pres.tag();
@@ -803,10 +863,7 @@ namespace gloox
     if( !m_authed /*for IQ Auth */ || !tag || tag->hasAttribute( "from" ) )
       return;
 
-    if ( m_selectedResource.empty() )
-      tag->addAttribute( "from", m_jid.bare() );
-    else
-      tag->addAttribute( "from", m_jid.bare() + '/' + m_selectedResource );
+    tag->addAttribute( "from", m_jid.full() );
   }
 
   void ClientBase::addNamespace( Tag* tag )
@@ -1093,11 +1150,14 @@ namespace gloox
     if( !ih )
       return;
 
+//     util::MutexGuard m( m_iqExtHandlerMapMutex );
     typedef IqHandlerMap::const_iterator IQci;
     std::pair<IQci, IQci> g = m_iqExtHandlers.equal_range( exttype );
     for( IQci it = g.first; it != g.second; ++it )
+    {
       if( (*it).second == ih )
         return;
+    }
 
     m_iqExtHandlers.insert( std::make_pair( exttype, ih ) );
   }
@@ -1107,6 +1167,7 @@ namespace gloox
     if( !ih )
       return;
 
+//     util::MutexGuard m( m_iqExtHandlerMapMutex );
     typedef IqHandlerMap::iterator IQi;
     std::pair<IQi, IQi> g = m_iqExtHandlers.equal_range( exttype );
     IQi it2;
@@ -1309,8 +1370,9 @@ namespace gloox
   {
     m_iqHandlerMapMutex.lock();
     IqTrackMap::iterator it_id = m_iqIDHandlers.find( iq.id() );
+    bool haveIdHandler = ( it_id != m_iqIDHandlers.end() );
     m_iqHandlerMapMutex.unlock();
-    if( it_id != m_iqIDHandlers.end() && iq.subtype() & ( IQ::Result | IQ::Error ) )
+    if( haveIdHandler && ( iq.subtype() == IQ::Result || iq.subtype() == IQ::Error ) )
     {
       (*it_id).second.ih->handleIqID( iq, (*it_id).second.context );
       if( (*it_id).second.del )
@@ -1322,9 +1384,17 @@ namespace gloox
     }
 
     if( iq.extensions().empty() )
+    {
+      if ( iq.subtype() == IQ::Get || iq.subtype() == IQ::Set )
+      {
+        IQ re( IQ::Error, iq.from(), iq.id() );
+        re.addExtension( new Error( StanzaErrorTypeCancel, StanzaErrorFeatureNotImplemented ) );
+        send( re );
+      }
       return;
+    }
 
-    bool res = false;
+    bool handled = false;
 
     // FIXME remove for 1.1
 //     typedef IqHandlerMapXmlns::const_iterator IQciXmlns
@@ -1337,20 +1407,22 @@ namespace gloox
 //     }
 //     delete tag;
 
+//     m_iqExtHandlerMapMutex.lock();
     typedef IqHandlerMap::const_iterator IQci;
     const StanzaExtensionList& sel = iq.extensions();
     StanzaExtensionList::const_iterator itse = sel.begin();
-    for( ; itse != sel.end(); ++itse )
+    for( ; !handled && itse != sel.end(); ++itse )
     {
       std::pair<IQci, IQci> g = m_iqExtHandlers.equal_range( (*itse)->extensionType() );
-      for( IQci it = g.first; it != g.second; ++it )
+      for( IQci it = g.first; !handled && it != g.second; ++it )
       {
         if( (*it).second->handleIq( iq ) )
-          res = true;
+          handled = true;
       }
     }
+//     m_iqExtHandlerMapMutex.unlock();
 
-    if( !res && iq.subtype() & ( IQ::Get | IQ::Set ) )
+    if( !handled && ( iq.subtype() == IQ::Get || iq.subtype() == IQ::Set ) )
     {
       IQ re( IQ::Error, iq.from(), iq.id() );
       re.addExtension( new Error( StanzaErrorTypeCancel, StanzaErrorServiceUnavailable ) );

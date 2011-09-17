@@ -228,28 +228,25 @@ namespace gloox
      */
     static inline const std::string long2string( long int value, const int base = 10 )
     {
-      int add = 0;
       if( base < 2 || base > 16 || value == 0 )
         return "0";
-      else if( value < 0 )
+
+      std::string output;
+      std::string sign;
+
+      if( value < 0 )
       {
-        ++add;
+        sign += "-";
         value = -value;
       }
-      int len = (int)( log( (double)( value ? value : 1 ) ) / log( (double)base ) ) + 1;
-      const char digits[] = "0123456789ABCDEF";
-      char* num = (char*)calloc( len + 1 + add, sizeof( char ) );
-      num[len--] = '\0';
-      if( add )
-        num[0] = '-';
-      while( value && len > -1 )
+
+      while( output.empty() || value > 0 )
       {
-        num[len-- + add] = digits[(int)( value % base )];
+        output.insert( 0, 1, static_cast<char>( value % base + '0' ) );
         value /= base;
       }
-      const std::string result( num );
-      free( num );
-      return result;
+
+      return sign + output;
     }
 
     /**

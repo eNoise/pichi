@@ -27,7 +27,7 @@ namespace gloox
 {
 
   /**
-   * @brief A virtual interface for an Ad-hoc Command Provider according to XEP-0050.
+   * @brief A virtual interface for an Ad-hoc Command Provider according to @xep{0050}.
    *
    * Derived classes can be registered as Command Providers with the Adhoc object.
    *

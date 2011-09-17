@@ -97,12 +97,13 @@ namespace gloox
     gnutls_bye( *m_session, GNUTLS_SHUT_RDWR );
     gnutls_db_remove_session( *m_session );
     gnutls_credentials_clear( *m_session );
-    if( m_secure )
+    if( m_session )
       gnutls_deinit( *m_session );
+
+    delete m_session;
 
     m_secure = false;
     m_valid = false;
-    delete m_session;
     m_session = 0;
     m_session = new gnutls_session_t;
     m_handler = handler;
