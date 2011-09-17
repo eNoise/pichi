@@ -77,15 +77,20 @@ end
 
 function UruchieForumCommands.whoami ( args, pichiobject )
 	local user = GetJIDinfo( pichiobject, GetLastJID( pichiobject ), "uforum_user" )
+	local isFind = false
 	for k,v in pairs(user) do
+		isFind = true
 		SendAnswer( pichiobject, "Ты " .. v)
+	end
+	if not isFind then
+		SendAnswer( pichiobject, "Вы не связаны с аккаунтом форума")
 	end
 end
 
 function UruchieForumCommands.login ( args, pichiobject )
 	local user, password
 	if type(args) == "string" then
-		user, password = string.match(args, "([%a0-9А-Яа-я]+) ([%a0-9А-Яа-я]+)")
+		user, password = string.match(args, "([^%s]+) ([^%s]+)")
 	end
 	if not user or not password then
 		SendAnswer( pichiobject, "введите полную информацию и попробуйте опять")
@@ -97,7 +102,7 @@ function UruchieForumCommands.login ( args, pichiobject )
 end
 
 local function escapePagetext( text )
-  return string.gsub( text, "\[/?[A-Za-z]+\]" , "" )
+  return string.gsub( text, "\[/?[A-Za-z_]+\]" , "" )
 end
 
 function UruchieForumCommandsAsync.getpost( args, pichiobject )
@@ -126,7 +131,7 @@ end
 function UruchieForumCommandsAsync.setkarma( args, pichiobject )
 	 local target, sub
 	 if type(args) == "string" then
-		target, sub = string.match(args, "([%a0-9А-Яа-я]+) ([1+-]+)")
+		target, sub = string.match(args, "([^%s]+) ([1+-]+)")
 	 end
 	 if sub ~= "+1" and sub ~= "-1" then
 		SendAnswer(pichiobject, "проверьте введенные параметры")
@@ -173,7 +178,7 @@ function UruchieForumCommandsAsync.getkarma( args, pichiobject )
 	 end
 	 if not userid and type(args) == "string" then
 		-- Пытаемся вытащить из последнего
-		userid = string.match(args, "([%a0-9А-Яа-я]+)")
+		userid = string.match(args, "([^%s]+)")
 		if userid then
 			local gertarget = ReadUrl("http://uruchie.org/api.php", {
 				module = "forum",
