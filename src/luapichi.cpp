@@ -111,26 +111,27 @@ void LuaPichi::enable(const std::string& file)
 
 void LuaPichi::loadLuaFiles(void )
 {
-	std::vector< std::string > luaFiles = Helper::getDirFiles(PICHI_INSTALLED_DIR + std::string("lua/"));
+	std::string loadPath = Helper::getShareFile("lua/");
+	std::vector< std::string > luaFiles = Helper::getDirFiles(loadPath);
 	if(luaFiles.size() == 0)
 	{
 		Log("No lua plugins :(", Log::DEBUG);
 		return;
 	}
 	
-	std::string filePath = PICHI_INSTALLED_DIR + std::string("lua/pichi.lua");
+	std::string filePath = loadPath + "pichi.lua";
 	this->loadFile(filePath.c_str());
 	if(this->loadFileStatus != 0)
 		throw PichiException("Load lua file pichi.lua problem...");
 	else
 		this->loadedLuaList.push_back({"pichi.lua", filePath, true});
 	
-	std::for_each(luaFiles.begin(), luaFiles.end(), [this,&filePath](const std::string& fileName){
+	std::for_each(luaFiles.begin(), luaFiles.end(), [this,&filePath,&loadPath](const std::string& fileName){
 		if(fileName == "pichi.lua")
 			return; // уже загружен
 		if(fileName.substr(fileName.size() - 4) != ".lua")
 			return;
-		filePath = PICHI_INSTALLED_DIR + std::string("lua/") + fileName;
+		filePath = loadPath + fileName;
 		this->loadFile(filePath.c_str());
 		if(this->loadFileStatus != 0)
 			throw PichiException("Load lua file " + fileName + " problem...");

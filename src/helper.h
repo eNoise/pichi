@@ -62,6 +62,7 @@ class Helper
 	static bool createDirectory(const std::string& path, const int mask = 0775);
 	static bool removeDirectory(const std::string& path);
 	static bool removeFile(const std::string& path);
+	static std::string getShareFile(const std::string& file, bool isThrowEx = true);
 	static double microtime(void);
 	static std::string md5sum(const std::string& tomd5);
 	

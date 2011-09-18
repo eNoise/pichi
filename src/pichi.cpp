@@ -64,16 +64,9 @@ void Pichi::firstStart(void)
 	// construcor checked dir exist... all good
 	Helper::createDirectory(dir);
 	
-	std::string cfgFile;
-	if(Helper::fileExists(std::string(PICHI_INSTALLED_DIR) + "pichi.xml"))
-		cfgFile = std::string(PICHI_INSTALLED_DIR) + "pichi.xml";
-	else if(Helper::fileExists("/usr/share/pichi/config/pichi.xml"))
-		cfgFile = "/usr/share/pichi/config/pichi.xml";
-	else if(RUN_DIR.substr(RUN_DIR.size()-4) == "/bin" && Helper::fileExists(RUN_DIR.substr(0, RUN_DIR.size()-3) + "share/pichi/config/pichi.xml"))
-		cfgFile = RUN_DIR.substr(0, RUN_DIR.size()-3) + "share/pichi/config/pichi.xml";
-	else
-		throw PichiException("Error: no config file founded... you must delete ~/.pichi and start bot again");
-	
+	std::string cfgFile = Helper::getShareFile("pichi.xml", false);
+	if(cfgFile.empty())
+		cfgFile = Helper::getShareFile("config/pichi.xml");
 	std::ifstream ifs(cfgFile.c_str(), std::ios::binary);
 	std::ofstream ofs((dir + "pichi.xml").c_str(), std::ios::binary);
 	ofs << ifs.rdbuf();

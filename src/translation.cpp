@@ -31,15 +31,7 @@ namespace pichi
 
 const std::string Translation::findLangDir(void )
 {
-	if(Helper::fileExists(Helper::getFullPath(PICHI_CONFIG_DIR) + "languages/"))
-		return (Helper::getFullPath(PICHI_CONFIG_DIR) + "languages/");
-	else if(Helper::fileExists(Helper::getFullPath(PICHI_INSTALLED_DIR) + "languages/"))
-		return Helper::getFullPath(PICHI_INSTALLED_DIR) + "languages/";
-	else if(Helper::fileExists(Helper::getFullPath(PICHI_SOURCE_DIR) + "languages/"))
-		return Helper::getFullPath(PICHI_SOURCE_DIR) + "languages/";
-	else
-		throw PichiException("No language directory's founded...");
-	return "";
+	return Helper::getShareFile("languages/");
 }  
   
 Translation::Translation()

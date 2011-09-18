@@ -28,6 +28,8 @@
 #include <sys/stat.h>
 #include <openssl/md5.h>
 
+#include "config.h"
+#include "pichiexception.h"
 
 namespace pichi
 {
@@ -168,6 +170,19 @@ bool Helper::removeDirectory(const std::string& path)
 bool Helper::removeFile(const std::string& path)
 {
 	return remove(path.c_str()) == 0;
+}
+
+std::string Helper::getShareFile(const std::string& file, bool isThrowEx)
+{
+	if(Helper::fileExists(Helper::getFullPath(PICHI_CONFIG_DIR) + file))
+		return Helper::getFullPath(PICHI_CONFIG_DIR) + file;
+	else if(Helper::fileExists(Helper::getFullPath(PICHI_INSTALLED_DIR) + file))
+		return Helper::getFullPath(PICHI_INSTALLED_DIR) + file;
+	else if(Helper::fileExists(Helper::getFullPath(PICHI_SOURCE_DIR) + file))
+		return Helper::getFullPath(PICHI_SOURCE_DIR) + file;
+	else if(isThrowEx)
+		throw PichiException("No file " + file + " founded...");
+	return "";
 }
 
 double Helper::microtime(void )
