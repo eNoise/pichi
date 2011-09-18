@@ -29,7 +29,7 @@
 #include <lua.h>
 #endif
 
-#include "languages.h"
+#include "translation.h"
 #include "pichicore.h"
 #include "pichi.h"
 #include "lexemebuilder.h"

@@ -177,7 +177,7 @@ set(PICHI_CPP 	src/tests.cpp
 		src/log.cpp
 		src/pichicurl.cpp
 		src/lexemebuilder.cpp
-		src/languages.cpp    
+		src/translation.cpp    
 		src/xmlsimple.cpp 
 		src/commandbase.cpp
 		src/pichioptions.cpp
@@ -267,11 +267,8 @@ endif(WIN32)
 install (DIRECTORY languages/ DESTINATION "${CLIENT_DATA_DIR}/languages")
 install (DIRECTORY lua/ DESTINATION "${CLIENT_DATA_DIR}/lua")
 
-#if(WIN32)
-#  set(PICHI_SOURCE_DIR "../")
-#else(WIN32)
-  set(PICHI_SOURCE_DIR ${PROJECT_SOURCE_DIR})
-#endif(WIN32)
+set(PICHI_SOURCE_DIR ${PROJECT_SOURCE_DIR})
+add_definitions(-DPICHI_SOURCE_DIR="${PICHI_SOURCE_DIR}/")
 
 if(WITH_TESTS)
   do_test(regexp_split)
@@ -317,14 +314,14 @@ if(WITH_TESTS)
 
     do_test(lua_handler_pushpop)
 
-    do_test(lua_pichilua_core_listener "${PICHI_SOURCE_DIR}/lua/pichi.lua" "goodtest1")
-    do_test(lua_pichilua_core_listener "${PICHI_SOURCE_DIR}/lua/pichi.lua" "goodtest2")
+    do_test(lua_pichilua_core_listener NO "goodtest1")
+    do_test(lua_pichilua_core_listener NO "goodtest2")
 
-    do_test(lua_functions_userdata "${PICHI_SOURCE_DIR}/lua/pichi.lua" "goodtest")
-    do_test_fail(lua_functions_userdata "${PICHI_SOURCE_DIR}/lua/pichi.lua" "badtest")
+    do_test(lua_functions_userdata NO "goodtest")
+    do_test_fail(lua_functions_userdata NO "badtest")
 
-    do_test(lua_functions_jsondecode "${PICHI_SOURCE_DIR}/lua/pichi.lua" "goodtest1")
-    do_test(lua_functions_jsondecode "${PICHI_SOURCE_DIR}/lua/pichi.lua" "goodtest2")
-    do_test(lua_functions_jsondecode "${PICHI_SOURCE_DIR}/lua/pichi.lua" "goodtest3")
+    do_test(lua_functions_jsondecode NO "goodtest1")
+    do_test(lua_functions_jsondecode NO "goodtest2")
+    do_test(lua_functions_jsondecode NO "goodtest3")
   endif(WITH_LUA)
 endif(WITH_TESTS)

@@ -25,7 +25,7 @@
 #include "helper.h"
 #include "pichicore.h"
 #include "pichidbpatcher.h"
-#include "languages.h"
+#include "translation.h"
 #include "config.h"
 #include "sqlite.h"
 #ifdef WITH_LUA
@@ -315,7 +315,7 @@ bool Tests::test_lua_handler_pushpop(const std::string& arg)
 	return test;
 }
 
-bool Tests::test_lua_pichilua_core_listener(const std::string& pichilua)
+bool Tests::test_lua_pichilua_core_listener(const std::string& arg)
 {
 	std::string path = std::string("./") + "test.lua";
 	std::ofstream file(path);
@@ -340,7 +340,7 @@ bool Tests::test_lua_pichilua_core_listener(const std::string& pichilua)
 	file.close();
 	
 	LuaPichi* lua = new LuaPichi();
-	lua->loadFile(pichilua);
+	lua->loadFile(std::string(PICHI_SOURCE_DIR) + "lua/pichi.lua");
 	if(lua->getFileStatus() != 0)
 		return false;
 	lua->loadFile(path);
@@ -354,18 +354,18 @@ bool Tests::test_lua_pichilua_core_listener(const std::string& pichilua)
 	return true;
 }
 
-bool Tests::test_lua_functions_userdata(const std::string& pichilua)
+bool Tests::test_lua_functions_userdata(const std::string& arg)
 {
-	std::string sqlpath = std::string("./") + "test.db";
+	std::string sqlpath = "./test.db";
 	SQLite* sql = new SQLite(sqlpath);
-	languages* lang = new languages("en");
+	Translation* lang = new Translation("en");
 	PichiDbPather patch(sql, lang);
 	patch.initDbStruct();
     
 	PichiCore* pichi = new PichiCore();
 	pichi->sql = sql;
 	
-	std::string path = std::string("./") + "test.lua";
+	std::string path = "./test.lua";
 	std::ofstream file(path);
 	
 	file << "testarea = {}\n"
@@ -381,7 +381,7 @@ bool Tests::test_lua_functions_userdata(const std::string& pichilua)
 	file.close();
 	
 	LuaPichi* lua = new LuaPichi();
-	lua->loadFile(pichilua);
+	lua->loadFile(std::string(PICHI_SOURCE_DIR) + "lua/pichi.lua");
 	if(lua->getFileStatus() != 0)
 		return false;
 	lua->loadFile(path);
@@ -401,7 +401,7 @@ bool Tests::test_lua_functions_userdata(const std::string& pichilua)
 	return true;
 }
 
-bool Tests::test_lua_functions_jsondecode(const std::string& pichilua)
+bool Tests::test_lua_functions_jsondecode(const std::string& arg)
 {
 	std::string path = std::string("./") + "test.lua";
 	std::ofstream file(path);
@@ -438,7 +438,7 @@ bool Tests::test_lua_functions_jsondecode(const std::string& pichilua)
 	file.close();
 	
 	LuaPichi* lua = new LuaPichi();
-	lua->loadFile(pichilua);
+	lua->loadFile(std::string(PICHI_SOURCE_DIR) + "lua/pichi.lua");
 	if(lua->getFileStatus() != 0)
 		return false;
 	lua->loadFile(path);

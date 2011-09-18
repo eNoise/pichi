@@ -41,7 +41,7 @@ namespace pichi
 
 class Pichi;
 class commandbase;
-class languages;
+class Translation;
 class LexemeBuilder;
 class PichiEvent;
 
@@ -56,7 +56,7 @@ class PichiCore : public PichiConfig,
 		SQLite *sql;
 		Pichi *jabber;
 		commandbase *commander;
-		languages *lang;
+		Translation *lang;
 		LexemeBuilder *lex;
 		PichiEvent *event;
 		

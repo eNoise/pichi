@@ -18,7 +18,7 @@
 
 */
 
-#include "languages.h"
+#include "translation.h"
 
 #include "pichi.h"
 #include "helper.h"
@@ -29,24 +29,20 @@
 namespace pichi
 {
 
-const std::string languages::findLangDir(void )
+const std::string Translation::findLangDir(void )
 {
-#ifndef WIN32
 	if(Helper::fileExists(Helper::getFullPath(PICHI_CONFIG_DIR) + "languages/"))
 		return (Helper::getFullPath(PICHI_CONFIG_DIR) + "languages/");
-	else if(Helper::fileExists("/usr/share/pichi/languages/"))
-		return "/usr/share/pichi/languages/";
-	else if(RUN_DIR.substr(RUN_DIR.size() - 4) == "/bin" && Helper::fileExists(RUN_DIR.substr(0, RUN_DIR.size() - 3) + "share/pichi/languages/"))
-		return (RUN_DIR.substr(0, RUN_DIR.size() - 3) + "share/pichi/languages/");
+	else if(Helper::fileExists(Helper::getFullPath(PICHI_INSTALLED_DIR) + "languages/"))
+		return Helper::getFullPath(PICHI_INSTALLED_DIR) + "languages/";
+	else if(Helper::fileExists(Helper::getFullPath(PICHI_SOURCE_DIR) + "languages/"))
+		return Helper::getFullPath(PICHI_SOURCE_DIR) + "languages/";
 	else
 		throw PichiException("No language directory's founded...");
-#else
-	return Helper::getFullPath(PICHI_CONFIG_DIR) + "languages/";
-#endif
 	return "";
 }  
   
-languages::languages()
+Translation::Translation()
 {
 	xmlfile = 0;
 	default_lang = "en";
@@ -55,7 +51,7 @@ languages::languages()
 	loadLanguage(dir + choise + ".xml");
 }
 
-languages::languages(const std::string& lan): choise(lan)
+Translation::Translation(const std::string& lan): choise(lan)
 {
 	xmlfile = 0;
 	default_lang = "en";
@@ -64,7 +60,7 @@ languages::languages(const std::string& lan): choise(lan)
 	loadLanguage(dir + choise + ".xml");	
 }
 
-void languages::loadLanguage(const std::string& file, bool reload)
+void Translation::loadLanguage(const std::string& file, bool reload)
 {
 	if(xmlfile)
 		delete xmlfile;
@@ -90,12 +86,12 @@ void languages::loadLanguage(const std::string& file, bool reload)
 	delete xmllevel;
 }
 
-std::string languages::operator[](const std::string& name)
+std::string Translation::operator[](const std::string& name)
 {
 	return language[name];
 }
 
-std::string languages::operator()(const std::string& first, ...)
+std::string Translation::operator()(const std::string& first, ...)
 {
 	va_list marker;
 	va_start(marker, first);

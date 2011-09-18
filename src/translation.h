@@ -30,7 +30,7 @@
 namespace pichi
 {
 
-class languages : public xmlsimple
+class Translation : public xmlsimple
 {  
   protected:
 	 std::map<std::string, std::string> language;
@@ -38,8 +38,8 @@ class languages : public xmlsimple
 	 std::string default_lang;
 	 const std::string findLangDir(void);
   public:
-	 languages();
-	 languages(const std::string& lan);
+	 Translation();
+	 Translation(const std::string& lan);
 	 void loadLanguage(const std::string&, bool reload = false);
 	 std::string operator[] (const std::string&);
          std::string operator() (const std::string& first, ...);

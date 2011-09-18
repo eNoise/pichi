@@ -30,7 +30,7 @@
 #include "sqlite.h"
 #include "helper.h"
 #include "commandbase.h"
-#include "languages.h"
+#include "translation.h"
 #include "lexemebuilder.h"
 #include "pichievent.h"
 
@@ -44,7 +44,7 @@ PichiCore::PichiCore() : PichiOptions(&sql)
 	// init commander
 	commander = new commandbase(this);
 	//translater
-	lang = new languages(config["language"]);
+	lang = new Translation(config["language"]);
 	lex = new LexemeBuilder(&sql);
 	event = new PichiEvent(this);
 	

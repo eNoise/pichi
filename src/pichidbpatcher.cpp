@@ -21,7 +21,7 @@
 #include "pichidbpatcher.h"
 
 #include "sqlite.h"
-#include "languages.h"
+#include "translation.h"
 #include "log.h"
 #include "helper.h"
 #include "pichiexception.h"
@@ -31,7 +31,7 @@
 namespace pichi
 {
   
-PichiDbPather::PichiDbPather(pichi::SQLite* sql, languages* lang)
+PichiDbPather::PichiDbPather(pichi::SQLite* sql, Translation* lang)
 {
 	this->sql = sql;
 	this->lang = lang;
