@@ -39,12 +39,16 @@ Pichi is a jabber(xmpp) bot written in C++. It is based on the sulci abilities.
 
 
 %prep
-%setup -q -n %{name}-%{version}
-
+#%setup -q -n %{name}-%{version}
+%setup -q -n %{name}-%{version}%{preversion}
 
 %build
 %{cmake}
 make %{?_smp_mflags}
+
+
+%check
+make test
 
 
 %install

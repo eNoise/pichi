@@ -130,11 +130,11 @@ bool Tests::test_helper_microtime(const std::string& arg)
 bool Tests::test_helper_createdirectory(const std::string& arg)
 {
 	bool test;
-	if(Helper::fileExists(Helper::getFullPath(PICHI_CONFIG_DIR))) {
-		test = Helper::createDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "tests");
-		Helper::removeDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "tests");
+	if(Helper::fileExists(std::string("./"))) {
+		test = Helper::createDirectory(std::string("./") + "tests");
+		Helper::removeDirectory(std::string("./") + "tests");
 	} else {
-		test = Helper::createDirectory(Helper::getFullPath(PICHI_CONFIG_DIR));
+		test = Helper::createDirectory(std::string("./"));
 	}
 	return test;
 }
@@ -142,17 +142,17 @@ bool Tests::test_helper_createdirectory(const std::string& arg)
 bool Tests::test_helper_removedirectory(const std::string& arg)
 {
 	bool test;
-	if(Helper::fileExists(Helper::getFullPath(PICHI_CONFIG_DIR))) {
-		if(Helper::fileExists(Helper::getFullPath(PICHI_CONFIG_DIR) + "tests")) {
-			test = Helper::removeDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "tests");
+	if(Helper::fileExists(std::string("./"))) {
+		if(Helper::fileExists(std::string("./") + "tests")) {
+			test = Helper::removeDirectory(std::string("./") + "tests");
 		} else {
-			Helper::createDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "tests");
-			test = Helper::removeDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "tests");
+			Helper::createDirectory(std::string("./") + "tests");
+			test = Helper::removeDirectory(std::string("./") + "tests");
 		}
 	} else {
-		Helper::createDirectory(Helper::getFullPath(PICHI_CONFIG_DIR));
-		Helper::createDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "tests");
-		test = Helper::removeDirectory(Helper::getFullPath(PICHI_CONFIG_DIR) + "tests");
+		Helper::createDirectory(std::string("./"));
+		Helper::createDirectory(std::string("./") + "tests");
+		test = Helper::removeDirectory(std::string("./") + "tests");
 	}
 	return test;
 }
@@ -176,7 +176,7 @@ bool Tests::test_helper_utf8decode(const std::string& arg)
 
 bool Tests::test_sqlite_open(const std::string& arg)
 {
-	std::string path = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.db";
+	std::string path = std::string("./") + "test.db";
 	SQLite* sql = new SQLite(path);
 	delete sql;
 	bool test = Helper::fileExists(path);
@@ -186,7 +186,7 @@ bool Tests::test_sqlite_open(const std::string& arg)
 
 bool Tests::test_sqlite_query(const std::string& arg)
 {
-	std::string path = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.db";
+	std::string path = std::string("./") + "test.db";
 	SQLite* sql = new SQLite(path);
 	
 	sql->exec("CREATE TABLE `testing` (`test` TEXT);");
@@ -203,7 +203,7 @@ bool Tests::test_sqlite_query(const std::string& arg)
 
 bool Tests::test_sqlite_query_async(const std::string& arg)
 {
-	std::string path = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.db";
+	std::string path = std::string("./") + "test.db";
 	SQLite* sql = new SQLite(path);
 	
 	sql->exec("CREATE TABLE `testing` (`test` TEXT, `somewhere` TEXT);");
@@ -241,7 +241,7 @@ bool Tests::test_sqlite_query_async(const std::string& arg)
 
 bool Tests::test_sqlite_escape_string(const std::string& arg)
 {
-	std::string path = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.db";
+	std::string path = std::string("./") + "test.db";
 	SQLite* sql = new SQLite(path);
 	
 	std::string esc = sql->escapeString("'x");
@@ -265,7 +265,7 @@ bool Tests::test_lua_fileload(const std::string& arg)
 
 bool Tests::test_lua_fileload_wrongsyntax(const std::string& arg)
 {
-	std::string path = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.lua";
+	std::string path = std::string("./") + "test.lua";
 	std::ofstream file(path);
 	
 	file << "function test()\n"
@@ -286,7 +286,7 @@ bool Tests::test_lua_fileload_wrongsyntax(const std::string& arg)
 
 bool Tests::test_lua_handler_pushpop(const std::string& arg)
 {
-	std::string path = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.lua";
+	std::string path = std::string("./") + "test.lua";
 	std::ofstream file(path);
 	
 	file << "testarea = {}\n"
@@ -317,7 +317,7 @@ bool Tests::test_lua_handler_pushpop(const std::string& arg)
 
 bool Tests::test_lua_pichilua_core_listener(const std::string& pichilua)
 {
-	std::string path = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.lua";
+	std::string path = std::string("./") + "test.lua";
 	std::ofstream file(path);
 	
 	file << "testarea = {}\n"
@@ -356,7 +356,7 @@ bool Tests::test_lua_pichilua_core_listener(const std::string& pichilua)
 
 bool Tests::test_lua_functions_userdata(const std::string& pichilua)
 {
-	std::string sqlpath = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.db";
+	std::string sqlpath = std::string("./") + "test.db";
 	SQLite* sql = new SQLite(sqlpath);
 	languages* lang = new languages("en");
 	PichiDbPather patch(sql, lang);
@@ -365,7 +365,7 @@ bool Tests::test_lua_functions_userdata(const std::string& pichilua)
 	PichiCore* pichi = new PichiCore();
 	pichi->sql = sql;
 	
-	std::string path = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.lua";
+	std::string path = std::string("./") + "test.lua";
 	std::ofstream file(path);
 	
 	file << "testarea = {}\n"
@@ -403,7 +403,7 @@ bool Tests::test_lua_functions_userdata(const std::string& pichilua)
 
 bool Tests::test_lua_functions_jsondecode(const std::string& pichilua)
 {
-	std::string path = Helper::getFullPath(PICHI_CONFIG_DIR) + "test.lua";
+	std::string path = std::string("./") + "test.lua";
 	std::ofstream file(path);
 	
 	file << "testarea = {}\n"
