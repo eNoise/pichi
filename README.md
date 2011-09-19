@@ -14,6 +14,7 @@ Build requirements
 * tinyxml (http://www.grinninglizard.com/tinyxml/) (optional)
 * gloox (http://camaya.net/gloox/) (optional)
 * libcurl (http://curl.haxx.se/)
+* lua (optional)
 
 Building (Linux)
 ----------------
@@ -27,6 +28,10 @@ Building (Linux)
 * -DLOCAL_GLOOX=ON - Enables built-in gloox library.
 * -DLOCAL_TINYXML=ON - Enables built-in tinyxml library.
 * -DLOCAL_LUA=ON - Enables built-in lia library.
+
+* -DWITH_LUA=ON - Enables/Disable lua plugins.
+* -DWITH_TESTS=ON - Enables/Disable tests after build.
+
 
 Binaries (Windows) and Linux Packages
 ----------------
