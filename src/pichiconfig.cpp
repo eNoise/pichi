@@ -92,7 +92,7 @@ void PichiConfig::loadXmlConfig(const std::string& file)
 PichiConfig::PichiConfig()
 {
 	version = 0;
-	loadXmlConfig(Helper::getFullPath(PICHI_CONFIG_DIR) + "pichi.xml");
+	loadXmlConfig(Helper::getShareFile("pichi.xml"));
 }
 
 std::string PichiConfig::operator[](const std::string& str)
