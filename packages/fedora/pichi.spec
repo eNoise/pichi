@@ -22,6 +22,7 @@ BuildRequires:  sqlite-devel
 BuildRequires:  tinyxml-devel
 BuildRequires:  openssl-devel
 BuildRequires:  lua-devel
+BuildRequires:  git
 
 Requires:       boost-regex
 Requires:       boost-program-options
