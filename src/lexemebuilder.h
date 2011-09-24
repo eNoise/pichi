@@ -21,19 +21,17 @@
 #ifndef LEXEMES_H
 #define LEXEMES_H
 
-#include "sqlite.h"
 #include <string>
 #include <vector>
 #include <list>
-#include "helper.h"
 #include <time.h>
 #include <stdio.h>
 #include <limits.h>
-#include <boost/algorithm/string/replace.hpp>
-#include <boost/regex.hpp>
 
 namespace pichi
 {
+
+class SQLite;
   
 class LexemeBuilder
 {
@@ -44,7 +42,7 @@ class LexemeBuilder
 	size_t message_size_limit;
 	size_t query_limit;
 	void parseText(std::string text);
-	void addLexema(const std::vector<std::string>& lex);
+	inline std::string addLexema(const std::vector<std::string>& lex);
 	
 	std::string genFullRandom();
 	std::string genFromWord(const std::string& word);

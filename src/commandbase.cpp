@@ -33,6 +33,7 @@
 #include "pichicore.h"
 #include "pichi.h"
 #include "lexemebuilder.h"
+#include "sqlite.h"
 
 namespace pichi
 {

@@ -19,7 +19,11 @@
 */
 
 #include "lexemebuilder.h"
+#include "sqlite.h"
+#include "helper.h"
 #include <boost/foreach.hpp>
+#include <boost/algorithm/string/replace.hpp>
+#include <boost/regex.hpp>
 
 namespace pichi
 {
@@ -50,6 +54,8 @@ void LexemeBuilder::parseText(std::string text)
 	
 	std::vector<std::string> tmp(3);
 	
+	std::string sqlData = "";
+	
 	if(base.size() <= word_size_limit)
 	{
 		for(int i = 0; i < INT_MAX && i < base.size(); i++)
@@ -57,22 +63,23 @@ void LexemeBuilder::parseText(std::string text)
 			tmp[0] = (i-1 >= 0) ? base[i-1] : beg;
 			tmp[1] = base[i];
 			tmp[2] = (i+1 <= base.size()-1) ? base[i+1] : end;
-			addLexema(tmp);
+			sqlData += addLexema(tmp);
 		}
+		if(!sqlData.empty())
+			(*sql)->exec(sqlData);
 	}
 	
 	user_text = text;
 }
 
-void LexemeBuilder::addLexema(const std::vector<std::string>& lex)
+std::string LexemeBuilder::addLexema(const std::vector<std::string>& lex)
 {
 	if(lex.size() != 3)
-		return;
+		return "";
 
-	std::string sql_query;
-	sql_query = "INSERT OR IGNORE INTO lexems (`lexeme1`,`lexeme2`,`lexeme3`) VALUES('" + (*sql)->escapeString(lex[0]) + "', '" + (*sql)->escapeString(lex[1]) + "', '" + (*sql)->escapeString(lex[2]) + "');\n";
-	sql_query += "UPDATE lexems SET count = count+1 WHERE lexeme1 = '" + (*sql)->escapeString(lex[0]) + "' AND lexeme2 = '" + (*sql)->escapeString(lex[1]) + "' AND lexeme3 = '" + (*sql)->escapeString(lex[2]) + "';";
-	(*sql)->exec(sql_query);	
+	std::string sql_query = "INSERT OR IGNORE INTO lexems (`lexeme1`,`lexeme2`,`lexeme3`) VALUES('" + (*sql)->escapeString(lex[0]) + "', '" + (*sql)->escapeString(lex[1]) + "', '" + (*sql)->escapeString(lex[2]) + "');\n";
+	sql_query += "UPDATE lexems SET count = count+1 WHERE lexeme1 = '" + (*sql)->escapeString(lex[0]) + "' AND lexeme2 = '" + (*sql)->escapeString(lex[1]) + "' AND lexeme3 = '" + (*sql)->escapeString(lex[2]) + "';\n";
+	return sql_query;	
 }
 
 void LexemeBuilder::buildArray(void )
