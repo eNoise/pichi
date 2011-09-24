@@ -2,7 +2,7 @@
 
 Name:           pichi
 Version:        0.7.0
-Release:        0.1.%{preversion}%{?dist}
+Release:        0.2.%{preversion}%{?dist}
 #Release:        1%{?dist}
 Summary:        Pichi is a jabber(xmpp) bot written in C++. It is based on the sulci abilities.
 Group:          Applications/Internet
