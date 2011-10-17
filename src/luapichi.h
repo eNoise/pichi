@@ -70,6 +70,8 @@ private:
 };
 
 struct PichiManager {
+	static int freeMessageEnv(lua_State* L);
+	
 	static int registerModule(lua_State* L);
 	
 	static int sendAnswer(lua_State* L);

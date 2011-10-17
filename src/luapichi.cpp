@@ -42,6 +42,7 @@ LuaPichi::LuaPichi()
 {
 	loadLuaFiles();
 	
+	luaMap.push_back({"freeMessageEnv", PichiManager::freeMessageEnv, true});
 	luaMap.push_back({"SendAnswer", PichiManager::sendAnswer, true});
 	luaMap.push_back({"GetLastJID", PichiManager::getLastJID, true});
 	luaMap.push_back({"RegisterModule", PichiManager::registerModule, true});
@@ -162,11 +163,33 @@ void LuaPichi::appendModule(const pichi::LuaPichi::LuaModuleInfo& info)
 }
 
 
+int PichiManager::freeMessageEnv(lua_State* L)
+{
+	if(lua_gettop(L) != 1)
+		return 0;
+	delete (PichiMessage*)lua_touserdata(L, -1);
+	return 0;
+}
+
+
 int PichiManager::sendAnswer(lua_State* L)
 {
-	PichiCore* pichi = (PichiCore*)lua_touserdata(L, -2);
-	std::string toSend = lua_tostring(L, -1);
-	pichi->sendAnswer(toSend);
+	PichiCore* pichi;
+	std::string toSend;
+	PichiMessage* msgarg;
+	switch(lua_gettop(L)) {
+		case 2:
+			pichi = (PichiCore*)lua_touserdata(L, -2);
+			toSend = lua_tostring(L, -1);
+			pichi->sendAnswer(toSend);
+			break;
+		case 3:
+			pichi = (PichiCore*)lua_touserdata(L, -3);
+			toSend = lua_tostring(L, -2);
+			msgarg = (PichiMessage*)lua_touserdata(L, -1);
+			pichi->sendAnswer(toSend, *msgarg);
+			break;
+	}
 	return 0;
 }
 

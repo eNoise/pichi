@@ -64,14 +64,15 @@ function PichiCommands.forum ( arg, pichiobject )
 	end
 end
 
-function PichiCommandsAsync.forum ( arg, pichiobject )
+function PichiCommandsAsync.forum ( arg, pichiobject, env )
 	local command, args
 	command, args = string.match(arg, "(%a+) (.+)")
 	if not command then
 		command = string.match(arg, "(%a+)")
 	end
 	if command and UruchieForumCommandsAsync[command] then
-		UruchieForumCommandsAsync[command]( args, pichiobject )
+		UruchieForumCommandsAsync[command]( args, pichiobject, env )
+		freeMessageEnv(env)
 	end
 end
 
@@ -105,7 +106,7 @@ local function escapePagetext( text )
   return string.gsub( text, "\[/?[A-Za-z_]+\]" , "" )
 end
 
-function UruchieForumCommandsAsync.getpost( args, pichiobject )
+function UruchieForumCommandsAsync.getpost( args, pichiobject, env )
 	  local thread = string.match(args or "", "%d+")
 	  local reciveposts = ReadUrl("http://uruchie.org/api.php", {
 			module = "forum",
@@ -125,16 +126,16 @@ function UruchieForumCommandsAsync.getpost( args, pichiobject )
 			  .. escapePagetext(post.pagetext) 
 			  .. "\n\n"
 	 end
-	 SendAnswer(pichiobject, answer)
+	 SendAnswer(pichiobject, answer, env)
 end
 
-function UruchieForumCommandsAsync.setkarma( args, pichiobject )
+function UruchieForumCommandsAsync.setkarma( args, pichiobject, env )
 	 local target, sub
 	 if type(args) == "string" then
 		target, sub = string.match(args, "([^%s]+) ([1+-]+)")
 	 end
 	 if sub ~= "+1" and sub ~= "-1" then
-		SendAnswer(pichiobject, "проверьте введенные параметры")
+		SendAnswer(pichiobject, "проверьте введенные параметры", env)
 		return
 	 end
 	 local user = GetJIDinfo( pichiobject, GetLastJID( pichiobject ), "uforum_user" )
@@ -142,7 +143,7 @@ function UruchieForumCommandsAsync.setkarma( args, pichiobject )
 	 user = user.uforum_user
 	 password = password.uforum_password
 	 if not user or not password then
-		SendAnswer(pichiobject, "установите свои данные")
+		SendAnswer(pichiobject, "установите свои данные", env)
 		return
 	 end
 	 local gertarget = ReadUrl("http://uruchie.org/api.php", {
@@ -153,7 +154,7 @@ function UruchieForumCommandsAsync.setkarma( args, pichiobject )
 	 target = JsonDecode(gertarget)
 	 target = target.userid
 	 if not target or target == "false" or target == "0" then
-		SendAnswer(pichiobject, "неверный ник")
+		SendAnswer(pichiobject, "неверный ник", env)
 	 end
 	 SetJIDinfo( pichiobject, GetLastJID( pichiobject ), "uforum_current_userid", target ) -- Выставляем текущего пользователя
 	 local karma = ReadUrl("http://uruchie.org/api.php", {
@@ -165,13 +166,13 @@ function UruchieForumCommandsAsync.setkarma( args, pichiobject )
 		})
 	karma = JsonDecode(Utf8Decode(karma))
 	if karma.error.error == "true" then
-		SendAnswer(pichiobject, "произошла ошибка: " .. karma.error.description)
+		SendAnswer(pichiobject, "произошла ошибка: " .. karma.error.description, env)
 	else
-		SendAnswer(pichiobject, "Карма успешно изменена")
+		SendAnswer(pichiobject, "Карма успешно изменена", env)
 	end
 end
 
-function UruchieForumCommandsAsync.getkarma( args, pichiobject )
+function UruchieForumCommandsAsync.getkarma( args, pichiobject, env )
 	 local userid
 	 if type(args) == "string" then
 		userid = string.match(args, "(%d+)")
@@ -197,7 +198,7 @@ function UruchieForumCommandsAsync.getkarma( args, pichiobject )
 		end
 	 end
 	 if not userid then
-		SendAnswer(pichiobject, "проверьте введенных корректность данных")
+		SendAnswer(pichiobject, "проверьте введенных корректность данных", env)
 		return
 	 end
 	 SetJIDinfo( pichiobject, GetLastJID( pichiobject ), "uforum_current_userid", userid ) -- Выставляем текущего пользователя
@@ -208,19 +209,19 @@ function UruchieForumCommandsAsync.getkarma( args, pichiobject )
 		})
 	user = JsonDecode(Utf8Decode(user))
 	if user.error.error == "true" then
-		SendAnswer(pichiobject, "произошла ошибка: " .. user.error.description)
+		SendAnswer(pichiobject, "произошла ошибка: " .. user.error.description, env)
 	else
-		SendAnswer(pichiobject, "Карма пользователя " .. user.user.username .. ": " .. user.user.karma .. ".")
+		SendAnswer(pichiobject, "Карма пользователя " .. user.user.username .. ": " .. user.user.karma .. ".", env)
 	end
 end
 
-function UruchieForumCommandsAsync.setrating( args, pichiobject )
+function UruchieForumCommandsAsync.setrating( args, pichiobject, env )
 	 local target, sub
 	 if type(args) == "string" then
 		target, sub = string.match(args, "(%d+) ([1+-]+)")
 	 end
 	 if sub ~= "+1" and sub ~= "-1" then
-		SendAnswer(pichiobject, "проверьте введенные параметры")
+		SendAnswer(pichiobject, "проверьте введенные параметры", env)
 		return
 	 end
 	 target = tonumber(target)
@@ -229,7 +230,7 @@ function UruchieForumCommandsAsync.setrating( args, pichiobject )
 	 user = user.uforum_user
 	 password = password.uforum_password
 	 if not user or not password then
-		SendAnswer(pichiobject, "установите свои данные")
+		SendAnswer(pichiobject, "установите свои данные", env)
 		return
 	 end
 	 SetJIDinfo( pichiobject, GetLastJID( pichiobject ), "uforum_current_postid", target ) -- Выставляем текущий пост
@@ -242,9 +243,9 @@ function UruchieForumCommandsAsync.setrating( args, pichiobject )
 		})
 	rating = JsonDecode(Utf8Decode(rating))
 	if rating.error.error == "true" then
-		SendAnswer(pichiobject, "произошла ошибка: " .. rating.error.description)
+		SendAnswer(pichiobject, "произошла ошибка: " .. rating.error.description, env)
 	else
-		SendAnswer(pichiobject, "Рейтинг изменен")
+		SendAnswer(pichiobject, "Рейтинг изменен", env)
 	end
 end
 
