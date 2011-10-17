@@ -131,8 +131,9 @@ end
 
 function UruchieForumCommandsAsync.setkarma( args, pichiobject, env )
 	 local target, sub
-	 if type(args) == "string" then
-		target, sub = string.match(args, "([^%s]+) ([1+-]+)")
+	 if type(args) == "string" and #args > 3 then
+		sub = string.sub(args, #args-1, #args)
+		target = string.sub(args, 0, #args-3)
 	 end
 	 if sub ~= "+1" and sub ~= "-1" then
 		SendAnswer(pichiobject, "проверьте введенные параметры", env)
