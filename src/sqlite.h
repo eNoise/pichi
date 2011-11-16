@@ -45,6 +45,8 @@ class SQLite
 			q();
 			~q();
 			void finalize(void);
+			const int numColumns() const;
+			const int numRows() const;
 		};
 		SQLite* clone() const;
 		SQLite(const std::string& f);
@@ -52,9 +54,10 @@ class SQLite
 		bool query(const std::string&);
 		q* squery(const std::string&);
 		bool exec(const std::string&);
-		SQLRow fetchArray(q* state = NULL);
+		SQLRow fetchArray();
+		static SQLRow fetchArray(q* state);
 		std::string fetchColumn(const int num, bool stay = false);
-		std::string fetchColumn(q* state, const int num, bool stay = false);
+		static std::string fetchColumn(q* state, const int num, bool stay = false);
 		const int numColumns() const;
 		const int numColumns(q* state) const;
 		const int numRows() const;

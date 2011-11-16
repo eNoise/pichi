@@ -58,6 +58,68 @@ int PichiManager::sqlExec(lua_State* L)
 	return 0;
 }
 
+int PichiManager::sqlNumRows(lua_State* L)
+{
+	if(lua_gettop(L) != 1)
+		return 0;
+	
+	lua_pushnumber(L, ((SQLite::q*)lua_touserdata(L, -1))->numRows());
+	
+	return 1;
+}
+
+int PichiManager::sqlNumColumns(lua_State* L)
+{
+	if(lua_gettop(L) != 1)
+		return 0;
+	
+	lua_pushnumber(L, ((SQLite::q*)lua_touserdata(L, -1))->numColumns());
+	
+	return 1;
+}
+
+int PichiManager::sqlFetchArray(lua_State* L)
+{
+	if(lua_gettop(L) != 1)
+		return 0;
+	
+	SQLite::q* sqlQuery = (SQLite::q*)lua_touserdata(L, -1);
+	SQLite::SQLRow data = SQLite::fetchArray(sqlQuery);
+	
+	lua_newtable(L);
+	for(std::pair<std::string, std::string> row : data)
+	{
+		lua_pushstring(L, row.first.c_str());
+		lua_pushstring(L, row.second.c_str());
+		lua_settable(L,-3);
+	}
+	return 1;
+}
+
+int PichiManager::sqlFetchColumn(lua_State* L)
+{
+	if(lua_gettop(L) != 3)
+		return 0;
+	
+	SQLite::q* sqlQuery = (SQLite::q*)lua_touserdata(L, -3);
+	int num = lua_tonumber(L, -2);
+	bool is_move = lua_toboolean(L, -1);
+	std::string data = SQLite::fetchColumn(sqlQuery, num, is_move);
+	
+	lua_pushstring(L, data.c_str());
+	return 1;
+}
+
+int PichiManager::sqlFinalize(lua_State* L)
+{
+	if(lua_gettop(L) != 1)
+		return 0;
+	
+	delete (SQLite::q*)lua_touserdata(L, -1);
+	
+	return 0;
+}
+
 };
 
 #endif

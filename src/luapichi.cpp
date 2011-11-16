@@ -56,6 +56,11 @@ LuaPichi::LuaPichi()
 	luaMap.push_back({"PichiCoreToSQL", PichiManager::pichi2sql, true});
 	luaMap.push_back({"SQLQuery", PichiManager::sqlQuery, true});
 	luaMap.push_back({"SQLExec", PichiManager::sqlExec, true});
+	luaMap.push_back({"SQLFinalize", PichiManager::sqlFinalize, true});
+	luaMap.push_back({"SQLNumRows", PichiManager::sqlNumRows, true});
+	luaMap.push_back({"SQLNumColumns", PichiManager::sqlNumColumns, true});
+	luaMap.push_back({"SQLFetchArray", PichiManager::sqlFetchArray, true});
+	luaMap.push_back({"SQLFetchColumn", PichiManager::sqlFetchColumn, true});
 	
 	registerLuaMap(); // регитрируем map
 	

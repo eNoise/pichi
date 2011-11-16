@@ -101,11 +101,13 @@ bool SQLite::exec(const std::string& sql)
 	return true;
 }
 
-std::map<std::string, std::string> SQLite::fetchArray(q* state)
+SQLite::SQLRow SQLite::fetchArray()
 {
-	if(state == NULL)
-		state = &mainquery;
-  
+	return fetchArray(&mainquery);
+}
+
+SQLite::SQLRow SQLite::fetchArray(q* state)
+{
 	std::map<std::string, std::string> row;
 	
 	char* column_data;
@@ -229,5 +231,17 @@ SQLite::SQLite(const SQLite& sqlcp)
 {
 	SQLite(sqlcp.dbfile);
 }
+
+const int SQLite::q::numColumns() const
+{
+	return sqlite3_column_count(statement);
+}
+
+
+const int SQLite::q::numRows() const
+{
+	return rows_count;
+}
+
 
 }
