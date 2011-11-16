@@ -32,6 +32,24 @@ function PichiLua.init ( pichiobject )
 	end
 end
 
+-- PichiCore
+if not PichiCore then
+    PichiCore = {}
+end
+
+function PichiCore.recive_message_start ( pichiobject )
+	for k,f in pairs(pichi:getListeners("recive_message_start")) do
+		f( pichiobject )
+	end
+end
+
+function PichiCore.recive_message_end ( pichiobject )
+	for k,f in pairs(pichi:getListeners("recive_message_end")) do
+		f( pichiobject )
+	end
+end
+-- end PichiCore
+
 -- Help Command mod
 if not PichiCommand then
     PichiCommand = {}

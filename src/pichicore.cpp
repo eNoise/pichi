@@ -440,6 +440,11 @@ bool PichiCore::reciveMessage(const std::string& message, const std::string& typ
 		return false;
 	}
 		
+#ifdef WITH_LUA
+	luaPush(this);
+	callEvent("PichiCore", "recive_message_start", 1);
+#endif
+		
 	if(enabled && !isCommand(last_message) && options["log_enabled"] == "1")
 		sql->exec("INSERT INTO log (`jid`,`room`,`from`,`time`,`type`,`message`) VALUES ('" + sql->escapeString(last_jid) + "','" + sql->escapeString(last_room) + "','" + sql->escapeString(last_from) + "','" + sql->escapeString(Helper::stringTime(time(NULL))) + "','" + sql->escapeString(last_type) + "','" + sql->escapeString(last_message) + "');");
 	
@@ -515,6 +520,11 @@ bool PichiCore::reciveMessage(const std::string& message, const std::string& typ
 	
 	// Дошло до конца, записываем более актуальное время
 	usermsg_times[last_jid] = micronow;
+
+#ifdef WITH_LUA
+	luaPush(this);
+	callEvent("PichiCore", "recive_message_end", 1);
+#endif
 	
 	return true;
 }

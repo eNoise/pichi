@@ -193,6 +193,7 @@ set(PICHI_CPP 	src/tests.cpp
 		src/luamanager.cpp
 		src/luamap.cpp
 		src/luapichi.cpp
+		src/luasql.cpp
 		
 		src/main.cpp
 )

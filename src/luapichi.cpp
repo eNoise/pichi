@@ -53,6 +53,10 @@ LuaPichi::LuaPichi()
 	luaMap.push_back({"SetJIDinfo", PichiManager::setJIDinfo, true});
 	luaMap.push_back({"GetJIDinfo", PichiManager::getJIDinfo, true});
 	luaMap.push_back({"DelJIDinfo", PichiManager::delJIDinfo, true});
+	luaMap.push_back({"PichiCoreToSQL", PichiManager::pichi2sql, true});
+	luaMap.push_back({"SQLQuery", PichiManager::sqlQuery, true});
+	luaMap.push_back({"SQLExec", PichiManager::sqlExec, true});
+	
 	registerLuaMap(); // регитрируем map
 	
 	// init call

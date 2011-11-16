@@ -88,6 +88,17 @@ struct PichiManager {
 	static void jsonDecodeParse(lua_State* L, boost::property_tree::ptree& ptree);
 	
 	static int utf8Decode(lua_State* L);
+	
+	static int pichi2sql(lua_State* L);
+	static int sqlQuery(lua_State* L);
+	static int sqlExec(lua_State* L);
+	/*
+	static int sqlFetchArray(lua_State* L);
+	static int sqlFetchColumn(lua_State* L);
+	static int sqlNumRows(lua_State* L);
+	static int sqlNumColumns(lua_State* L);
+	static int sqlFinalize(lua_State* L);
+	*/
 };
 
 };
