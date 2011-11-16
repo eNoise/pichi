@@ -22,7 +22,7 @@ pichi:setListener( "init", "uforum",
 pichi:setListener( "command_help", "uforum",
 	function( help )
 		local new_help = {
-			forum = "!forum - это подсказка\n",
+			forum = "!forum - эта подсказка\n",
 			forum_whoami = "!forum whoami - к какому аккаунту я привязан\n",
 			forum_login = "!forum login user password - связать себя с аккаунтом форума\n",
 			forum_getpost = "!forum getpost [тема] - получить посты\n",
