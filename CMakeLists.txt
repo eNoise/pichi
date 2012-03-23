@@ -48,6 +48,20 @@ if (NOT MSVC)
     #set (CMAKE_CXX_FLAGS_DEBUG       "${CMAKE_CXX_FLAGS_DEBUG} -UNDEBUG -g3 -pipe")
 endif (NOT MSVC)
 
+if(CMAKE_COMPILER_IS_GNUCC)
+    execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
+    string(REGEX MATCHALL "[0-9]+" GCC_VERSION_COMPONENTS ${GCC_VERSION})
+    list(GET GCC_VERSION_COMPONENTS 0 GCC_MAJOR)
+    list(GET GCC_VERSION_COMPONENTS 1 GCC_MINOR)
+endif(CMAKE_COMPILER_IS_GNUCC)
+
+# Error if gcc < 4.6
+if(GCC_VERSION VERSION_GREATER 4.6 OR GCC_VERSION VERSION_EQUAL 4.6)
+	message(STATUS "GCC version >= 4.6")
+else()
+	message(FATAL_ERROR "Minimum GCC version must be >= 4.6.0. Your GCC version is ${GCC_VERSION}")
+endif()
+
 option (LOCAL_GLOOX "Use local gloox lib" ON) #gloox 1.0.1dev
 option (LOCAL_TINYXML "Use local tinyxml lib" OFF)
 option (LOCAL_LUA "Use local lua lib" OFF)
