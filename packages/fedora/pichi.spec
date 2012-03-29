@@ -1,8 +1,8 @@
-%define preversion b2
+%define preversion b3
 
 Name:           pichi
 Version:        0.7.0
-Release:        0.2.%{preversion}%{?dist}
+Release:        0.3.%{preversion}%{?dist}
 #Release:        1%{?dist}
 Summary:        Pichi is a jabber(xmpp) bot written in C++. It is based on the sulci abilities.
 Group:          Applications/Internet
@@ -70,6 +70,9 @@ rm -rf %{buildroot}
 %{_datadir}/pichi/config/pichi.xml
 
 %changelog
+* Thu Apr 29 2012 Alexey Kasyanchuk <deg@uruchie.org> - 0.7.0-0.3.beta3
+- 0.7.0 beta3
+
 * Sat Sep 01 2011 Alexey Kasyanchuk <deg@uruchie.org> - 0.7.0-0.1.beta2
 - 0.7.0 beta2
 
