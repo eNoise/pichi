@@ -29,6 +29,7 @@
 #include "config.h"
 #include "pichidbpatcher.h"
 
+#include "json_parser_read.hpp"
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/algorithm/string/erase.hpp>
 

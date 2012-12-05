@@ -26,6 +26,7 @@
 #include "luamap.h"
 #include <list>
 #include <map>
+#include "json_parser_read.hpp"
 #include <boost/property_tree/ptree.hpp>
 
 namespace pichi
