@@ -29,7 +29,7 @@ add_definitions(-DGIT_VERSION="${VERSION}")
 
 if (NOT MSVC)
     #enable c++0X
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
     
     #enable win32 defs
     if (WIN32)
